@@ -1,0 +1,30 @@
+[package]
+authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
+description = "Your Substrate Alfred"
+edition     = "2018"
+homepage    = "https://l2ust.world/subalfred"
+license     = "GPL-3.0"
+name        = "subalfred"
+readme      = "README.md"
+repository  = "https://github.com/l2ust/subalfred/"
+version     = "0.1.0"
+
+[[bin]]
+name = "subalfred"
+path = "src/main.rs"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[features]
+dbg = ["githubman/dbg"]
+
+[dependencies]
+async-std  = { version = "1.6.5", features = ["attributes"] }
+clap       = { version = "3.0.0-beta.2" }
+githubman  = { version = "0.1.0", path = "githubman" }
+isahc      = { version = "0.9.10", features = ["json"] }
+serde_json = { version = "1.0.59" }
+
+[workspace]
+members = ["githubman"]

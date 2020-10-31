@@ -1,0 +1,21 @@
+[package]
+authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
+description = "githubman"
+edition     = "2018"
+homepage    = "https://l2ust.world/githubman"
+license     = "GPL-3.0"
+name        = "githubman"
+readme      = "README.md"
+repository  = "https://github.com/l2ust/githubman/"
+version     = "0.1.0"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[features]
+dbg = []
+
+[dependencies]
+# async-std  = { version = "1.6.5", features = ["attributes"] }
+derive_builder = { version = "0.9.0" }
+isahc          = { version = "0.9.10" }

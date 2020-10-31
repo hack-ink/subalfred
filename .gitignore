@@ -1,0 +1,25 @@
+# IDE
+.idea
+.vscode
+.ignore
+
+# macOS
+.DS_Store
+
+# PM2
+.pm2.json
+
+# Release
+release/
+
+# Rust
+**/*.rs.bk
+**/target/
+.cargo-ok
+Cargo.toml.bak
+expand.rs
+
+
+# Added by cargo
+
+/target
