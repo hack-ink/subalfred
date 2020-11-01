@@ -1,22 +1,67 @@
-pub mod action;
+pub mod pager;
+pub mod requests;
+pub mod responses;
 pub mod util;
 
 // --- crates.io ---
-use isahc::{http::Method as HttpMethod, Body as HttpBody, HttpClient, HttpClientBuilder};
+use isahc::{
+	http::{
+		header::ACCEPT, request::Builder as RequestBuilder, Method as HttpMethod, Request,
+		Response, Uri,
+	},
+	Body as IsahcBody, HttpClient, HttpClientBuilder,
+};
+// --- githubman ---
+use crate::pager::Pager;
 
-type IsahcRequest<B> = isahc::http::Request<B>;
-type IsahcResponse = isahc::http::Response<HttpBody>;
+type IsahcRequest<B> = Request<B>;
+type IsahcResponse = Response<IsahcBody>;
 type IsahcResult<T> = Result<T, isahc::Error>;
 
 // TODO: configurable
-const OAUTH_TOKEN: &'static str = "b8aafd15d8ae950ba8425da60df5329a6bb1ea7a";
+const OAUTH_TOKEN: &'static str = "297159b07a1e0f87699de9a2b8dd796a66d46f0d";
 
-pub trait GithubApi<B>: Into<IsahcRequest<B>>
+pub trait GithubApi<B>
 where
-	B: Into<HttpBody>,
+	B: Into<IsahcBody>,
 {
 	const HTTP_METHOD: HttpMethod;
 	const PATH: &'static str;
+	const ACCEPT: &'static str;
+
+	fn build_uri(&self) -> Uri;
+
+	fn build_body(&self) -> B;
+
+	fn build_request(&self) -> IsahcRequest<B> {
+		let mut request_builder = RequestBuilder::new()
+			.method(Self::HTTP_METHOD)
+			.uri(self.build_uri());
+
+		request_builder
+			.headers_mut()
+			.unwrap()
+			.append(ACCEPT, Self::ACCEPT.parse().unwrap());
+
+		request_builder.body(self.build_body()).unwrap()
+	}
+
+	fn build_request_with_extra_queries(&self, extra_queries: impl AsRef<str>) -> IsahcRequest<B> {
+		let uri = self.build_uri();
+		let uri = if uri.query().is_none() {
+			format!("{}?{}", uri, extra_queries.as_ref())
+		} else {
+			format!("{}&{}", uri, extra_queries.as_ref())
+		};
+		let mut request_builder = RequestBuilder::new().method(Self::HTTP_METHOD).uri(uri);
+
+		request_builder
+			.headers_mut()
+			.unwrap()
+			.append(ACCEPT, Self::ACCEPT.parse().unwrap());
+
+		request_builder.body(self.build_body()).unwrap()
+	}
 }
 
 #[derive(Debug)]
@@ -28,20 +73,34 @@ impl GithubMan {
 
 	pub fn new() -> Self {
 		let http_client = HttpClientBuilder::new()
-			.default_headers(&[
-				("accept", "application/vnd.github.v3+json"),
-				("Authorization", &format!("token {}", OAUTH_TOKEN)),
-			])
+			.default_header("Authorization", &format!("token {}", OAUTH_TOKEN))
 			.build()
 			.unwrap();
 
 		Self { http_client }
 	}
 
-	pub async fn request<B>(&self, request: impl GithubApi<B>) -> IsahcResult<IsahcResponse>
-	where
-		B: Into<HttpBody>,
-	{
-		self.http_client.send_async(request.into()).await
+	pub async fn get(&self, request: impl GithubApi<()>) -> IsahcResult<IsahcResponse> {
+		let request = request.build_request();
+
+		#[cfg(feature = "dbg")]
+		dbg!(request.uri());
+
+		self.http_client.send_async(request).await
+	}
+
+	pub async fn get_with_pager(
+		&self,
+		request: impl GithubApi<()>,
+		pager: &mut Pager,
+	) -> IsahcResult<IsahcResponse> {
+		let request = request.build_request_with_extra_queries(pager.query());
+
+		#[cfg(feature = "dbg")]
+		dbg!(request.uri());
+
+		pager.page += 1;
+
+		self.http_client.send_async(request).await
 	}
 }
