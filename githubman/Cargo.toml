@@ -18,6 +18,6 @@ dbg = []
 [dependencies]
 # async-std  = { version = "1.6.5", features = ["attributes"] }
 derive_builder = { version = "0.9.0" }
-isahc          = { version = "0.9.10" }
+isahc          = { version = "0.9.11" }
 serde          = { version = "1.0.117", features = ["derive"] }
 serde_json     = { version = "1.0.59" }

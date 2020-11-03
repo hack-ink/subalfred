@@ -18,9 +18,6 @@ type IsahcRequest<B> = Request<B>;
 type IsahcResponse = Response<IsahcBody>;
 type IsahcResult<T> = Result<T, isahc::Error>;
 
-// TODO: configurable
-const OAUTH_TOKEN: &'static str = "297159b07a1e0f87699de9a2b8dd796a66d46f0d";
-
 pub trait GithubApi<B>
 where
 	B: Into<IsahcBody>,
@@ -71,9 +68,9 @@ pub struct GithubMan {
 impl GithubMan {
 	pub const API_BASE_URL: &'static str = "https://api.github.com";
 
-	pub fn new() -> Self {
+	pub fn new(oauth_token: &str) -> Self {
 		let http_client = HttpClientBuilder::new()
-			.default_header("Authorization", &format!("token {}", OAUTH_TOKEN))
+			.default_header("Authorization", &format!("token {}", oauth_token))
 			.build()
 			.unwrap();
 

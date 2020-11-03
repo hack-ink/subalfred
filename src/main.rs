@@ -1,6 +1,12 @@
+#![feature(with_options)]
+
+pub mod config;
 pub mod substrate;
 
+// --- std ---
+use std::fs::{create_dir_all, File};
 // --- crates.io ---
+use app_dirs2::*;
 use async_std::{sync::Arc, task};
 use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg};
 use githubman::{
@@ -13,25 +19,89 @@ use githubman::{
 	GithubMan,
 };
 use isahc::ResponseExt;
+// --- subalfred ---
+use config::Config;
 
 type Error = Box<dyn std::error::Error>;
+type Result<T> = std::result::Result<T, Error>;
+
+const APP_INFO: AppInfo = AppInfo {
+	name: crate_name!(),
+	author: crate_authors!(),
+};
 
 #[async_std::main]
-pub async fn main() -> Result<(), Error> {
+pub async fn main() -> Result<()> {
+	let app_root_path = get_app_root(AppDataType::UserConfig, &APP_INFO).unwrap();
+	let app_config_path = app_root_path.join("config");
+	let file = if app_config_path.is_file() {
+		File::with_options()
+			.create(false)
+			.read(true)
+			.write(true)
+			.append(false)
+			.open(&app_config_path)
+			.unwrap()
+	} else {
+		if !app_root_path.is_dir() {
+			create_dir_all(&app_root_path).unwrap();
+		}
+
+		let mut file = File::with_options();
+
+		file.create_new(true).read(true).write(true).append(false);
+
+		#[cfg(target_family = "unix")]
+		{
+			// --- std ---
+			use std::os::unix::fs::OpenOptionsExt;
+
+			file.mode(0o600);
+		}
+
+		file.open(&app_config_path).unwrap()
+	};
+	let config = if let Ok(config) = Config::from_reader(&file) {
+		config
+	} else {
+		let config = Config::default();
+
+		config.to_writer(&file).unwrap();
+
+		config
+	};
 	let app = App::new(crate_name!())
 		.version(crate_version!())
 		.author(crate_authors!())
 		.about(crate_description!())
-		.subcommand(App::new("list-commits").about("").arg(
-			Arg::new("sha").long("sha").takes_value(true).about(
-				"SHA or branch to start listing commits from. \
-				Default: the repository’s default branch (usually master).",
+		.subcommand(
+			App::new("list-commits").about("").arg(
+				Arg::new("sha")
+					.long("sha")
+					.takes_value(true)
+					.value_name("BRANCH/HASH")
+					.about(
+						"SHA or branch to start listing commits from. \
+						Default: the repository’s default branch (usually master).",
+					),
 			),
-		))
+		)
 		.subcommand(
 			App::new("list-migrations")
 				.about("")
-				.arg(Arg::new("sha").long("sha").takes_value(true))
+				.arg(
+					Arg::new("thread")
+						.long("thread")
+						.takes_value(true)
+						.value_name("COUNT")
+						.about(""),
+				)
+				.arg(
+					Arg::new("sha")
+						.long("sha")
+						.value_name("BRANCH/HASH")
+						.takes_value(true),
+				)
 				.about(
 					"SHA or branch to start listing commits from.\
 					Default: the repository’s default branch (usually master).",
@@ -40,19 +110,32 @@ pub async fn main() -> Result<(), Error> {
 					Arg::new("path")
 						.long("path")
 						.takes_value(true)
+						.value_name("PATH")
 						.about("Only commits containing this file path will be returned."),
 				)
-				.arg(Arg::new("since").long("since").takes_value(true).about(
-					"Only show notifications updated after the given time. \
-					This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.",
-				))
-				.arg(Arg::new("until").long("until").takes_value(true).about(
-					"Only commits before this date will be returned. \
-					This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.",
-				)),
+				.arg(
+					Arg::new("since")
+						.long("since")
+						.takes_value(true)
+						.value_name("DATE")
+						.about(
+							"Only show notifications updated after the given time. \
+							This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.",
+						),
+				)
+				.arg(
+					Arg::new("until")
+						.long("until")
+						.takes_value(true)
+						.value_name("DATE")
+						.about(
+							"Only commits before this date will be returned. \
+							This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.",
+						),
+				),
 		);
 	let app_args = app.get_matches();
-	let github_man = GithubMan::new();
+	let github_man = GithubMan::new(&config.github_oauth_token);
 
 	if let Some(list_commits_args) = app_args.subcommand_matches("list-commits") {
 		let json: serde_json::Value = github_man
@@ -109,7 +192,7 @@ pub async fn main() -> Result<(), Error> {
 		let github_man = Arc::new(github_man);
 		let mut migrations = vec![];
 
-		for chunk in commit_shas.chunks(10) {
+		for chunk in commit_shas.chunks(32) {
 			let mut handles = vec![];
 
 			for commit_sha in chunk.iter() {
