@@ -1,7 +1,8 @@
 // --- crates.io ---
 use async_std::{sync::Arc, task};
 use clap::ArgMatches;
-use isahc::ResponseExt;
+use isahc::{Body as IsahcBody, ResponseExt};
+use serde::de::DeserializeOwned;
 // --- githubman ---
 use githubman::{
 	pager::Pager,
@@ -14,7 +15,7 @@ use githubman::{
 		repositories::list_repository_tags::ListRepositoryTagsBuilder,
 	},
 	responses::commits::{Commit, PullRequest},
-	Githubman,
+	GithubApi, Githubman,
 };
 // --- subalfred ---
 use crate::Result;
@@ -68,59 +69,54 @@ impl Substrate {
 	}
 
 	pub async fn list_commits(&self, list_commits_args: &ArgMatches) -> Result<()> {
-		let json: serde_json::Value = self
-			.githubman
-			.send(
-				ListCommitsBuilder::default()
-					.owner(Self::OWNER)
-					.repo(Self::REPO)
-					.sha(list_commits_args.value_of("sha").map(Into::into))
-					.per_page(Some(100u32))
-					.build()
-					.unwrap(),
-			)
-			.await?
-			.json()?;
+		let mut commit_shas = vec![];
+
+		iterate_page_with(
+			&self.githubman,
+			ListCommitsBuilder::default()
+				.owner(Self::OWNER)
+				.repo(Self::REPO)
+				.sha(list_commits_args.value_of("sha").map(Into::into))
+				.path(list_commits_args.value_of("path").map(Into::into))
+				.since(list_commits_args.value_of("since").map(Into::into))
+				.until(list_commits_args.value_of("until").map(Into::into))
+				.build()
+				.unwrap(),
+			|commits: Vec<Commit>| {
+				for Commit { sha, .. } in commits {
+					commit_shas.push(sha);
+				}
+			},
+		)
+		.await?;
 
 		#[cfg(feature = "dbg")]
-		dbg!(json);
+		dbg!(&commit_shas);
 
 		Ok(())
 	}
 
 	pub async fn list_migrations(&self, list_migrations_args: &ArgMatches) -> Result<()> {
 		let mut commit_shas = vec![];
-		let mut pager = Pager {
-			per_page: 100,
-			page: 1,
-		};
 
-		loop {
-			let commits: Vec<Commit> = self
-				.githubman
-				.send_with_pager(
-					ListCommitsBuilder::default()
-						.owner(Self::OWNER)
-						.repo(Self::REPO)
-						.sha(list_migrations_args.value_of("sha").map(Into::into))
-						.path(list_migrations_args.value_of("path").map(Into::into))
-						.since(list_migrations_args.value_of("since").map(Into::into))
-						.until(list_migrations_args.value_of("until").map(Into::into))
-						.build()
-						.unwrap(),
-					&mut pager,
-				)
-				.await?
-				.json()?;
-
-			if commits.is_empty() {
-				break;
-			}
-
-			for Commit { sha, .. } in commits {
-				commit_shas.push(sha);
-			}
-		}
+		iterate_page_with(
+			&self.githubman,
+			ListCommitsBuilder::default()
+				.owner(Self::OWNER)
+				.repo(Self::REPO)
+				.sha(list_migrations_args.value_of("sha").map(Into::into))
+				.path(list_migrations_args.value_of("path").map(Into::into))
+				.since(list_migrations_args.value_of("since").map(Into::into))
+				.until(list_migrations_args.value_of("until").map(Into::into))
+				.build()
+				.unwrap(),
+			|commits: Vec<Commit>| {
+				for Commit { sha, .. } in commits {
+					commit_shas.push(sha);
+				}
+			},
+		)
+		.await?;
 
 		#[cfg(feature = "dbg")]
 		dbg!(&commit_shas);
@@ -171,5 +167,34 @@ impl Substrate {
 		dbg!(&migrations);
 
 		Ok(())
+	}
+}
+
+async fn iterate_page_with<B, D, F>(
+	githubman: &Arc<Githubman>,
+	request: impl GithubApi<B>,
+	mut f: F,
+) -> Result<()>
+where
+	B: Into<IsahcBody>,
+	D: DeserializeOwned,
+	F: FnMut(Vec<D>),
+{
+	let mut pager = Pager {
+		per_page: 100,
+		page: 1,
+	};
+
+	loop {
+		let ds: Vec<D> = githubman
+			.send_with_pager(request.clone(), &mut pager)
+			.await?
+			.json()?;
+
+		if ds.is_empty() {
+			return Ok(());
+		}
+
+		f(ds);
 	}
 }

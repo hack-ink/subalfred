@@ -3,6 +3,8 @@ pub mod requests;
 pub mod responses;
 pub mod util;
 
+// --- std ---
+use std::fmt::Debug;
 // --- crates.io ---
 use isahc::{
 	http::{
@@ -18,7 +20,7 @@ type IsahcRequest<B> = Request<B>;
 type IsahcResponse = Response<IsahcBody>;
 type IsahcResult<T> = Result<T, isahc::Error>;
 
-pub trait GithubApi<B>
+pub trait GithubApi<B>: Clone + Debug
 where
 	B: Into<IsahcBody>,
 {

@@ -1,12 +1,10 @@
 // --- crates.io ---
 use derive_builder::Builder as DeriveBuilder;
-use isahc::http::{
-	Method as HttpMethod, Uri,
-};
+use isahc::http::{Method as HttpMethod, Uri};
 // --- githubman ---
 use crate::{uri, GithubApi};
 
-#[derive(Debug, Default, DeriveBuilder)]
+#[derive(Clone, Debug, Default, DeriveBuilder)]
 pub struct ListCommits {
 	/// owner	string	path
 	#[builder(setter(into))]

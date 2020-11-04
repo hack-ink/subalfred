@@ -1,9 +1,13 @@
 // --- std ---
-use std::io::{Read, Write};
+use std::{
+	fs::{create_dir_all, File},
+	io::{Read, Write},
+};
 // --- crates.io ---
+use app_dirs2::{get_app_root, AppDataType};
 use serde::{Deserialize, Serialize};
 // --- subalfred ---
-use crate::Result;
+use crate::{Result, APP_INFO};
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -13,6 +17,48 @@ pub struct Config {
 	pub substrate_project_repo: String,
 }
 impl Config {
+	pub fn load_config() -> Self {
+		let app_root_path = get_app_root(AppDataType::UserConfig, &APP_INFO).unwrap();
+		let app_config_path = app_root_path.join("config");
+		let file = if app_config_path.is_file() {
+			File::with_options()
+				.create(false)
+				.read(true)
+				.write(true)
+				.append(false)
+				.open(&app_config_path)
+				.unwrap()
+		} else {
+			if !app_root_path.is_dir() {
+				create_dir_all(&app_root_path).unwrap();
+			}
+
+			let mut file = File::with_options();
+
+			file.create_new(true).read(true).write(true).append(false);
+
+			#[cfg(target_family = "unix")]
+			{
+				// --- std ---
+				use std::os::unix::fs::OpenOptionsExt;
+
+				file.mode(0o600);
+			}
+
+			file.open(&app_config_path).unwrap()
+		};
+
+		if let Ok(config) = Config::from_reader(&file) {
+			config
+		} else {
+			let config = Config::default();
+
+			config.to_writer(&file).unwrap();
+
+			config
+		}
+	}
+
 	pub fn from_reader(r: impl Read) -> Result<Self> {
 		serde_yaml::from_reader(r).map_err(Into::into)
 	}
@@ -33,7 +79,7 @@ github-oauth-token: ""
 
 # Your substrate project `https://github.com/{owner}/{repo}`
 substrate-project-owner: "l2ust"
-substrate-project-repo: "subalfred""#;
+substrate-project-repo: "test-githubman""#;
 
 		let mut w = w;
 

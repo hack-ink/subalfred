@@ -5,7 +5,7 @@ use serde::Serialize;
 // --- githubman ---
 use crate::{api, GithubApi};
 
-#[derive(Debug, Default, DeriveBuilder)]
+#[derive(Clone, Debug, Default, DeriveBuilder)]
 pub struct CreateAnIssue {
 	/// owner	string	path
 	#[builder(setter(into))]

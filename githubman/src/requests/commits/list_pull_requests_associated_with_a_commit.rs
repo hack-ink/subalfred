@@ -4,7 +4,7 @@ use isahc::http::{Method as HttpMethod, Uri};
 // --- githubman ---
 use crate::{uri, GithubApi};
 
-#[derive(Debug, Default, DeriveBuilder)]
+#[derive(Clone, Debug, Default, DeriveBuilder)]
 pub struct ListPullRequestsAssociatedWithACommit {
 	/// owner	string	path
 	#[builder(setter(into))]

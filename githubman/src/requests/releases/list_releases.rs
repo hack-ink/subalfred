@@ -4,7 +4,7 @@ use isahc::http::{Method as HttpMethod, Uri};
 // --- githubman ---
 use crate::{uri, GithubApi};
 
-#[derive(Debug, Default, DeriveBuilder)]
+#[derive(Clone, Debug, Default, DeriveBuilder)]
 pub struct ListReleases {
 	/// owner	string	path
 	#[builder(setter(into))]
@@ -27,13 +27,7 @@ impl GithubApi<()> for ListReleases {
 	const ACCEPT: &'static str = "application/vnd.github.v3+json";
 
 	fn build_uri(&self) -> Uri {
-		uri!(
-			self,
-			[owner, repo],
-			[per_page, page]
-		)
-		.parse()
-		.unwrap()
+		uri!(self, [owner, repo], [per_page, page]).parse().unwrap()
 	}
 
 	fn build_body(&self) -> () {
