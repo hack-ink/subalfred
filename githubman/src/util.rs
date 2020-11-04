@@ -29,7 +29,7 @@ macro_rules! api {
 #[macro_export]
 macro_rules! queries {
 	($self:ident, [$($query:ident),+]) => {{
-		let mut queries = String::new();
+		let mut queries = ::std::string::String::new();
 
 		$(
 			if let Some($query) = &$self.$query {

@@ -11,9 +11,13 @@ use async_std::{sync::Arc, task};
 use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg};
 use githubman::{
 	pager::Pager,
-	requests::commits::{
-		list_commits::ListCommitsBuilder,
-		list_pull_requests_associated_with_a_commit::ListPullRequestsAssociatedWithACommitBuilder,
+	requests::{
+		commits::{
+			list_commits::ListCommitsBuilder,
+			list_pull_requests_associated_with_a_commit::ListPullRequestsAssociatedWithACommitBuilder,
+		},
+		releases::list_releases::ListReleasesBuilder,
+		repositories::list_repository_tags::ListRepositoryTagsBuilder,
 	},
 	responses::commits::{Commit, PullRequest},
 	GithubMan,
@@ -133,7 +137,9 @@ pub async fn main() -> Result<()> {
 							This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.",
 						),
 				),
-		);
+		)
+		.subcommand(App::new("list-repository-tags").about(""))
+		.subcommand(App::new("list-releases").about(""));
 	let app_args = app.get_matches();
 	let github_man = GithubMan::new(&config.github_oauth_token);
 
@@ -192,7 +198,13 @@ pub async fn main() -> Result<()> {
 		let github_man = Arc::new(github_man);
 		let mut migrations = vec![];
 
-		for chunk in commit_shas.chunks(32) {
+		for chunk in commit_shas.chunks(
+			list_migrations_args
+				.value_of("thread")
+				.map(str::parse)
+				.unwrap_or(Ok(1))
+				.unwrap(),
+		) {
 			let mut handles = vec![];
 
 			for commit_sha in chunk.iter() {
@@ -227,6 +239,36 @@ pub async fn main() -> Result<()> {
 
 		#[cfg(feature = "dbg")]
 		dbg!(&migrations);
+	} else if let Some(_) = app_args.subcommand_matches("list-repository-tags") {
+		let json: serde_json::Value = github_man
+			.get(
+				ListRepositoryTagsBuilder::default()
+					.owner("paritytech")
+					.repo("substrate")
+					.per_page(Some(100u32))
+					.build()
+					.unwrap(),
+			)
+			.await?
+			.json()?;
+
+		#[cfg(feature = "dbg")]
+		dbg!(json);
+	} else if let Some(_) = app_args.subcommand_matches("list-releases") {
+		let json: serde_json::Value = github_man
+			.get(
+				ListReleasesBuilder::default()
+					.owner("paritytech")
+					.repo("substrate")
+					.per_page(Some(100u32))
+					.build()
+					.unwrap(),
+			)
+			.await?
+			.json()?;
+
+		#[cfg(feature = "dbg")]
+		dbg!(json);
 	}
 
 	Ok(())
