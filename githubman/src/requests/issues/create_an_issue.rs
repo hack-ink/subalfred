@@ -1,6 +1,7 @@
 // --- crates.io ---
 use derive_builder::Builder as DeriveBuilder;
 use isahc::http::{Method as HttpMethod, Uri};
+use serde::Serialize;
 // --- githubman ---
 use crate::{api, GithubApi};
 
@@ -38,7 +39,7 @@ pub struct CreateAnIssue {
 	#[builder(default)]
 	pub assignees: Option<Vec<String>>,
 }
-impl GithubApi<()> for CreateAnIssue {
+impl GithubApi<Vec<u8>> for CreateAnIssue {
 	const HTTP_METHOD: HttpMethod = HttpMethod::POST;
 	const PATH: &'static str = "/repos/{owner}/{repo}/issues";
 	const ACCEPT: &'static str = "application/vnd.github.v3+json";
@@ -47,7 +48,27 @@ impl GithubApi<()> for CreateAnIssue {
 		api!(self, [owner, repo]).parse().unwrap()
 	}
 
-	fn build_body(&self) -> () {
-		()
+	fn build_body(&self) -> Vec<u8> {
+		serde_json::to_vec(&Body {
+			title: &self.title,
+			body: &self.body,
+			milestone: &self.milestone,
+			labels: &self.labels,
+			assignees: &self.assignees,
+		})
+		.unwrap()
 	}
+}
+
+#[derive(Serialize)]
+struct Body<'a> {
+	title: &'a String,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	body: &'a Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	milestone: &'a Option<u32>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	labels: &'a Option<Vec<String>>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	assignees: &'a Option<Vec<String>>,
 }

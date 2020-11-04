@@ -7,24 +7,13 @@ pub mod substrate;
 use std::fs::{create_dir_all, File};
 // --- crates.io ---
 use app_dirs2::*;
-use async_std::{sync::Arc, task};
+use async_std::sync::Arc;
 use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg};
-use githubman::{
-	pager::Pager,
-	requests::{
-		commits::{
-			list_commits::ListCommitsBuilder,
-			list_pull_requests_associated_with_a_commit::ListPullRequestsAssociatedWithACommitBuilder,
-		},
-		releases::list_releases::ListReleasesBuilder,
-		repositories::list_repository_tags::ListRepositoryTagsBuilder,
-	},
-	responses::commits::{Commit, PullRequest},
-	GithubMan,
-};
+use githubman::{requests::issues::create_an_issue::CreateAnIssueBuilder, Githubman};
 use isahc::ResponseExt;
 // --- subalfred ---
 use config::Config;
+use substrate::Substrate;
 
 type Error = Box<dyn std::error::Error>;
 type Result<T> = std::result::Result<T, Error>;
@@ -78,6 +67,8 @@ pub async fn main() -> Result<()> {
 		.version(crate_version!())
 		.author(crate_authors!())
 		.about(crate_description!())
+		.subcommand(App::new("list-repository-tags").about(""))
+		.subcommand(App::new("list-releases").about(""))
 		.subcommand(
 			App::new("list-commits").about("").arg(
 				Arg::new("sha")
@@ -137,138 +128,36 @@ pub async fn main() -> Result<()> {
 							This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.",
 						),
 				),
-		)
-		.subcommand(App::new("list-repository-tags").about(""))
-		.subcommand(App::new("list-releases").about(""));
+		);
 	let app_args = app.get_matches();
-	let github_man = GithubMan::new(&config.github_oauth_token);
+	let githubman = Githubman::new(&config.github_oauth_token);
+	let substrate = Substrate {
+		githubman: Arc::new(githubman.clone()),
+	};
 
-	if let Some(list_commits_args) = app_args.subcommand_matches("list-commits") {
-		let json: serde_json::Value = github_man
-			.get(
-				ListCommitsBuilder::default()
-					.owner("paritytech")
-					.repo("substrate")
-					.sha(list_commits_args.value_of("sha").map(Into::into))
-					.per_page(Some(100u32))
-					.build()
-					.unwrap(),
-			)
-			.await?
-			.json()?;
-
-		#[cfg(feature = "dbg")]
-		dbg!(json);
-	} else if let Some(list_migrations_args) = app_args.subcommand_matches("list-migrations") {
-		let mut commit_shas = vec![];
-		let mut pager = Pager {
-			per_page: 100,
-			page: 1,
-		};
-
-		loop {
-			let commits: Vec<Commit> = github_man
-				.get_with_pager(
-					ListCommitsBuilder::default()
-						.owner("paritytech")
-						.repo("substrate")
-						.sha(list_migrations_args.value_of("sha").map(Into::into))
-						.path(list_migrations_args.value_of("path").map(Into::into))
-						.since(list_migrations_args.value_of("since").map(Into::into))
-						.until(list_migrations_args.value_of("until").map(Into::into))
-						.build()
-						.unwrap(),
-					&mut pager,
-				)
-				.await?
-				.json()?;
-
-			if commits.is_empty() {
-				break;
-			}
-
-			for Commit { sha, .. } in commits {
-				commit_shas.push(sha);
-			}
-		}
-
-		#[cfg(feature = "dbg")]
-		dbg!(&commit_shas);
-
-		let github_man = Arc::new(github_man);
-		let mut migrations = vec![];
-
-		for chunk in commit_shas.chunks(
-			list_migrations_args
-				.value_of("thread")
-				.map(str::parse)
-				.unwrap_or(Ok(1))
+	let json: serde_json::Value = githubman
+		.send(
+			CreateAnIssueBuilder::default()
+				.owner(config.substrate_project_owner)
+				.repo(config.substrate_project_repo)
+				.title("Test Githubman")
+				.build()
 				.unwrap(),
-		) {
-			let mut handles = vec![];
+		)
+		.await?
+		.json()?;
 
-			for commit_sha in chunk.iter() {
-				let github_man = github_man.clone();
-				let req = ListPullRequestsAssociatedWithACommitBuilder::default()
-					.owner("paritytech")
-					.repo("substrate")
-					.commit_sha(commit_sha)
-					.build()
-					.unwrap();
-				let commit_sha = commit_sha.to_owned();
+	#[cfg(feature = "dbg")]
+	dbg!(json);
 
-				handles.push(task::spawn(async move {
-					(github_man.get(req).await, commit_sha)
-				}));
-			}
-
-			for handle in handles {
-				let (pull_requests, commit_sha) = handle.await;
-				let pull_requests: Vec<PullRequest> = pull_requests?.json()?;
-
-				for PullRequest { url, labels, .. } in pull_requests {
-					if labels
-						.into_iter()
-						.any(|label| &label.name == "D1-runtime-migration")
-					{
-						migrations.push((url, commit_sha.clone()));
-					}
-				}
-			}
-		}
-
-		#[cfg(feature = "dbg")]
-		dbg!(&migrations);
-	} else if let Some(_) = app_args.subcommand_matches("list-repository-tags") {
-		let json: serde_json::Value = github_man
-			.get(
-				ListRepositoryTagsBuilder::default()
-					.owner("paritytech")
-					.repo("substrate")
-					.per_page(Some(100u32))
-					.build()
-					.unwrap(),
-			)
-			.await?
-			.json()?;
-
-		#[cfg(feature = "dbg")]
-		dbg!(json);
+	if let Some(_) = app_args.subcommand_matches("list-repository-tags") {
+		substrate.list_repository_tags().await?;
 	} else if let Some(_) = app_args.subcommand_matches("list-releases") {
-		let json: serde_json::Value = github_man
-			.get(
-				ListReleasesBuilder::default()
-					.owner("paritytech")
-					.repo("substrate")
-					.per_page(Some(100u32))
-					.build()
-					.unwrap(),
-			)
-			.await?
-			.json()?;
-
-		#[cfg(feature = "dbg")]
-		dbg!(json);
+		substrate.list_releases().await?;
+	} else if let Some(list_commits_args) = app_args.subcommand_matches("list-commits") {
+		substrate.list_commits(list_commits_args).await?;
+	} else if let Some(list_migrations_args) = app_args.subcommand_matches("list-migrations") {
+		substrate.list_migrations(list_migrations_args).await?;
 	}
 
 	Ok(())

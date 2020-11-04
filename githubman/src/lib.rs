@@ -61,11 +61,11 @@ where
 	}
 }
 
-#[derive(Debug)]
-pub struct GithubMan {
+#[derive(Clone, Debug)]
+pub struct Githubman {
 	pub http_client: HttpClient,
 }
-impl GithubMan {
+impl Githubman {
 	pub const API_BASE_URL: &'static str = "https://api.github.com";
 
 	pub fn new(oauth_token: &str) -> Self {
@@ -77,7 +77,10 @@ impl GithubMan {
 		Self { http_client }
 	}
 
-	pub async fn get(&self, request: impl GithubApi<()>) -> IsahcResult<IsahcResponse> {
+	pub async fn send<B>(&self, request: impl GithubApi<B>) -> IsahcResult<IsahcResponse>
+	where
+		B: Into<IsahcBody>,
+	{
 		let request = request.build_request();
 
 		#[cfg(feature = "dbg")]
@@ -86,11 +89,14 @@ impl GithubMan {
 		self.http_client.send_async(request).await
 	}
 
-	pub async fn get_with_pager(
+	pub async fn send_with_pager<B>(
 		&self,
-		request: impl GithubApi<()>,
+		request: impl GithubApi<B>,
 		pager: &mut Pager,
-	) -> IsahcResult<IsahcResponse> {
+	) -> IsahcResult<IsahcResponse>
+	where
+		B: Into<IsahcBody>,
+	{
 		let request = request.build_request_with_extra_queries(pager.query());
 
 		#[cfg(feature = "dbg")]

@@ -17,7 +17,7 @@ macro_rules! api {
 	($self:ident, $([$($path_part:ident),+])?) => {{
 		format!(
 			"{}{}",
-			$crate::GithubMan::API_BASE_URL,
+			$crate::Githubman::API_BASE_URL,
 			Self::PATH
 				$($(
 					.replace(&format!("{{{}}}", stringify!($path_part)), &$self.$path_part)
