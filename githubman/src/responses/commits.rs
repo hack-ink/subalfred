@@ -6,6 +6,7 @@ use crate::responses::Label;
 #[derive(Debug, Deserialize)]
 pub struct Commit {
 	pub sha: String,
+	pub url: String,
 }
 
 #[derive(Debug, Deserialize)]

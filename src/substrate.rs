@@ -14,7 +14,11 @@ use githubman::{
 		releases::list_releases::ListReleasesBuilder,
 		repositories::list_repository_tags::ListRepositoryTagsBuilder,
 	},
-	responses::commits::{Commit, PullRequest},
+	responses::{
+		commits::{Commit, PullRequest},
+		releases::Release,
+		tags::Tag,
+	},
 	GithubApi, Githubman,
 };
 // --- subalfred ---
@@ -29,41 +33,41 @@ impl Substrate {
 	pub const REPO: &'static str = "substrate";
 
 	pub async fn list_repository_tags(&self) -> Result<()> {
-		let json: serde_json::Value = self
-			.githubman
-			.send(
-				ListRepositoryTagsBuilder::default()
-					.owner(Self::OWNER)
-					.repo(Self::REPO)
-					.per_page(Some(100u32))
-					.build()
-					.unwrap(),
-			)
-			.await?
-			.json()?;
+		let mut tags = vec![];
+
+		iterate_page_with(
+			&self.githubman,
+			ListRepositoryTagsBuilder::default()
+				.owner(Self::OWNER)
+				.repo(Self::REPO)
+				.build()
+				.unwrap(),
+			|mut tags_: Vec<Tag>| tags.append(&mut tags_),
+		)
+		.await?;
 
 		#[cfg(feature = "dbg")]
-		dbg!(json);
+		dbg!(tags);
 
 		Ok(())
 	}
 
 	pub async fn list_releases(&self) -> Result<()> {
-		let json: serde_json::Value = self
-			.githubman
-			.send(
-				ListReleasesBuilder::default()
-					.owner(Self::OWNER)
-					.repo(Self::REPO)
-					.per_page(Some(100u32))
-					.build()
-					.unwrap(),
-			)
-			.await?
-			.json()?;
+		let mut releases = vec![];
+
+		iterate_page_with(
+			&self.githubman,
+			ListReleasesBuilder::default()
+				.owner(Self::OWNER)
+				.repo(Self::REPO)
+				.build()
+				.unwrap(),
+			|mut releases_: Vec<Release>| releases.append(&mut releases_),
+		)
+		.await?;
 
 		#[cfg(feature = "dbg")]
-		dbg!(json);
+		dbg!(releases);
 
 		Ok(())
 	}
