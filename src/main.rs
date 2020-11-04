@@ -87,29 +87,14 @@ pub async fn main() -> Result<()> {
 							This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.",
 						),
 				)
-				.arg(Arg::new("issue").long("issue")),
+				.arg(Arg::new("create-issue").long("create-issue")),
 		);
 	let app_args = app.get_matches();
 	let config = Config::load_config();
 	let githubman = Githubman::new(&config.github_oauth_token);
 	let substrate = Substrate {
-		githubman: Arc::new(githubman.clone()),
+		githubman: Arc::new(githubman),
 	};
-
-	// let json: serde_json::Value = githubman
-	// 	.send(
-	// 		CreateAnIssueBuilder::default()
-	// 			.owner(config.substrate_project_owner)
-	// 			.repo(config.substrate_project_repo)
-	// 			.title("Test Githubman")
-	// 			.build()
-	// 			.unwrap(),
-	// 	)
-	// 	.await?
-	// 	.json()?;
-
-	// #[cfg(feature = "dbg")]
-	// dbg!(json);
 
 	if let Some(_) = app_args.subcommand_matches("list-repository-tags") {
 		substrate.list_repository_tags().await?;
@@ -118,7 +103,18 @@ pub async fn main() -> Result<()> {
 	} else if let Some(list_commits_args) = app_args.subcommand_matches("list-commits") {
 		substrate.list_commits(list_commits_args).await?;
 	} else if let Some(list_migrations_args) = app_args.subcommand_matches("list-migrations") {
-		substrate.list_migrations(list_migrations_args).await?;
+		let maybe_self_project = if list_migrations_args.is_present("create-issue") {
+			Some((
+				config.substrate_project_owner.as_str(),
+				config.substrate_project_repo.as_str(),
+			))
+		} else {
+			None
+		};
+
+		substrate
+			.list_migrations(list_migrations_args, maybe_self_project)
+			.await?;
 	}
 
 	Ok(())

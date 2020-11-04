@@ -6,6 +6,12 @@ pub mod tags;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
+pub struct User {
+	pub login: String,
+	pub html_url: String,
+}
+
+#[derive(Debug, Deserialize)]
 pub struct Label {
 	pub name: String,
 }

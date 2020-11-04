@@ -11,6 +11,7 @@ use githubman::{
 			list_commits::ListCommitsBuilder,
 			list_pull_requests_associated_with_a_commit::ListPullRequestsAssociatedWithACommitBuilder,
 		},
+		issues::create_an_issue::CreateAnIssueBuilder,
 		releases::list_releases::ListReleasesBuilder,
 		repositories::list_repository_tags::ListRepositoryTagsBuilder,
 	},
@@ -18,6 +19,7 @@ use githubman::{
 		commits::{Commit, PullRequest},
 		releases::Release,
 		tags::Tag,
+		User,
 	},
 	GithubApi, Githubman,
 };
@@ -100,7 +102,11 @@ impl Substrate {
 		Ok(())
 	}
 
-	pub async fn list_migrations(&self, list_migrations_args: &ArgMatches) -> Result<()> {
+	pub async fn list_migrations(
+		&self,
+		list_migrations_args: &ArgMatches,
+		maybe_self_project: Option<(&str, &str)>,
+	) -> Result<()> {
 		let mut commit_shas = vec![];
 
 		iterate_page_with(
@@ -125,7 +131,6 @@ impl Substrate {
 		#[cfg(feature = "dbg")]
 		dbg!(&commit_shas);
 
-		// let githubman = Arc::new(self.githubman);
 		let mut migrations = vec![];
 
 		for chunk in commit_shas.chunks(
@@ -145,23 +150,20 @@ impl Substrate {
 					.commit_sha(commit_sha)
 					.build()
 					.unwrap();
-				let commit_sha = commit_sha.to_owned();
 
-				handles.push(task::spawn(async move {
-					(githubman.send(request).await, commit_sha)
-				}));
+				handles.push(task::spawn(async move { githubman.send(request).await }));
 			}
 
 			for handle in handles {
-				let (pull_requests, commit_sha) = handle.await;
-				let pull_requests: Vec<PullRequest> = pull_requests?.json()?;
+				let pull_requests: Vec<PullRequest> = handle.await?.json()?;
 
-				for PullRequest { url, labels, .. } in pull_requests {
-					if labels
-						.into_iter()
+				for pull_request in pull_requests {
+					if pull_request
+						.labels
+						.iter()
 						.any(|label| &label.name == "D1-runtime-migration")
 					{
-						migrations.push((url, commit_sha.clone()));
+						migrations.push(pull_request);
 					}
 				}
 			}
@@ -169,6 +171,39 @@ impl Substrate {
 
 		#[cfg(feature = "dbg")]
 		dbg!(&migrations);
+
+		if let Some((owner, repo)) = maybe_self_project {
+			let mut body = String::new();
+
+			for PullRequest {
+				html_url,
+				title,
+				user: User {
+					login,
+					html_url: user_html_url,
+				},
+				merged_at,
+				..
+			} in migrations
+			{
+				body.push_str(&format!(
+					"- [ ] [**{}**]({})\n\t- by [**{}**]({}) merged at **{}**\n",
+					title, html_url, login, user_html_url, merged_at
+				));
+			}
+
+			self.githubman
+				.send(
+					CreateAnIssueBuilder::default()
+						.owner(owner)
+						.repo(repo)
+						.title("Migrations")
+						.body(Some(body))
+						.build()
+						.unwrap(),
+				)
+				.await?;
+		}
 
 		Ok(())
 	}
