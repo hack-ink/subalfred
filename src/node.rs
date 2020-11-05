@@ -24,10 +24,10 @@ pub async fn send_rpc(
 		.method(HttpMethod::POST)
 		.uri(address.as_ref());
 
-	request_builder
-		.headers_mut()
-		.unwrap()
-		.append(CONTENT_TYPE, "application/json".parse().unwrap());
+	request_builder.headers_mut().unwrap().append(
+		CONTENT_TYPE,
+		"application/json;charset=utf-8".parse().unwrap(),
+	);
 
 	let body = json!({
 		"jsonrpc": "2.0",
