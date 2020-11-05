@@ -1,6 +1,7 @@
 #![feature(with_options)]
 
 pub mod config;
+pub mod node;
 pub mod substrate;
 
 // --- crates.io ---
@@ -13,7 +14,7 @@ use config::CONFIG;
 use substrate::Substrate;
 
 type Error = Box<dyn std::error::Error>;
-type Result<T> = std::result::Result<T, Error>;
+type Result<T> = ::std::result::Result<T, Error>;
 
 const APP_INFO: AppInfo = AppInfo {
 	name: crate_name!(),
@@ -26,6 +27,33 @@ pub async fn main() -> Result<()> {
 		.version(crate_version!())
 		.author(crate_authors!())
 		.about(crate_description!())
+		.subcommand(
+			App::new("send-rpc")
+				.about("")
+				.arg(
+					Arg::new("address")
+						.long("address")
+						.takes_value(true)
+						.value_name("ADDRESS")
+						.about(""),
+				)
+				.arg(
+					Arg::new("method")
+						.long("method")
+						.required(true)
+						.takes_value(true)
+						.value_name("METHOD")
+						.possible_values(&["author_rotateKeys", "author_insertKey"])
+						.about(""),
+				)
+				.arg(
+					Arg::new("params")
+						.long("params")
+						.takes_value(true)
+						.value_name("[PARAM]")
+						.about(""),
+				),
+		)
 		.subcommand(App::new("list-repository-tags").about(""))
 		.subcommand(App::new("list-releases").about(""))
 		.subcommand(
@@ -144,7 +172,16 @@ pub async fn main() -> Result<()> {
 		githubman: Arc::new(githubman),
 	};
 
-	if let Some(_) = app_args.subcommand_matches("list-repository-tags") {
+	if let Some(send_rpc) = app_args.subcommand_matches("send-rpc") {
+		node::send_rpc(
+			send_rpc
+				.value_of("address")
+				.unwrap_or("http://127.0.0.1:9933"),
+			send_rpc.value_of("method").unwrap(),
+			serde_json::from_str(send_rpc.value_of("params").unwrap_or("[]"))?,
+		)
+		.await?;
+	} else if let Some(_) = app_args.subcommand_matches("list-repository-tags") {
 		substrate.list_repository_tags().await?;
 	} else if let Some(_) = app_args.subcommand_matches("list-releases") {
 		substrate.list_releases().await?;

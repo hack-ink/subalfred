@@ -175,7 +175,7 @@ impl Substrate {
 
 				body.push_str(&format!(
 					"- [ ] [{}]({})\n\
-					\t- by [{}]({}) merged at {}\n\
+					\t- *by [{}]({}) merged at {}*\n\
 					\t- <details>\n\
 					\t  <summary>Details{}</summary>\n\
 					\t  {}\n\
@@ -232,7 +232,7 @@ impl Substrate {
 
 				body.push_str(&format!(
 					"- [ ] [{}]({})\n\
-					\t- by [{}]({}) merged at {}\n\
+					\t- *by [{}]({}) merged at {}*\n\
 					\t- <details>\n\
 					\t  <summary>Details</summary>\n\
 					\t  {}\n\
