@@ -174,8 +174,8 @@ impl Substrate {
 				let pull_request_body = pull_request_body.trim_end();
 
 				body.push_str(&format!(
-					"- [ ] [**{}**]({})\n\
-					\t- by [**{}**]({}) merged at **{}**\n\
+					"- [ ] [{}]({})\n\
+					\t- by [{}]({}) merged at {}\n\
 					\t- <details>\n\
 					\t  <summary>Details{}</summary>\n\
 					\t  {}\n\
@@ -231,8 +231,8 @@ impl Substrate {
 				let pull_request_body = pull_request_body.trim_end();
 
 				body.push_str(&format!(
-					"- [ ] [**{}**]({})\n\
-					\t- by [**{}**]({}) merged at **{}**\n\
+					"- [ ] [{}]({})\n\
+					\t- by [{}]({}) merged at {}\n\
 					\t- <details>\n\
 					\t  <summary>Details</summary>\n\
 					\t  {}\n\
