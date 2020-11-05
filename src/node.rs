@@ -12,14 +12,14 @@ use crate::Result;
 pub struct RpcResult {
 	id: u32,
 	jsonrpc: String,
-	result: String,
+	result: Value,
 }
 
 pub async fn send_rpc(
 	address: impl AsRef<str>,
 	method: impl AsRef<str>,
 	params: Value,
-) -> Result<()> {
+) -> Result<RpcResult> {
 	let mut request_builder = RequestBuilder::new()
 		.method(HttpMethod::POST)
 		.uri(address.as_ref());
@@ -39,7 +39,7 @@ pub async fn send_rpc(
 	let result: RpcResult = isahc::send_async(request).await?.json()?;
 
 	#[cfg(feature = "dbg")]
-	dbg!(result);
+	dbg!(&result);
 
-	Ok(())
+	Ok(result)
 }

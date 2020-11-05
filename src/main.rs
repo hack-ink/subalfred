@@ -43,7 +43,11 @@ pub async fn main() -> Result<()> {
 						.required(true)
 						.takes_value(true)
 						.value_name("METHOD")
-						.possible_values(&["author_rotateKeys", "author_insertKey"])
+						.possible_values(&[
+							"author_rotateKeys",
+							"author_insertKey",
+							"grandpa_roundState",
+						])
 						.about(""),
 				)
 				.arg(
