@@ -5,9 +5,14 @@ use std::{
 };
 // --- crates.io ---
 use app_dirs2::{get_app_root, AppDataType};
+use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 // --- subalfred ---
 use crate::{Result, APP_INFO};
+
+lazy_static! {
+	pub static ref CONFIG: Config = Config::load_config();
+}
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]

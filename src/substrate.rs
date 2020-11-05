@@ -1,6 +1,7 @@
 // --- crates.io ---
-use async_std::{sync::Arc, task};
+use async_std::sync::Arc;
 use clap::ArgMatches;
+use futures::{stream, StreamExt};
 use isahc::{Body as IsahcBody, ResponseExt};
 use serde::de::DeserializeOwned;
 // --- githubman ---
@@ -24,7 +25,7 @@ use githubman::{
 	GithubApi, Githubman,
 };
 // --- subalfred ---
-use crate::Result;
+use crate::{config::CONFIG, Result};
 
 #[derive(Debug)]
 pub struct Substrate {
@@ -74,8 +75,8 @@ impl Substrate {
 		Ok(())
 	}
 
-	pub async fn list_commits(&self, list_commits_args: &ArgMatches) -> Result<()> {
-		let mut commit_shas = vec![];
+	pub async fn list_commits(&self, list_commits_args: &ArgMatches) -> Result<Vec<Commit>> {
+		let mut commits = vec![];
 
 		iterate_page_with(
 			&self.githubman,
@@ -88,91 +89,64 @@ impl Substrate {
 				.until(list_commits_args.value_of("until").map(Into::into))
 				.build()
 				.unwrap(),
-			|commits: Vec<Commit>| {
-				for Commit { sha, .. } in commits {
-					commit_shas.push(sha);
-				}
-			},
+			|mut commits_: Vec<Commit>| commits.append(&mut commits_),
 		)
 		.await?;
 
 		#[cfg(feature = "dbg")]
-		dbg!(&commit_shas);
+		dbg!(&commits);
 
-		Ok(())
+		Ok(commits)
 	}
 
-	pub async fn list_migrations(
+	pub async fn list_pull_requests(
 		&self,
-		list_migrations_args: &ArgMatches,
-		maybe_self_project: Option<(&str, &str)>,
-	) -> Result<()> {
-		let mut commit_shas = vec![];
-
-		iterate_page_with(
-			&self.githubman,
-			ListCommitsBuilder::default()
+		list_pull_requests_args: &ArgMatches,
+	) -> Result<Vec<PullRequest>> {
+		let commit_shas = self
+			.list_commits(list_pull_requests_args)
+			.await?
+			.into_iter()
+			.map(|Commit { sha, .. }| sha)
+			.collect::<Vec<_>>();
+		let pull_requests = stream::iter(commit_shas.into_iter().map(|commit_sha| {
+			let githubman = self.githubman.clone();
+			let request = ListPullRequestsAssociatedWithACommitBuilder::default()
 				.owner(Self::OWNER)
 				.repo(Self::REPO)
-				.sha(list_migrations_args.value_of("sha").map(Into::into))
-				.path(list_migrations_args.value_of("path").map(Into::into))
-				.since(list_migrations_args.value_of("since").map(Into::into))
-				.until(list_migrations_args.value_of("until").map(Into::into))
+				.commit_sha(commit_sha)
 				.build()
-				.unwrap(),
-			|commits: Vec<Commit>| {
-				for Commit { sha, .. } in commits {
-					commit_shas.push(sha);
+				.unwrap();
+
+			async move {
+				loop {
+					match githubman.send(request.clone()).await {
+						Ok(mut response) => match response.json::<Vec<PullRequest>>() {
+							Ok(pull_requests) => return pull_requests,
+							Err(e) => eprintln!("Serialize Failed Due To: `{:?}`", e),
+						},
+						Err(e) => eprintln!("Request Failed Due To: `{:?}`", e),
+					}
 				}
-			},
-		)
-		.await?;
-
-		#[cfg(feature = "dbg")]
-		dbg!(&commit_shas);
-
-		let mut migrations = vec![];
-
-		for chunk in commit_shas.chunks(
-			list_migrations_args
+			}
+		}))
+		.buffer_unordered(
+			list_pull_requests_args
 				.value_of("thread")
 				.map(str::parse)
 				.unwrap_or(Ok(1))
 				.unwrap(),
-		) {
-			let mut handles = vec![];
-
-			for commit_sha in chunk.iter() {
-				let githubman = self.githubman.clone();
-				let request = ListPullRequestsAssociatedWithACommitBuilder::default()
-					.owner(Self::OWNER)
-					.repo(Self::REPO)
-					.commit_sha(commit_sha)
-					.build()
-					.unwrap();
-
-				handles.push(task::spawn(async move { githubman.send(request).await }));
-			}
-
-			for handle in handles {
-				let pull_requests: Vec<PullRequest> = handle.await?.json()?;
-
-				for pull_request in pull_requests {
-					if pull_request
-						.labels
-						.iter()
-						.any(|label| &label.name == "D1-runtime-migration")
-					{
-						migrations.push(pull_request);
-					}
-				}
-			}
-		}
+		)
+		.collect::<Vec<_>>()
+		.await
+		.into_iter()
+		.flatten()
+		.collect::<Vec<_>>();
 
 		#[cfg(feature = "dbg")]
-		dbg!(&migrations);
+		dbg!(&pull_requests);
 
-		if let Some((owner, repo)) = maybe_self_project {
+		if list_pull_requests_args.is_present("create-issue") {
 			let mut body = String::new();
 
 			for PullRequest {
@@ -182,30 +156,102 @@ impl Substrate {
 					login,
 					html_url: user_html_url,
 				},
+				body: pull_request_body,
 				merged_at,
+				labels,
 				..
-			} in migrations
+			} in &pull_requests
 			{
+				let migration = if labels
+					.iter()
+					.any(|label| &label.name == "D1-runtime-migration")
+				{
+					" - !!Contains Migration!!"
+				} else {
+					""
+				};
+				let pull_request_body = pull_request_body.replace('\n', "\n\t  ");
+				let pull_request_body = pull_request_body.trim_end();
+
 				body.push_str(&format!(
-					"- [ ] [**{}**]({})\n\t- by [**{}**]({}) merged at **{}**\n",
-					title, html_url, login, user_html_url, merged_at
+					"- [ ] [**{}**]({})\n\
+					\t- by [**{}**]({}) merged at **{}**\n\
+					\t- <details>\n\
+					\t  <summary>Details{}</summary>\n\
+					\t  {}\n\
+					\t  </details>\n",
+					title, html_url, login, user_html_url, merged_at, migration, pull_request_body
 				));
 			}
 
-			self.githubman
-				.send(
-					CreateAnIssueBuilder::default()
-						.owner(owner)
-						.repo(repo)
-						.title("Migrations")
-						.body(Some(body))
-						.build()
-						.unwrap(),
-				)
-				.await?;
+			create_an_issue(
+				&self.githubman,
+				&CONFIG.substrate_project_owner,
+				&CONFIG.substrate_project_repo,
+				"Updates",
+				body,
+			)
+			.await?;
 		}
 
-		Ok(())
+		Ok(pull_requests)
+	}
+
+	pub async fn list_migrations(
+		&self,
+		list_migrations_args: &ArgMatches,
+	) -> Result<Vec<PullRequest>> {
+		let mut pull_requests = self.list_pull_requests(list_migrations_args).await?;
+		pull_requests.retain(|pull_request| {
+			pull_request
+				.labels
+				.iter()
+				.any(|label| &label.name == "D1-runtime-migration")
+		});
+
+		#[cfg(feature = "dbg")]
+		dbg!(&pull_requests);
+
+		if list_migrations_args.is_present("create-issue") {
+			let mut body = String::new();
+
+			for PullRequest {
+				html_url,
+				title,
+				user: User {
+					login,
+					html_url: user_html_url,
+				},
+				body: pull_request_body,
+				merged_at,
+				..
+			} in &pull_requests
+			{
+				let pull_request_body = pull_request_body.replace('\n', "\n\t  ");
+				let pull_request_body = pull_request_body.trim_end();
+
+				body.push_str(&format!(
+					"- [ ] [**{}**]({})\n\
+					\t- by [**{}**]({}) merged at **{}**\n\
+					\t- <details>\n\
+					\t  <summary>Details</summary>\n\
+					\t  {}\n\
+					\t  </details>\n",
+					title, html_url, login, user_html_url, merged_at, pull_request_body
+				));
+			}
+
+			create_an_issue(
+				&self.githubman,
+				&CONFIG.substrate_project_owner,
+				&CONFIG.substrate_project_repo,
+				"Migrations",
+				body,
+			)
+			.await?;
+		}
+
+		Ok(pull_requests)
 	}
 }
 
@@ -236,4 +282,26 @@ where
 
 		f(ds);
 	}
+}
+
+async fn create_an_issue(
+	githubman: &Arc<Githubman>,
+	owner: impl Into<String>,
+	repo: impl Into<String>,
+	title: impl Into<String>,
+	body: impl Into<String>,
+) -> Result<()> {
+	githubman
+		.send(
+			CreateAnIssueBuilder::default()
+				.owner(owner.into())
+				.repo(repo.into())
+				.title(title.into())
+				.body(Some(body.into()))
+				.build()
+				.unwrap(),
+		)
+		.await?;
+
+	Ok(())
 }
