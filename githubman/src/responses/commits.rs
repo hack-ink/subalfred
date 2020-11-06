@@ -7,6 +7,15 @@ use crate::responses::{Label, User};
 pub struct Commit {
 	pub sha: String,
 	pub url: String,
+	pub commit: CommitDetail,
+}
+#[derive(Debug, Deserialize)]
+pub struct CommitDetail {
+	pub committer: Committer,
+}
+#[derive(Debug, Deserialize)]
+pub struct Committer {
+	pub date: String,
 }
 
 #[derive(Debug, Deserialize)]

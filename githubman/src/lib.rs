@@ -33,16 +33,12 @@ where
 	fn build_body(&self) -> B;
 
 	fn build_request(&self) -> IsahcRequest<B> {
-		let mut request_builder = RequestBuilder::new()
+		RequestBuilder::new()
 			.method(Self::HTTP_METHOD)
-			.uri(self.build_uri());
-
-		request_builder
-			.headers_mut()
+			.header(ACCEPT, Self::ACCEPT)
+			.uri(self.build_uri())
+			.body(self.build_body())
 			.unwrap()
-			.append(ACCEPT, Self::ACCEPT.parse().unwrap());
-
-		request_builder.body(self.build_body()).unwrap()
 	}
 
 	fn build_request_with_extra_queries(&self, extra_queries: impl AsRef<str>) -> IsahcRequest<B> {
@@ -52,14 +48,13 @@ where
 		} else {
 			format!("{}&{}", uri, extra_queries.as_ref())
 		};
-		let mut request_builder = RequestBuilder::new().method(Self::HTTP_METHOD).uri(uri);
 
-		request_builder
-			.headers_mut()
+		RequestBuilder::new()
+			.method(Self::HTTP_METHOD)
+			.header(ACCEPT, Self::ACCEPT)
+			.uri(uri)
+			.body(self.build_body())
 			.unwrap()
-			.append(ACCEPT, Self::ACCEPT.parse().unwrap());
-
-		request_builder.body(self.build_body()).unwrap()
 	}
 }
 

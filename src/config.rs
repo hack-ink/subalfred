@@ -83,8 +83,8 @@ br#"# You can use OAuth tokens to interact with GitHub via automated scripts.
 github-oauth-token: ""
 
 # Your substrate project `https://github.com/{owner}/{repo}`
-substrate-project-owner: "l2ust"
-substrate-project-repo: "test-githubman""#;
+substrate-project-owner: ""
+substrate-project-repo: """#;
 
 		let mut w = w;
 

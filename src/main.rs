@@ -22,7 +22,7 @@ const APP_INFO: AppInfo = AppInfo {
 };
 
 #[async_std::main]
-pub async fn main() -> Result<()> {
+async fn main() -> Result<()> {
 	let app = App::new(crate_name!())
 		.version(crate_version!())
 		.author(crate_authors!())
@@ -65,111 +65,15 @@ pub async fn main() -> Result<()> {
 				Arg::new("sha")
 					.long("sha")
 					.takes_value(true)
-					.value_name("BRANCH/HASH")
+					.value_name("BRANCH/SHA")
 					.about(
 						"SHA or branch to start listing commits from. \
 						Default: the repository’s default branch (usually master).",
 					),
 			),
 		)
-		.subcommand(
-			App::new("list-pull-requests")
-				.about("")
-				.arg(
-					Arg::new("thread")
-						.long("thread")
-						.takes_value(true)
-						.value_name("COUNT")
-						.about(""),
-				)
-				.arg(
-					Arg::new("sha")
-						.long("sha")
-						.value_name("BRANCH/HASH")
-						.takes_value(true),
-				)
-				.about(
-					"SHA or branch to start listing commits from.\
-					Default: the repository’s default branch (usually master).",
-				)
-				.arg(
-					Arg::new("path")
-						.long("path")
-						.takes_value(true)
-						.value_name("PATH")
-						.about("Only commits containing this file path will be returned."),
-				)
-				.arg(
-					Arg::new("since")
-						.long("since")
-						.takes_value(true)
-						.value_name("DATE")
-						.about(
-							"Only show notifications updated after the given time. \
-							This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.",
-						),
-				)
-				.arg(
-					Arg::new("until")
-						.long("until")
-						.takes_value(true)
-						.value_name("DATE")
-						.about(
-							"Only commits before this date will be returned. \
-							This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.",
-						),
-				)
-				.arg(Arg::new("create-issue").long("create-issue")),
-		)
-		.subcommand(
-			App::new("list-migrations")
-				.about("")
-				.arg(
-					Arg::new("thread")
-						.long("thread")
-						.takes_value(true)
-						.value_name("COUNT")
-						.about(""),
-				)
-				.arg(
-					Arg::new("sha")
-						.long("sha")
-						.value_name("BRANCH/HASH")
-						.takes_value(true),
-				)
-				.about(
-					"SHA or branch to start listing commits from.\
-					Default: the repository’s default branch (usually master).",
-				)
-				.arg(
-					Arg::new("path")
-						.long("path")
-						.takes_value(true)
-						.value_name("PATH")
-						.about("Only commits containing this file path will be returned."),
-				)
-				.arg(
-					Arg::new("since")
-						.long("since")
-						.takes_value(true)
-						.value_name("DATE")
-						.about(
-							"Only show notifications updated after the given time. \
-							This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.",
-						),
-				)
-				.arg(
-					Arg::new("until")
-						.long("until")
-						.takes_value(true)
-						.value_name("DATE")
-						.about(
-							"Only commits before this date will be returned. \
-							This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.",
-						),
-				)
-				.arg(Arg::new("create-issue").long("create-issue")),
-		);
+		.subcommand(list_app("list-pull-requests"))
+		.subcommand(list_app("list-migrations"));
 	let app_args = app.get_matches();
 	let githubman = Githubman::new(&CONFIG.github_oauth_token);
 	let substrate = Substrate {
@@ -201,4 +105,54 @@ pub async fn main() -> Result<()> {
 	}
 
 	Ok(())
+}
+
+fn list_app(name: &str) -> App {
+	App::new(name)
+		.about("")
+		.arg(
+			Arg::new("thread")
+				.long("thread")
+				.takes_value(true)
+				.value_name("COUNT")
+				.about(""),
+		)
+		.arg(
+			Arg::new("sha")
+				.long("sha")
+				.value_name("BRANCH/SHA")
+				.takes_value(true),
+		)
+		.about(
+			"SHA or branch to start listing commits from.\
+			Default: the repository’s default branch (usually master).",
+		)
+		.arg(
+			Arg::new("path")
+				.long("path")
+				.takes_value(true)
+				.value_name("PATH")
+				.about("Only commits containing this file path will be returned."),
+		)
+		.arg(
+			Arg::new("since")
+				.long("since")
+				.takes_value(true)
+				.value_name("DATE/SHA")
+				.about(
+					"Only show notifications updated after the given time. \
+					This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.",
+				),
+		)
+		.arg(
+			Arg::new("until")
+				.long("until")
+				.takes_value(true)
+				.value_name("DATE/SHA")
+				.about(
+					"Only commits before this date will be returned. \
+					This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.",
+				),
+		)
+		.arg(Arg::new("create-issue").long("create-issue"))
 }
