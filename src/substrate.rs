@@ -96,12 +96,16 @@ impl Substrate {
 				Ok(commit.commit.committer.date)
 			}
 		};
-		let since = list_commits_args
-			.value_of("since")
-			.map(|since| date_or_hash(since).unwrap_or(since.into()));
-		let until = list_commits_args
-			.value_of("until")
-			.map(|until| date_or_hash(until).unwrap_or(until.into()));
+		let since = if let Some(since) = list_commits_args.value_of("since") {
+			Some(date_or_hash(since)?)
+		} else {
+			None
+		};
+		let until = if let Some(until) = list_commits_args.value_of("until") {
+			Some(date_or_hash(until)?)
+		} else {
+			None
+		};
 
 		iterate_page_with(
 			&self.githubman,
