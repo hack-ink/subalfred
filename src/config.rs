@@ -91,11 +91,9 @@ substrate-project:
   repo: "repo"
   issue-repo: "issue-repo"
   local-full-path: "/path/to/project"
-  runtimes: [
-    runtime:
-      runtime-relative-paths: "/path/to/runtime/src/lib.rs"
+  runtimes:
+    - runtime-relative-path: "path/to/runtime/src/lib.rs"
       node-rpc-address: "http://127.0.0.1:9933"
-  ]
 "#;
 
 		let mut w = w;
