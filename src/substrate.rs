@@ -28,10 +28,10 @@ use githubman::{
 use crate::{config::CONFIG, Result};
 
 #[derive(Debug)]
-pub struct Substrate {
-	pub githubman: Arc<Githubman>,
+pub struct Substrate<'a> {
+	pub githubman: &'a Arc<Githubman>,
 }
-impl Substrate {
+impl<'a> Substrate<'a> {
 	pub const OWNER: &'static str = "paritytech";
 	pub const REPO: &'static str = "substrate";
 

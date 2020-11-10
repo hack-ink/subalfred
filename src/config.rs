@@ -92,7 +92,8 @@ substrate-project:
   issue-repo: "issue-repo"
   local-full-path: "/path/to/project"
   runtimes:
-    - runtime-relative-path: "path/to/runtime/src/lib.rs"
+    - branch: main
+      runtime-relative-path: "path/to/runtime/src/lib.rs"
       node-rpc-address: "http://127.0.0.1:9933"
 "#;
 

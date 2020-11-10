@@ -9,7 +9,7 @@ macro_rules! uri {
 		} else {
 			format!("{}?{}", api, queries)
 		}
-	}}
+	}};
 }
 
 #[macro_export]
@@ -20,10 +20,16 @@ macro_rules! api {
 			$crate::Githubman::API_BASE_URL,
 			Self::PATH
 				$($(
-					.replace(&format!("{{{}}}", stringify!($path_part)), &$self.$path_part)
+					.replace($crate::api!($self, $path_part), &$self.$path_part)
 				)+)?
 		)
-	}}
+	}};
+	($self:ident, r#ref) => {
+		"{ref}"
+	};
+	($self:ident, $path_part:ident) => {
+		&format!("{{{}}}", stringify!($path_part))
+	};
 }
 
 #[macro_export]
@@ -33,11 +39,19 @@ macro_rules! queries {
 		let mut queries = ::std::string::String::new();
 
 		$($(
-			if let Some($query) = &$self.$query {
-				queries.push_str(&format!("{}={}&", stringify!($query), $query));
-				}
+			$crate::queries!($self, $query, queries);
 		)+)?
 
 		queries.trim_end_matches('&').to_owned()
 	}};
+	($self:ident, r#ref, $queries:expr) => {
+		if let Some(r#ref) = &$self.r#ref {
+			$queries.push_str(&format!("ref={}&", r#ref));
+			}
+	};
+	($self:ident, $query:ident, $queries:expr) => {
+		if let Some($query) = &$self.$query {
+			$queries.push_str(&format!("{}={}&", stringify!($query), $query));
+			}
+	};
 }

@@ -23,30 +23,6 @@ const APP_INFO: AppInfo = AppInfo {
 
 #[async_std::main]
 async fn main() -> Result<()> {
-	println!(
-		"{}",
-		serde_yaml::to_string(&config::Config {
-			github_oauth_token: "".to_string(),
-			substrate_project: config::SubstrateProject {
-				owner: "".to_string(),
-				repo: "".to_string(),
-				issue_repo: "".to_string(),
-				local_full_path: "".to_string(),
-				runtimes: vec![
-					config::Runtime {
-						runtime_relative_path: "".to_string(),
-						node_rpc_address: "".to_string(),
-					},
-					config::Runtime {
-						runtime_relative_path: "".to_string(),
-						node_rpc_address: "".to_string(),
-					}
-				]
-			}
-		})
-		.unwrap()
-	);
-
 	let app = App::new(crate_name!())
 		.version(crate_version!())
 		.author(crate_authors!())
@@ -95,9 +71,9 @@ async fn main() -> Result<()> {
 		)
 		.subcommand(App::new("check-runtime-version").about(""));
 	let app_args = app.get_matches();
-	let githubman = Githubman::new(&CONFIG.github_oauth_token);
+	let githubman = Arc::new(Githubman::new(&CONFIG.github_oauth_token));
 	let substrate = Substrate {
-		githubman: Arc::new(githubman),
+		githubman: &githubman,
 	};
 
 	if let Some(_) = app_args.subcommand_matches("list-repository-tags") {
@@ -123,7 +99,7 @@ async fn main() -> Result<()> {
 		)
 		.await?;
 	} else if let Some(_) = app_args.subcommand_matches("check-runtime-version") {
-		node::check_runtime_version().await?;
+		node::check_runtime_version(&githubman).await?;
 	}
 
 	Ok(())

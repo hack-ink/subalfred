@@ -1,6 +1,8 @@
 // --- std ---
 use std::{fs::File, io::Read};
 // --- crates.io ---
+use async_std::sync::Arc;
+use githubman::Githubman;
 use isahc::{
 	http::{header::CONTENT_TYPE, request::Builder as RequestBuilder, Method as HttpMethod},
 	ResponseExt,
@@ -60,7 +62,7 @@ pub async fn send_rpc(
 	Ok(result)
 }
 
-pub async fn check_runtime_version() -> Result<()> {
+pub async fn check_runtime_version(githubman: &Arc<Githubman>) -> Result<()> {
 	for Runtime {
 		runtime_relative_path,
 		node_rpc_address,
@@ -76,8 +78,11 @@ pub async fn check_runtime_version() -> Result<()> {
 			.result,
 		)
 		.unwrap();
+
 		#[cfg(feature = "dbg")]
 		dbg!(runtime_version);
+
+		// let s = githubman.send(request).await?.text().unwrap();
 
 		let mut f = File::open(&format!(
 			"{}/{}",
@@ -94,42 +99,51 @@ pub async fn check_runtime_version() -> Result<()> {
 }
 
 fn extract_runtime_version(s: &str) {
+	let extract_name = |s| format!(r#"{} *?: *?create_runtime_str! *?\("(.+?)"\)"#, s);
+	let extract_version = |s| format!(r#"{} *?: *?(\d+)"#, s);
+
 	let re = regex::Regex::new(
 		r#"pub +?const +?VERSION *?: +?RuntimeVersion +?= +?RuntimeVersion +?\{(?s)(.+?)\}"#,
 	)
 	.unwrap();
-	let cap = &re.captures(&s).unwrap();
-	let s = &cap[0];
-	let extract_name = |s| format!(r#"{} *?: *?create_runtime_str! *?\("(.+?)"\)"#, s);
-	let extract_version = |s| format!(r#"{} *?: *?(\d+)"#, s);
+	let s = &re.captures(&s).unwrap()[0];
+
+	#[cfg(feature = "dbg")]
+	dbg!(s);
 
 	let re = regex::Regex::new(&extract_name("spec_name")).unwrap();
 	let spec_name = &re.captures(&s).unwrap()[1];
+
 	#[cfg(feature = "dbg")]
 	dbg!(spec_name);
 
 	let re = regex::Regex::new(&extract_name("impl_name")).unwrap();
 	let impl_name = &re.captures(&s).unwrap()[1];
+
 	#[cfg(feature = "dbg")]
 	dbg!(impl_name);
 
 	let re = regex::Regex::new(&extract_version("authoring_version")).unwrap();
 	let authoring_version = &re.captures(&s).unwrap()[1];
+
 	#[cfg(feature = "dbg")]
 	dbg!(authoring_version);
 
 	let re = regex::Regex::new(&extract_version("spec_version")).unwrap();
 	let spec_version = &re.captures(&s).unwrap()[1];
+
 	#[cfg(feature = "dbg")]
 	dbg!(spec_version);
 
 	let re = regex::Regex::new(&extract_version("impl_version")).unwrap();
 	let impl_version = &re.captures(&s).unwrap()[1];
+
 	#[cfg(feature = "dbg")]
 	dbg!(impl_version);
 
 	let re = regex::Regex::new(&extract_version("transaction_version")).unwrap();
 	let transaction_version = &re.captures(&s).unwrap()[1];
+
 	#[cfg(feature = "dbg")]
 	dbg!(transaction_version);
 }
