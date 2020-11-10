@@ -23,10 +23,50 @@ const APP_INFO: AppInfo = AppInfo {
 
 #[async_std::main]
 async fn main() -> Result<()> {
+	println!(
+		"{}",
+		serde_yaml::to_string(&config::Config {
+			github_oauth_token: "".to_string(),
+			substrate_project: config::SubstrateProject {
+				owner: "".to_string(),
+				repo: "".to_string(),
+				issue_repo: "".to_string(),
+				local_full_path: "".to_string(),
+				runtimes: vec![
+					config::Runtime {
+						runtime_relative_path: "".to_string(),
+						node_rpc_address: "".to_string(),
+					},
+					config::Runtime {
+						runtime_relative_path: "".to_string(),
+						node_rpc_address: "".to_string(),
+					}
+				]
+			}
+		})
+		.unwrap()
+	);
+
 	let app = App::new(crate_name!())
 		.version(crate_version!())
 		.author(crate_authors!())
 		.about(crate_description!())
+		.subcommand(App::new("list-repository-tags").about(""))
+		.subcommand(App::new("list-releases").about(""))
+		.subcommand(
+			App::new("list-commits").about("").arg(
+				Arg::new("sha")
+					.long("sha")
+					.takes_value(true)
+					.value_name("BRANCH/SHA")
+					.about(
+						"SHA or branch to start listing commits from. \
+						Default: the repository’s default branch (usually master).",
+					),
+			),
+		)
+		.subcommand(list_app("list-pull-requests"))
+		.subcommand(list_app("list-migrations"))
 		.subcommand(
 			App::new("send-rpc")
 				.about("")
@@ -43,11 +83,6 @@ async fn main() -> Result<()> {
 						.required(true)
 						.takes_value(true)
 						.value_name("METHOD")
-						.possible_values(&[
-							"author_rotateKeys",
-							"author_insertKey",
-							"grandpa_roundState",
-						])
 						.about(""),
 				)
 				.arg(
@@ -58,38 +93,14 @@ async fn main() -> Result<()> {
 						.about(""),
 				),
 		)
-		.subcommand(App::new("list-repository-tags").about(""))
-		.subcommand(App::new("list-releases").about(""))
-		.subcommand(
-			App::new("list-commits").about("").arg(
-				Arg::new("sha")
-					.long("sha")
-					.takes_value(true)
-					.value_name("BRANCH/SHA")
-					.about(
-						"SHA or branch to start listing commits from. \
-						Default: the repository’s default branch (usually master).",
-					),
-			),
-		)
-		.subcommand(list_app("list-pull-requests"))
-		.subcommand(list_app("list-migrations"));
+		.subcommand(App::new("check-runtime-version").about(""));
 	let app_args = app.get_matches();
 	let githubman = Githubman::new(&CONFIG.github_oauth_token);
 	let substrate = Substrate {
 		githubman: Arc::new(githubman),
 	};
 
-	if let Some(send_rpc) = app_args.subcommand_matches("send-rpc") {
-		node::send_rpc(
-			send_rpc
-				.value_of("address")
-				.unwrap_or("http://127.0.0.1:9933"),
-			send_rpc.value_of("method").unwrap(),
-			serde_json::from_str(send_rpc.value_of("params").unwrap_or("[]"))?,
-		)
-		.await?;
-	} else if let Some(_) = app_args.subcommand_matches("list-repository-tags") {
+	if let Some(_) = app_args.subcommand_matches("list-repository-tags") {
 		substrate.list_repository_tags().await?;
 	} else if let Some(_) = app_args.subcommand_matches("list-releases") {
 		substrate.list_releases().await?;
@@ -102,6 +113,17 @@ async fn main() -> Result<()> {
 			.await?;
 	} else if let Some(list_migrations_args) = app_args.subcommand_matches("list-migrations") {
 		substrate.list_migrations(list_migrations_args).await?;
+	} else if let Some(send_rpc_args) = app_args.subcommand_matches("send-rpc") {
+		node::send_rpc(
+			send_rpc_args
+				.value_of("address")
+				.unwrap_or("http://127.0.0.1:9933"),
+			send_rpc_args.value_of("method").unwrap(),
+			serde_json::from_str(send_rpc_args.value_of("params").unwrap_or("[]"))?,
+		)
+		.await?;
+	} else if let Some(_) = app_args.subcommand_matches("check-runtime-version") {
+		node::check_runtime_version().await?;
 	}
 
 	Ok(())

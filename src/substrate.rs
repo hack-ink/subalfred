@@ -172,7 +172,7 @@ impl Substrate {
 		.flatten()
 		.collect::<Vec<_>>();
 
-		pull_requests.sort_by(|a, b| a.merged_at.cmp(&b.merged_at));
+		pull_requests.sort_by(|a, b| b.merged_at.cmp(&a.merged_at));
 
 		#[cfg(feature = "dbg")]
 		dbg!(&pull_requests);
@@ -217,8 +217,8 @@ impl Substrate {
 
 			create_an_issue(
 				&self.githubman,
-				&CONFIG.substrate_project_owner,
-				&CONFIG.substrate_project_repo,
+				&CONFIG.substrate_project.owner,
+				&CONFIG.substrate_project.issue_repo,
 				"Updates",
 				body,
 			)
@@ -274,8 +274,8 @@ impl Substrate {
 
 			create_an_issue(
 				&self.githubman,
-				&CONFIG.substrate_project_owner,
-				&CONFIG.substrate_project_repo,
+				&CONFIG.substrate_project.owner,
+				&CONFIG.substrate_project.issue_repo,
 				"Migrations",
 				body,
 			)
