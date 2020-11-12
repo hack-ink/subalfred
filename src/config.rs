@@ -5,20 +5,17 @@ use std::{
 };
 // --- crates.io ---
 use app_dirs2::{get_app_root, AppDataType};
-use lazy_static::lazy_static;
+use async_std::sync::Arc;
+use githubman::Githubman;
 use serde::{Deserialize, Serialize};
 // --- subalfred ---
-use crate::{Result, APP_INFO};
-
-lazy_static! {
-	pub static ref CONFIG: Config = Config::load_config();
-}
+use crate::{Error, Result, Subalfred, APP_INFO};
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct Config {
 	pub github_oauth_token: String,
-	pub substrate_project: SubstrateProject,
+	pub substrate_project: Project,
 }
 impl Config {
 	pub fn load_config() -> Self {
@@ -100,13 +97,15 @@ substrate-project:
 		let mut w = w;
 
 		w.write_all(TEMPLATE)?;
-		w.flush().map_err(Into::into)
+		w.flush().map_err(Error::from)?;
+
+		Ok(())
 	}
 }
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
-pub struct SubstrateProject {
+pub struct Project {
 	pub owner: String,
 	pub repo: String,
 	pub issue_repo: String,
@@ -119,4 +118,18 @@ pub struct SubstrateProject {
 pub struct Runtime {
 	pub runtime_relative_path: String,
 	pub node_rpc_address: String,
+}
+
+impl Subalfred {
+	pub fn init() -> Self {
+		let Config {
+			github_oauth_token,
+			substrate_project,
+		} = Config::load_config();
+
+		Self {
+			githubman: Arc::new(Githubman::new(github_oauth_token)),
+			project: substrate_project,
+		}
+	}
 }

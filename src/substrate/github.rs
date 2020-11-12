@@ -25,54 +25,48 @@ use githubman::{
 	GithubApi, Githubman,
 };
 // --- subalfred ---
-use crate::{config::CONFIG, Result};
+use crate::{Result, Subalfred};
 
-#[derive(Debug)]
-pub struct Substrate<'a> {
-	pub githubman: &'a Arc<Githubman>,
-}
-impl<'a> Substrate<'a> {
-	pub const OWNER: &'static str = "paritytech";
-	pub const REPO: &'static str = "substrate";
+impl Subalfred {
+	pub const SUBSTRATE_GITHUB_OWNER: &'static str = "paritytech";
+	pub const SUBSTRATE_GITHUB_REPO: &'static str = "substrate";
 
-	pub async fn list_repository_tags(&self) -> Result<()> {
+	pub async fn list_repository_tags(&self) -> Result<Vec<Tag>> {
 		let mut tags = vec![];
 
 		iterate_page_with(
 			&self.githubman,
 			ListRepositoryTagsBuilder::default()
-				.owner(Self::OWNER)
-				.repo(Self::REPO)
+				.owner(Self::SUBSTRATE_GITHUB_OWNER)
+				.repo(Self::SUBSTRATE_GITHUB_REPO)
 				.build()
 				.unwrap(),
 			|mut tags_: Vec<Tag>| tags.append(&mut tags_),
 		)
 		.await?;
 
-		#[cfg(feature = "dbg")]
-		dbg!(tags);
+		log::trace!(target: "tags", "{:#?}", tags);
 
-		Ok(())
+		Ok(tags)
 	}
 
-	pub async fn list_releases(&self) -> Result<()> {
+	pub async fn list_releases(&self) -> Result<Vec<Release>> {
 		let mut releases = vec![];
 
 		iterate_page_with(
 			&self.githubman,
 			ListReleasesBuilder::default()
-				.owner(Self::OWNER)
-				.repo(Self::REPO)
+				.owner(Self::SUBSTRATE_GITHUB_OWNER)
+				.repo(Self::SUBSTRATE_GITHUB_REPO)
 				.build()
 				.unwrap(),
 			|mut releases_: Vec<Release>| releases.append(&mut releases_),
 		)
 		.await?;
 
-		#[cfg(feature = "dbg")]
-		dbg!(releases);
+		log::trace!(target: "releases", "{:#?}", releases);
 
-		Ok(())
+		Ok(releases)
 	}
 
 	pub async fn list_commits(&self, list_commits_args: &ArgMatches) -> Result<Vec<Commit>> {
@@ -84,8 +78,8 @@ impl<'a> Substrate<'a> {
 				let commit: Commit = block_on(
 					self.githubman.send(
 						GetACommitBuilder::default()
-							.owner(Self::OWNER)
-							.repo(Self::REPO)
+							.owner(Self::SUBSTRATE_GITHUB_OWNER)
+							.repo(Self::SUBSTRATE_GITHUB_REPO)
 							.r#ref(date_or_hash)
 							.build()
 							.unwrap(),
@@ -110,8 +104,8 @@ impl<'a> Substrate<'a> {
 		iterate_page_with(
 			&self.githubman,
 			ListCommitsBuilder::default()
-				.owner(Self::OWNER)
-				.repo(Self::REPO)
+				.owner(Self::SUBSTRATE_GITHUB_OWNER)
+				.repo(Self::SUBSTRATE_GITHUB_REPO)
 				.sha(list_commits_args.value_of("sha").map(Into::into))
 				.path(list_commits_args.value_of("path").map(Into::into))
 				.since(since)
@@ -122,8 +116,7 @@ impl<'a> Substrate<'a> {
 		)
 		.await?;
 
-		#[cfg(feature = "dbg")]
-		dbg!(&commits);
+		log::trace!(target: "commits", "{:#?}", commits);
 
 		Ok(commits)
 	}
@@ -141,8 +134,8 @@ impl<'a> Substrate<'a> {
 		let mut pull_requests = stream::iter(commit_shas.into_iter().map(|commit_sha| {
 			let githubman = self.githubman.clone();
 			let request = ListPullRequestsAssociatedWithACommitBuilder::default()
-				.owner(Self::OWNER)
-				.repo(Self::REPO)
+				.owner(Self::SUBSTRATE_GITHUB_OWNER)
+				.repo(Self::SUBSTRATE_GITHUB_REPO)
 				.commit_sha(commit_sha)
 				.build()
 				.unwrap();
@@ -174,8 +167,7 @@ impl<'a> Substrate<'a> {
 
 		pull_requests.sort_by(|a, b| b.merged_at.cmp(&a.merged_at));
 
-		#[cfg(feature = "dbg")]
-		dbg!(&pull_requests);
+		log::trace!(target: "pull-requests", "{:#?}", pull_requests);
 
 		if list_pull_requests_args.is_present("create-issue") {
 			let mut body = String::new();
@@ -217,8 +209,8 @@ impl<'a> Substrate<'a> {
 
 			create_an_issue(
 				&self.githubman,
-				&CONFIG.substrate_project.owner,
-				&CONFIG.substrate_project.issue_repo,
+				&self.project.owner,
+				&self.project.issue_repo,
 				"Updates",
 				body,
 			)
@@ -240,8 +232,7 @@ impl<'a> Substrate<'a> {
 				.any(|label| &label.name == "D1-runtime-migration")
 		});
 
-		#[cfg(feature = "dbg")]
-		dbg!(&pull_requests);
+		log::trace!(target: "migrations", "{:#?}", pull_requests);
 
 		if list_migrations_args.is_present("create-issue") {
 			let mut body = String::new();
@@ -274,8 +265,8 @@ impl<'a> Substrate<'a> {
 
 			create_an_issue(
 				&self.githubman,
-				&CONFIG.substrate_project.owner,
-				&CONFIG.substrate_project.issue_repo,
+				&self.project.owner,
+				&self.project.issue_repo,
 				"Migrations",
 				body,
 			)

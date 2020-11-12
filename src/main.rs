@@ -4,14 +4,15 @@ pub mod config;
 pub mod node;
 pub mod substrate;
 
+// --- std ---
+use std::env;
 // --- crates.io ---
 use app_dirs2::AppInfo;
 use async_std::sync::Arc;
 use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg};
 use githubman::Githubman;
 // --- subalfred ---
-use config::CONFIG;
-use substrate::Substrate;
+use crate::config::Project;
 
 type Error = Box<dyn std::error::Error>;
 type Result<T> = ::std::result::Result<T, Error>;
@@ -27,6 +28,15 @@ async fn main() -> Result<()> {
 		.version(crate_version!())
 		.author(crate_authors!())
 		.about(crate_description!())
+		.arg(
+			Arg::new("log")
+				.long("long")
+				.short('l')
+				.takes_value(true)
+				.value_name("TARGET")
+				.global(true)
+				.about(""),
+		)
 		.subcommand(App::new("list-repository-tags").about(""))
 		.subcommand(App::new("list-releases").about(""))
 		.subcommand(
@@ -45,7 +55,6 @@ async fn main() -> Result<()> {
 		.subcommand(list_app("list-migrations"))
 		.subcommand(
 			App::new("send-rpc")
-				.about("")
 				.arg(
 					Arg::new("address")
 						.long("address")
@@ -67,30 +76,36 @@ async fn main() -> Result<()> {
 						.takes_value(true)
 						.value_name("[PARAM]")
 						.about(""),
-				),
+				)
+				.about(""),
 		)
 		.subcommand(App::new("check-runtime-version").about(""));
 	let app_args = app.get_matches();
-	let githubman = Arc::new(Githubman::new(&CONFIG.github_oauth_token));
-	let substrate = Substrate {
-		githubman: &githubman,
-	};
+	let subalfred = Subalfred::init();
+
+	if let Some(logs) = app_args.values_of("log") {
+		for log in logs {
+			env::set_var("RUST_LOG", log);
+		}
+
+		pretty_env_logger::init();
+	}
 
 	if let Some(_) = app_args.subcommand_matches("list-repository-tags") {
-		substrate.list_repository_tags().await?;
+		subalfred.list_repository_tags().await?;
 	} else if let Some(_) = app_args.subcommand_matches("list-releases") {
-		substrate.list_releases().await?;
+		subalfred.list_releases().await?;
 	} else if let Some(list_commits_args) = app_args.subcommand_matches("list-commits") {
-		substrate.list_commits(list_commits_args).await?;
+		subalfred.list_commits(list_commits_args).await?;
 	} else if let Some(list_pull_requests_args) = app_args.subcommand_matches("list-pull-requests")
 	{
-		substrate
+		subalfred
 			.list_pull_requests(list_pull_requests_args)
 			.await?;
 	} else if let Some(list_migrations_args) = app_args.subcommand_matches("list-migrations") {
-		substrate.list_migrations(list_migrations_args).await?;
+		subalfred.list_migrations(list_migrations_args).await?;
 	} else if let Some(send_rpc_args) = app_args.subcommand_matches("send-rpc") {
-		node::send_rpc(
+		Subalfred::send_rpc(
 			send_rpc_args
 				.value_of("address")
 				.unwrap_or("http://127.0.0.1:9933"),
@@ -99,7 +114,7 @@ async fn main() -> Result<()> {
 		)
 		.await?;
 	} else if let Some(_) = app_args.subcommand_matches("check-runtime-version") {
-		node::check_runtime_version(&githubman).await?;
+		subalfred.check_runtime_version().await?;
 	}
 
 	Ok(())
@@ -153,4 +168,9 @@ fn list_app(name: &str) -> App {
 				),
 		)
 		.arg(Arg::new("create-issue").long("create-issue"))
+}
+
+struct Subalfred {
+	githubman: Arc<Githubman>,
+	project: Project,
 }

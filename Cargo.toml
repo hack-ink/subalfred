@@ -16,22 +16,20 @@ path = "src/main.rs"
 [badges]
 maintenance = { status = "actively-developed" }
 
-[features]
-dbg = ["githubman/dbg"]
-
 [dependencies]
-app_dirs2   = { version = "2.3.0" }
-async-std   = { version = "1.7.0", features = ["attributes"] }
-clap        = { version = "3.0.0-beta.2" }
-futures     = { version = "0.3.8" }
-githubman   = { version = "0.1.0", path = "githubman" }
-isahc       = { version = "0.9.11", features = ["json"] }
-lazy_static = { version = "1.4.0" }
-regex       = { version = "1.4.2" }
-serde       = { version = "1.0.117" }
-serde_json  = { version = "1.0.59" }
-serde_yaml  = { version = "0.8.14" }
-toml        = { version = "0.5.7" }
+app_dirs2         = { version = "2.3.0" }
+async-std         = { version = "1.7.0", features = ["attributes"] }
+clap              = { version = "3.0.0-beta.2" }
+futures           = { version = "0.3.8" }
+githubman         = { version = "0.1.0", path = "githubman" }
+isahc             = { version = "0.9.12", features = ["json"] }
+log               = { version = "0.4.11" }
+pretty_env_logger = { version = "0.4.0" }
+regex             = { version = "1.4.2" }
+serde             = { version = "1.0.117" }
+serde_json        = { version = "1.0.59" }
+serde_yaml        = { version = "0.8.14" }
+toml              = { version = "0.5.7" }
 
 [workspace]
 members = ["githubman"]

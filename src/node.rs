@@ -1,149 +1,146 @@
 // --- std ---
-use std::{fs::File, io::Read};
+use std::{fmt::Debug, fs::File, io::Read};
 // --- crates.io ---
-use async_std::sync::Arc;
-use githubman::Githubman;
 use isahc::{
 	http::{header::CONTENT_TYPE, request::Builder as RequestBuilder, Method as HttpMethod},
 	ResponseExt,
 };
-use serde::Deserialize;
+use serde::{de::DeserializeOwned, Deserialize};
 use serde_json::{json, Value};
 // --- subalfred ---
-use crate::{
-	config::{Runtime, CONFIG},
-	Result,
-};
+use crate::{config::Runtime, Result, Subalfred};
 
 #[derive(Debug, Deserialize)]
 pub struct RpcResult {
-	pub id: u32,
-	pub jsonrpc: String,
 	pub result: Value,
+}
+impl RpcResult {
+	pub fn into_inner<T: DeserializeOwned>(self) -> T {
+		serde_json::from_value(self.result).unwrap()
+	}
 }
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RuntimeVersion {
-	pub authoring_version: u32,
-	pub impl_name: String,
-	pub impl_version: u32,
 	pub spec_name: String,
+	pub impl_name: String,
+	pub authoring_version: u32,
 	pub spec_version: u32,
+	pub impl_version: u32,
 	pub transaction_version: u32,
 }
 
-pub async fn send_rpc(
-	address: impl AsRef<str>,
-	method: impl AsRef<str>,
-	params: Value,
-) -> Result<RpcResult> {
-	let mut request_builder = RequestBuilder::new()
-		.method(HttpMethod::POST)
-		.uri(address.as_ref());
+impl Subalfred {
+	pub async fn send_rpc(
+		address: impl AsRef<str>,
+		method: impl AsRef<str>,
+		params: Value,
+	) -> Result<RpcResult> {
+		let mut request_builder = RequestBuilder::new()
+			.method(HttpMethod::POST)
+			.uri(address.as_ref());
 
-	request_builder.headers_mut().unwrap().append(
-		CONTENT_TYPE,
-		"application/json;charset=utf-8".parse().unwrap(),
-	);
+		request_builder.headers_mut().unwrap().append(
+			CONTENT_TYPE,
+			"application/json;charset=utf-8".parse().unwrap(),
+		);
 
-	let body = json!({
-		"jsonrpc": "2.0",
-		"id": 1,
-		"method": method.as_ref(),
-		"params": params
-	});
-	let request = request_builder.body(body.to_string()).unwrap();
-	let result: RpcResult = isahc::send_async(request).await?.json()?;
+		let body = json!({
+			"jsonrpc": "2.0",
+			"id": 1,
+			"method": method.as_ref(),
+			"params": params
+		});
+		let request = request_builder.body(body.to_string()).unwrap();
+		let result = isahc::send_async(request).await?.json::<RpcResult>()?;
 
-	#[cfg(feature = "dbg")]
-	dbg!(&result);
+		log::trace!(target: "rpc-result", "{:#?}", result);
 
-	Ok(result)
-}
-
-pub async fn check_runtime_version(githubman: &Arc<Githubman>) -> Result<()> {
-	for Runtime {
-		runtime_relative_path,
-		node_rpc_address,
-	} in &CONFIG.substrate_project.runtimes
-	{
-		let runtime_version = serde_json::to_string_pretty(
-			&send_rpc(
-				node_rpc_address,
-				"state_getRuntimeVersion",
-				serde_json::from_str("[]").unwrap(),
-			)
-			.await?
-			.result,
-		)
-		.unwrap();
-
-		#[cfg(feature = "dbg")]
-		dbg!(runtime_version);
-
-		// let s = githubman.send(request).await?.text().unwrap();
-
-		let mut f = File::open(&format!(
-			"{}/{}",
-			&CONFIG.substrate_project.local_full_path, runtime_relative_path
-		))
-		.unwrap();
-		let mut s = String::new();
-
-		f.read_to_string(&mut s).unwrap();
-		extract_runtime_version(&s);
+		Ok(result)
 	}
 
-	Ok(())
+	pub async fn check_runtime_version(&self) -> Result<()> {
+		for Runtime {
+			runtime_relative_path,
+			node_rpc_address,
+		} in &self.project.runtimes
+		{
+			let runtime_version = serde_json::to_string_pretty(
+				&Self::send_rpc(
+					node_rpc_address,
+					"state_getRuntimeVersion",
+					serde_json::from_str("[]").unwrap(),
+				)
+				.await?
+				.result,
+			)
+			.unwrap();
+
+			// let s = githubman.send(request).await?.text().unwrap();
+
+			let mut f = File::open(&format!(
+				"{}/{}",
+				&self.project.local_full_path, runtime_relative_path
+			))
+			.unwrap();
+			let mut s = String::new();
+
+			f.read_to_string(&mut s).unwrap();
+			extract_runtime_version(&s);
+		}
+
+		Ok(())
+	}
 }
 
-fn extract_runtime_version(s: &str) {
+fn extract_runtime_version(s: &str) -> RuntimeVersion {
 	let extract_name = |s| format!(r#"{} *?: *?create_runtime_str! *?\("(.+?)"\)"#, s);
 	let extract_version = |s| format!(r#"{} *?: *?(\d+)"#, s);
 
-	let re = regex::Regex::new(
+	let runtime_version_extractor = regex::Regex::new(
 		r#"pub +?const +?VERSION *?: +?RuntimeVersion +?= +?RuntimeVersion +?\{(?s)(.+?)\}"#,
 	)
 	.unwrap();
-	let s = &re.captures(&s).unwrap()[0];
+	let spec_name_extractor = regex::Regex::new(&extract_name("spec_name")).unwrap();
+	let impl_name_extractor = regex::Regex::new(&extract_name("impl_name")).unwrap();
+	let authoring_version_extractor =
+		regex::Regex::new(&extract_version("authoring_version")).unwrap();
+	let spec_version_extractor = regex::Regex::new(&extract_version("spec_version")).unwrap();
+	let impl_version_extractor = regex::Regex::new(&extract_version("impl_version")).unwrap();
+	let transaction_version_extractor =
+		regex::Regex::new(&extract_version("transaction_version")).unwrap();
 
-	#[cfg(feature = "dbg")]
-	dbg!(s);
+	let runtime_version = &runtime_version_extractor.captures(&s).unwrap()[0];
+	let spec_name = spec_name_extractor.captures(&runtime_version).unwrap()[1].to_string();
+	let impl_name = impl_name_extractor.captures(&runtime_version).unwrap()[1].to_string();
+	let authoring_version = authoring_version_extractor
+		.captures(&runtime_version)
+		.unwrap()[1]
+		.parse()
+		.unwrap();
+	let spec_version = spec_version_extractor.captures(&runtime_version).unwrap()[1]
+		.parse()
+		.unwrap();
+	let impl_version = impl_version_extractor.captures(&runtime_version).unwrap()[1]
+		.parse()
+		.unwrap();
+	let transaction_version = transaction_version_extractor
+		.captures(&runtime_version)
+		.unwrap()[1]
+		.parse()
+		.unwrap();
 
-	let re = regex::Regex::new(&extract_name("spec_name")).unwrap();
-	let spec_name = &re.captures(&s).unwrap()[1];
+	let runtime_version = RuntimeVersion {
+		spec_name,
+		impl_name,
+		authoring_version,
+		spec_version,
+		impl_version,
+		transaction_version,
+	};
 
-	#[cfg(feature = "dbg")]
-	dbg!(spec_name);
+	log::trace!(target: "runtime-version", "{:#?}", runtime_version);
 
-	let re = regex::Regex::new(&extract_name("impl_name")).unwrap();
-	let impl_name = &re.captures(&s).unwrap()[1];
-
-	#[cfg(feature = "dbg")]
-	dbg!(impl_name);
-
-	let re = regex::Regex::new(&extract_version("authoring_version")).unwrap();
-	let authoring_version = &re.captures(&s).unwrap()[1];
-
-	#[cfg(feature = "dbg")]
-	dbg!(authoring_version);
-
-	let re = regex::Regex::new(&extract_version("spec_version")).unwrap();
-	let spec_version = &re.captures(&s).unwrap()[1];
-
-	#[cfg(feature = "dbg")]
-	dbg!(spec_version);
-
-	let re = regex::Regex::new(&extract_version("impl_version")).unwrap();
-	let impl_version = &re.captures(&s).unwrap()[1];
-
-	#[cfg(feature = "dbg")]
-	dbg!(impl_version);
-
-	let re = regex::Regex::new(&extract_version("transaction_version")).unwrap();
-	let transaction_version = &re.captures(&s).unwrap()[1];
-
-	#[cfg(feature = "dbg")]
-	dbg!(transaction_version);
+	runtime_version
 }

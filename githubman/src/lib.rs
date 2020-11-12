@@ -65,9 +65,9 @@ pub struct Githubman {
 impl Githubman {
 	pub const API_BASE_URL: &'static str = "https://api.github.com";
 
-	pub fn new(oauth_token: &str) -> Self {
+	pub fn new(oauth_token: impl AsRef<str>) -> Self {
 		let http_client = HttpClientBuilder::new()
-			.default_header("Authorization", &format!("token {}", oauth_token))
+			.default_header("Authorization", &format!("token {}", oauth_token.as_ref()))
 			.build()
 			.unwrap();
 
@@ -80,8 +80,7 @@ impl Githubman {
 	{
 		let request = request.build_request();
 
-		#[cfg(feature = "dbg")]
-		dbg!(request.uri());
+		log::trace!(target: "uri", "{}", request.uri());
 
 		self.http_client.send_async(request).await
 	}
@@ -96,8 +95,7 @@ impl Githubman {
 	{
 		let request = request.build_request_with_extra_queries(pager.query());
 
-		#[cfg(feature = "dbg")]
-		dbg!(request.uri());
+		log::trace!(target: "uri", "{}", request.uri());
 
 		pager.page += 1;
 

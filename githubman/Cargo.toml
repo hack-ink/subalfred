@@ -12,11 +12,9 @@ version     = "0.1.0"
 [badges]
 maintenance = { status = "actively-developed" }
 
-[features]
-dbg = []
-
 [dependencies]
 derive_builder = { version = "0.9.0" }
-isahc          = { version = "0.9.11" }
+isahc          = { version = "0.9.12" }
+log            = { version = "0.4.11" }
 serde          = { version = "1.0.117", features = ["derive"] }
 serde_json     = { version = "1.0.59" }
