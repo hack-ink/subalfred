@@ -77,8 +77,6 @@ impl Subalfred {
 			)
 			.unwrap();
 
-			// let s = githubman.send(request).await?.text().unwrap();
-
 			let mut f = File::open(&format!(
 				"{}/{}",
 				&self.project.local_full_path, runtime_relative_path

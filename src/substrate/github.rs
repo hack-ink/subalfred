@@ -1,6 +1,5 @@
 // --- crates.io ---
 use async_std::{sync::Arc, task::block_on};
-use clap::ArgMatches;
 use futures::{stream, StreamExt};
 use isahc::{Body as IsahcBody, ResponseExt};
 use serde::de::DeserializeOwned;
@@ -69,7 +68,13 @@ impl Subalfred {
 		Ok(releases)
 	}
 
-	pub async fn list_commits(&self, list_commits_args: &ArgMatches) -> Result<Vec<Commit>> {
+	pub async fn list_commits(
+		&self,
+		sha: Option<&str>,
+		path: Option<&str>,
+		since: Option<&str>,
+		until: Option<&str>,
+	) -> Result<Vec<Commit>> {
 		let mut commits = vec![];
 		let date_or_hash = |date_or_hash: &str| -> Result<_> {
 			if date_or_hash.contains('-') {
@@ -90,12 +95,12 @@ impl Subalfred {
 				Ok(commit.commit.committer.date)
 			}
 		};
-		let since = if let Some(since) = list_commits_args.value_of("since") {
+		let since = if let Some(since) = since {
 			Some(date_or_hash(since)?)
 		} else {
 			None
 		};
-		let until = if let Some(until) = list_commits_args.value_of("until") {
+		let until = if let Some(until) = until {
 			Some(date_or_hash(until)?)
 		} else {
 			None
@@ -106,8 +111,8 @@ impl Subalfred {
 			ListCommitsBuilder::default()
 				.owner(Self::SUBSTRATE_GITHUB_OWNER)
 				.repo(Self::SUBSTRATE_GITHUB_REPO)
-				.sha(list_commits_args.value_of("sha").map(Into::into))
-				.path(list_commits_args.value_of("path").map(Into::into))
+				.sha(sha.map(Into::into))
+				.path(path.map(Into::into))
 				.since(since)
 				.until(until)
 				.build()
@@ -123,10 +128,15 @@ impl Subalfred {
 
 	pub async fn list_pull_requests(
 		&self,
-		list_pull_requests_args: &ArgMatches,
+		sha: Option<&str>,
+		path: Option<&str>,
+		since: Option<&str>,
+		until: Option<&str>,
+		thread: usize,
+		create_issue: bool,
 	) -> Result<Vec<PullRequest>> {
 		let commit_shas = self
-			.list_commits(list_pull_requests_args)
+			.list_commits(sha, path, since, until)
 			.await?
 			.into_iter()
 			.map(|Commit { sha, .. }| sha)
@@ -152,13 +162,7 @@ impl Subalfred {
 				}
 			}
 		}))
-		.buffer_unordered(
-			list_pull_requests_args
-				.value_of("thread")
-				.map(str::parse)
-				.unwrap_or(Ok(1))
-				.unwrap(),
-		)
+		.buffer_unordered(thread)
 		.collect::<Vec<_>>()
 		.await
 		.into_iter()
@@ -169,7 +173,7 @@ impl Subalfred {
 
 		log::trace!(target: "pull-requests", "{:#?}", pull_requests);
 
-		if list_pull_requests_args.is_present("create-issue") {
+		if create_issue {
 			let mut body = String::new();
 
 			for PullRequest {
@@ -222,9 +226,16 @@ impl Subalfred {
 
 	pub async fn list_migrations(
 		&self,
-		list_migrations_args: &ArgMatches,
+		sha: Option<&str>,
+		path: Option<&str>,
+		since: Option<&str>,
+		until: Option<&str>,
+		thread: usize,
+		create_issue: bool,
 	) -> Result<Vec<PullRequest>> {
-		let mut pull_requests = self.list_pull_requests(list_migrations_args).await?;
+		let mut pull_requests = self
+			.list_pull_requests(sha, path, since, until, thread, false)
+			.await?;
 		pull_requests.retain(|pull_request| {
 			pull_request
 				.labels
@@ -234,7 +245,7 @@ impl Subalfred {
 
 		log::trace!(target: "migrations", "{:#?}", pull_requests);
 
-		if list_migrations_args.is_present("create-issue") {
+		if create_issue {
 			let mut body = String::new();
 
 			for PullRequest {
@@ -275,6 +286,8 @@ impl Subalfred {
 
 		Ok(pull_requests)
 	}
+
+	pub async fn get_repository_content(&self) {}
 }
 
 async fn iterate_page_with<B, D, F>(

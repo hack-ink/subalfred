@@ -24,6 +24,7 @@ const APP_INFO: AppInfo = AppInfo {
 
 #[async_std::main]
 async fn main() -> Result<()> {
+	// TODO: about
 	let app = App::new(crate_name!())
 		.version(crate_version!())
 		.author(crate_authors!())
@@ -39,22 +40,34 @@ async fn main() -> Result<()> {
 		)
 		.subcommand(App::new("list-repository-tags").about(""))
 		.subcommand(App::new("list-releases").about(""))
+		.subcommand(list_app("list-commits").about(""))
 		.subcommand(
-			App::new("list-commits").about("").arg(
-				Arg::new("sha")
-					.long("sha")
-					.takes_value(true)
-					.value_name("BRANCH/SHA")
-					.about(
-						"SHA or branch to start listing commits from. \
-						Default: the repository’s default branch (usually master).",
-					),
-			),
+			list_app("list-pull-requests")
+				.about("")
+				.arg(
+					Arg::new("thread")
+						.long("thread")
+						.takes_value(true)
+						.value_name("COUNT")
+						.about(""),
+				)
+				.arg(Arg::new("create-issue").long("create-issue")),
 		)
-		.subcommand(list_app("list-pull-requests"))
-		.subcommand(list_app("list-migrations"))
+		.subcommand(
+			list_app("list-migrations")
+				.about("")
+				.arg(
+					Arg::new("thread")
+						.long("thread")
+						.takes_value(true)
+						.value_name("COUNT")
+						.about(""),
+				)
+				.arg(Arg::new("create-issue").long("create-issue")),
+		)
 		.subcommand(
 			App::new("send-rpc")
+				.about("")
 				.arg(
 					Arg::new("address")
 						.long("address")
@@ -76,12 +89,10 @@ async fn main() -> Result<()> {
 						.takes_value(true)
 						.value_name("[PARAM]")
 						.about(""),
-				)
-				.about(""),
+				),
 		)
 		.subcommand(App::new("check-runtime-version").about(""));
 	let app_args = app.get_matches();
-	let subalfred = Subalfred::init();
 
 	if let Some(logs) = app_args.values_of("log") {
 		for log in logs {
@@ -91,19 +102,52 @@ async fn main() -> Result<()> {
 		pretty_env_logger::init();
 	}
 
+	let subalfred = Subalfred::init();
+
 	if let Some(_) = app_args.subcommand_matches("list-repository-tags") {
 		subalfred.list_repository_tags().await?;
 	} else if let Some(_) = app_args.subcommand_matches("list-releases") {
 		subalfred.list_releases().await?;
 	} else if let Some(list_commits_args) = app_args.subcommand_matches("list-commits") {
-		subalfred.list_commits(list_commits_args).await?;
+		subalfred
+			.list_commits(
+				list_commits_args.value_of("sha"),
+				list_commits_args.value_of("path"),
+				list_commits_args.value_of("since"),
+				list_commits_args.value_of("until"),
+			)
+			.await?;
 	} else if let Some(list_pull_requests_args) = app_args.subcommand_matches("list-pull-requests")
 	{
 		subalfred
-			.list_pull_requests(list_pull_requests_args)
+			.list_pull_requests(
+				list_pull_requests_args.value_of("sha"),
+				list_pull_requests_args.value_of("path"),
+				list_pull_requests_args.value_of("since"),
+				list_pull_requests_args.value_of("until"),
+				list_pull_requests_args
+					.value_of("thread")
+					.map(str::parse)
+					.unwrap_or(Ok(1))
+					.unwrap(),
+				list_pull_requests_args.is_present("create-issue"),
+			)
 			.await?;
 	} else if let Some(list_migrations_args) = app_args.subcommand_matches("list-migrations") {
-		subalfred.list_migrations(list_migrations_args).await?;
+		subalfred
+			.list_migrations(
+				list_migrations_args.value_of("sha"),
+				list_migrations_args.value_of("path"),
+				list_migrations_args.value_of("since"),
+				list_migrations_args.value_of("until"),
+				list_migrations_args
+					.value_of("thread")
+					.map(str::parse)
+					.unwrap_or(Ok(1))
+					.unwrap(),
+				list_migrations_args.is_present("create-issue"),
+			)
+			.await?;
 	} else if let Some(send_rpc_args) = app_args.subcommand_matches("send-rpc") {
 		Subalfred::send_rpc(
 			send_rpc_args
@@ -122,23 +166,15 @@ async fn main() -> Result<()> {
 
 fn list_app(name: &str) -> App {
 	App::new(name)
-		.about("")
-		.arg(
-			Arg::new("thread")
-				.long("thread")
-				.takes_value(true)
-				.value_name("COUNT")
-				.about(""),
-		)
 		.arg(
 			Arg::new("sha")
 				.long("sha")
 				.value_name("BRANCH/SHA")
-				.takes_value(true),
-		)
-		.about(
-			"SHA or branch to start listing commits from.\
-			Default: the repository’s default branch (usually master).",
+				.takes_value(true)
+				.about(
+					"SHA or branch to start listing commits from.\
+					Default: the repository’s default branch (usually master).",
+				),
 		)
 		.arg(
 			Arg::new("path")
@@ -167,7 +203,6 @@ fn list_app(name: &str) -> App {
 					This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.",
 				),
 		)
-		.arg(Arg::new("create-issue").long("create-issue"))
 }
 
 struct Subalfred {
