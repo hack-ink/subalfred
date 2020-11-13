@@ -99,7 +99,7 @@ async fn main() -> Result<()> {
 			env::set_var("RUST_LOG", log);
 		}
 
-		pretty_env_logger::init();
+		pretty_env_logger::init_timed();
 	}
 
 	let subalfred = Subalfred::init();

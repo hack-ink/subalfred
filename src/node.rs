@@ -7,6 +7,7 @@ use isahc::{
 };
 use serde::{de::DeserializeOwned, Deserialize};
 use serde_json::{json, Value};
+use tracing::trace;
 // --- subalfred ---
 use crate::{config::Runtime, Result, Subalfred};
 
@@ -29,6 +30,13 @@ pub struct RuntimeVersion {
 	pub spec_version: u32,
 	pub impl_version: u32,
 	pub transaction_version: u32,
+}
+
+#[derive(Debug)]
+pub struct RuntimeVersions {
+	chain_runtime_version: RuntimeVersion,
+	github_runtime_version: RuntimeVersion,
+	local_runtime_version: RuntimeVersion,
 }
 
 impl Subalfred {
@@ -55,19 +63,21 @@ impl Subalfred {
 		let request = request_builder.body(body.to_string()).unwrap();
 		let result = isahc::send_async(request).await?.json::<RpcResult>()?;
 
-		log::trace!(target: "rpc-result", "{:#?}", result);
+		trace!("{:#?}", result);
 
 		Ok(result)
 	}
 
-	pub async fn check_runtime_version(&self) -> Result<()> {
+	pub async fn check_runtime_version(&self) -> Result<Vec<Vec<RuntimeVersions>>> {
+		let mut runtimes = <Vec<Vec<RuntimeVersions>>>::new();
+
 		for Runtime {
 			runtime_relative_path,
 			node_rpc_address,
 		} in &self.project.runtimes
 		{
-			let runtime_version = serde_json::to_string_pretty(
-				&Self::send_rpc(
+			let chain_runtime_version = serde_json::from_value::<RuntimeVersion>(
+				Self::send_rpc(
 					node_rpc_address,
 					"state_getRuntimeVersion",
 					serde_json::from_str("[]").unwrap(),
@@ -76,19 +86,50 @@ impl Subalfred {
 				.result,
 			)
 			.unwrap();
+			let github_runtime_version = {
+				let download_url = self
+					.get_repository_content(
+						&self.project.owner,
+						&self.project.repo,
+						runtime_relative_path,
+						None,
+					)
+					.await?
+					.download_url;
 
-			let mut f = File::open(&format!(
-				"{}/{}",
-				&self.project.local_full_path, runtime_relative_path
-			))
-			.unwrap();
-			let mut s = String::new();
+				extract_runtime_version(&self.githubman.download(download_url).await?.text()?)
+			};
+			let local_runtime_version = {
+				let mut f = File::open(&format!(
+					"{}/{}",
+					&self.project.local_full_path, runtime_relative_path
+				))
+				.unwrap();
+				let mut s = String::new();
 
-			f.read_to_string(&mut s).unwrap();
-			extract_runtime_version(&s);
+				f.read_to_string(&mut s).unwrap();
+
+				extract_runtime_version(&s)
+			};
+			let runtime_versions = RuntimeVersions {
+				chain_runtime_version,
+				github_runtime_version,
+				local_runtime_version,
+			};
+
+			if let Some(i) = runtimes.iter().position(|runtimes| {
+				&runtimes[0].chain_runtime_version.spec_name
+					== &runtime_versions.chain_runtime_version.spec_name
+			}) {
+				runtimes[i].push(runtime_versions);
+			} else {
+				runtimes.push(vec![runtime_versions]);
+			}
 		}
 
-		Ok(())
+		trace!("{:#?}", runtimes);
+
+		Ok(runtimes)
 	}
 }
 
@@ -138,7 +179,7 @@ fn extract_runtime_version(s: &str) -> RuntimeVersion {
 		transaction_version,
 	};
 
-	log::trace!(target: "runtime-version", "{:#?}", runtime_version);
+	trace!("{:#?}", runtime_version);
 
 	runtime_version
 }

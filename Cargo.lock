@@ -635,9 +635,9 @@ version = "0.1.0"
 dependencies = [
  "derive_builder",
  "isahc",
- "log",
  "serde",
  "serde_json",
+ "tracing",
 ]
 
 [[package]]
@@ -1280,13 +1280,13 @@ dependencies = [
  "futures",
  "githubman",
  "isahc",
- "log",
  "pretty_env_logger",
  "regex",
  "serde",
  "serde_json",
  "serde_yaml",
  "toml",
+ "tracing",
 ]
 
 [[package]]

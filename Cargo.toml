@@ -23,13 +23,14 @@ clap              = { version = "3.0.0-beta.2" }
 futures           = { version = "0.3.8" }
 githubman         = { version = "0.1.0", path = "githubman" }
 isahc             = { version = "0.9.12", features = ["json"] }
-log               = { version = "0.4.11" }
 pretty_env_logger = { version = "0.4.0" }
 regex             = { version = "1.4.2" }
 serde             = { version = "1.0.117" }
 serde_json        = { version = "1.0.59" }
 serde_yaml        = { version = "0.8.14" }
 toml              = { version = "0.5.7" }
+tracing           = { version = "0.1.21" }
 
 [workspace]
+# TODO: move out, separate into a single crate
 members = ["githubman"]

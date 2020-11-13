@@ -13,6 +13,7 @@ use isahc::{
 	},
 	Body as IsahcBody, HttpClient, HttpClientBuilder,
 };
+use tracing::trace;
 // --- githubman ---
 use crate::pager::Pager;
 
@@ -74,13 +75,21 @@ impl Githubman {
 		Self { http_client }
 	}
 
+	pub async fn download(&self, url: impl AsRef<str>) -> IsahcResult<IsahcResponse> {
+		let response = self.http_client.get_async(url.as_ref()).await?;
+
+		trace!("{:#?}", response);
+
+		Ok(response)
+	}
+
 	pub async fn send<B>(&self, request: impl GithubApi<B>) -> IsahcResult<IsahcResponse>
 	where
 		B: Into<IsahcBody>,
 	{
 		let request = request.build_request();
 
-		log::trace!(target: "uri", "{}", request.uri());
+		trace!("{}", request.uri());
 
 		self.http_client.send_async(request).await
 	}
@@ -95,7 +104,7 @@ impl Githubman {
 	{
 		let request = request.build_request_with_extra_queries(pager.query());
 
-		log::trace!(target: "uri", "{}", request.uri());
+		trace!("{}", request.uri());
 
 		pager.page += 1;
 
