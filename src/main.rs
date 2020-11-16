@@ -138,8 +138,9 @@ async fn main() -> Result<()> {
 
 	let subalfred = Subalfred::init();
 
+	// TODO: beautify output
 	if let Some(_) = app_args.subcommand_matches("list-repository-tags") {
-		subalfred.list_repository_tags().await?;
+		println!("{:#?}", subalfred.list_repository_tags().await?);
 	} else if let Some(_) = app_args.subcommand_matches("list-releases") {
 		subalfred.list_releases().await?;
 	} else if let Some(list_commits_args) = app_args.subcommand_matches("list-commits") {

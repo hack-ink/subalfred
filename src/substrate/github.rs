@@ -17,11 +17,10 @@ use githubman::{
 		repositories::list_repository_tags::ListRepositoryTagsBuilder,
 	},
 	responses::{
-		commits::{Commit, PullRequest},
+		commits::{Commit, PullRequest, User},
 		contents::Content,
 		releases::Release,
-		tags::Tag,
-		User,
+		repositories::Tag,
 	},
 	GithubApi, Githubman,
 };
