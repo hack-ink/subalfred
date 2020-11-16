@@ -2,14 +2,18 @@
 use std::{fmt::Debug, fs::File, io::Read};
 // --- crates.io ---
 use isahc::{
-	http::{header::CONTENT_TYPE, request::Builder as RequestBuilder, Method as HttpMethod},
-	ResponseExt,
+	http::{
+		header::CONTENT_TYPE, request::Builder as RequestBuilder, Method as HttpMethod, Response,
+	},
+	Body as IsahcBody, ResponseExt,
 };
 use serde::{de::DeserializeOwned, Deserialize};
 use serde_json::{json, Value};
 use tracing::trace;
 // --- subalfred ---
 use crate::{config::Runtime, Result, Subalfred};
+
+type IsahcResponse = Response<IsahcBody>;
 
 #[derive(Debug, Deserialize)]
 pub struct RpcResult {
@@ -21,6 +25,12 @@ impl RpcResult {
 	}
 }
 
+#[derive(Debug)]
+pub struct RuntimeVersions {
+	chain_runtime_version: RuntimeVersion,
+	github_runtime_version: RuntimeVersion,
+	local_runtime_version: RuntimeVersion,
+}
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RuntimeVersion {
@@ -32,19 +42,12 @@ pub struct RuntimeVersion {
 	pub transaction_version: u32,
 }
 
-#[derive(Debug)]
-pub struct RuntimeVersions {
-	chain_runtime_version: RuntimeVersion,
-	github_runtime_version: RuntimeVersion,
-	local_runtime_version: RuntimeVersion,
-}
-
 impl Subalfred {
 	pub async fn send_rpc(
 		address: impl AsRef<str>,
 		method: impl AsRef<str>,
 		params: Value,
-	) -> Result<RpcResult> {
+	) -> Result<IsahcResponse> {
 		let mut request_builder = RequestBuilder::new()
 			.method(HttpMethod::POST)
 			.uri(address.as_ref());
@@ -61,7 +64,7 @@ impl Subalfred {
 			"params": params
 		});
 		let request = request_builder.body(body.to_string()).unwrap();
-		let result = isahc::send_async(request).await?.json::<RpcResult>()?;
+		let result = isahc::send_async(request).await?;
 
 		trace!("{:#?}", result);
 
@@ -83,6 +86,7 @@ impl Subalfred {
 					serde_json::from_str("[]").unwrap(),
 				)
 				.await?
+				.json::<RpcResult>()?
 				.result,
 			)
 			.unwrap();

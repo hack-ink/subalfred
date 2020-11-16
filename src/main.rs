@@ -3,6 +3,7 @@
 pub mod config;
 pub mod node;
 pub mod substrate;
+pub mod util;
 
 // --- std ---
 use std::env;
@@ -11,8 +12,13 @@ use app_dirs2::AppInfo;
 use async_std::sync::Arc;
 use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg};
 use githubman::Githubman;
+use isahc::ResponseExt;
+use serde_json::Value;
 // --- subalfred ---
-use crate::config::Project;
+use crate::{
+	config::Project,
+	substrate::{crypto::parse_account, storage::parse_storage_keys},
+};
 
 type Error = Box<dyn std::error::Error>;
 type Result<T> = ::std::result::Result<T, Error>;
@@ -91,7 +97,35 @@ async fn main() -> Result<()> {
 						.about(""),
 				),
 		)
-		.subcommand(App::new("check-runtime-version").about(""));
+		.subcommand(App::new("check-runtime-version").about(""))
+		.subcommand(
+			App::new("account").about("").arg(
+				Arg::new("account")
+					.required(true)
+					.takes_value(true)
+					.value_name("PUBLIC KEY/SS58 ADDRESS")
+					.about(""),
+			),
+		)
+		.subcommand(
+			// TODO: handle instance
+			App::new("storage-prefix")
+				.about("")
+				.arg(
+					Arg::new("module")
+						.long("module")
+						.takes_value(true)
+						.value_name("NAME")
+						.about(""),
+				)
+				.arg(
+					Arg::new("item")
+						.long("item")
+						.takes_value(true)
+						.value_name("NAME")
+						.about(""),
+				),
+		);
 	let app_args = app.get_matches();
 
 	if let Some(logs) = app_args.values_of("log") {
@@ -149,16 +183,43 @@ async fn main() -> Result<()> {
 			)
 			.await?;
 	} else if let Some(send_rpc_args) = app_args.subcommand_matches("send-rpc") {
-		Subalfred::send_rpc(
-			send_rpc_args
-				.value_of("address")
-				.unwrap_or("http://127.0.0.1:9933"),
-			send_rpc_args.value_of("method").unwrap(),
-			serde_json::from_str(send_rpc_args.value_of("params").unwrap_or("[]"))?,
-		)
-		.await?;
+		println!(
+			"{}",
+			serde_json::to_string_pretty(
+				&Subalfred::send_rpc(
+					send_rpc_args
+						.value_of("address")
+						.unwrap_or("http://127.0.0.1:9933"),
+					send_rpc_args.value_of("method").unwrap(),
+					serde_json::from_str(send_rpc_args.value_of("params").unwrap_or("[]"))?,
+				)
+				.await?
+				.json::<Value>()?
+			)?
+		);
 	} else if let Some(_) = app_args.subcommand_matches("check-runtime-version") {
-		subalfred.check_runtime_version().await?;
+		for versions in subalfred.check_runtime_version().await? {
+			println!("{:#?}", versions);
+		}
+	} else if let Some(account_args) = app_args.subcommand_matches("account") {
+		let accounts = parse_account(account_args.value_of("account").unwrap());
+		let max_width = accounts
+			.iter()
+			.map(|account| account.0.len())
+			.max()
+			.unwrap();
+
+		for account in accounts {
+			println!("{:>width$}: {}", account.0, account.1, width = max_width);
+		}
+	} else if let Some(storage_prefix_args) = app_args.subcommand_matches("storage-prefix") {
+		println!(
+			"Storage Keys: {}",
+			parse_storage_keys(
+				storage_prefix_args.value_of("module"),
+				storage_prefix_args.value_of("item")
+			)
+		);
 	}
 
 	Ok(())
