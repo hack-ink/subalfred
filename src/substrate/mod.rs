@@ -1,3 +1,3 @@
 pub mod crypto;
 pub mod github;
-pub mod storage;
+pub mod hash;

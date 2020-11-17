@@ -27,13 +27,7 @@ impl GithubApi<()> for GetRepositoryContent {
 	const ACCEPT: &'static str = "application/vnd.github.v3+json";
 
 	fn build_uri(&self) -> Uri {
-		uri!(
-			self,
-			[owner, repo, path],
-			[r#ref]
-		)
-		.parse()
-		.unwrap()
+		uri!(self, [owner, repo, path], [r#ref]).parse().unwrap()
 	}
 
 	fn build_body(&self) -> () {

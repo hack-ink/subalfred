@@ -17,7 +17,10 @@ use serde_json::Value;
 // --- subalfred ---
 use crate::{
 	config::Project,
-	substrate::{crypto::parse_account, storage::parse_storage_keys},
+	substrate::{
+		crypto::parse_account,
+		hash::{hash, parse_storage_keys},
+	},
 };
 
 type Error = Box<dyn std::error::Error>;
@@ -54,6 +57,7 @@ async fn main() -> Result<()> {
 					Arg::new("thread")
 						.long("thread")
 						.takes_value(true)
+						.default_value("1")
 						.value_name("COUNT")
 						.about(""),
 				)
@@ -66,6 +70,7 @@ async fn main() -> Result<()> {
 					Arg::new("thread")
 						.long("thread")
 						.takes_value(true)
+						.default_value("1")
 						.value_name("COUNT")
 						.about(""),
 				)
@@ -108,6 +113,36 @@ async fn main() -> Result<()> {
 			),
 		)
 		.subcommand(
+			App::new("hash")
+				.about("")
+				.arg(
+					Arg::new("data")
+						.required(true)
+						.takes_value(true)
+						.value_name("VALUE")
+						.about(""),
+				)
+				.arg(
+					Arg::new("hasher")
+						.long("hasher")
+						.takes_value(true)
+						.default_value("blake2-128")
+						.possible_values(&[
+							"blake2-128",
+							"blake2-256",
+							"blake2-128-concat",
+							"twox-64",
+							"twox-128",
+							"twox-256",
+							"twox-64-concat",
+							"identity",
+						])
+						.value_name("HASHER")
+						.about(""),
+				)
+				.arg(Arg::new("hex").long("hex").about("")),
+		)
+		.subcommand(
 			// TODO: handle instance
 			App::new("storage-prefix")
 				.about("")
@@ -142,47 +177,58 @@ async fn main() -> Result<()> {
 	if let Some(_) = app_args.subcommand_matches("list-repository-tags") {
 		println!("{:#?}", subalfred.list_repository_tags().await?);
 	} else if let Some(_) = app_args.subcommand_matches("list-releases") {
-		subalfred.list_releases().await?;
+		println!("{:#?}", subalfred.list_releases().await?);
 	} else if let Some(list_commits_args) = app_args.subcommand_matches("list-commits") {
-		subalfred
-			.list_commits(
-				list_commits_args.value_of("sha"),
-				list_commits_args.value_of("path"),
-				list_commits_args.value_of("since"),
-				list_commits_args.value_of("until"),
-			)
-			.await?;
+		println!(
+			"{:#?}",
+			subalfred
+				.list_commits(
+					list_commits_args.value_of("sha"),
+					list_commits_args.value_of("path"),
+					list_commits_args.value_of("since"),
+					list_commits_args.value_of("until"),
+				)
+				.await?
+		);
 	} else if let Some(list_pull_requests_args) = app_args.subcommand_matches("list-pull-requests")
 	{
-		subalfred
-			.list_pull_requests(
-				list_pull_requests_args.value_of("sha"),
-				list_pull_requests_args.value_of("path"),
-				list_pull_requests_args.value_of("since"),
-				list_pull_requests_args.value_of("until"),
-				list_pull_requests_args
-					.value_of("thread")
-					.map(str::parse)
-					.unwrap_or(Ok(1))
-					.unwrap(),
-				list_pull_requests_args.is_present("create-issue"),
-			)
-			.await?;
+		// TODO: optimize params
+		println!(
+			"{:#?}",
+			subalfred
+				.list_pull_requests(
+					list_pull_requests_args.value_of("sha"),
+					list_pull_requests_args.value_of("path"),
+					list_pull_requests_args.value_of("since"),
+					list_pull_requests_args.value_of("until"),
+					list_pull_requests_args
+						.value_of("thread")
+						.unwrap()
+						.parse()
+						.unwrap(),
+					list_pull_requests_args.is_present("create-issue"),
+				)
+				.await?
+		);
 	} else if let Some(list_migrations_args) = app_args.subcommand_matches("list-migrations") {
-		subalfred
-			.list_migrations(
-				list_migrations_args.value_of("sha"),
-				list_migrations_args.value_of("path"),
-				list_migrations_args.value_of("since"),
-				list_migrations_args.value_of("until"),
-				list_migrations_args
-					.value_of("thread")
-					.map(str::parse)
-					.unwrap_or(Ok(1))
-					.unwrap(),
-				list_migrations_args.is_present("create-issue"),
-			)
-			.await?;
+		// TODO: optimize params
+		println!(
+			"{:#?}",
+			subalfred
+				.list_migrations(
+					list_migrations_args.value_of("sha"),
+					list_migrations_args.value_of("path"),
+					list_migrations_args.value_of("since"),
+					list_migrations_args.value_of("until"),
+					list_migrations_args
+						.value_of("thread")
+						.unwrap()
+						.parse()
+						.unwrap(),
+					list_migrations_args.is_present("create-issue"),
+				)
+				.await?
+		);
 	} else if let Some(send_rpc_args) = app_args.subcommand_matches("send-rpc") {
 		println!(
 			"{}",
@@ -213,6 +259,15 @@ async fn main() -> Result<()> {
 		for account in accounts {
 			println!("{:>width$}: {}", account.0, account.1, width = max_width);
 		}
+	} else if let Some(hash_args) = app_args.subcommand_matches("hash") {
+		println!(
+			"{}",
+			hash(
+				hash_args.value_of("data").unwrap(),
+				hash_args.value_of("hasher").unwrap(),
+				hash_args.is_present("hex")
+			)
+		);
 	} else if let Some(storage_prefix_args) = app_args.subcommand_matches("storage-prefix") {
 		println!(
 			"Storage Keys: {}",
