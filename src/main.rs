@@ -6,7 +6,7 @@ pub mod substrate;
 pub mod util;
 
 // --- std ---
-use std::env;
+use std::{env, process::Command};
 // --- crates.io ---
 use app_dirs2::AppInfo;
 use async_std::sync::Arc;
@@ -160,6 +160,15 @@ async fn main() -> Result<()> {
 						.value_name("NAME")
 						.about(""),
 				),
+		)
+		.subcommand(
+			App::new("node-template").about("").arg(
+				Arg::new("name")
+					.long("name")
+					.takes_value(true)
+					.value_name("NAME")
+					.about(""),
+			),
 		);
 	let app_args = app.get_matches();
 
@@ -276,6 +285,18 @@ async fn main() -> Result<()> {
 				storage_prefix_args.value_of("item")
 			)
 		);
+	} else if let Some(node_template_args) = app_args.subcommand_matches("node-template") {
+		// TODO: output
+		Command::new("git")
+			.args(&[
+				"clone",
+				"https://github.com/substrate-developer-hub/substrate-node-template.git",
+				node_template_args
+					.value_of("name")
+					.unwrap_or("substrate-node-template"),
+			])
+			.output()
+			.unwrap();
 	}
 
 	Ok(())
