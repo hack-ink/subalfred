@@ -62,8 +62,8 @@ impl Subalfred {
 		Ok(result)
 	}
 
-	pub async fn check_runtime_version(&self) -> Result<Vec<Vec<RuntimeVersions>>> {
-		let mut runtimes = <Vec<Vec<RuntimeVersions>>>::new();
+	pub async fn check_runtime_version(&self) -> Result<Vec<RuntimeVersions>> {
+		let mut runtimes = vec![];
 
 		for Runtime {
 			runtime_relative_path,
@@ -105,20 +105,12 @@ impl Subalfred {
 
 				extract_runtime_version(&s)
 			};
-			let runtime_versions = RuntimeVersions {
+
+			runtimes.push(RuntimeVersions {
 				chain_runtime_version,
 				github_runtime_version,
 				local_runtime_version,
-			};
-
-			if let Some(i) = runtimes.iter().position(|runtimes| {
-				&runtimes[0].chain_runtime_version.spec_name
-					== &runtime_versions.chain_runtime_version.spec_name
-			}) {
-				runtimes[i].push(runtime_versions);
-			} else {
-				runtimes.push(vec![runtime_versions]);
-			}
+			});
 		}
 
 		trace!("{:#?}", runtimes);
