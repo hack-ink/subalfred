@@ -33,7 +33,7 @@ regex             = { version = "1.4.2" }
 serde             = { version = "1.0.117" }
 serde_json        = { version = "1.0.59" }
 serde_yaml        = { version = "0.8.14" }
-substrate-rpc-api = { version = "0.1.0", path = "substrate-rpc-api" }
+subrpcer          = { version = "0.1.0", path = "subrpcer" }
 toml              = { version = "0.5.7" }
 tracing           = { version = "0.1.21" }
 twox-hash         = { version = "1.6.0" }
@@ -43,5 +43,5 @@ twox-hash         = { version = "1.6.0" }
 members = [
 	"array-bytes",
 	"githuber",
-	"substrate-rpc-api",
+	"subrpcer",
 ]

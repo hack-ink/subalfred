@@ -73,7 +73,7 @@ impl Subalfred {
 			let chain_runtime_version = serde_json::from_value::<RuntimeVersion>(
 				Self::send_rpc(
 					node_rpc_uri,
-					substrate_rpc_api::state::get_runtime_version(),
+					subrpcer::state::get_runtime_version(),
 				)
 				.await?
 				.json::<RpcResult>()?

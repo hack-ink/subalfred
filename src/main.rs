@@ -242,7 +242,7 @@ async fn main() -> Result<()> {
 					send_rpc_args
 						.value_of("uri")
 						.unwrap_or("http://127.0.0.1:9933"),
-					substrate_rpc_api::rpc(
+					subrpcer::rpc(
 						send_rpc_args.value_of("method").unwrap(),
 						serde_json::from_str::<Value>(
 							send_rpc_args.value_of("params").unwrap_or("[]")

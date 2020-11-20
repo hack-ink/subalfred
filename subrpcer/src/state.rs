@@ -1,6 +1,6 @@
 // --- crates.io ---
 use serde_json::{json, Value};
-// --- substrate-rpc-api ---
+// --- subrpcer ---
 use crate::rpc;
 
 pub fn get_runtime_version() -> Value {

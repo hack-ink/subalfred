@@ -1389,14 +1389,14 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_yaml",
- "substrate-rpc-api",
+ "subrpcer",
  "toml",
  "tracing",
  "twox-hash",
 ]
 
 [[package]]
-name = "substrate-rpc-api"
+name = "subrpcer"
 version = "0.1.0"
 dependencies = [
  "serde",
