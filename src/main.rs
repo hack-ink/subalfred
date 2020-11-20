@@ -1,13 +1,12 @@
 #![feature(with_options)]
 
 pub mod config;
-pub mod node;
 pub mod substrate;
-pub mod util;
 
 // --- std ---
 use std::{env, process::Command};
 // --- crates.io ---
+use anyhow::Result;
 use app_dirs2::AppInfo;
 use async_std::sync::Arc;
 use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg};
@@ -22,9 +21,6 @@ use crate::{
 		hash::{hash, parse_storage_keys},
 	},
 };
-
-type Error = Box<dyn std::error::Error>;
-type Result<T> = ::std::result::Result<T, Error>;
 
 const APP_INFO: AppInfo = AppInfo {
 	name: crate_name!(),
@@ -80,10 +76,10 @@ async fn main() -> Result<()> {
 			App::new("send-rpc")
 				.about("")
 				.arg(
-					Arg::new("address")
-						.long("address")
+					Arg::new("uri")
+						.long("uri")
 						.takes_value(true)
-						.value_name("ADDRESS")
+						.value_name("URI")
 						.about(""),
 				)
 				.arg(
@@ -241,13 +237,17 @@ async fn main() -> Result<()> {
 	} else if let Some(send_rpc_args) = app_args.subcommand_matches("send-rpc") {
 		println!(
 			"{}",
-			serde_json::to_string_pretty(
+			serde_json::to_string(
 				&Subalfred::send_rpc(
 					send_rpc_args
-						.value_of("address")
+						.value_of("uri")
 						.unwrap_or("http://127.0.0.1:9933"),
-					send_rpc_args.value_of("method").unwrap(),
-					serde_json::from_str(send_rpc_args.value_of("params").unwrap_or("[]"))?,
+					substrate_rpc_api::rpc(
+						send_rpc_args.value_of("method").unwrap(),
+						serde_json::from_str::<Value>(
+							send_rpc_args.value_of("params").unwrap_or("[]")
+						)?
+					),
 				)
 				.await?
 				.json::<Value>()?

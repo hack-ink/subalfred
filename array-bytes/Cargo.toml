@@ -1,15 +1,17 @@
 [package]
 authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
-description = "rpcer"
+description = "array-bytes"
 edition     = "2018"
-homepage    = "https://rpcer.l2ust.world/"
+homepage    = "https://array-bytes.l2ust.world/"
 license     = "GPL-3.0"
-name        = "rpcer"
+name        = "array-bytes"
 readme      = "README.md"
-repository  = "https://github.com/l2ust/rpcer/"
+repository  = "https://github.com/l2ust/array-bytes/"
 version     = "0.1.0"
 
 [badges]
 maintenance = { status = "actively-developed" }
 
 [dependencies]
+anyhow    = { version = "1.0.34" }
+thiserror = { version = "1.0.22" }

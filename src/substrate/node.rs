@@ -1,6 +1,7 @@
 // --- std ---
 use std::{fmt::Debug, fs::File, io::Read};
 // --- crates.io ---
+use anyhow::Result;
 use isahc::{
 	http::{
 		header::CONTENT_TYPE, request::Builder as RequestBuilder, Method as HttpMethod, Response,
@@ -8,10 +9,10 @@ use isahc::{
 	Body as IsahcBody, ResponseExt,
 };
 use serde::{de::DeserializeOwned, Deserialize};
-use serde_json::{json, Value};
+use serde_json::Value;
 use tracing::trace;
 // --- subalfred ---
-use crate::{config::Runtime, Result, Subalfred};
+use crate::{config::Runtime, Subalfred};
 
 type IsahcResponse = Response<IsahcBody>;
 
@@ -43,27 +44,17 @@ pub struct RuntimeVersion {
 }
 
 impl Subalfred {
-	pub async fn send_rpc(
-		address: impl AsRef<str>,
-		method: impl AsRef<str>,
-		params: Value,
-	) -> Result<IsahcResponse> {
+	pub async fn send_rpc(uri: impl AsRef<str>, body: Value) -> Result<IsahcResponse> {
 		let mut request_builder = RequestBuilder::new()
 			.method(HttpMethod::POST)
-			.uri(address.as_ref());
+			.uri(uri.as_ref());
 
 		request_builder.headers_mut().unwrap().append(
 			CONTENT_TYPE,
 			"application/json;charset=utf-8".parse().unwrap(),
 		);
 
-		let body = json!({
-			"jsonrpc": "2.0",
-			"id": 1,
-			"method": method.as_ref(),
-			"params": params
-		});
-		let request = request_builder.body(body.to_string()).unwrap();
+		let request = request_builder.body(serde_json::to_vec(&body)?).unwrap();
 		let result = isahc::send_async(request).await?;
 
 		trace!("{:#?}", result);
@@ -76,14 +67,13 @@ impl Subalfred {
 
 		for Runtime {
 			runtime_relative_path,
-			node_rpc_address,
+			node_rpc_uri,
 		} in &self.project.runtimes
 		{
 			let chain_runtime_version = serde_json::from_value::<RuntimeVersion>(
 				Self::send_rpc(
-					node_rpc_address,
-					"state_getRuntimeVersion",
-					serde_json::from_str("[]").unwrap(),
+					node_rpc_uri,
+					substrate_rpc_api::state::get_runtime_version(),
 				)
 				.await?
 				.json::<RpcResult>()?

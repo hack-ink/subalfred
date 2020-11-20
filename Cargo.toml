@@ -17,7 +17,9 @@ path = "src/main.rs"
 maintenance = { status = "actively-developed" }
 
 [dependencies]
+anyhow            = { version = "1.0.34" }
 app_dirs2         = { version = "2.3.1" }
+array-bytes       = { version = "0.1.0", path = "array-bytes" }
 async-std         = { version = "1.7.0", features = ["attributes"] }
 base58            = { version = "0.1.0" }
 blake2-rfc        = { version = "0.2.18" }
@@ -31,6 +33,7 @@ regex             = { version = "1.4.2" }
 serde             = { version = "1.0.117" }
 serde_json        = { version = "1.0.59" }
 serde_yaml        = { version = "0.8.14" }
+substrate-rpc-api = { version = "0.1.0", path = "substrate-rpc-api" }
 toml              = { version = "0.5.7" }
 tracing           = { version = "0.1.21" }
 twox-hash         = { version = "1.6.0" }
@@ -38,6 +41,7 @@ twox-hash         = { version = "1.6.0" }
 [workspace]
 # TODO: move out, separate into a single crate
 members = [
+	"array-bytes",
 	"githuber",
-	# "rpcer",
+	"substrate-rpc-api",
 ]

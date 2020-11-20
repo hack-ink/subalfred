@@ -10,6 +10,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "anyhow"
+version = "1.0.34"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bf8dcb5b4bbaa28653b647d8c77bd4ed40183b48882e130c1f1ffb73de069fd7"
+
+[[package]]
 name = "app_dirs2"
 version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -19,6 +25,14 @@ dependencies = [
  "ndk-glue",
  "winapi",
  "xdg",
+]
+
+[[package]]
+name = "array-bytes"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "thiserror",
 ]
 
 [[package]]
@@ -1359,7 +1373,9 @@ checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
 name = "subalfred"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "app_dirs2",
+ "array-bytes",
  "async-std",
  "base58",
  "blake2-rfc",
@@ -1373,9 +1389,18 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_yaml",
+ "substrate-rpc-api",
  "toml",
  "tracing",
  "twox-hash",
+]
+
+[[package]]
+name = "substrate-rpc-api"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

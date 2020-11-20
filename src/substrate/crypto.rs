@@ -1,8 +1,7 @@
 // --- crates.io ---
+use array_bytes::*;
 use base58::{FromBase58, ToBase58};
 use blake2_rfc::blake2b::Blake2b;
-// --- substrate ---
-use crate::util::{bytes, hex};
 
 const NETWORK: [(&'static str, u8); 32] = [
 	("Polkadot", 0),
@@ -46,9 +45,9 @@ pub fn parse_account(account: &str) -> Vec<(String, String)> {
 	if account.len() == 48 {
 		public_key = into_public_key(account);
 
-		accounts.push(("Public Key".into(), format!("0x{}", hex(&public_key))));
+		accounts.push(("Public Key".into(), format!("0x{}", hex_str(&public_key))));
 	} else {
-		public_key = bytes(account);
+		public_key = bytes(account).unwrap();
 
 		accounts.push((
 			"Public Key".into(),

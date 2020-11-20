@@ -4,12 +4,13 @@ use std::{
 	io::{Read, Write},
 };
 // --- crates.io ---
+use anyhow::Result;
 use app_dirs2::{get_app_root, AppDataType};
 use async_std::sync::Arc;
 use githuber::Githuber;
 use serde::{Deserialize, Serialize};
 // --- subalfred ---
-use crate::{Error, Result, Subalfred, APP_INFO};
+use crate::{Subalfred, APP_INFO};
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -66,7 +67,7 @@ impl Config {
 
 	pub fn to_writer(&self, w: impl Write) -> Result<()> {
 		// TODO
-		// serde_yaml::to_writer(w, self).map_err(Into::into)
+		// serde_yaml::to_writer(w, self)
 
 		const TEMPLATE: &'static [u8] =
 br#"
@@ -91,13 +92,13 @@ substrate-project:
   runtimes:
     - branch: main
       runtime-relative-path: "path/to/runtime/src/lib.rs"
-      node-rpc-address: "http://127.0.0.1:9933"
+      node-rpc-uri: "http://127.0.0.1:9933"
 "#;
 
 		let mut w = w;
 
 		w.write_all(TEMPLATE)?;
-		w.flush().map_err(Error::from)?;
+		w.flush()?;
 
 		Ok(())
 	}
@@ -117,7 +118,7 @@ pub struct Project {
 #[serde(rename_all = "kebab-case")]
 pub struct Runtime {
 	pub runtime_relative_path: String,
-	pub node_rpc_address: String,
+	pub node_rpc_uri: String,
 }
 
 impl Subalfred {

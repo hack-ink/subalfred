@@ -4,6 +4,7 @@ use futures::{stream, StreamExt};
 use isahc::{Body as IsahcBody, ResponseExt};
 use serde::de::DeserializeOwned;
 // --- githuber ---
+use anyhow::Result;
 use githuber::{
 	pager::Pager,
 	requests::{
@@ -26,7 +27,7 @@ use githuber::{
 };
 use tracing::trace;
 // --- subalfred ---
-use crate::{Result, Subalfred};
+use crate::Subalfred;
 
 impl Subalfred {
 	pub const SUBSTRATE_GITHUB_OWNER: &'static str = "paritytech";

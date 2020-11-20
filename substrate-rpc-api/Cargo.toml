@@ -1,0 +1,17 @@
+[package]
+authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
+description = "substrate-rpc-api"
+edition     = "2018"
+homepage    = "https://substrate-rpc-api.l2ust.world/"
+license     = "GPL-3.0"
+name        = "substrate-rpc-api"
+readme      = "README.md"
+repository  = "https://github.com/l2ust/substrate-rpc-api/"
+version     = "0.1.0"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[dependencies]
+serde      = { version = "1.0.117" }
+serde_json = { version = "1.0.59" }
