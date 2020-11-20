@@ -2,7 +2,7 @@
 use derive_builder::Builder as DeriveBuilder;
 use isahc::http::{Method as HttpMethod, Uri};
 use serde::Serialize;
-// --- githubman ---
+// --- githuber ---
 use crate::{api, GithubApi};
 
 #[derive(Clone, Debug, Default, DeriveBuilder)]

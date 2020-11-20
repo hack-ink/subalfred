@@ -101,7 +101,7 @@ impl Subalfred {
 					.await?
 					.download_url;
 
-				extract_runtime_version(&self.githubman.download(download_url).await?.text()?)
+				extract_runtime_version(&self.githuber.download(download_url).await?.text()?)
 			};
 			let local_runtime_version = {
 				let mut f = File::open(&format!(

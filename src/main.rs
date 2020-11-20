@@ -11,7 +11,7 @@ use std::{env, process::Command};
 use app_dirs2::AppInfo;
 use async_std::sync::Arc;
 use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg};
-use githubman::Githubman;
+use githuber::Githuber;
 use isahc::ResponseExt;
 use serde_json::Value;
 // --- subalfred ---
@@ -344,6 +344,6 @@ fn list_app(name: &str) -> App {
 }
 
 struct Subalfred {
-	githubman: Arc<Githubman>,
+	githuber: Arc<Githuber>,
 	project: Project,
 }

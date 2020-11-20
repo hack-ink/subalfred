@@ -6,7 +6,7 @@ use std::{
 // --- crates.io ---
 use app_dirs2::{get_app_root, AppDataType};
 use async_std::sync::Arc;
-use githubman::Githubman;
+use githuber::Githuber;
 use serde::{Deserialize, Serialize};
 // --- subalfred ---
 use crate::{Error, Result, Subalfred, APP_INFO};
@@ -128,7 +128,7 @@ impl Subalfred {
 		} = Config::load_config();
 
 		Self {
-			githubman: Arc::new(Githubman::new(github_oauth_token)),
+			githuber: Arc::new(Githuber::new(github_oauth_token)),
 			project: substrate_project,
 		}
 	}

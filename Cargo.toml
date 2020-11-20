@@ -2,7 +2,7 @@
 authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
 description = "Your Substrate Alfred"
 edition     = "2018"
-homepage    = "https://l2ust.world/subalfred"
+homepage    = "https://subalfred.l2ust.world/"
 license     = "GPL-3.0"
 name        = "subalfred"
 readme      = "README.md"
@@ -17,15 +17,15 @@ path = "src/main.rs"
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-app_dirs2         = { version = "2.3.0" }
+app_dirs2         = { version = "2.3.1" }
 async-std         = { version = "1.7.0", features = ["attributes"] }
 base58            = { version = "0.1.0" }
 blake2-rfc        = { version = "0.2.18" }
 byteorder         = { version = "1.3.4" }
 clap              = { version = "3.0.0-beta.2" }
 futures           = { version = "0.3.8" }
-githubman         = { version = "0.1.0", path = "githubman" }
-isahc             = { version = "0.9.12", features = ["json"] }
+githuber          = { version = "0.1.0", path = "githuber" }
+isahc             = { version = "0.9.13", features = ["json"] }
 pretty_env_logger = { version = "0.4.0" }
 regex             = { version = "1.4.2" }
 serde             = { version = "1.0.117" }
@@ -37,4 +37,7 @@ twox-hash         = { version = "1.6.0" }
 
 [workspace]
 # TODO: move out, separate into a single crate
-members = ["githubman"]
+members = [
+	"githuber",
+	# "rpcer",
+]

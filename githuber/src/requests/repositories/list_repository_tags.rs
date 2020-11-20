@@ -1,33 +1,33 @@
 // --- crates.io ---
 use derive_builder::Builder as DeriveBuilder;
 use isahc::http::{Method as HttpMethod, Uri};
-// --- githubman ---
+// --- githuber ---
 use crate::{uri, GithubApi};
 
 #[derive(Clone, Debug, Default, DeriveBuilder)]
-pub struct GetRepositoryContent {
+pub struct ListRepositoryTags {
 	/// owner	string	path
 	#[builder(setter(into))]
 	pub owner: String,
 	/// repo	string	path
 	#[builder(setter(into))]
 	pub repo: String,
-	/// path	string	path
-	/// path+ parameter
-	#[builder(setter(into))]
-	pub path: String,
-	/// ref	string	query
-	/// The name of the commit/branch/tag. Default: the repository’s default branch (usually master)
+	/// commit_sha	string	path
+	/// commit_sha+ parameter
 	#[builder(default)]
-	pub r#ref: Option<String>,
+	pub per_page: Option<u32>,
+	/// page	integer	query
+	/// Page number of the results to fetch.
+	#[builder(default)]
+	pub page: Option<u32>,
 }
-impl GithubApi<()> for GetRepositoryContent {
+impl GithubApi<()> for ListRepositoryTags {
 	const HTTP_METHOD: HttpMethod = HttpMethod::GET;
-	const PATH: &'static str = "/repos/{owner}/{repo}/contents/{path}";
+	const PATH: &'static str = "/repos/{owner}/{repo}/tags";
 	const ACCEPT: &'static str = "application/vnd.github.v3+json";
 
 	fn build_uri(&self) -> Uri {
-		uri!(self, [owner, repo, path], [r#ref]).parse().unwrap()
+		uri!(self, [owner, repo], [per_page, page]).parse().unwrap()
 	}
 
 	fn build_body(&self) -> () {

@@ -3,8 +3,8 @@ use async_std::{sync::Arc, task::block_on};
 use futures::{stream, StreamExt};
 use isahc::{Body as IsahcBody, ResponseExt};
 use serde::de::DeserializeOwned;
-// --- githubman ---
-use githubman::{
+// --- githuber ---
+use githuber::{
 	pager::Pager,
 	requests::{
 		commits::{
@@ -22,7 +22,7 @@ use githubman::{
 		releases::Release,
 		repositories::Tag,
 	},
-	GithubApi, Githubman,
+	GithubApi, Githuber,
 };
 use tracing::trace;
 // --- subalfred ---
@@ -36,7 +36,7 @@ impl Subalfred {
 		let mut tags = vec![];
 
 		iterate_page_with(
-			&self.githubman,
+			&self.githuber,
 			ListRepositoryTagsBuilder::default()
 				.owner(Self::SUBSTRATE_GITHUB_OWNER)
 				.repo(Self::SUBSTRATE_GITHUB_REPO)
@@ -55,7 +55,7 @@ impl Subalfred {
 		let mut releases = vec![];
 
 		iterate_page_with(
-			&self.githubman,
+			&self.githuber,
 			ListReleasesBuilder::default()
 				.owner(Self::SUBSTRATE_GITHUB_OWNER)
 				.repo(Self::SUBSTRATE_GITHUB_REPO)
@@ -83,7 +83,7 @@ impl Subalfred {
 				Ok(date_or_hash.into())
 			} else {
 				let commit: Commit = block_on(
-					self.githubman.send(
+					self.githuber.send(
 						GetACommitBuilder::default()
 							.owner(Self::SUBSTRATE_GITHUB_OWNER)
 							.repo(Self::SUBSTRATE_GITHUB_REPO)
@@ -109,7 +109,7 @@ impl Subalfred {
 		};
 
 		iterate_page_with(
-			&self.githubman,
+			&self.githuber,
 			ListCommitsBuilder::default()
 				.owner(Self::SUBSTRATE_GITHUB_OWNER)
 				.repo(Self::SUBSTRATE_GITHUB_REPO)
@@ -144,7 +144,7 @@ impl Subalfred {
 			.map(|Commit { sha, .. }| sha)
 			.collect::<Vec<_>>();
 		let mut pull_requests = stream::iter(commit_shas.into_iter().map(|commit_sha| {
-			let githubman = self.githubman.clone();
+			let githuber = self.githuber.clone();
 			let request = ListPullRequestsAssociatedWithACommitBuilder::default()
 				.owner(Self::SUBSTRATE_GITHUB_OWNER)
 				.repo(Self::SUBSTRATE_GITHUB_REPO)
@@ -154,7 +154,7 @@ impl Subalfred {
 
 			async move {
 				loop {
-					match githubman.send(request.clone()).await {
+					match githuber.send(request.clone()).await {
 						Ok(mut response) => match response.json::<Vec<PullRequest>>() {
 							Ok(pull_requests) => return pull_requests,
 							Err(e) => eprintln!("Serialize Failed Due To: `{:?}`", e),
@@ -295,7 +295,7 @@ impl Subalfred {
 		r#ref: Option<&str>,
 	) -> Result<Content> {
 		let content = self
-			.githubman
+			.githuber
 			.send(
 				GetRepositoryContentBuilder::default()
 					.owner(owner)
@@ -320,7 +320,7 @@ impl Subalfred {
 		title: impl Into<String>,
 		body: impl Into<String>,
 	) -> Result<()> {
-		self.githubman
+		self.githuber
 			.send(
 				CreateAnIssueBuilder::default()
 					.owner(owner)
@@ -340,7 +340,7 @@ impl Subalfred {
 }
 
 async fn iterate_page_with<B, D, F>(
-	githubman: &Arc<Githubman>,
+	githuber: &Arc<Githuber>,
 	request: impl GithubApi<B>,
 	mut f: F,
 ) -> Result<()>
@@ -355,7 +355,7 @@ where
 	};
 
 	loop {
-		let ds: Vec<D> = githubman
+		let ds: Vec<D> = githuber
 			.send_with_pager(request.clone(), &mut pager)
 			.await?
 			.json()?;

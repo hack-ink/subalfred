@@ -14,7 +14,7 @@ use isahc::{
 	Body as IsahcBody, HttpClient, HttpClientBuilder,
 };
 use tracing::trace;
-// --- githubman ---
+// --- githuber ---
 use crate::pager::Pager;
 
 type IsahcRequest<B> = Request<B>;
@@ -60,10 +60,10 @@ where
 }
 
 #[derive(Clone, Debug)]
-pub struct Githubman {
+pub struct Githuber {
 	pub http_client: HttpClient,
 }
-impl Githubman {
+impl Githuber {
 	pub const API_BASE_URL: &'static str = "https://api.github.com";
 
 	pub fn new(oauth_token: impl AsRef<str>) -> Self {

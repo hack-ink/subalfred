@@ -1,12 +1,12 @@
 [package]
 authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
-description = "githubman"
+description = "githuber"
 edition     = "2018"
-homepage    = "https://l2ust.world/githubman"
+homepage    = "https://githuber.l2ust.world/"
 license     = "GPL-3.0"
-name        = "githubman"
+name        = "githuber"
 readme      = "README.md"
-repository  = "https://github.com/l2ust/githubman/"
+repository  = "https://github.com/l2ust/githuber/"
 version     = "0.1.0"
 
 [badges]
@@ -14,7 +14,7 @@ maintenance = { status = "actively-developed" }
 
 [dependencies]
 derive_builder = { version = "0.9.0" }
-isahc          = { version = "0.9.12" }
+isahc          = { version = "0.9.13" }
 serde          = { version = "1.0.117", features = ["derive"] }
 serde_json     = { version = "1.0.59" }
 tracing        = { version = "0.1.21" }
