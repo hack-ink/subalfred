@@ -4,7 +4,7 @@ use std::{
 	io::{Read, Write},
 };
 // --- crates.io ---
-use anyhow::Result;
+use anyhow::Result as AnyResult;
 use app_dirs2::{get_app_root, AppDataType};
 use async_std::sync::Arc;
 use githuber::Githuber;
@@ -61,11 +61,11 @@ impl Config {
 		}
 	}
 
-	pub fn from_reader(r: impl Read) -> Result<Self> {
+	pub fn from_reader(r: impl Read) -> AnyResult<Self> {
 		serde_yaml::from_reader(r).map_err(Into::into)
 	}
 
-	pub fn to_writer(&self, w: impl Write) -> Result<()> {
+	pub fn to_writer(&self, w: impl Write) -> AnyResult<()> {
 		// TODO
 		// serde_yaml::to_writer(w, self)
 

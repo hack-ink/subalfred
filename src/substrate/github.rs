@@ -4,7 +4,7 @@ use futures::{stream, StreamExt};
 use isahc::{Body as IsahcBody, ResponseExt};
 use serde::de::DeserializeOwned;
 // --- githuber ---
-use anyhow::Result;
+use anyhow::Result as AnyResult;
 use githuber::{
 	pager::Pager,
 	requests::{
@@ -33,7 +33,7 @@ impl Subalfred {
 	pub const SUBSTRATE_GITHUB_OWNER: &'static str = "paritytech";
 	pub const SUBSTRATE_GITHUB_REPO: &'static str = "substrate";
 
-	pub async fn list_repository_tags(&self) -> Result<Vec<Tag>> {
+	pub async fn list_repository_tags(&self) -> AnyResult<Vec<Tag>> {
 		let mut tags = vec![];
 
 		iterate_page_with(
@@ -52,7 +52,7 @@ impl Subalfred {
 		Ok(tags)
 	}
 
-	pub async fn list_releases(&self) -> Result<Vec<Release>> {
+	pub async fn list_releases(&self) -> AnyResult<Vec<Release>> {
 		let mut releases = vec![];
 
 		iterate_page_with(
@@ -77,9 +77,9 @@ impl Subalfred {
 		path: Option<&str>,
 		since: Option<&str>,
 		until: Option<&str>,
-	) -> Result<Vec<Commit>> {
+	) -> AnyResult<Vec<Commit>> {
 		let mut commits = vec![];
-		let date_or_hash = |date_or_hash: &str| -> Result<_> {
+		let date_or_hash = |date_or_hash: &str| -> AnyResult<_> {
 			if date_or_hash.contains('-') {
 				Ok(date_or_hash.into())
 			} else {
@@ -137,7 +137,7 @@ impl Subalfred {
 		until: Option<&str>,
 		thread: usize,
 		create_issue: bool,
-	) -> Result<Vec<PullRequest>> {
+	) -> AnyResult<Vec<PullRequest>> {
 		let commit_shas = self
 			.list_commits(sha, path, since, until)
 			.await?
@@ -234,7 +234,7 @@ impl Subalfred {
 		until: Option<&str>,
 		thread: usize,
 		create_issue: bool,
-	) -> Result<Vec<PullRequest>> {
+	) -> AnyResult<Vec<PullRequest>> {
 		let mut pull_requests = self
 			.list_pull_requests(sha, path, since, until, thread, false)
 			.await?;
@@ -294,7 +294,7 @@ impl Subalfred {
 		repo: impl Into<String>,
 		path: impl Into<String>,
 		r#ref: Option<&str>,
-	) -> Result<Content> {
+	) -> AnyResult<Content> {
 		let content = self
 			.githuber
 			.send(
@@ -320,7 +320,7 @@ impl Subalfred {
 		repo: impl Into<String>,
 		title: impl Into<String>,
 		body: impl Into<String>,
-	) -> Result<()> {
+	) -> AnyResult<()> {
 		self.githuber
 			.send(
 				CreateAnIssueBuilder::default()
@@ -344,7 +344,7 @@ async fn iterate_page_with<B, D, F>(
 	githuber: &Arc<Githuber>,
 	request: impl GithubApi<B>,
 	mut f: F,
-) -> Result<()>
+) -> AnyResult<()>
 where
 	B: Into<IsahcBody>,
 	D: DeserializeOwned,

@@ -6,7 +6,7 @@ pub mod substrate;
 // --- std ---
 use std::{env, process::Command};
 // --- crates.io ---
-use anyhow::Result;
+use anyhow::Result as AnyResult;
 use app_dirs2::AppInfo;
 use async_std::sync::Arc;
 use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg};
@@ -28,7 +28,7 @@ const APP_INFO: AppInfo = AppInfo {
 };
 
 #[async_std::main]
-async fn main() -> Result<()> {
+async fn main() -> AnyResult<()> {
 	// TODO: about
 	let app = App::new(crate_name!())
 		.version(crate_version!())

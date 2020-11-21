@@ -1,7 +1,7 @@
 // --- std ---
 use std::{fmt::Debug, fs::File, io::Read};
 // --- crates.io ---
-use anyhow::Result;
+use anyhow::Result as AnyResult;
 use isahc::{
 	http::{
 		header::CONTENT_TYPE, request::Builder as RequestBuilder, Method as HttpMethod, Response,
@@ -44,7 +44,7 @@ pub struct RuntimeVersion {
 }
 
 impl Subalfred {
-	pub async fn send_rpc(uri: impl AsRef<str>, body: Value) -> Result<IsahcResponse> {
+	pub async fn send_rpc(uri: impl AsRef<str>, body: Value) -> AnyResult<IsahcResponse> {
 		let mut request_builder = RequestBuilder::new()
 			.method(HttpMethod::POST)
 			.uri(uri.as_ref());
@@ -62,7 +62,7 @@ impl Subalfred {
 		Ok(result)
 	}
 
-	pub async fn check_runtime_version(&self) -> Result<Vec<RuntimeVersions>> {
+	pub async fn check_runtime_version(&self) -> AnyResult<Vec<RuntimeVersions>> {
 		let mut runtimes = vec![];
 
 		for Runtime {
@@ -71,13 +71,10 @@ impl Subalfred {
 		} in &self.project.runtimes
 		{
 			let chain_runtime_version = serde_json::from_value::<RuntimeVersion>(
-				Self::send_rpc(
-					node_rpc_uri,
-					subrpcer::state::get_runtime_version(),
-				)
-				.await?
-				.json::<RpcResult>()?
-				.result,
+				Self::send_rpc(node_rpc_uri, subrpcer::state::get_runtime_version())
+					.await?
+					.json::<RpcResult>()?
+					.result,
 			)
 			.unwrap();
 			let github_runtime_version = {
