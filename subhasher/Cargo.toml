@@ -1,0 +1,19 @@
+[package]
+authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
+description = "subhasher"
+edition     = "2018"
+homepage    = "https://subhasher.l2ust.world/"
+license     = "GPL-3.0"
+name        = "subhasher"
+readme      = "README.md"
+repository  = "https://github.com/l2ust/subhasher/"
+version     = "0.1.0"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[dependencies]
+array-bytes = { version = "0.1.0", path = "../array-bytes" }
+blake2-rfc  = { version = "0.2.18" }
+byteorder   = { version = "1.3.4" }
+twox-hash   = { version = "1.6.0" }

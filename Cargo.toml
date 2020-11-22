@@ -23,7 +23,6 @@ array-bytes       = { version = "0.1.0", path = "array-bytes" }
 async-std         = { version = "1.7.0", features = ["attributes"] }
 base58            = { version = "0.1.0" }
 blake2-rfc        = { version = "0.2.18" }
-byteorder         = { version = "1.3.4" }
 clap              = { version = "3.0.0-beta.2" }
 futures           = { version = "0.3.8" }
 githuber          = { version = "0.1.0", path = "githuber" }
@@ -33,15 +32,16 @@ regex             = { version = "1.4.2" }
 serde             = { version = "1.0.117" }
 serde_json        = { version = "1.0.59" }
 serde_yaml        = { version = "0.8.14" }
+subhasher         = { version = "0.1.0", path = "subhasher" }
 subrpcer          = { version = "0.1.0", path = "subrpcer" }
 toml              = { version = "0.5.7" }
 tracing           = { version = "0.1.21" }
-twox-hash         = { version = "1.6.0" }
 
 [workspace]
 # TODO: move out, separate into a single crate
 members = [
 	"array-bytes",
 	"githuber",
+	"subhasher",
 	"subrpcer",
 ]

@@ -1379,7 +1379,6 @@ dependencies = [
  "async-std",
  "base58",
  "blake2-rfc",
- "byteorder",
  "clap",
  "futures",
  "githuber",
@@ -1389,9 +1388,19 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_yaml",
+ "subhasher",
  "subrpcer",
  "toml",
  "tracing",
+]
+
+[[package]]
+name = "subhasher"
+version = "0.1.0"
+dependencies = [
+ "array-bytes",
+ "blake2-rfc",
+ "byteorder",
  "twox-hash",
 ]
 
