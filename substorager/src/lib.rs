@@ -1,6 +1,14 @@
-// --- crates.io ---
-use subhasher::*;
+// --- std ---
+// use std::str::FromStr;
 
+#[derive(Debug)]
+pub enum StorageType {
+	Plain,
+	Map(StorageHasher),
+	DoubleMap(StorageHasher, StorageHasher),
+}
+
+#[derive(Debug)]
 pub enum StorageHasher {
 	Blake2_128,
 	Blake2_256,
@@ -26,6 +34,16 @@ impl StorageHasher {
 		}
 	}
 }
+// impl FromStr for StorageHasher {
+// 	type Err = ();
+
+// 	fn from_str(s: &str) -> Result<Self, Self::Err> {
+// 		// --- substorager ---
+// 		use StorageHasher::*;
+
+// 		match s {}
+// 	}
+// }
 
 pub fn storage_value_key(module: impl AsRef<[u8]>, item: impl AsRef<[u8]>) -> Vec<u8> {
 	let mut storage_value_key = vec![];

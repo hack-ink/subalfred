@@ -1,5 +1,4 @@
 // --- crates.io ---
-use array_bytes::*;
 use base58::{FromBase58, ToBase58};
 use blake2_rfc::blake2b::Blake2b;
 
@@ -45,9 +44,12 @@ pub fn parse_account(account: &str) -> Vec<(String, String)> {
 	if account.len() == 48 {
 		public_key = into_public_key(account);
 
-		accounts.push(("Public Key".into(), format!("0x{}", hex_str(&public_key))));
+		accounts.push((
+			"Public Key".into(),
+			format!("0x{}", array_bytes::hex_str(&public_key)),
+		));
 	} else {
-		public_key = bytes(account).unwrap();
+		public_key = array_bytes::bytes(account).unwrap();
 
 		accounts.push((
 			"Public Key".into(),
