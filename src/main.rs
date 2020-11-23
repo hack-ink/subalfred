@@ -143,8 +143,8 @@ async fn main() -> AnyResult<()> {
 			App::new("storage-prefix")
 				.about("")
 				.arg(
-					Arg::new("module")
-						.long("module")
+					Arg::new("prefix")
+						.long("prefix")
 						.takes_value(true)
 						.value_name("NAME")
 						.about(""),
@@ -281,7 +281,7 @@ async fn main() -> AnyResult<()> {
 		println!(
 			"Storage Keys: {}",
 			parse_storage_keys(
-				storage_prefix_args.value_of("module"),
+				storage_prefix_args.value_of("prefix"),
 				storage_prefix_args.value_of("item")
 			)
 		);

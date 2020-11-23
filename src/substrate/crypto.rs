@@ -44,10 +44,7 @@ pub fn parse_account(account: &str) -> Vec<(String, String)> {
 	if account.len() == 48 {
 		public_key = into_public_key(account);
 
-		accounts.push((
-			"Public Key".into(),
-			format!("0x{}", array_bytes::hex_str(&public_key)),
-		));
+		accounts.push(("Public Key".into(), array_bytes::hex_str("0x", &public_key)));
 	} else {
 		public_key = array_bytes::bytes(account).unwrap();
 

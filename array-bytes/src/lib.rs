@@ -1,3 +1,5 @@
+// --- std ---
+use core::char;
 // --- crates.io ---
 use anyhow::Result as AnyResult;
 use thiserror::Error as ThisError;
@@ -30,17 +32,23 @@ pub fn bytes(hex_str: &str) -> AnyResult<Vec<u8>> {
 	}
 
 	let hex_str = hex_str.trim_start_matches("0x");
-
-	Ok((0..hex_str.len())
+	let bytes = (0..hex_str.len())
 		.step_by(2)
 		.map(|i| u8::from_str_radix(&hex_str[i..i + 2], 16).map_err(Into::into))
-		.collect::<AnyResult<Vec<_>>>()?)
+		.collect::<AnyResult<Vec<_>>>()?;
+
+	Ok(bytes)
 }
 
-pub fn hex_str(bytes: &[u8]) -> String {
-	bytes
-		.iter()
-		.map(|byte| format!("{:02x}", byte))
-		.collect::<Vec<_>>()
-		.join("")
+pub fn hex_str(prefix: &str, bytes: &[u8]) -> String {
+	let mut hex_str = String::with_capacity(prefix.len() + bytes.len() * 2);
+	for byte in prefix.chars() {
+		hex_str.push(byte);
+	}
+	for byte in bytes.iter() {
+		hex_str.push(char::from_digit((byte >> 4) as _, 16).unwrap());
+		hex_str.push(char::from_digit((byte & 0xf) as _, 16).unwrap());
+	}
+
+	hex_str
 }
