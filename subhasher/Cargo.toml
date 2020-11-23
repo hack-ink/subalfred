@@ -13,7 +13,6 @@ version     = "0.1.0"
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-array-bytes = { version = "0.1.0", path = "../array-bytes" }
-blake2-rfc  = { version = "0.2.18" }
-byteorder   = { version = "1.3.4" }
-twox-hash   = { version = "1.6.0" }
+blake2-rfc = { version = "0.2.18" }
+byteorder  = { version = "1.3.4" }
+twox-hash  = { version = "1.6.0" }

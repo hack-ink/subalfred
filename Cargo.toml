@@ -44,4 +44,5 @@ members = [
 	"githuber",
 	"subhasher",
 	"subrpcer",
+	"substorager",
 ]

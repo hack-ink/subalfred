@@ -1398,7 +1398,6 @@ dependencies = [
 name = "subhasher"
 version = "0.1.0"
 dependencies = [
- "array-bytes",
  "blake2-rfc",
  "byteorder",
  "twox-hash",
@@ -1410,6 +1409,13 @@ version = "0.1.0"
 dependencies = [
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "substorager"
+version = "0.1.0"
+dependencies = [
+ "subhasher",
 ]
 
 [[package]]
