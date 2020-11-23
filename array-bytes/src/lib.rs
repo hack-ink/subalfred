@@ -6,7 +6,7 @@ use thiserror::Error as ThisError;
 
 #[derive(Debug, ThisError)]
 pub enum Error {
-	#[error("Fail to convert `{}` to bytes", hex_str)]
+	#[error("Fail to convert {} to bytes", hex_str)]
 	InvalidHexLength { hex_str: String },
 }
 
@@ -24,7 +24,9 @@ macro_rules! hex_str_array_unchecked {
 		}};
 }
 
-pub fn bytes(hex_str: &str) -> AnyResult<Vec<u8>> {
+pub fn bytes(hex_str: impl AsRef<str>) -> AnyResult<Vec<u8>> {
+	let hex_str = hex_str.as_ref();
+
 	if hex_str.len() % 2 != 0 {
 		Err(Error::InvalidHexLength {
 			hex_str: hex_str.into(),
@@ -40,8 +42,11 @@ pub fn bytes(hex_str: &str) -> AnyResult<Vec<u8>> {
 	Ok(bytes)
 }
 
-pub fn hex_str(prefix: &str, bytes: &[u8]) -> String {
+pub fn hex_str(prefix: impl AsRef<str>, bytes: impl AsRef<[u8]>) -> String {
+	let prefix = prefix.as_ref();
+	let bytes = bytes.as_ref();
 	let mut hex_str = String::with_capacity(prefix.len() + bytes.len() * 2);
+
 	for byte in prefix.chars() {
 		hex_str.push(byte);
 	}
