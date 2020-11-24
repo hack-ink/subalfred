@@ -5,11 +5,11 @@ use serde_json::{json, Value};
 use crate::rpc;
 
 pub fn get_metadata() -> Value {
-	rpc("state_getMetadata", Value::Null)
+	rpc("state_getMetadata", Value::Null, 1)
 }
 
 pub fn get_runtime_version() -> Value {
-	rpc("state_getRuntimeVersion", Value::Null)
+	rpc("state_getRuntimeVersion", Value::Null, 1)
 }
 
 pub fn get_storage(key: impl Serialize, at: Option<impl Serialize>) -> Value {
@@ -20,5 +20,6 @@ pub fn get_storage(key: impl Serialize, at: Option<impl Serialize>) -> Value {
 			at.map(|at| serde_json::to_value(at).unwrap())
 				.unwrap_or(Value::Null)
 		]),
+		1,
 	)
 }

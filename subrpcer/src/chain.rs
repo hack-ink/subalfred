@@ -5,5 +5,5 @@ use serde_json::{json, Value};
 use crate::rpc;
 
 pub fn get_block_hash(block_number: impl Serialize) -> Value {
-	rpc("chain_getBlockHash", json!([block_number]))
+	rpc("chain_getBlockHash", json!([block_number]), 1)
 }

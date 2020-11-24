@@ -53,7 +53,6 @@ async fn main() -> AnyResult<()> {
 					Arg::new("thread")
 						.long("thread")
 						.takes_value(true)
-						.default_value("1")
 						.value_name("COUNT")
 						.about(""),
 				)
@@ -66,7 +65,6 @@ async fn main() -> AnyResult<()> {
 					Arg::new("thread")
 						.long("thread")
 						.takes_value(true)
-						.default_value("1")
 						.value_name("COUNT")
 						.about(""),
 				)
@@ -122,7 +120,6 @@ async fn main() -> AnyResult<()> {
 					Arg::new("hasher")
 						.long("hasher")
 						.takes_value(true)
-						.default_value("blake2-128")
 						.possible_values(&[
 							"blake2-128",
 							"blake2-256",
@@ -208,7 +205,7 @@ async fn main() -> AnyResult<()> {
 					list_pull_requests_args.value_of("until"),
 					list_pull_requests_args
 						.value_of("thread")
-						.unwrap()
+						.unwrap_or("1")
 						.parse()
 						.unwrap(),
 					list_pull_requests_args.is_present("create-issue"),
@@ -227,7 +224,7 @@ async fn main() -> AnyResult<()> {
 					list_migrations_args.value_of("until"),
 					list_migrations_args
 						.value_of("thread")
-						.unwrap()
+						.unwrap_or("1")
 						.parse()
 						.unwrap(),
 					list_migrations_args.is_present("create-issue"),
@@ -246,7 +243,12 @@ async fn main() -> AnyResult<()> {
 						send_rpc_args.value_of("method").unwrap(),
 						serde_json::from_str::<Value>(
 							send_rpc_args.value_of("params").unwrap_or("[]")
-						)?
+						)?,
+						send_rpc_args
+							.value_of("id")
+							.unwrap_or("1")
+							.parse::<u32>()
+							.unwrap(),
 					),
 				)
 				.await?
@@ -273,7 +275,7 @@ async fn main() -> AnyResult<()> {
 			"{}",
 			hash(
 				hash_args.value_of("data").unwrap(),
-				hash_args.value_of("hasher").unwrap(),
+				hash_args.value_of("hasher").unwrap_or("blake2-128-concat"),
 				hash_args.is_present("hex")
 			)
 		);
