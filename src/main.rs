@@ -161,13 +161,51 @@ async fn main() -> AnyResult<()> {
 			),
 		)
 		.subcommand(
-			App::new("pallet-template").about("").arg(
-				Arg::new("name")
-					.long("name")
-					.takes_value(true)
-					.value_name("NAME")
-					.about(""),
-			),
+			App::new("pallet-template")
+				.about("")
+				.arg(
+					Arg::new("name")
+						.long("name")
+						.takes_value(true)
+						.value_name("NAME")
+						.about(""),
+				)
+				.arg(Arg::new("multi-instance").long("multi-instance").about(""))
+				.arg(
+					Arg::new("dependency-path")
+						.long("dependency-path")
+						.takes_value(true)
+						.value_name("PATH")
+						.about(""),
+				)
+				.arg(
+					Arg::new("dependency-git")
+						.long("dependency-git")
+						.takes_value(true)
+						.value_name("GIT")
+						.about(""),
+				)
+				.arg(
+					Arg::new("dependency-commit")
+						.long("dependency-commit")
+						.takes_value(true)
+						.value_name("SHA")
+						.about(""),
+				)
+				.arg(
+					Arg::new("dependency-branch")
+						.long("dependency-branch")
+						.takes_value(true)
+						.value_name("SHA")
+						.about(""),
+				)
+				.arg(
+					Arg::new("dependency-tag")
+						.long("dependency-tag")
+						.takes_value(true)
+						.value_name("TAG")
+						.about(""),
+				),
 		);
 	let app_args = app.get_matches();
 
