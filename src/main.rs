@@ -305,12 +305,12 @@ async fn main() -> AnyResult<()> {
 			pallet_template_args
 				.value_of("name")
 				.unwrap_or("substrate-pallet-template"),
-			pallet_template_args.value_of("version"),
-			pallet_template_args.value_of("path"),
-			pallet_template_args.value_of("git"),
-			pallet_template_args.value_of("commit"),
-			pallet_template_args.value_of("branch"),
-			pallet_template_args.value_of("tag"),
+			pallet_template_args.is_present("multi-instance"),
+			pallet_template_args.value_of("dependency-path"),
+			pallet_template_args.value_of("dependency-git"),
+			pallet_template_args.value_of("dependency-commit"),
+			pallet_template_args.value_of("dependency-branch"),
+			pallet_template_args.value_of("dependency-tag"),
 		);
 	}
 
