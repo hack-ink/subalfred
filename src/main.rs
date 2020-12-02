@@ -4,7 +4,7 @@ pub mod config;
 pub mod substrate;
 
 // --- std ---
-use std::{env, process::Command};
+use std::env;
 // --- crates.io ---
 use anyhow::Result as AnyResult;
 use app_dirs2::AppInfo;
@@ -16,10 +16,7 @@ use serde_json::Value;
 // --- subalfred ---
 use crate::{
 	config::Project,
-	substrate::{
-		crypto::parse_account,
-		hash::{hash, parse_storage_keys},
-	},
+	substrate::{crypto, hash, template},
 };
 
 const APP_INFO: AppInfo = AppInfo {
@@ -162,6 +159,15 @@ async fn main() -> AnyResult<()> {
 					.value_name("NAME")
 					.about(""),
 			),
+		)
+		.subcommand(
+			App::new("pallet-template").about("").arg(
+				Arg::new("name")
+					.long("name")
+					.takes_value(true)
+					.value_name("NAME")
+					.about(""),
+			),
 		);
 	let app_args = app.get_matches();
 
@@ -260,7 +266,7 @@ async fn main() -> AnyResult<()> {
 			println!("{:#?}", versions);
 		}
 	} else if let Some(account_args) = app_args.subcommand_matches("account") {
-		let accounts = parse_account(account_args.value_of("account").unwrap());
+		let accounts = crypto::parse_account(account_args.value_of("account").unwrap());
 		let max_width = accounts
 			.iter()
 			.map(|account| account.0.len())
@@ -273,7 +279,7 @@ async fn main() -> AnyResult<()> {
 	} else if let Some(hash_args) = app_args.subcommand_matches("hash") {
 		println!(
 			"{}",
-			hash(
+			hash::hash(
 				hash_args.value_of("data").unwrap(),
 				hash_args.value_of("hasher").unwrap_or("blake2-128-concat"),
 				hash_args.is_present("hex")
@@ -282,23 +288,30 @@ async fn main() -> AnyResult<()> {
 	} else if let Some(storage_prefix_args) = app_args.subcommand_matches("storage-prefix") {
 		println!(
 			"Storage Keys: {}",
-			parse_storage_keys(
+			hash::parse_storage_keys(
 				storage_prefix_args.value_of("prefix"),
 				storage_prefix_args.value_of("item")
 			)
 		);
 	} else if let Some(node_template_args) = app_args.subcommand_matches("node-template") {
 		// TODO: output
-		Command::new("git")
-			.args(&[
-				"clone",
-				"https://github.com/substrate-developer-hub/substrate-node-template.git",
-				node_template_args
-					.value_of("name")
-					.unwrap_or("substrate-node-template"),
-			])
-			.output()
-			.unwrap();
+		template::node_template(
+			node_template_args
+				.value_of("name")
+				.unwrap_or("substrate-node-template"),
+		);
+	} else if let Some(pallet_template_args) = app_args.subcommand_matches("pallet-template") {
+		template::pallet_template(
+			pallet_template_args
+				.value_of("name")
+				.unwrap_or("substrate-pallet-template"),
+			pallet_template_args.value_of("version"),
+			pallet_template_args.value_of("path"),
+			pallet_template_args.value_of("git"),
+			pallet_template_args.value_of("commit"),
+			pallet_template_args.value_of("branch"),
+			pallet_template_args.value_of("tag"),
+		);
 	}
 
 	Ok(())
