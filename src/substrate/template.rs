@@ -1,7 +1,7 @@
 // --- std ---
 use std::{
 	fs::{self, OpenOptions},
-	io::Read,
+	io::{Read, Seek, SeekFrom, Write},
 	process::Command,
 };
 
@@ -25,29 +25,29 @@ pub fn pallet_template(
 	dependency_branch: Option<&str>,
 	dependency_tag: Option<&str>,
 ) {
-	// Command::new("git")
-	// 	.args(&[
-	// 		"clone",
-	// 		"-b",
-	// 		if multi_instance {
-	// 			"multi-instance"
-	// 		} else {
-	// 			"single-instance"
-	// 		},
-	// 		"--single-branch",
-	// 		"https://github.com/l2ust/substrate-pallet-template.git",
-	// 		name,
-	// 	])
-	// 	.output()
-	// 	.unwrap();
+	Command::new("git")
+		.args(&[
+			"clone",
+			"-b",
+			if multi_instance {
+				"multi-instance"
+			} else {
+				"single-instance"
+			},
+			"--single-branch",
+			"https://github.com/l2ust/substrate-pallet-template.git",
+			name,
+		])
+		.output()
+		.unwrap();
 
 	let path = |f| format!("{}/{}", name, f);
 
-	// fs::remove_file(path(".editorconfig")).unwrap();
-	// fs::remove_file(path(".gitignore")).unwrap();
-	// fs::remove_file(path(".rustfmt.toml")).unwrap();
-	// fs::remove_file(path("Cargo.lock")).unwrap();
-	// fs::remove_dir_all(path(".git")).unwrap();
+	fs::remove_file(path(".editorconfig")).unwrap();
+	fs::remove_file(path(".gitignore")).unwrap();
+	fs::remove_file(path(".rustfmt.toml")).unwrap();
+	fs::remove_file(path("Cargo.lock")).unwrap();
+	fs::remove_dir_all(path(".git")).unwrap();
 
 	let mut cargo_toml = OpenOptions::new()
 		.read(true)
@@ -102,5 +102,7 @@ pub fn pallet_template(
 		})
 		.collect();
 
-	println!("{}", cargo_toml_content);
+	cargo_toml.seek(SeekFrom::Start(0)).unwrap();
+	cargo_toml.write_all(cargo_toml_content.as_bytes()).unwrap();
+	cargo_toml.sync_all().unwrap();
 }
