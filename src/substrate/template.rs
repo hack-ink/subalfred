@@ -59,32 +59,28 @@ pub fn pallet_template(
 	cargo_toml.read_to_string(&mut cargo_toml_content).unwrap();
 
 	let lines_to_modify = [17, 18, 22, 23, 24];
-	let dependency_extra_info = if let Some(dependency_path) = dependency_path {
-		format!(", path = \"{}\"", dependency_path)
-	} else if let Some(dependency_git) = dependency_git {
-		let dependency_commit = if let Some(dependency_commit) = dependency_commit {
-			format!(", commit = \"{}\"", dependency_commit)
+	let if_let_else = |key, option, otherwise| {
+		if let Some(value) = option {
+			format!(", {} = \"{}\"", key, value)
 		} else {
-			String::new()
-		};
-		let dependency_branch = if let Some(dependency_branch) = dependency_branch {
-			format!(", branch = \"{}\"", dependency_branch)
-		} else {
-			String::new()
-		};
-		let dependency_tag = if let Some(dependency_tag) = dependency_tag {
-			format!(", tag = \"{}\"", dependency_tag)
-		} else {
-			String::new()
-		};
-
-		format!(
-			", git = \"{}\"{}{}{}",
-			dependency_git, dependency_commit, dependency_branch, dependency_tag
-		)
-	} else {
-		String::new()
+			otherwise
+		}
 	};
+	let dependency_extra_info = if_let_else("path", dependency_path, {
+		let dependency_git = if_let_else("git", dependency_git, String::new());
+		let dependency_commit = if_let_else("commit", dependency_commit, String::new());
+		let dependency_branch = if_let_else("branch", dependency_branch, String::new());
+		let dependency_tag = if_let_else("tag", dependency_tag, String::new());
+
+		if dependency_git.is_empty() {
+			dependency_git
+		} else {
+			format!(
+				"{}{}{}{}",
+				dependency_git, dependency_commit, dependency_branch, dependency_tag
+			)
+		}
+	});
 
 	cargo_toml_content = cargo_toml_content
 		.lines()
