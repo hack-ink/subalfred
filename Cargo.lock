@@ -1384,7 +1384,6 @@ dependencies = [
  "array-bytes",
  "async-std",
  "base58",
- "blake2-rfc",
  "clap",
  "futures",
  "githuber",
@@ -1394,10 +1393,19 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_yaml",
+ "subcryptor",
  "subhasher",
  "subrpcer",
  "toml",
  "tracing",
+]
+
+[[package]]
+name = "subcryptor"
+version = "0.1.0"
+dependencies = [
+ "base58",
+ "blake2-rfc",
 ]
 
 [[package]]

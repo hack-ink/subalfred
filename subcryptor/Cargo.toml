@@ -1,0 +1,17 @@
+[package]
+authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
+description = "subcryptor"
+edition     = "2018"
+homepage    = "https://subcryptor.l2ust.world/"
+license     = "GPL-3.0"
+name        = "subcryptor"
+readme      = "README.md"
+repository  = "https://github.com/l2ust/subcryptor/"
+version     = "0.1.0"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[dependencies]
+base58     = { version = "0.1.0" }
+blake2-rfc = { version = "0.2.18" }
