@@ -13,5 +13,5 @@ version     = "0.1.0"
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-anyhow    = { version = "1.0.34" }
+anyhow    = { version = "1.0.35" }
 thiserror = { version = "1.0.22" }

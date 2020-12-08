@@ -2,19 +2,12 @@
 use std::{fmt::Debug, fs::File, io::Read};
 // --- crates.io ---
 use anyhow::Result as AnyResult;
-use isahc::{
-	http::{
-		header::CONTENT_TYPE, request::Builder as RequestBuilder, Method as HttpMethod, Response,
-	},
-	Body as IsahcBody, ResponseExt,
-};
+use isahc::ResponseExt;
 use serde::{de::DeserializeOwned, Deserialize};
 use serde_json::Value;
 use tracing::trace;
 // --- subalfred ---
 use crate::{config::Runtime, Subalfred};
-
-type IsahcResponse = Response<IsahcBody>;
 
 #[derive(Debug, Deserialize)]
 pub struct RpcResult {
@@ -44,24 +37,6 @@ pub struct RuntimeVersion {
 }
 
 impl Subalfred {
-	pub async fn send_rpc(uri: impl AsRef<str>, body: Value) -> AnyResult<IsahcResponse> {
-		let mut request_builder = RequestBuilder::new()
-			.method(HttpMethod::POST)
-			.uri(uri.as_ref());
-
-		request_builder.headers_mut().unwrap().append(
-			CONTENT_TYPE,
-			"application/json;charset=utf-8".parse().unwrap(),
-		);
-
-		let request = request_builder.body(serde_json::to_vec(&body)?).unwrap();
-		let result = isahc::send_async(request).await?;
-
-		trace!("{:#?}", result);
-
-		Ok(result)
-	}
-
 	pub async fn check_runtime_version(&self) -> AnyResult<Vec<RuntimeVersions>> {
 		let mut runtimes = vec![];
 
@@ -71,7 +46,7 @@ impl Subalfred {
 		} in &self.project.runtimes
 		{
 			let chain_runtime_version = serde_json::from_value::<RuntimeVersion>(
-				Self::send_rpc(node_rpc_uri, subrpcer::state::get_runtime_version())
+				subrpcer::send_rpc(node_rpc_uri, subrpcer::state::get_runtime_version())
 					.await?
 					.json::<RpcResult>()?
 					.result,

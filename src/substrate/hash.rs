@@ -59,10 +59,10 @@ pub fn parse_storage_keys(prefix: Option<&str>, item: Option<&str>) -> String {
 	let mut storage_prefix = String::from("0x");
 
 	if let Some(prefix) = prefix {
-		storage_prefix.push_str(&array_bytes::hex_str("0x", &subhasher::twox_128(prefix)));
+		storage_prefix.push_str(&array_bytes::hex_str("", &subhasher::twox_128(prefix)));
 	}
 	if let Some(item) = item {
-		storage_prefix.push_str(&array_bytes::hex_str("0x", &subhasher::twox_128(item)));
+		storage_prefix.push_str(&array_bytes::hex_str("", &subhasher::twox_128(item)));
 	}
 
 	storage_prefix

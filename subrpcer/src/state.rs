@@ -23,3 +23,7 @@ pub fn get_storage(key: impl Serialize, at: Option<impl Serialize>) -> Value {
 		1,
 	)
 }
+#[cfg(feature = "raw-params")]
+pub fn get_storage_with_raw_params(params: impl Serialize) -> Value {
+	rpc("state_getStorage", params, 1)
+}

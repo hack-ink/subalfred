@@ -1,6 +1,3 @@
-// --- std ---
-// use std::str::FromStr;
-
 #[derive(Clone, Debug)]
 pub enum StorageType {
 	Plain,
@@ -39,16 +36,6 @@ impl AsRef<StorageHasher> for StorageHasher {
 		&self
 	}
 }
-// impl FromStr for StorageHasher {
-// 	type Err = ();
-
-// 	fn from_str(s: &str) -> Result<Self, Self::Err> {
-// 		// --- substorager ---
-// 		use StorageHasher::*;
-
-// 		match s {}
-// 	}
-// }
 
 pub fn storage_value_key(prefix: impl AsRef<[u8]>, item: impl AsRef<[u8]>) -> Vec<u8> {
 	let mut storage_value_key = vec![];

@@ -91,6 +91,13 @@ async fn main() -> AnyResult<()> {
 						.takes_value(true)
 						.value_name("[PARAM]")
 						.about(""),
+				)
+				.arg(
+					Arg::new("id")
+						.long("id")
+						.takes_value(true)
+						.value_name("ID")
+						.about(""),
 				),
 		)
 		.subcommand(App::new("check-runtime-version").about(""))
@@ -134,7 +141,7 @@ async fn main() -> AnyResult<()> {
 		)
 		.subcommand(
 			// TODO: handle instance
-			App::new("storage-prefix")
+			App::new("storage-key")
 				.about("")
 				.arg(
 					Arg::new("prefix")
@@ -276,28 +283,39 @@ async fn main() -> AnyResult<()> {
 				.await?
 		);
 	} else if let Some(send_rpc_args) = app_args.subcommand_matches("send-rpc") {
+		let uri = send_rpc_args
+			.value_of("uri")
+			.unwrap_or("http://127.0.0.1:9933");
+		let params =
+			|| serde_json::from_str::<Value>(send_rpc_args.value_of("params").unwrap_or("[]"));
+		let rpc = match send_rpc_args.value_of("method").unwrap() {
+			"author_submitAndWatchExtrinsic" | "submitAndWatchExtrinsic" => {
+				subrpcer::author::submit_and_watch_extrinsic_with_params(params()?)
+			}
+			"chain_getBlockHash" | "getBlockHash" => {
+				subrpcer::chain::get_block_hash_with_raw_params(params()?)
+			}
+			"state_getRuntimeVersion" | "getRuntimeVersion" => {
+				subrpcer::state::get_runtime_version()
+			}
+			"state_getMetadata" | "getMetadata" => subrpcer::state::get_metadata(),
+			"state_getStorage" | "getStorage" => {
+				subrpcer::state::get_storage_with_raw_params(params()?)
+			}
+			method => subrpcer::rpc(
+				method,
+				params()?,
+				send_rpc_args
+					.value_of("id")
+					.unwrap_or("1")
+					.parse::<u32>()
+					.unwrap(),
+			),
+		};
+
 		println!(
 			"{}",
-			serde_json::to_string(
-				&Subalfred::send_rpc(
-					send_rpc_args
-						.value_of("uri")
-						.unwrap_or("http://127.0.0.1:9933"),
-					subrpcer::rpc(
-						send_rpc_args.value_of("method").unwrap(),
-						serde_json::from_str::<Value>(
-							send_rpc_args.value_of("params").unwrap_or("[]")
-						)?,
-						send_rpc_args
-							.value_of("id")
-							.unwrap_or("1")
-							.parse::<u32>()
-							.unwrap(),
-					),
-				)
-				.await?
-				.json::<Value>()?
-			)?
+			serde_json::to_string(&subrpcer::send_rpc(uri, rpc).await?.json::<Value>()?)?
 		);
 	} else if let Some(_) = app_args.subcommand_matches("check-runtime-version") {
 		for versions in subalfred.check_runtime_version().await? {
@@ -323,7 +341,7 @@ async fn main() -> AnyResult<()> {
 				hash_args.is_present("hex")
 			)
 		);
-	} else if let Some(storage_prefix_args) = app_args.subcommand_matches("storage-prefix") {
+	} else if let Some(storage_prefix_args) = app_args.subcommand_matches("storage-key") {
 		println!(
 			"Storage Keys: {}",
 			hash::parse_storage_keys(
