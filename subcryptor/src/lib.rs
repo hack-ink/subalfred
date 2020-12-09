@@ -1,3 +1,17 @@
+#[cfg(feature = "full-crypto")]
+pub mod full_crypto {
+	pub type PublicKey = [u8; 32];
+	pub type Signature = [u8; 64];
+
+	pub const SIGNING_CTX: &[u8] = b"substrate";
+}
+
+// --- crates.io ---
+#[cfg(feature = "full-crypto")]
+pub use full_crypto::*;
+#[cfg(feature = "full-crypto")]
+pub use schnorrkel;
+
 // --- crates.io ---
 use base58::{FromBase58, ToBase58};
 use blake2_rfc::blake2b::Blake2b;

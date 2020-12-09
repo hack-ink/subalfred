@@ -12,6 +12,10 @@ version     = "0.1.0"
 [badges]
 maintenance = { status = "actively-developed" }
 
+[features]
+full-crypto = ["schnorrkel"]
+
 [dependencies]
 base58     = { version = "0.1.0" }
 blake2-rfc = { version = "0.2.18" }
+schnorrkel = { version = "0.9.1", optional = true }
