@@ -33,6 +33,7 @@ serde_json        = { version = "1.0.60" }
 serde_yaml        = { version = "0.8.14" }
 subcryptor        = { version = "0.1.0", path = "subcryptor" }
 subhasher         = { version = "0.1.0", path = "subhasher" }
+submetadatan      = { version = "0.1.0", path = "submetadatan" }
 subrpcer          = { version = "0.1.0", features = ["raw-params", "sender"], path = "subrpcer" }
 toml              = { version = "0.5.7" }
 tracing           = { version = "0.1.22" }
@@ -44,6 +45,7 @@ members = [
 	"githuber",
 	"subcryptor",
 	"subhasher",
+	"submetadatan",
 	"subrpcer",
 	"substorager",
 ]

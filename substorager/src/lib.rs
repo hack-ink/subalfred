@@ -1,11 +1,28 @@
+// --- crates.io ---
+#[cfg(feature = "codec")]
+use parity_scale_codec::Decode;
+
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "codec", derive(Decode))]
 pub enum StorageType {
-	Plain,
-	Map(StorageHasher),
-	DoubleMap(StorageHasher, StorageHasher),
+	Plain(String),
+	Map {
+		hasher: StorageHasher,
+		key: String,
+		value: String,
+		unused: bool,
+	},
+	DoubleMap {
+		hasher: StorageHasher,
+		key1: String,
+		key2: String,
+		value: String,
+		key2_hasher: StorageHasher,
+	},
 }
 
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "codec", derive(Decode))]
 pub enum StorageHasher {
 	Blake2_128,
 	Blake2_256,
