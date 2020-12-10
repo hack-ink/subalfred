@@ -1590,6 +1590,7 @@ version = "0.1.0"
 dependencies = [
  "base58",
  "blake2-rfc",
+ "parity-scale-codec",
  "schnorrkel",
 ]
 
