@@ -1,13 +1,16 @@
 // --- std ---
-use core::char;
+use std::{char, num::ParseIntError};
 // --- crates.io ---
-use anyhow::Result as AnyResult;
 use thiserror::Error as ThisError;
+
+pub type ArrayBytesResult<T> = Result<T, Error>;
 
 #[derive(Debug, ThisError)]
 pub enum Error {
 	#[error("Fail to convert {} to bytes", hex_str)]
 	InvalidHexLength { hex_str: String },
+	#[error("Fail to parse int")]
+	InvalidChar(#[from] ParseIntError),
 }
 
 #[macro_export]
@@ -20,11 +23,11 @@ macro_rules! bytes_array_unchecked {
 #[macro_export]
 macro_rules! hex_str_array_unchecked {
 	($hex_str:expr, $len:expr) => {{
-		$crate::bytes_array_unchecked!($crate::bytes($hex_str)?, $len)
+		$crate::bytes_array_unchecked!($crate::bytes_unchecked($hex_str), $len)
 		}};
 }
 
-pub fn bytes(hex_str: impl AsRef<str>) -> AnyResult<Vec<u8>> {
+pub fn bytes(hex_str: impl AsRef<str>) -> ArrayBytesResult<Vec<u8>> {
 	let hex_str = hex_str.as_ref();
 
 	if hex_str.len() % 2 != 0 {
@@ -33,13 +36,20 @@ pub fn bytes(hex_str: impl AsRef<str>) -> AnyResult<Vec<u8>> {
 		})?;
 	}
 
-	let hex_str = hex_str.trim_start_matches("0x");
-	let bytes = (0..hex_str.len())
-		.step_by(2)
-		.map(|i| u8::from_str_radix(&hex_str[i..i + 2], 16).map_err(Into::into))
-		.collect::<AnyResult<Vec<_>>>()?;
+	Ok(
+		(if hex_str.starts_with("0x") { 2 } else { 0 }..hex_str.len())
+			.step_by(2)
+			.map(|i| Ok(u8::from_str_radix(&hex_str[i..i + 2], 16)?))
+			.collect::<ArrayBytesResult<_>>()?,
+	)
+}
+pub fn bytes_unchecked(hex_str: impl AsRef<str>) -> Vec<u8> {
+	let hex_str = hex_str.as_ref();
 
-	Ok(bytes)
+	(if hex_str.starts_with("0x") { 2 } else { 0 }..hex_str.len())
+		.step_by(2)
+		.map(|i| u8::from_str_radix(&hex_str[i..i + 2], 16).unwrap())
+		.collect()
 }
 
 pub fn hex_str(prefix: impl AsRef<str>, bytes: impl AsRef<[u8]>) -> String {

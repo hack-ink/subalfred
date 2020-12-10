@@ -3,19 +3,19 @@ pub mod simplify_metadata {
 	// --- std ---
 	use std::convert::TryFrom;
 	// --- crates.io ---
-	use anyhow::Result as AnyResult;
 	use thiserror::Error as ThisError;
 	// --- submetadatan ---
 	use crate::*;
 
 	pub type Bytes = Vec<u8>;
+	pub type MetadataResult<T> = Result<T, Error>;
 
 	#[derive(Clone, Debug)]
 	pub struct Metadata {
 		pub modules: Vec<Module>,
 	}
 	impl Metadata {
-		pub fn storage_prefix(&self, module_name: impl Into<String>) -> AnyResult<&str> {
+		pub fn storage_prefix(&self, module_name: impl Into<String>) -> MetadataResult<&str> {
 			let module_name = module_name.into();
 			let module = self
 				.modules
@@ -30,7 +30,7 @@ pub mod simplify_metadata {
 			&self,
 			module_name: impl Into<String>,
 			item_name: impl Into<String>,
-		) -> AnyResult<&Storage> {
+		) -> MetadataResult<&Storage> {
 			let module_name = module_name.into();
 			let item_name = item_name.into();
 			let module = self
@@ -58,7 +58,7 @@ pub mod simplify_metadata {
 			module: impl AsRef<str>,
 			item: impl AsRef<str>,
 			key: impl AsRef<[u8]>,
-		) -> AnyResult<Bytes> {
+		) -> MetadataResult<Bytes> {
 			let module = module.as_ref();
 			let item = item.as_ref();
 			let prefix = self.storage_prefix(module)?;
@@ -79,7 +79,7 @@ pub mod simplify_metadata {
 			&self,
 			module_name: impl Into<String>,
 			call_name: impl Into<String>,
-		) -> AnyResult<[u8; 2]> {
+		) -> MetadataResult<[u8; 2]> {
 			let module_name = module_name.into();
 			let call_name = call_name.into();
 			let module_index = self

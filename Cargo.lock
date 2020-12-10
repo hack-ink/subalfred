@@ -31,7 +31,6 @@ dependencies = [
 name = "array-bytes"
 version = "0.1.0"
 dependencies = [
- "anyhow",
  "thiserror",
 ]
 
@@ -1607,7 +1606,6 @@ dependencies = [
 name = "submetadatan"
 version = "0.1.0"
 dependencies = [
- "anyhow",
  "parity-scale-codec",
  "substorager",
  "thiserror",
