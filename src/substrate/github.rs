@@ -4,7 +4,6 @@ use futures::{stream, StreamExt};
 use isahc::{Body as IsahcBody, ResponseExt};
 use serde::de::DeserializeOwned;
 // --- githuber ---
-use anyhow::Result as AnyResult;
 use githuber::{
 	pager::Pager,
 	requests::{
@@ -27,13 +26,13 @@ use githuber::{
 };
 use tracing::trace;
 // --- subalfred ---
-use crate::Subalfred;
+use crate::{AnyResult, Subalfred};
 
 impl Subalfred {
 	pub const SUBSTRATE_GITHUB_OWNER: &'static str = "paritytech";
 	pub const SUBSTRATE_GITHUB_REPO: &'static str = "substrate";
 
-	pub async fn list_repository_tags(&self) -> AnyResult<Vec<Tag>> {
+	pub async fn list_tags(&self) -> AnyResult<Vec<Tag>> {
 		let mut tags = vec![];
 
 		iterate_page_with(

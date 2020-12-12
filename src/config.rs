@@ -4,13 +4,12 @@ use std::{
 	io::{Read, Write},
 };
 // --- crates.io ---
-use anyhow::Result as AnyResult;
 use app_dirs2::{get_app_root, AppDataType};
 use async_std::sync::Arc;
 use githuber::Githuber;
 use serde::{Deserialize, Serialize};
 // --- subalfred ---
-use crate::{Subalfred, APP_INFO};
+use crate::{AnyResult, Subalfred, APP_INFO};
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]

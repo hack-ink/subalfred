@@ -131,43 +131,49 @@ pub mod simplify_metadata {
 				V9 => err!("V9"),
 				V10 => err!("V10"),
 				V11 => err!("V11"),
-				V12(runtime_metadata) => {
-					let mut metadata = Self { modules: vec![] };
+				V12(runtime_metadata) => runtime_metadata.try_into(),
+			}
+		}
+	}
+	#[cfg(feature = "simplify-metadata")]
+	impl TryFrom<RuntimeMetadataV12> for Metadata {
+		type Error = Error;
 
-					for module in runtime_metadata.modules {
-						let mut storages = Storages {
-							prefix: Default::default(),
-							items: vec![],
-						};
-						let mut calls = vec![];
+		fn try_from(runtime_metadata: RuntimeMetadataV12) -> Result<Metadata, Self::Error> {
+			let mut metadata = Self { modules: vec![] };
 
-						if let Some(storage) = module.storage {
-							storages.prefix = storage.prefix;
+			for module in runtime_metadata.modules {
+				let mut storages = Storages {
+					prefix: Default::default(),
+					items: vec![],
+				};
+				let mut calls = vec![];
 
-							for storage in storage.entries {
-								storages.items.push(Storage {
-									name: storage.name,
-									r#type: storage.ty,
-								});
-							}
-						}
+				if let Some(storage) = module.storage {
+					storages.prefix = storage.prefix;
 
-						if let Some(calls_) = module.calls {
-							for call in calls_ {
-								calls.push(Call { name: call.name });
-							}
-						}
-
-						metadata.modules.push(Module {
-							name: module.name,
-							storages,
-							calls,
+					for storage in storage.entries {
+						storages.items.push(Storage {
+							name: storage.name,
+							r#type: storage.ty,
 						});
 					}
-
-					Ok(metadata)
 				}
+
+				if let Some(calls_) = module.calls {
+					for call in calls_ {
+						calls.push(Call { name: call.name });
+					}
+				}
+
+				metadata.modules.push(Module {
+					name: module.name,
+					storages,
+					calls,
+				});
 			}
+
+			Ok(metadata)
 		}
 	}
 

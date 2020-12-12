@@ -1571,6 +1571,7 @@ dependencies = [
  "futures",
  "githuber",
  "isahc",
+ "parity-scale-codec",
  "pretty_env_logger",
  "regex",
  "serde",
@@ -1616,10 +1617,10 @@ dependencies = [
 name = "subrpcer"
 version = "0.1.0"
 dependencies = [
- "anyhow",
  "isahc",
  "serde",
  "serde_json",
+ "thiserror",
  "tracing",
 ]
 

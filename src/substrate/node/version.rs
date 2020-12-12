@@ -1,23 +1,11 @@
 // --- std ---
 use std::{fmt::Debug, fs::File, io::Read};
 // --- crates.io ---
-use anyhow::Result as AnyResult;
 use isahc::ResponseExt;
-use serde::{de::DeserializeOwned, Deserialize};
-use serde_json::Value;
+use serde::Deserialize;
 use tracing::trace;
 // --- subalfred ---
-use crate::{config::Runtime, Subalfred};
-
-#[derive(Debug, Deserialize)]
-pub struct RpcResult {
-	pub result: Value,
-}
-impl RpcResult {
-	pub fn into_inner<T: DeserializeOwned>(self) -> T {
-		serde_json::from_value(self.result).unwrap()
-	}
-}
+use crate::{config::Runtime, substrate::node::RpcResult, AnyResult, Subalfred};
 
 #[derive(Debug)]
 pub struct RuntimeVersions {

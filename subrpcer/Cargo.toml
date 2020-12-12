@@ -15,14 +15,14 @@ maintenance = { status = "actively-developed" }
 [features]
 raw-params = []
 sender     = [
-	"anyhow",
 	"isahc",
+	"thiserror",
 	"tracing",
 ]
 
 [dependencies]
-anyhow     = { version = "1.0.35", optional = true }
 isahc      = { version = "0.9.13", optional = true, features = ["json"] }
 serde      = { version = "1.0.118" }
 serde_json = { version = "1.0.60" }
+thiserror  = { version = "1.0.22", optional = true }
 tracing    = { version = "0.1.22", optional = true }

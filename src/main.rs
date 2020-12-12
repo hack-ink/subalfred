@@ -14,10 +14,7 @@ use githuber::Githuber;
 use isahc::ResponseExt;
 use serde_json::Value;
 // --- subalfred ---
-use crate::{
-	config::Project,
-	substrate::{crypto, hashing, template},
-};
+use crate::config::Project;
 
 const APP_INFO: AppInfo = AppInfo {
 	name: crate_name!(),
@@ -40,7 +37,7 @@ async fn main() -> AnyResult<()> {
 				.value_name("TARGET")
 				.global(true),
 		)
-		.subcommand(App::new("list-repository-tags").about(""))
+		.subcommand(App::new("list-tags").about(""))
 		.subcommand(App::new("list-releases").about(""))
 		.subcommand(list_app("list-commits").about(""))
 		.subcommand(
@@ -102,6 +99,18 @@ async fn main() -> AnyResult<()> {
 		)
 		.subcommand(App::new("check-runtime-version").about(""))
 		.subcommand(
+			App::new("metadata")
+				.about("")
+				.arg(
+					Arg::new("uri")
+						.about("")
+						.long("uri")
+						.takes_value(true)
+						.value_name("URI"),
+				)
+				.arg(Arg::new("list-module").about("").long("list-module")),
+		)
+		.subcommand(
 			App::new("account").about("").arg(
 				Arg::new("account")
 					.about("")
@@ -158,12 +167,6 @@ async fn main() -> AnyResult<()> {
 						.conflicts_with("list")
 						.takes_value(true)
 						.value_name("NAME"),
-				)
-				.arg(
-					Arg::new("list")
-						.about("")
-						.long("list")
-						.conflicts_with_all(&["prefix", "item"]),
 				),
 		)
 		.subcommand(
@@ -235,8 +238,8 @@ async fn main() -> AnyResult<()> {
 	let subalfred = Subalfred::init();
 
 	// TODO: beautify output
-	if let Some(_) = app_args.subcommand_matches("list-repository-tags") {
-		println!("{:#?}", subalfred.list_repository_tags().await?);
+	if let Some(_) = app_args.subcommand_matches("list-tags") {
+		println!("{:#?}", subalfred.list_tags().await?);
 	} else if let Some(_) = app_args.subcommand_matches("list-releases") {
 		println!("{:#?}", subalfred.list_releases().await?);
 	} else if let Some(list_commits_args) = app_args.subcommand_matches("list-commits") {
@@ -329,8 +332,16 @@ async fn main() -> AnyResult<()> {
 		for versions in subalfred.check_runtime_version().await? {
 			println!("{:#?}", versions);
 		}
+	} else if let Some(metadata_args) = app_args.subcommand_matches("metadata") {
+		let uri = metadata_args
+			.value_of("uri")
+			.unwrap_or("http://127.0.0.1:9933");
+
+		if metadata_args.is_present("list-module") {
+			println!("{:#?}", Subalfred::list_module(uri).await?);
+		}
 	} else if let Some(account_args) = app_args.subcommand_matches("account") {
-		let accounts = crypto::parse_account(account_args.value_of("account").unwrap());
+		let accounts = Subalfred::accounts(account_args.value_of("account").unwrap());
 		let max_width = accounts
 			.iter()
 			.map(|account| account.0.len())
@@ -343,7 +354,7 @@ async fn main() -> AnyResult<()> {
 	} else if let Some(hash_args) = app_args.subcommand_matches("hash") {
 		println!(
 			"{}",
-			hashing::hash(
+			Subalfred::hash(
 				hash_args.value_of("data").unwrap(),
 				hash_args.value_of("hasher").unwrap_or("blake2-128-concat"),
 				hash_args.is_present("hex")
@@ -352,20 +363,20 @@ async fn main() -> AnyResult<()> {
 	} else if let Some(storage_prefix_args) = app_args.subcommand_matches("storage-key") {
 		println!(
 			"Storage Keys: {}",
-			hashing::parse_storage_keys(
+			Subalfred::storage_keys(
 				storage_prefix_args.value_of("prefix"),
 				storage_prefix_args.value_of("item")
 			)
 		);
 	} else if let Some(node_template_args) = app_args.subcommand_matches("node-template") {
 		// TODO: output
-		template::node_template(
+		Subalfred::node_template(
 			node_template_args
 				.value_of("name")
 				.unwrap_or("substrate-node-template"),
 		);
 	} else if let Some(pallet_template_args) = app_args.subcommand_matches("pallet-template") {
-		template::pallet_template(
+		Subalfred::pallet_template(
 			pallet_template_args
 				.value_of("name")
 				.unwrap_or("substrate-pallet-template"),
