@@ -16,7 +16,7 @@ use serde_json::Value;
 // --- subalfred ---
 use crate::{
 	config::Project,
-	substrate::{crypto, hash, template},
+	substrate::{crypto, hashing, template},
 };
 
 const APP_INFO: AppInfo = AppInfo {
@@ -33,12 +33,12 @@ async fn main() -> AnyResult<()> {
 		.about(crate_description!())
 		.arg(
 			Arg::new("log")
+				.about("")
 				.long("long")
 				.short('l')
 				.takes_value(true)
 				.value_name("TARGET")
-				.global(true)
-				.about(""),
+				.global(true),
 		)
 		.subcommand(App::new("list-repository-tags").about(""))
 		.subcommand(App::new("list-releases").about(""))
@@ -48,66 +48,66 @@ async fn main() -> AnyResult<()> {
 				.about("")
 				.arg(
 					Arg::new("thread")
+						.about("")
 						.long("thread")
 						.takes_value(true)
-						.value_name("COUNT")
-						.about(""),
+						.value_name("COUNT"),
 				)
-				.arg(Arg::new("create-issue").long("create-issue")),
+				.arg(Arg::new("create-issue").about("").long("create-issue")),
 		)
 		.subcommand(
 			list_app("list-migrations")
 				.about("")
 				.arg(
 					Arg::new("thread")
+						.about("")
 						.long("thread")
 						.takes_value(true)
-						.value_name("COUNT")
-						.about(""),
+						.value_name("COUNT"),
 				)
-				.arg(Arg::new("create-issue").long("create-issue")),
+				.arg(Arg::new("create-issue").about("").long("create-issue")),
 		)
 		.subcommand(
 			App::new("send-rpc")
 				.about("")
 				.arg(
 					Arg::new("uri")
+						.about("")
 						.long("uri")
 						.takes_value(true)
-						.value_name("URI")
-						.about(""),
+						.value_name("URI"),
 				)
 				.arg(
 					Arg::new("method")
+						.about("")
 						.long("method")
 						.required(true)
 						.takes_value(true)
-						.value_name("METHOD")
-						.about(""),
+						.value_name("METHOD"),
 				)
 				.arg(
 					Arg::new("params")
+						.about("")
 						.long("params")
 						.takes_value(true)
-						.value_name("[PARAM]")
-						.about(""),
+						.value_name("[PARAM]"),
 				)
 				.arg(
 					Arg::new("id")
+						.about("")
 						.long("id")
 						.takes_value(true)
-						.value_name("ID")
-						.about(""),
+						.value_name("ID"),
 				),
 		)
 		.subcommand(App::new("check-runtime-version").about(""))
 		.subcommand(
 			App::new("account").about("").arg(
 				Arg::new("account")
+					.about("")
 					.required(true)
 					.takes_value(true)
-					.value_name("PUBLIC KEY/SS58 ADDRESS")
-					.about(""),
+					.value_name("PUBLIC KEY/SS58 ADDRESS"),
 			),
 		)
 		.subcommand(
@@ -115,13 +115,14 @@ async fn main() -> AnyResult<()> {
 				.about("")
 				.arg(
 					Arg::new("data")
+						.about("")
 						.required(true)
 						.takes_value(true)
-						.value_name("VALUE")
-						.about(""),
+						.value_name("VALUE"),
 				)
 				.arg(
 					Arg::new("hasher")
+						.about("")
 						.long("hasher")
 						.takes_value(true)
 						.possible_values(&[
@@ -134,10 +135,9 @@ async fn main() -> AnyResult<()> {
 							"twox-64-concat",
 							"identity",
 						])
-						.value_name("HASHER")
-						.about(""),
+						.value_name("HASHER"),
 				)
-				.arg(Arg::new("hex").long("hex").about("")),
+				.arg(Arg::new("hex").about("").long("hex")),
 		)
 		.subcommand(
 			// TODO: handle instance
@@ -145,26 +145,34 @@ async fn main() -> AnyResult<()> {
 				.about("")
 				.arg(
 					Arg::new("prefix")
+						.about("")
 						.long("prefix")
+						.conflicts_with("list")
 						.takes_value(true)
-						.value_name("NAME")
-						.about(""),
+						.value_name("NAME"),
 				)
 				.arg(
 					Arg::new("item")
+						.about("")
 						.long("item")
+						.conflicts_with("list")
 						.takes_value(true)
-						.value_name("NAME")
-						.about(""),
+						.value_name("NAME"),
+				)
+				.arg(
+					Arg::new("list")
+						.about("")
+						.long("list")
+						.conflicts_with_all(&["prefix", "item"]),
 				),
 		)
 		.subcommand(
 			App::new("node-template").about("").arg(
 				Arg::new("name")
+					.about("")
 					.long("name")
 					.takes_value(true)
-					.value_name("NAME")
-					.about(""),
+					.value_name("NAME"),
 			),
 		)
 		.subcommand(
@@ -172,46 +180,46 @@ async fn main() -> AnyResult<()> {
 				.about("")
 				.arg(
 					Arg::new("name")
+						.about("")
 						.long("name")
 						.takes_value(true)
-						.value_name("NAME")
-						.about(""),
+						.value_name("NAME"),
 				)
-				.arg(Arg::new("multi-instance").long("multi-instance").about(""))
+				.arg(Arg::new("multi-instance").about("").long("multi-instance"))
 				.arg(
 					Arg::new("dependency-path")
+						.about("")
 						.long("dependency-path")
 						.takes_value(true)
-						.value_name("PATH")
-						.about(""),
+						.value_name("PATH"),
 				)
 				.arg(
 					Arg::new("dependency-git")
+						.about("")
 						.long("dependency-git")
 						.takes_value(true)
-						.value_name("GIT")
-						.about(""),
+						.value_name("GIT"),
 				)
 				.arg(
 					Arg::new("dependency-commit")
+						.about("")
 						.long("dependency-commit")
 						.takes_value(true)
-						.value_name("SHA")
-						.about(""),
+						.value_name("SHA"),
 				)
 				.arg(
 					Arg::new("dependency-branch")
+						.about("")
 						.long("dependency-branch")
 						.takes_value(true)
-						.value_name("SHA")
-						.about(""),
+						.value_name("SHA"),
 				)
 				.arg(
 					Arg::new("dependency-tag")
+						.about("")
 						.long("dependency-tag")
 						.takes_value(true)
-						.value_name("TAG")
-						.about(""),
+						.value_name("TAG"),
 				),
 		);
 	let app_args = app.get_matches();
@@ -335,7 +343,7 @@ async fn main() -> AnyResult<()> {
 	} else if let Some(hash_args) = app_args.subcommand_matches("hash") {
 		println!(
 			"{}",
-			hash::hash(
+			hashing::hash(
 				hash_args.value_of("data").unwrap(),
 				hash_args.value_of("hasher").unwrap_or("blake2-128-concat"),
 				hash_args.is_present("hex")
@@ -344,7 +352,7 @@ async fn main() -> AnyResult<()> {
 	} else if let Some(storage_prefix_args) = app_args.subcommand_matches("storage-key") {
 		println!(
 			"Storage Keys: {}",
-			hash::parse_storage_keys(
+			hashing::parse_storage_keys(
 				storage_prefix_args.value_of("prefix"),
 				storage_prefix_args.value_of("item")
 			)
