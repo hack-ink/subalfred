@@ -108,7 +108,18 @@ async fn main() -> AnyResult<()> {
 						.takes_value(true)
 						.value_name("URI"),
 				)
-				.arg(Arg::new("list-module").about("").long("list-module")),
+				.arg(
+					Arg::new("list-module")
+						.about("")
+						.long("list-module")
+						.conflicts_with("list-storage-keys"),
+				)
+				.arg(
+					Arg::new("list-storage-keys")
+						.about("")
+						.long("list-storage-keys")
+						.conflicts_with("list-module"),
+				),
 		)
 		.subcommand(
 			App::new("account").about("").arg(
@@ -339,6 +350,8 @@ async fn main() -> AnyResult<()> {
 
 		if metadata_args.is_present("list-module") {
 			println!("{:#?}", Subalfred::list_module(uri).await?);
+		} else if metadata_args.is_present("list-storage-keys") {
+			println!("{:#?}", Subalfred::list_storage_keys(uri).await?);
 		}
 	} else if let Some(account_args) = app_args.subcommand_matches("account") {
 		let accounts = Subalfred::accounts(account_args.value_of("account").unwrap());

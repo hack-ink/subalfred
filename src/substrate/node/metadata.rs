@@ -35,4 +35,42 @@ impl Subalfred {
 			.map(|module| module.name)
 			.collect())
 	}
+
+	pub async fn list_storage_keys(uri: impl AsRef<str>) -> AnyResult<Vec<String>> {
+		Ok(Self::runtime_metadata(uri)
+			.await?
+			.modules
+			.into_iter()
+			.filter_map(|module| {
+				if let Some(storage) = module.storage {
+					Some(
+						storage
+							.entries
+							.iter()
+							.map(|entry| {
+								format!(
+									"{}{}: {}",
+									storage.prefix,
+									entry.name,
+									storage_key(storage.prefix.as_bytes(), entry.name.as_bytes())
+								)
+							})
+							.collect::<Vec<_>>(),
+					)
+				} else {
+					None
+				}
+			})
+			.flatten()
+			.collect())
+	}
+}
+
+fn storage_key(prefix: impl AsRef<[u8]>, item: impl AsRef<[u8]>) -> String {
+	let mut storage_key = String::from("0x");
+
+	storage_key.push_str(&array_bytes::hex_str("", &subhasher::twox_128(prefix)));
+	storage_key.push_str(&array_bytes::hex_str("", &subhasher::twox_128(item)));
+
+	storage_key
 }

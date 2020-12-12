@@ -60,15 +60,15 @@ impl Subalfred {
 	}
 
 	pub fn storage_keys(prefix: Option<&str>, item: Option<&str>) -> String {
-		let mut storage_prefix = String::from("0x");
+		let mut storage_key = String::from("0x");
 
 		if let Some(prefix) = prefix {
-			storage_prefix.push_str(&array_bytes::hex_str("", &subhasher::twox_128(prefix)));
+			storage_key.push_str(&array_bytes::hex_str("", &subhasher::twox_128(prefix)));
 		}
 		if let Some(item) = item {
-			storage_prefix.push_str(&array_bytes::hex_str("", &subhasher::twox_128(item)));
+			storage_key.push_str(&array_bytes::hex_str("", &subhasher::twox_128(item)));
 		}
 
-		storage_prefix
+		storage_key
 	}
 }
