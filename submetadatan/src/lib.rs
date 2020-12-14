@@ -1,7 +1,7 @@
 #[cfg(feature = "simplify-metadata")]
 pub mod simplify_metadata {
 	// --- std ---
-	use std::convert::TryFrom;
+	use std::convert::{TryFrom, TryInto};
 	// --- crates.io ---
 	use thiserror::Error as ThisError;
 	// --- submetadatan ---

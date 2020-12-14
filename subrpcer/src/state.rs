@@ -27,3 +27,11 @@ pub fn get_storage(key: impl Serialize, at: Option<impl Serialize>) -> Value {
 pub fn get_storage_with_raw_params(params: impl Serialize) -> Value {
 	rpc("state_getStorage", params, 1)
 }
+
+pub fn subscribe_storage(keys: impl Serialize) -> Value {
+	rpc("state_subscribeStorage", json!([keys]), 1)
+}
+#[cfg(feature = "raw-params")]
+pub fn subscribe_storage_with_raw_params(params: impl Serialize) -> Value {
+	rpc("state_subscribeStorage", params, 1)
+}
