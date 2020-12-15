@@ -62,6 +62,8 @@ pub use sender::*;
 use serde::Serialize;
 use serde_json::{json, Value};
 
+const DEFAULT_ID: u8 = 1;
+
 pub fn rpc(method: impl Serialize, params: impl Serialize, id: impl Serialize) -> Value {
 	json!({
 		"jsonrpc": "2.0",
