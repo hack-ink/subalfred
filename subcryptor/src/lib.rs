@@ -32,7 +32,7 @@ pub use schnorrkel;
 use base58::{FromBase58, ToBase58};
 use blake2_rfc::blake2b::Blake2b;
 
-pub const NETWORK: [(&'static str, u8); 32] = [
+pub const NETWORK: [(&str, u8); 32] = [
 	("Polkadot", 0),
 	("Kusama", 2),
 	("KatalChain", 3),

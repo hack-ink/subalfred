@@ -36,7 +36,7 @@ pub mod simplify_metadata {
 			let module = self
 				.modules
 				.iter()
-				.find(|module| &module.name == &module_name)
+				.find(|module| module.name == module_name)
 				.ok_or(Error::ModuleNotFound {
 					module_name: module_name.clone(),
 				})?;
@@ -44,7 +44,7 @@ pub mod simplify_metadata {
 				.storages
 				.items
 				.iter()
-				.find(|item| &item.name == &item_name)
+				.find(|item| item.name == item_name)
 				.ok_or(Error::StorageItemNotFound {
 					module_name,
 					item_name,
@@ -71,7 +71,7 @@ pub mod simplify_metadata {
 				r#type => Err(Error::StorageTypeMismatch {
 					expected: "Map".into(),
 					found: r#type.to_owned(),
-				})?,
+				}),
 			}
 		}
 
@@ -85,14 +85,14 @@ pub mod simplify_metadata {
 			let module_index = self
 				.modules
 				.iter()
-				.position(|module| &module.name == &module_name)
+				.position(|module| module.name == module_name)
 				.ok_or(Error::ModuleNotFound {
 					module_name: module_name.clone(),
 				})?;
 			let call_index = self.modules[module_index]
 				.calls
 				.iter()
-				.position(|call| &call.name == &call_name)
+				.position(|call| call.name == call_name)
 				.ok_or(Error::CallNotFound {
 					module_name,
 					call_name,
