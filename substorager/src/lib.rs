@@ -54,12 +54,12 @@ impl AsRef<StorageHasher> for StorageHasher {
 	}
 }
 
-pub fn storage_value_key(prefix: impl AsRef<[u8]>, item: impl AsRef<[u8]>) -> Vec<u8> {
-	let mut storage_value_key = vec![];
-	storage_value_key.extend_from_slice(&subhasher::twox_128(prefix));
-	storage_value_key.extend_from_slice(&subhasher::twox_128(item));
+pub fn storage_key(prefix: impl AsRef<[u8]>, item: impl AsRef<[u8]>) -> Vec<u8> {
+	let mut storage_key = vec![];
+	storage_key.extend_from_slice(&subhasher::twox_128(prefix));
+	storage_key.extend_from_slice(&subhasher::twox_128(item));
 
-	storage_value_key
+	storage_key
 }
 
 pub fn storage_map_key(
@@ -67,7 +67,7 @@ pub fn storage_map_key(
 	item: impl AsRef<[u8]>,
 	key: (impl AsRef<StorageHasher>, impl AsRef<[u8]>),
 ) -> Vec<u8> {
-	let mut storage_map_key = storage_value_key(prefix, item);
+	let mut storage_map_key = storage_key(prefix, item);
 	storage_map_key.extend_from_slice(&key.0.as_ref().hash(key.1));
 
 	storage_map_key
@@ -79,7 +79,7 @@ pub fn storage_double_map_key(
 	key1: (StorageHasher, impl AsRef<[u8]>),
 	key2: (StorageHasher, impl AsRef<[u8]>),
 ) -> Vec<u8> {
-	let mut storage_double_map_key = storage_value_key(prefix, item);
+	let mut storage_double_map_key = storage_key(prefix, item);
 	storage_double_map_key.extend_from_slice(&key1.0.hash(key1.1));
 	storage_double_map_key.extend_from_slice(&key2.0.hash(key2.1));
 

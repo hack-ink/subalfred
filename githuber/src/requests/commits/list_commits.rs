@@ -56,7 +56,5 @@ impl GithubApi<()> for ListCommits {
 		.unwrap()
 	}
 
-	fn build_body(&self) -> () {
-		()
-	}
+	fn build_body(&self) {}
 }

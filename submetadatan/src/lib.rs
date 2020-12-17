@@ -20,7 +20,7 @@ pub mod simplify_metadata {
 			let module = self
 				.modules
 				.iter()
-				.find(|module| &module.name == &module_name)
+				.find(|module| module.name == module_name)
 				.ok_or(Error::ModuleNotFound { module_name })?;
 
 			Ok(&module.storages.prefix)

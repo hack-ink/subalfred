@@ -1,3 +1,5 @@
+#![allow(clippy::tabs_in_doc_comments)]
+
 pub mod pager;
 pub mod requests;
 pub mod responses;

@@ -30,7 +30,5 @@ impl GithubApi<()> for ListRepositoryTags {
 		uri!(self, [owner, repo], [per_page, page]).parse().unwrap()
 	}
 
-	fn build_body(&self) -> () {
-		()
-	}
+	fn build_body(&self) {}
 }

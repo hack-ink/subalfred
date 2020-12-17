@@ -137,39 +137,35 @@ impl Subalfred {
 		thread: usize,
 		create_issue: bool,
 	) -> AnyResult<Vec<PullRequest>> {
-		let commit_shas = self
-			.list_commits(sha, path, since, until)
-			.await?
-			.into_iter()
-			.map(|Commit { sha, .. }| sha)
-			.collect::<Vec<_>>();
-		let mut pull_requests = stream::iter(commit_shas.into_iter().map(|commit_sha| {
-			let githuber = self.githuber.clone();
-			let request = ListPullRequestsAssociatedWithACommitBuilder::default()
-				.owner(Self::SUBSTRATE_GITHUB_OWNER)
-				.repo(Self::SUBSTRATE_GITHUB_REPO)
-				.commit_sha(commit_sha)
-				.build()
-				.unwrap();
+		let commits = self.list_commits(sha, path, since, until).await?;
+		let mut pull_requests =
+			stream::iter(commits.into_iter().map(|Commit { sha, .. }| {
+				let githuber = self.githuber.clone();
+				let request = ListPullRequestsAssociatedWithACommitBuilder::default()
+					.owner(Self::SUBSTRATE_GITHUB_OWNER)
+					.repo(Self::SUBSTRATE_GITHUB_REPO)
+					.commit_sha(sha)
+					.build()
+					.unwrap();
 
-			async move {
-				loop {
-					match githuber.send(request.clone()).await {
-						Ok(mut response) => match response.json::<Vec<PullRequest>>() {
-							Ok(pull_requests) => return pull_requests,
-							Err(e) => eprintln!("Serialize Failed Due To: `{:?}`", e),
-						},
-						Err(e) => eprintln!("Request Failed Due To: `{:?}`", e),
+				async move {
+					loop {
+						match githuber.send(request.clone()).await {
+							Ok(mut response) => match response.json::<Vec<PullRequest>>() {
+								Ok(pull_requests) => return pull_requests,
+								Err(e) => eprintln!("Serialize Failed Due To: `{:?}`", e),
+							},
+							Err(e) => eprintln!("Request Failed Due To: `{:?}`", e),
+						}
 					}
 				}
-			}
-		}))
-		.buffer_unordered(thread)
-		.collect::<Vec<_>>()
-		.await
-		.into_iter()
-		.flatten()
-		.collect::<Vec<_>>();
+			}))
+			.buffer_unordered(thread)
+			.collect::<Vec<_>>()
+			.await
+			.into_iter()
+			.flatten()
+			.collect::<Vec<_>>();
 
 		pull_requests.sort_by(|a, b| b.merged_at.cmp(&a.merged_at));
 

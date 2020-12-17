@@ -68,7 +68,7 @@ impl Config {
 		// TODO
 		// serde_yaml::to_writer(w, self)
 
-		const TEMPLATE: &'static [u8] =
+		const TEMPLATE: &[u8] =
 br#"
 # Your github OAuth token
 #

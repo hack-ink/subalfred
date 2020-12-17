@@ -26,7 +26,5 @@ impl GithubApi<()> for GetACommit {
 		uri!(self, [owner, repo, r#ref]).parse().unwrap()
 	}
 
-	fn build_body(&self) -> () {
-		()
-	}
+	fn build_body(&self) {}
 }

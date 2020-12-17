@@ -36,7 +36,5 @@ impl GithubApi<()> for ListPullRequestsAssociatedWithACommit {
 			.unwrap()
 	}
 
-	fn build_body(&self) -> () {
-		()
-	}
+	fn build_body(&self) {}
 }

@@ -30,7 +30,5 @@ impl GithubApi<()> for GetRepositoryContent {
 		uri!(self, [owner, repo, path], [r#ref]).parse().unwrap()
 	}
 
-	fn build_body(&self) -> () {
-		()
-	}
+	fn build_body(&self) {}
 }

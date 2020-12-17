@@ -31,9 +31,9 @@ pub fn bytes(hex_str: impl AsRef<str>) -> ArrayBytesResult<Vec<u8>> {
 	let hex_str = hex_str.as_ref();
 
 	if hex_str.len() % 2 != 0 {
-		Err(Error::InvalidHexLength {
+		return Err(Error::InvalidHexLength {
 			hex_str: hex_str.into(),
-		})?;
+		});
 	}
 
 	Ok(

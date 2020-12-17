@@ -249,9 +249,9 @@ async fn main() -> AnyResult<()> {
 	let subalfred = Subalfred::init();
 
 	// TODO: beautify output
-	if let Some(_) = app_args.subcommand_matches("list-tags") {
+	if app_args.subcommand_matches("list-tags").is_some() {
 		println!("{:#?}", subalfred.list_tags().await?);
-	} else if let Some(_) = app_args.subcommand_matches("list-releases") {
+	} else if app_args.subcommand_matches("list-releases").is_some() {
 		println!("{:#?}", subalfred.list_releases().await?);
 	} else if let Some(list_commits_args) = app_args.subcommand_matches("list-commits") {
 		println!(
@@ -339,7 +339,10 @@ async fn main() -> AnyResult<()> {
 			"{}",
 			serde_json::to_string(&subrpcer::send_rpc(uri, rpc).await?.json::<Value>()?)?
 		);
-	} else if let Some(_) = app_args.subcommand_matches("check-runtime-version") {
+	} else if app_args
+		.subcommand_matches("check-runtime-version")
+		.is_some()
+	{
 		for versions in subalfred.check_runtime_version().await? {
 			println!("{:#?}", versions);
 		}
