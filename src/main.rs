@@ -379,7 +379,7 @@ async fn main() -> AnyResult<()> {
 	} else if let Some(storage_prefix_args) = app_args.subcommand_matches("storage-key") {
 		println!(
 			"Storage Keys: {}",
-			Subalfred::storage_keys(
+			Subalfred::storage_key(
 				storage_prefix_args.value_of("prefix"),
 				storage_prefix_args.value_of("item")
 			)

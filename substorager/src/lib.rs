@@ -61,6 +61,13 @@ pub fn storage_key(prefix: impl AsRef<[u8]>, item: impl AsRef<[u8]>) -> Vec<u8> 
 
 	storage_key
 }
+pub fn hex_storage_key_with_prefix(
+	hex_prefix: impl AsRef<str>,
+	prefix: impl AsRef<[u8]>,
+	item: impl AsRef<[u8]>,
+) -> String {
+	array_bytes::hex_str(hex_prefix, storage_key(prefix, item))
+}
 
 pub fn storage_map_key(
 	prefix: impl AsRef<[u8]>,
@@ -71,6 +78,14 @@ pub fn storage_map_key(
 	storage_map_key.extend_from_slice(&key.0.as_ref().hash(key.1));
 
 	storage_map_key
+}
+pub fn hex_storage_map_key_with_prefix(
+	hex_prefix: impl AsRef<str>,
+	prefix: impl AsRef<[u8]>,
+	item: impl AsRef<[u8]>,
+	key: (impl AsRef<StorageHasher>, impl AsRef<[u8]>),
+) -> String {
+	array_bytes::hex_str(hex_prefix, storage_map_key(prefix, item, key))
 }
 
 pub fn storage_double_map_key(
@@ -84,4 +99,13 @@ pub fn storage_double_map_key(
 	storage_double_map_key.extend_from_slice(&key2.0.hash(key2.1));
 
 	storage_double_map_key
+}
+pub fn hex_storage_double_map_key_with_prefix(
+	hex_prefix: impl AsRef<str>,
+	prefix: impl AsRef<[u8]>,
+	item: impl AsRef<[u8]>,
+	key1: (StorageHasher, impl AsRef<[u8]>),
+	key2: (StorageHasher, impl AsRef<[u8]>),
+) -> String {
+	array_bytes::hex_str(hex_prefix, storage_double_map_key(prefix, item, key1, key2))
 }

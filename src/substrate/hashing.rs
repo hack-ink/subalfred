@@ -59,7 +59,7 @@ impl Subalfred {
 		}
 	}
 
-	pub fn storage_keys(prefix: Option<&str>, item: Option<&str>) -> String {
+	pub fn storage_key(prefix: Option<&str>, item: Option<&str>) -> String {
 		let mut storage_key = String::from("0x");
 
 		if let Some(prefix) = prefix {
