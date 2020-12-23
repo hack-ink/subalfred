@@ -16,6 +16,6 @@ maintenance = { status = "actively-developed" }
 codec = ["parity-scale-codec"]
 
 [dependencies]
-array-bytes        = { version = "0.1.0", path = "../array-bytes" }
+array-bytes        = { version = "0.2.0", path = "../array-bytes" }
 parity-scale-codec = { version = "1.3.5", optional = true, features = ["derive"] }
 subhasher          = { version = "0.1.0", path = "../subhasher" }
