@@ -19,7 +19,7 @@ maintenance = { status = "actively-developed" }
 [dependencies]
 anyhow             = "1.0.36"
 app_dirs2          = "2.3.1"
-array-bytes        = { version = "0.3.0", path = "array-bytes" }
+array-bytes        = { version = "0.3.0" }
 async-std          = { version = "1.8.0", features = ["attributes"] }
 base58             = "0.1.0"
 clap               = "3.0.0-beta.2"
@@ -41,7 +41,6 @@ tracing            = "0.1.22"
 [workspace]
 # TODO: move out, separate into a single crate
 members = [
-	"array-bytes",
 	"githuber",
 	"subcryptor",
 	"subhasher",
