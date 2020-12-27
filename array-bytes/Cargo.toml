@@ -13,4 +13,4 @@ version     = "0.3.0"
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-# thiserror = { version = "1.0.22" }
+# thiserror = { version = "1.0.23" }

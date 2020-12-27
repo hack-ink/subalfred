@@ -22,4 +22,4 @@ simplify-metadata = ["thiserror"]
 [dependencies]
 parity-scale-codec = { version = "1.3.5", optional = true, features = ["derive"] }
 substorager        = { version = "0.1.0", path = "../substorager" }
-thiserror          = { version = "1.0.22", optional = true }
+thiserror          = { version = "1.0.23", optional = true }

@@ -17,7 +17,7 @@ codec       = ["parity-scale-codec"]
 full-crypto = ["schnorrkel"]
 
 [dependencies]
-base58             = { version = "0.1.0" }
-blake2-rfc         = { version = "0.2.18" }
+base58             = "0.1.0"
+blake2-rfc         = "0.2.18"
 parity-scale-codec = { version = "1.3.5", optional = true, features = ["derive"] }
 schnorrkel         = { version = "0.9.1", optional = true }
