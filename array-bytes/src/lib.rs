@@ -1,16 +1,32 @@
-// --- std ---
-use std::{char, num::ParseIntError};
-// --- crates.io ---
-use thiserror::Error as ThisError;
+#![no_std]
+
+extern crate alloc;
+
+// --- alloc ---
+use alloc::{string::String, vec::Vec};
+// --- core ---
+use core::{char, num::ParseIntError};
+// // --- crates.io ---
+// use thiserror::Error as ThisError;
 
 pub type ArrayBytesResult<T> = Result<T, Error>;
 
-#[derive(Debug, ThisError)]
+// #[derive(Debug, ThisError)]
+// pub enum Error {
+// 	#[error("Fail to convert {} to bytes", hex_str)]
+// 	InvalidHexLength { hex_str: String },
+// 	#[error("Fail to parse int")]
+// 	InvalidChar(#[from] ParseIntError),
+// }
+#[derive(Debug)]
 pub enum Error {
-	#[error("Fail to convert {} to bytes", hex_str)]
 	InvalidHexLength { hex_str: String },
-	#[error("Fail to parse int")]
-	InvalidChar(#[from] ParseIntError),
+	InvalidChar(ParseIntError),
+}
+impl From<ParseIntError> for Error {
+	fn from(e: ParseIntError) -> Self {
+		Self::InvalidChar(e)
+	}
 }
 
 #[macro_export]

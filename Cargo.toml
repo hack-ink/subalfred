@@ -19,7 +19,7 @@ maintenance = { status = "actively-developed" }
 [dependencies]
 anyhow             = { version = "1.0.36" }
 app_dirs2          = { version = "2.3.1" }
-array-bytes        = { version = "0.2.0", path = "array-bytes" }
+array-bytes        = { version = "0.3.0", path = "array-bytes" }
 async-std          = { version = "1.8.0", features = ["attributes"] }
 base58             = { version = "0.1.0" }
 clap               = { version = "3.0.0-beta.2" }

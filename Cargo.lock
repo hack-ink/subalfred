@@ -29,10 +29,7 @@ dependencies = [
 
 [[package]]
 name = "array-bytes"
-version = "0.2.0"
-dependencies = [
- "thiserror",
-]
+version = "0.3.0"
 
 [[package]]
 name = "arrayref"
