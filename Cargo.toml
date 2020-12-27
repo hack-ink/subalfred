@@ -2,11 +2,11 @@
 authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
 description = "Your Substrate Alfred"
 edition     = "2018"
-homepage    = "https://subalfred.l2ust.world/"
+homepage    = "https://subalfred.l2ust.world"
 license     = "GPL-3.0"
 name        = "subalfred"
 readme      = "README.md"
-repository  = "https://github.com/l2ust/subalfred/"
+repository  = "https://github.com/l2ust/subalfred"
 version     = "0.1.0"
 
 [[bin]]

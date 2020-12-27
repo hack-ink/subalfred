@@ -2,11 +2,11 @@
 authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
 description = "subhasher"
 edition     = "2018"
-homepage    = "https://subhasher.l2ust.world/"
+homepage    = "https://subhasher.l2ust.world"
 license     = "GPL-3.0"
 name        = "subhasher"
 readme      = "README.md"
-repository  = "https://github.com/l2ust/subhasher/"
+repository  = "https://github.com/l2ust/subhasher"
 version     = "0.1.0"
 
 [badges]

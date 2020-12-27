@@ -2,11 +2,11 @@
 authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
 description = "submetadatan"
 edition     = "2018"
-homepage    = "https://submetadatan.l2ust.world/"
+homepage    = "https://submetadatan.l2ust.world"
 license     = "GPL-3.0"
 name        = "submetadatan"
 readme      = "README.md"
-repository  = "https://github.com/l2ust/submetadatan/"
+repository  = "https://github.com/l2ust/submetadatan"
 version     = "0.1.0"
 
 [badges]

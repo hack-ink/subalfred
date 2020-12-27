@@ -2,11 +2,11 @@
 authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
 description = "substorager"
 edition     = "2018"
-homepage    = "https://substorager.l2ust.world/"
+homepage    = "https://substorager.l2ust.world"
 license     = "GPL-3.0"
 name        = "substorager"
 readme      = "README.md"
-repository  = "https://github.com/l2ust/substorager/"
+repository  = "https://github.com/l2ust/substorager"
 version     = "0.1.0"
 
 [badges]

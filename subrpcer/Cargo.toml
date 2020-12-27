@@ -2,11 +2,11 @@
 authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
 description = "subrpcer"
 edition     = "2018"
-homepage    = "https://subrpcer.l2ust.world/"
+homepage    = "https://subrpcer.l2ust.world"
 license     = "GPL-3.0"
 name        = "subrpcer"
 readme      = "README.md"
-repository  = "https://github.com/l2ust/subrpcer/"
+repository  = "https://github.com/l2ust/subrpcer"
 version     = "0.1.0"
 
 [badges]
