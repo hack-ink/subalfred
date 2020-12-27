@@ -731,6 +731,8 @@ dependencies = [
 [[package]]
 name = "githuber"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c35e9a9579144874700ff101b5bffba84ba067c14c914c054ba83bd2f9f512c1"
 dependencies = [
  "derive_builder",
  "isahc",
