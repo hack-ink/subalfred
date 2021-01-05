@@ -11,7 +11,7 @@ use app_dirs2::AppInfo;
 use async_std::sync::Arc;
 use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg};
 use githuber::Githuber;
-use isahc::ResponseExt;
+use isahc::AsyncReadResponseExt;
 use serde_json::Value;
 // --- subalfred ---
 use crate::config::Project;
@@ -335,10 +335,7 @@ async fn main() -> AnyResult<()> {
 			),
 		};
 
-		println!(
-			"{}",
-			serde_json::to_string(&subrpcer::send_rpc(uri, rpc).await?.json::<Value>()?)?
-		);
+		println!("{}", subrpcer::send_rpc(uri, rpc).await?.text().await?);
 	} else if app_args
 		.subcommand_matches("check-runtime-version")
 		.is_some()

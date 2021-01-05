@@ -1,7 +1,7 @@
 // --- std ---
 use std::{fmt::Debug, fs::File, io::Read};
 // --- crates.io ---
-use isahc::ResponseExt;
+use isahc::AsyncReadResponseExt;
 use serde::Deserialize;
 use tracing::trace;
 // --- subalfred ---
@@ -33,13 +33,16 @@ impl Subalfred {
 			node_rpc_uri,
 		} in &self.project.runtimes
 		{
-			let chain_runtime_version = serde_json::from_value::<RuntimeVersion>(
+			let result = {
+				let mut v = vec![];
 				subrpcer::send_rpc(node_rpc_uri, subrpcer::state::get_runtime_version())
 					.await?
-					.json::<RpcResult>()?
-					.result,
-			)
-			.unwrap();
+					.copy_to(&mut v)
+					.await?;
+
+				serde_json::from_slice::<RpcResult>(&v)?.result
+			};
+			let chain_runtime_version = serde_json::from_value::<RuntimeVersion>(result).unwrap();
 			let github_runtime_version = {
 				let download_url = self
 					.get_repository_content(
@@ -51,7 +54,7 @@ impl Subalfred {
 					.await?
 					.download_url;
 
-				extract_runtime_version(&self.githuber.download(download_url).await?.text()?)
+				extract_runtime_version(&self.githuber.download(download_url).await?.text().await?)
 			};
 			let local_runtime_version = {
 				let mut f = File::open(&format!(

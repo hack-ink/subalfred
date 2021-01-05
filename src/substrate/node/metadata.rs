@@ -1,5 +1,5 @@
 // --- crates.io ---
-use isahc::ResponseExt;
+use isahc::AsyncReadResponseExt;
 use parity_scale_codec::Decode;
 use submetadatan::{RuntimeMetadata, RuntimeMetadataPrefixed, RuntimeMetadataV12};
 use tracing::trace;
@@ -8,10 +8,15 @@ use crate::{substrate::node::RpcResult, AnyResult, Subalfred};
 
 impl Subalfred {
 	pub async fn runtime_metadata(uri: impl AsRef<str>) -> AnyResult<RuntimeMetadataV12> {
-		let result = subrpcer::send_rpc(uri, subrpcer::state::get_metadata())
-			.await?
-			.json::<RpcResult>()?
-			.result;
+		let result = {
+			let mut v = vec![];
+			subrpcer::send_rpc(uri, subrpcer::state::get_metadata())
+				.await?
+				.copy_to(&mut v)
+				.await?;
+
+			serde_json::from_slice::<RpcResult>(&v)?.result
+		};
 		let raw_runtime_metadata_prefixed = array_bytes::bytes(result.as_str().unwrap()).unwrap();
 		let runtime_metadata_prefixed =
 			RuntimeMetadataPrefixed::decode(&mut &*raw_runtime_metadata_prefixed)?;

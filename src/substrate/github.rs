@@ -1,7 +1,7 @@
 // --- crates.io ---
-use async_std::{sync::Arc, task::block_on};
+use async_std::{sync::Arc, task};
 use futures::{stream, StreamExt};
-use isahc::{Body as IsahcBody, ResponseExt};
+use isahc::{AsyncBody as IsahcBody, AsyncReadResponseExt};
 use serde::de::DeserializeOwned;
 // --- githuber ---
 use githuber::{
@@ -82,7 +82,8 @@ impl Subalfred {
 			if date_or_hash.contains('-') {
 				Ok(date_or_hash.into())
 			} else {
-				let commit: Commit = block_on(
+				let mut v = vec![];
+				let mut response = task::block_on(
 					self.githuber.send(
 						GetACommitBuilder::default()
 							.owner(Self::SUBSTRATE_GITHUB_OWNER)
@@ -91,8 +92,9 @@ impl Subalfred {
 							.build()
 							.unwrap(),
 					),
-				)?
-				.json()?;
+				)?;
+				task::block_on(response.copy_to(&mut v))?;
+				let commit: Commit = serde_json::from_slice(&v)?;
 
 				Ok(commit.commit.committer.date)
 			}
@@ -138,34 +140,41 @@ impl Subalfred {
 		create_issue: bool,
 	) -> AnyResult<Vec<PullRequest>> {
 		let commits = self.list_commits(sha, path, since, until).await?;
-		let mut pull_requests =
-			stream::iter(commits.into_iter().map(|Commit { sha, .. }| {
-				let githuber = self.githuber.clone();
-				let request = ListPullRequestsAssociatedWithACommitBuilder::default()
-					.owner(Self::SUBSTRATE_GITHUB_OWNER)
-					.repo(Self::SUBSTRATE_GITHUB_REPO)
-					.commit_sha(sha)
-					.build()
-					.unwrap();
+		let mut pull_requests = stream::iter(commits.into_iter().map(|Commit { sha, .. }| {
+			let githuber = self.githuber.clone();
+			let request = ListPullRequestsAssociatedWithACommitBuilder::default()
+				.owner(Self::SUBSTRATE_GITHUB_OWNER)
+				.repo(Self::SUBSTRATE_GITHUB_REPO)
+				.commit_sha(sha)
+				.build()
+				.unwrap();
 
-				async move {
-					loop {
-						match githuber.send(request.clone()).await {
-							Ok(mut response) => match response.json::<Vec<PullRequest>>() {
-								Ok(pull_requests) => return pull_requests,
-								Err(e) => eprintln!("Serialize Failed Due To: `{:?}`", e),
-							},
-							Err(e) => eprintln!("Request Failed Due To: `{:?}`", e),
+			async move {
+				loop {
+					match githuber.send(request.clone()).await {
+						Ok(mut response) => {
+							let mut v = vec![];
+
+							if let Err(e) = response.copy_to(&mut v).await {
+								eprintln!("Read Response Body Failed Due To: `{:?}`", e);
+							} else {
+								match serde_json::from_slice::<Vec<PullRequest>>(&v) {
+									Ok(pull_requests) => return pull_requests,
+									Err(e) => eprintln!("Serialize Failed Due To: `{:?}`", e),
+								}
+							}
 						}
+						Err(e) => eprintln!("Request Failed Due To: `{:?}`", e),
 					}
 				}
-			}))
-			.buffer_unordered(thread)
-			.collect::<Vec<_>>()
-			.await
-			.into_iter()
-			.flatten()
-			.collect::<Vec<_>>();
+			}
+		}))
+		.buffer_unordered(thread)
+		.collect::<Vec<_>>()
+		.await
+		.into_iter()
+		.flatten()
+		.collect::<Vec<_>>();
 
 		pull_requests.sort_by(|a, b| b.merged_at.cmp(&a.merged_at));
 
@@ -290,8 +299,8 @@ impl Subalfred {
 		path: impl Into<String>,
 		r#ref: Option<&str>,
 	) -> AnyResult<Content> {
-		let content = self
-			.githuber
+		let mut v = vec![];
+		self.githuber
 			.send(
 				GetRepositoryContentBuilder::default()
 					.owner(owner)
@@ -302,7 +311,9 @@ impl Subalfred {
 					.unwrap(),
 			)
 			.await?
-			.json()?;
+			.copy_to(&mut v)
+			.await?;
+		let content = serde_json::from_slice(&v)?;
 
 		trace!("{:#?}", content);
 
@@ -351,10 +362,13 @@ where
 	};
 
 	loop {
-		let ds: Vec<D> = githuber
+		let mut v = vec![];
+		githuber
 			.send_with_pager(request.clone(), &mut pager)
 			.await?
-			.json()?;
+			.copy_to(&mut v)
+			.await?;
+		let ds = serde_json::from_slice::<Vec<D>>(&v)?;
 
 		if ds.is_empty() {
 			return Ok(());

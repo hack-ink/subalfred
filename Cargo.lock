@@ -573,17 +573,6 @@ dependencies = [
 
 [[package]]
 name = "flume"
-version = "0.9.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d9e818efa7776f4dd7df0e542f877f7a5a87bddd6a1a10f59a7732b71ffb9d55"
-dependencies = [
- "futures-core",
- "futures-sink",
- "spinning_top",
-]
-
-[[package]]
-name = "flume"
 version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0362ef9c4c1fa854ff95b4cb78045a86e810d804dc04937961988b45427104a9"
@@ -742,12 +731,12 @@ dependencies = [
 
 [[package]]
 name = "githuber"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c35e9a9579144874700ff101b5bffba84ba067c14c914c054ba83bd2f9f512c1"
+checksum = "e0a40d2a43cf3c7b80fd91a0f73b40b53ad428a1b838df3a9112ecd9fa27fe69"
 dependencies = [
  "derive_builder",
- "isahc 0.9.14",
+ "isahc",
  "serde",
  "serde_json",
  "tracing",
@@ -848,31 +837,6 @@ dependencies = [
 
 [[package]]
 name = "isahc"
-version = "0.9.14"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e2948a0ce43e2c2ef11d7edf6816508998d99e13badd1150be0914205df9388a"
-dependencies = [
- "bytes",
- "crossbeam-utils",
- "curl",
- "curl-sys",
- "encoding_rs",
- "flume 0.9.1",
- "futures-lite",
- "http",
- "log",
- "mime",
- "once_cell",
- "slab",
- "sluice",
- "tracing",
- "tracing-futures",
- "url",
- "waker-fn",
-]
-
-[[package]]
-name = "isahc"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "990caf8da378f0127ade48d4db60ed19f9e7dd3094a4278ef51cf3d56982e28b"
@@ -881,7 +845,7 @@ dependencies = [
  "curl",
  "curl-sys",
  "encoding_rs",
- "flume 0.10.1",
+ "flume",
  "futures-lite",
  "http",
  "log",
@@ -1607,7 +1571,7 @@ dependencies = [
  "clap",
  "futures",
  "githuber",
- "isahc 1.0.2",
+ "isahc",
  "parity-scale-codec",
  "pretty_env_logger",
  "regex",
@@ -1633,7 +1597,7 @@ dependencies = [
 
 [[package]]
 name = "subgrandpa"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "parity-scale-codec",
 ]
@@ -1671,7 +1635,7 @@ dependencies = [
 name = "subrpcer"
 version = "0.1.0"
 dependencies = [
- "isahc 1.0.2",
+ "isahc",
  "serde",
  "serde_json",
  "thiserror",

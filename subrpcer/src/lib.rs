@@ -10,7 +10,7 @@ pub mod sender {
 			header::CONTENT_TYPE, request::Builder as RequestBuilder, Method as HttpMethod,
 			Response,
 		},
-		Body as IsahcBody, Error as IsahcError,
+		AsyncBody as IsahcBody, Error as IsahcError,
 	};
 	use serde_json::{Error as RawSerdeJsonError, Value};
 	use thiserror::Error as ThisError;
