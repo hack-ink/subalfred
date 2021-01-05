@@ -18,4 +18,4 @@ codec = ["parity-scale-codec"]
 [dependencies]
 array-bytes        = { version = "0.3.0" }
 parity-scale-codec = { version = "1.3.5", optional = true, features = ["derive"] }
-subhasher          = { version = "0.1.0", path = "../subhasher" }
+subhasher          = { version = "0.1.0" }
