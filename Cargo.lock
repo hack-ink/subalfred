@@ -1632,6 +1632,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "subgrandpa"
+version = "0.1.0"
+dependencies = [
+ "parity-scale-codec",
+]
+
+[[package]]
 name = "subhasher"
 version = "0.1.0"
 dependencies = [

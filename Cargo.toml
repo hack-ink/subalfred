@@ -41,6 +41,7 @@ tracing            = { version = "0.1.22" }
 [workspace]
 members = [
 	"subcryptor",
+	"subgrandpa",
 	"subhasher",
 	"submetadatan",
 	"subrpcer",
