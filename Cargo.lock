@@ -1615,7 +1615,7 @@ dependencies = [
  "serde_json",
  "serde_yaml",
  "subcryptor",
- "subhasher",
+ "subhasher 0.1.0",
  "submetadatan",
  "subrpcer",
  "tracing",
@@ -1648,6 +1648,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "subhasher"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5eaced1c642831fb7fce0835824c069b4c04108a10e6b39d6f548002c8c7c9fc"
+dependencies = [
+ "blake2-rfc",
+ "byteorder",
+ "twox-hash",
+]
+
+[[package]]
 name = "submetadatan"
 version = "0.1.0"
 dependencies = [
@@ -1673,7 +1684,7 @@ version = "0.1.0"
 dependencies = [
  "array-bytes",
  "parity-scale-codec",
- "subhasher",
+ "subhasher 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
