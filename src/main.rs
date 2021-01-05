@@ -31,7 +31,7 @@ async fn main() -> AnyResult<()> {
 		.arg(
 			Arg::new("log")
 				.about("")
-				.long("long")
+				.long("log")
 				.short('l')
 				.takes_value(true)
 				.value_name("TARGET")
