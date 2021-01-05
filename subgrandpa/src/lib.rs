@@ -4,28 +4,28 @@ use parity_scale_codec::Decode;
 
 #[derive(Debug)]
 #[cfg_attr(feature = "codec", derive(Decode))]
-struct GrandpaJustification<Hash, BlockNumber, Signature, AccountId> {
-	round: u64,
-	commit: Commit<Hash, BlockNumber, Signature, AccountId>,
+pub struct GrandpaJustification<Hash, BlockNumber, Signature, AccountId> {
+	pub round: u64,
+	pub commit: Commit<Hash, BlockNumber, Signature, AccountId>,
 }
 
 #[derive(Debug)]
 #[cfg_attr(feature = "codec", derive(Decode))]
-struct Commit<Hash, BlockNumber, Signature, AccountId> {
-	target_hash: Hash,
-	target_number: BlockNumber,
-	precommits: Vec<SignedPrecommit<Hash, BlockNumber, Signature, AccountId>>,
+pub struct Commit<Hash, BlockNumber, Signature, AccountId> {
+	pub target_hash: Hash,
+	pub target_number: BlockNumber,
+	pub precommits: Vec<SignedPrecommit<Hash, BlockNumber, Signature, AccountId>>,
 }
 #[derive(Debug)]
 #[cfg_attr(feature = "codec", derive(Decode))]
-struct SignedPrecommit<Hash, BlockNumber, Signature, AccountId> {
-	precommit: Precommit<Hash, BlockNumber>,
-	signature: Signature,
-	id: AccountId,
+pub struct SignedPrecommit<Hash, BlockNumber, Signature, AccountId> {
+	pub precommit: Precommit<Hash, BlockNumber>,
+	pub signature: Signature,
+	pub id: AccountId,
 }
 #[derive(Debug)]
 #[cfg_attr(feature = "codec", derive(Decode))]
-struct Precommit<Hash, BlockNumber> {
-	target_hash: Hash,
-	target_number: BlockNumber,
+pub struct Precommit<Hash, BlockNumber> {
+	pub target_hash: Hash,
+	pub target_number: BlockNumber,
 }
