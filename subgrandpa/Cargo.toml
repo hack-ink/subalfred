@@ -1,0 +1,21 @@
+[package]
+authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
+description = "substorager"
+edition     = "2018"
+homepage    = "https://substorager.l2ust.world"
+license     = "GPL-3.0"
+name        = "substorager"
+readme      = "README.md"
+repository  = "https://github.com/l2ust/substorager"
+version     = "0.1.0"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[features]
+codec = ["parity-scale-codec"]
+
+[dependencies]
+array-bytes        = { version = "0.3.0" }
+parity-scale-codec = { version = "1.3.5", optional = true, features = ["derive"] }
+subhasher          = { version = "0.1.0", path = "../subhasher" }

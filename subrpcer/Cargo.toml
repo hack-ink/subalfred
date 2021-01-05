@@ -21,8 +21,8 @@ sender     = [
 ]
 
 [dependencies]
-isahc      = { version = "0.9.14", optional = true, features = ["json"] }
+isahc      = { version = "1.0.2", optional = true, features = ["json"] }
 serde      = { version = "1.0.118" }
-serde_json = { version = "1.0.60" }
+serde_json = { version = "1.0.61" }
 thiserror  = { version = "1.0.23", optional = true }
 tracing    = { version = "0.1.22", optional = true }

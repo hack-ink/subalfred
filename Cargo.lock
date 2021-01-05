@@ -11,9 +11,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.36"
+version = "1.0.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "68803225a7b13e47191bab76f2687382b60d259e8cf37f6e1893658b84bb9479"
+checksum = "ee67c11feeac938fae061b232e38e0b6d94f97a9df10e6271319325ac4c56a86"
 
 [[package]]
 name = "app_dirs2"
@@ -583,6 +583,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "flume"
+version = "0.10.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0362ef9c4c1fa854ff95b4cb78045a86e810d804dc04937961988b45427104a9"
+dependencies = [
+ "futures-core",
+ "futures-sink",
+ "pin-project 1.0.2",
+ "spinning_top",
+]
+
+[[package]]
 name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -735,7 +747,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c35e9a9579144874700ff101b5bffba84ba067c14c914c054ba83bd2f9f512c1"
 dependencies = [
  "derive_builder",
- "isahc",
+ "isahc 0.9.14",
  "serde",
  "serde_json",
  "tracing",
@@ -845,7 +857,31 @@ dependencies = [
  "curl",
  "curl-sys",
  "encoding_rs",
- "flume",
+ "flume 0.9.1",
+ "futures-lite",
+ "http",
+ "log",
+ "mime",
+ "once_cell",
+ "slab",
+ "sluice",
+ "tracing",
+ "tracing-futures",
+ "url",
+ "waker-fn",
+]
+
+[[package]]
+name = "isahc"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "990caf8da378f0127ade48d4db60ed19f9e7dd3094a4278ef51cf3d56982e28b"
+dependencies = [
+ "crossbeam-utils",
+ "curl",
+ "curl-sys",
+ "encoding_rs",
+ "flume 0.10.1",
  "futures-lite",
  "http",
  "log",
@@ -1470,9 +1506,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.60"
+version = "1.0.61"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1500e84d27fe482ed1dc791a56eddc2f230046a040fa908c08bda1d9fb615779"
+checksum = "4fceb2595057b6891a4ee808f70054bd2d12f0e97f1cbb78689b59f676df325a"
 dependencies = [
  "itoa",
  "ryu",
@@ -1481,9 +1517,9 @@ dependencies = [
 
 [[package]]
 name = "serde_yaml"
-version = "0.8.14"
+version = "0.8.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f7baae0a99f1a324984bcdc5f0718384c1f69775f1c7eec8b859b71b443e3fd7"
+checksum = "971be8f6e4d4a47163b405a3df70d14359186f9ab0f3a3ec37df144ca1ce089f"
 dependencies = [
  "dtoa",
  "linked-hash-map",
@@ -1571,7 +1607,7 @@ dependencies = [
  "clap",
  "futures",
  "githuber",
- "isahc",
+ "isahc 1.0.2",
  "parity-scale-codec",
  "pretty_env_logger",
  "regex",
@@ -1617,7 +1653,7 @@ dependencies = [
 name = "subrpcer"
 version = "0.1.0"
 dependencies = [
- "isahc",
+ "isahc 1.0.2",
  "serde",
  "serde_json",
  "thiserror",
@@ -2012,9 +2048,9 @@ checksum = "d089681aa106a86fade1b0128fb5daf07d5867a509ab036d99988dec80429a57"
 
 [[package]]
 name = "yaml-rust"
-version = "0.4.4"
+version = "0.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "39f0c922f1a334134dc2f7a8b67dc5d25f0735263feec974345ff706bcf20b0d"
+checksum = "56c1936c4cc7a1c9ab21a1ebb602eb942ba868cbd44a99cb7cdc5892335e1c85"
 dependencies = [
  "linked-hash-map",
 ]

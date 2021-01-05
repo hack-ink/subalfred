@@ -17,7 +17,7 @@ path = "src/main.rs"
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-anyhow             = { version = "1.0.36" }
+anyhow             = { version = "1.0.37" }
 app_dirs2          = { version = "2.3.1" }
 array-bytes        = { version = "0.3.0" }
 async-std          = { version = "1.8.0", features = ["attributes"] }
@@ -25,13 +25,13 @@ base58             = { version = "0.1.0" }
 clap               = { version = "3.0.0-beta.2" }
 futures            = { version = "0.3.8" }
 githuber           = { version = "0.1.0" }
-isahc              = { version = "0.9.14", features = ["json"] }
+isahc              = { version = "1.0.2", features = ["json"] }
 parity-scale-codec = { version = "1.3.5" }
 pretty_env_logger  = { version = "0.4.0" }
 regex              = { version = "1.4.2" }
 serde              = { version = "1.0.118" }
-serde_json         = { version = "1.0.60" }
-serde_yaml         = { version = "0.8.14" }
+serde_json         = { version = "1.0.61" }
+serde_yaml         = { version = "0.8.15" }
 subcryptor         = { version = "0.1.0", path = "subcryptor" }
 subhasher          = { version = "0.1.0", path = "subhasher" }
 submetadatan       = { version = "0.1.0", features = ["codec"], path = "submetadatan" }
