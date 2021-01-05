@@ -1,6 +1,6 @@
 // --- crates.io ---
 use serde::Serialize;
-use serde_json::{json, Value};
+use serde_json::Value;
 // --- subrpcer ---
 use crate::{rpc, DEFAULT_ID};
 
