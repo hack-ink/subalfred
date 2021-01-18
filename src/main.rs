@@ -30,7 +30,7 @@ async fn main() -> AnyResult<()> {
 		.about(crate_description!())
 		.arg(
 			Arg::new("log")
-				.about("")
+				.about("Enable/Print logs same as the `RUST_LOG`")
 				.long("log")
 				.short('l')
 				.takes_value(true)
@@ -238,11 +238,8 @@ async fn main() -> AnyResult<()> {
 		);
 	let app_args = app.get_matches();
 
-	if let Some(logs) = app_args.values_of("log") {
-		for log in logs {
-			env::set_var("RUST_LOG", log);
-		}
-
+	if let Some(logs) = app_args.value_of("log") {
+		env::set_var("RUST_LOG", logs);
 		pretty_env_logger::init_timed();
 	}
 
