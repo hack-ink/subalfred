@@ -1610,10 +1610,10 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_yaml",
- "subcryptor",
- "subhasher 0.1.1",
- "submetadatan",
- "subrpcer",
+ "subcryptor 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "subhasher 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "submetadatan 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "subrpcer 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "tracing",
 ]
 
@@ -1625,6 +1625,16 @@ dependencies = [
  "blake2-rfc",
  "parity-scale-codec",
  "schnorrkel",
+]
+
+[[package]]
+name = "subcryptor"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "afb9a2e32792fb27f59fd4385b63231e4ec403f1029332d8d07854c0c0af7eea"
+dependencies = [
+ "base58",
+ "blake2-rfc",
 ]
 
 [[package]]
@@ -1664,8 +1674,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "submetadatan"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4881d1b210276d5810172efa439ac3fabeb1f1271896ad74f66810683eaa3d91"
+dependencies = [
+ "parity-scale-codec",
+ "substorager 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "subrpcer"
 version = "0.1.3"
+dependencies = [
+ "isahc",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tracing",
+]
+
+[[package]]
+name = "subrpcer"
+version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e492c99d77d8bcc9bbc9db6817e884fda3baf2557c56b83700c9ee68abaa9920"
 dependencies = [
  "isahc",
  "serde",
