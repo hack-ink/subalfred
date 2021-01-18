@@ -445,8 +445,18 @@ version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0d706e75d87e35569db781a9b5e2416cff1236a47ed380831f959382ccd5f858"
 dependencies = [
- "darling_core",
- "darling_macro",
+ "darling_core 0.10.2",
+ "darling_macro 0.10.2",
+]
+
+[[package]]
+name = "darling"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "11947000d710ff98138229f633039982f0fef2d9a3f546c21d610fee5f8631d5"
+dependencies = [
+ "darling_core 0.12.0",
+ "darling_macro 0.12.0",
 ]
 
 [[package]]
@@ -464,12 +474,37 @@ dependencies = [
 ]
 
 [[package]]
+name = "darling_core"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ae53b4d9cc89c40314ccf2bf9e6ff1eb19c31e3434542445a41893dbf041aec2"
+dependencies = [
+ "fnv",
+ "ident_case",
+ "proc-macro2",
+ "quote",
+ "strsim 0.10.0",
+ "syn",
+]
+
+[[package]]
 name = "darling_macro"
 version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d9b5a2f4ac4969822c62224815d069952656cadc7084fdca9751e6d959189b72"
 dependencies = [
- "darling_core",
+ "darling_core 0.10.2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "darling_macro"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e9cd9ac4d50d023af5e710cae1501afb063efcd917bd3fc026e8ed6493cc9755"
+dependencies = [
+ "darling_core 0.12.0",
  "quote",
  "syn",
 ]
@@ -487,26 +522,33 @@ dependencies = [
 
 [[package]]
 name = "derive_builder"
-version = "0.9.0"
+version = "0.10.0-alpha"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a2658621297f2cf68762a6f7dc0bb7e1ff2cfd6583daef8ee0fed6f7ec468ec0"
+checksum = "66e047346c0c7f3bd1a67a436f57064ffebba27f78dcb7b4e226e4d072eba82c"
 dependencies = [
- "darling",
  "derive_builder_core",
+ "derive_builder_macro",
+]
+
+[[package]]
+name = "derive_builder_core"
+version = "0.10.0-alpha"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "16b5aa8afd52791d395ce47a0c07bd31b884189be5775337489ea9234d667a1c"
+dependencies = [
+ "darling 0.12.0",
  "proc-macro2",
  "quote",
  "syn",
 ]
 
 [[package]]
-name = "derive_builder_core"
-version = "0.9.0"
+name = "derive_builder_macro"
+version = "0.10.0-alpha"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2791ea3e372c8495c0bc2033991d76b512cd799d07491fbd6890124db9458bef"
+checksum = "8ef405b8d1a5878b7a66bc1bcb15f4438320a719f0eac8b51a084a4822ee650f"
 dependencies = [
- "darling",
- "proc-macro2",
- "quote",
+ "derive_builder_core",
  "syn",
 ]
 
@@ -734,9 +776,9 @@ dependencies = [
 
 [[package]]
 name = "githuber"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e0a40d2a43cf3c7b80fd91a0f73b40b53ad428a1b838df3a9112ecd9fa27fe69"
+checksum = "9ef5ecc15790ba27f8b5822ed02a7cf4a2530ea70728f5db3fc94e78eaa4b342"
 dependencies = [
  "derive_builder",
  "isahc",
@@ -1044,7 +1086,7 @@ version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "05d1c6307dc424d0f65b9b06e94f88248e6305726b14729fd67a5e47b2dc481d"
 dependencies = [
- "darling",
+ "darling 0.10.2",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -1569,7 +1611,7 @@ dependencies = [
  "serde_json",
  "serde_yaml",
  "subcryptor",
- "subhasher 0.1.0",
+ "subhasher 0.1.1",
  "submetadatan",
  "subrpcer",
  "tracing",
@@ -1577,7 +1619,7 @@ dependencies = [
 
 [[package]]
 name = "subcryptor"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "base58",
  "blake2-rfc",
@@ -1587,18 +1629,9 @@ dependencies = [
 
 [[package]]
 name = "subgrandpa"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "parity-scale-codec",
-]
-
-[[package]]
-name = "subhasher"
-version = "0.1.0"
-dependencies = [
- "blake2-rfc",
- "byteorder",
- "twox-hash",
 ]
 
 [[package]]
@@ -1613,8 +1646,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "subhasher"
+version = "0.1.1"
+dependencies = [
+ "blake2-rfc",
+ "byteorder",
+ "twox-hash",
+]
+
+[[package]]
 name = "submetadatan"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "parity-scale-codec",
  "substorager",
@@ -1623,7 +1665,7 @@ dependencies = [
 
 [[package]]
 name = "subrpcer"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "isahc",
  "serde",
@@ -1634,11 +1676,11 @@ dependencies = [
 
 [[package]]
 name = "substorager"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "array-bytes",
  "parity-scale-codec",
- "subhasher 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "subhasher 0.1.0",
 ]
 
 [[package]]
