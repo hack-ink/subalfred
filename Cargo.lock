@@ -1636,9 +1636,7 @@ dependencies = [
 
 [[package]]
 name = "subhasher"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5eaced1c642831fb7fce0835824c069b4c04108a10e6b39d6f548002c8c7c9fc"
+version = "0.1.1"
 dependencies = [
  "blake2-rfc",
  "byteorder",
@@ -1648,6 +1646,8 @@ dependencies = [
 [[package]]
 name = "subhasher"
 version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "180ba9d39c662f98b358191c71de6c40ec31f803fe02396a977e611e7f4a3b37"
 dependencies = [
  "blake2-rfc",
  "byteorder",
@@ -1676,11 +1676,11 @@ dependencies = [
 
 [[package]]
 name = "substorager"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "array-bytes",
  "parity-scale-codec",
- "subhasher 0.1.0",
+ "subhasher 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
