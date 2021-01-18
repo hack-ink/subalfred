@@ -7,7 +7,7 @@ license     = "GPL-3.0"
 name        = "submetadatan"
 readme      = "README.md"
 repository  = "https://github.com/l2ust/submetadatan"
-version     = "0.1.1"
+version     = "0.1.2"
 
 [badges]
 maintenance = { status = "actively-developed" }
@@ -21,5 +21,5 @@ simplify-metadata = ["thiserror"]
 
 [dependencies]
 parity-scale-codec = { version = "1.3.6", optional = true, features = ["derive"] }
-substorager        = { version = "0.1.0", path = "../substorager" }
+substorager        = { version = "0.1.2" }
 thiserror          = { version = "1.0.23", optional = true }
