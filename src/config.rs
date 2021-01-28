@@ -53,7 +53,6 @@ impl Config {
 			config
 		} else {
 			let config = Config::default();
-
 			config.to_writer(&file).unwrap();
 
 			config

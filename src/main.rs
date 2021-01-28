@@ -24,6 +24,7 @@ const APP_INFO: AppInfo = AppInfo {
 #[async_std::main]
 async fn main() -> AnyResult<()> {
 	// TODO: about
+	// TODO: --json for output
 	let app = App::new(crate_name!())
 		.version(crate_version!())
 		.author(crate_authors!())
@@ -37,12 +38,12 @@ async fn main() -> AnyResult<()> {
 				.value_name("TARGET")
 				.global(true),
 		)
-		.subcommand(App::new("list-tags").about(""))
-		.subcommand(App::new("list-releases").about(""))
-		.subcommand(list_app("list-commits").about(""))
+		.subcommand(App::new("list-tags").about("List all the tags of Substrate"))
+		.subcommand(App::new("list-releases").about("List all the releases of Substrate"))
+		.subcommand(list_app("list-commits").about("List the specific commits of Substrate"))
 		.subcommand(
 			list_app("list-pull-requests")
-				.about("")
+				.about("List the specific pull requests of Substrate")
 				.arg(
 					Arg::new("thread")
 						.about("")
@@ -54,7 +55,7 @@ async fn main() -> AnyResult<()> {
 		)
 		.subcommand(
 			list_app("list-migrations")
-				.about("")
+				.about("List the specific pull requests which contains runtime migration(s) of Substrate")
 				.arg(
 					Arg::new("thread")
 						.about("")
@@ -66,7 +67,7 @@ async fn main() -> AnyResult<()> {
 		)
 		.subcommand(
 			App::new("send-rpc")
-				.about("")
+				.about("Send RPC to the node")
 				.arg(
 					Arg::new("uri")
 						.about("")
@@ -76,7 +77,7 @@ async fn main() -> AnyResult<()> {
 				)
 				.arg(
 					Arg::new("method")
-						.about("")
+						.about("Support these styles (non case sensitive):\n    - state_getRuntimeVersion\n    - getRuntimeVersion")
 						.long("method")
 						.required(true)
 						.takes_value(true)
@@ -97,10 +98,10 @@ async fn main() -> AnyResult<()> {
 						.value_name("ID"),
 				),
 		)
-		.subcommand(App::new("check-runtime-version").about(""))
+		.subcommand(App::new("check-runtime-version").about("Fetch and check the given node's runtime version"))
 		.subcommand(
 			App::new("metadata")
-				.about("")
+				.about("Read and parse the given node's metadata")
 				.arg(
 					Arg::new("uri")
 						.about("")
@@ -122,7 +123,7 @@ async fn main() -> AnyResult<()> {
 				),
 		)
 		.subcommand(
-			App::new("account").about("").arg(
+			App::new("account").about("Convert the SS58/public to public/SS58").arg(
 				Arg::new("account")
 					.about("")
 					.required(true)
@@ -132,7 +133,7 @@ async fn main() -> AnyResult<()> {
 		)
 		.subcommand(
 			App::new("hash")
-				.about("")
+				.about("Hash the given data with specific hasher")
 				.arg(
 					Arg::new("data")
 						.about("")
@@ -162,7 +163,7 @@ async fn main() -> AnyResult<()> {
 		.subcommand(
 			// TODO: handle instance
 			App::new("storage-key")
-				.about("")
+				.about("Calculate the storage key for the storage item/prefix")
 				.arg(
 					Arg::new("prefix")
 						.about("")
@@ -181,7 +182,7 @@ async fn main() -> AnyResult<()> {
 				),
 		)
 		.subcommand(
-			App::new("node-template").about("").arg(
+			App::new("node-template").about("Create a node template in current dir").arg(
 				Arg::new("name")
 					.about("")
 					.long("name")
@@ -191,7 +192,7 @@ async fn main() -> AnyResult<()> {
 		)
 		.subcommand(
 			App::new("pallet-template")
-				.about("")
+				.about("Create a pallet template in current dir")
 				.arg(
 					Arg::new("name")
 						.about("")
@@ -307,18 +308,23 @@ async fn main() -> AnyResult<()> {
 			.unwrap_or("http://127.0.0.1:9933");
 		let params =
 			|| serde_json::from_str::<Value>(send_rpc_args.value_of("params").unwrap_or("[]"));
-		let rpc = match send_rpc_args.value_of("method").unwrap() {
-			"author_submitAndWatchExtrinsic" | "submitAndWatchExtrinsic" => {
+		let rpc = match send_rpc_args
+			.value_of("method")
+			.unwrap()
+			.to_lowercase()
+			.as_str()
+		{
+			"author_submitandwatchextrinsic" | "submitandwatchextrinsic" => {
 				subrpcer::author::submit_and_watch_extrinsic_with_params(params()?)
 			}
-			"chain_getBlockHash" | "getBlockHash" => {
+			"chain_getblockhash" | "getblockhash" => {
 				subrpcer::chain::get_block_hash_with_raw_params(params()?)
 			}
-			"state_getRuntimeVersion" | "getRuntimeVersion" => {
+			"state_getruntimeversion" | "getruntimeversion" => {
 				subrpcer::state::get_runtime_version()
 			}
-			"state_getMetadata" | "getMetadata" => subrpcer::state::get_metadata(),
-			"state_getStorage" | "getStorage" => {
+			"state_getmetadata" | "getmetadata" => subrpcer::state::get_metadata(),
+			"state_getstorage" | "getstorage" => {
 				subrpcer::state::get_storage_with_raw_params(params()?)
 			}
 			method => subrpcer::rpc(
