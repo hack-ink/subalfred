@@ -7,20 +7,20 @@ use serde::de::DeserializeOwned;
 use githuber::{
 	pager::Pager,
 	requests::{
-		commits::{
+		commit::{
 			get_a_commit::GetACommitBuilder, list_commits::ListCommitsBuilder,
 			list_pull_requests_associated_with_a_commit::ListPullRequestsAssociatedWithACommitBuilder,
 		},
-		contents::get_repository_content::GetRepositoryContentBuilder,
-		issues::create_an_issue::CreateAnIssueBuilder,
-		releases::list_releases::ListReleasesBuilder,
-		repositories::list_repository_tags::ListRepositoryTagsBuilder,
+		content::get_repository_content::GetRepositoryContentBuilder,
+		issue::create_an_issue::CreateAnIssueBuilder,
+		release::list_releases::ListReleasesBuilder,
+		repository::list_repository_tags::ListRepositoryTagsBuilder,
 	},
 	responses::{
-		commits::{Commit, PullRequest, User},
-		contents::Content,
-		releases::Release,
-		repositories::Tag,
+		commit::{Commit, PullRequest, User},
+		content::Content,
+		release::Release,
+		repository::Tag,
 	},
 	GithubApi, Githuber,
 };
@@ -260,7 +260,10 @@ impl Subalfred {
 		trace!("{:#?}", pull_requests);
 
 		if create_issue {
-			let mut body = String::new();
+			const MAXIMUM_ISSUE_BODY_SIZE: usize = 65536;
+
+			let mut issue_contents = vec![String::new()];
+			let mut issue_content = issue_contents.last_mut().unwrap();
 
 			for PullRequest {
 				html_url,
@@ -269,15 +272,14 @@ impl Subalfred {
 					login,
 					html_url: user_html_url,
 				},
-				body: pull_request_body,
+				body,
 				merged_at,
 				..
 			} in &pull_requests
 			{
-				let pull_request_body = pull_request_body.replace('\n', "\n\t  ");
+				let pull_request_body = body.replace('\n', "\n\t  ");
 				let pull_request_body = pull_request_body.trim_end();
-
-				body.push_str(&format!(
+				let formatted_pull_request_body = format!(
 					"- [ ] [{}]({})\n\
 					\t- *by [{}]({}) merged at {}*\n\
 					\t- <details>\n\
@@ -285,7 +287,15 @@ impl Subalfred {
 					\t  {}\n\
 					\t  </details>\n",
 					title, html_url, login, user_html_url, merged_at, pull_request_body
-				));
+				);
+
+				if issue_content.len() + formatted_pull_request_body.len() > MAXIMUM_ISSUE_BODY_SIZE
+				{
+					issue_contents.push(String::new());
+					issue_content = issue_contents.last_mut().unwrap();
+				}
+
+				issue_content.push_str(&formatted_pull_request_body);
 			}
 
 			self.create_an_issue(
@@ -296,7 +306,7 @@ impl Subalfred {
 					since.unwrap_or("earliest"),
 					until.unwrap_or("latest")
 				),
-				body,
+				issue_contents.remove(0),
 			)
 			.await?;
 		}
@@ -339,6 +349,19 @@ impl Subalfred {
 		title: impl Into<String>,
 		body: impl Into<String>,
 	) -> AnyResult<()> {
+		// TODO: error handling
+		// {
+		// 	"message": "Validation Failed",
+		// 	"errors": [
+		// 	  {
+		// 		"resource": "Issue",
+		// 		"code": "custom",
+		// 		"field": "body",
+		// 		"message": "body is too long (maximum is 65536 characters)"
+		// 	  }
+		// 	],
+		// 	"documentation_url": "https://docs.github.com/rest/reference/issues#create-an-issue"
+		// }
 		self.githuber
 			.send(
 				CreateAnIssueBuilder::default()

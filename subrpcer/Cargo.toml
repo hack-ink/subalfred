@@ -7,7 +7,7 @@ license     = "GPL-3.0"
 name        = "subrpcer"
 readme      = "README.md"
 repository  = "https://github.com/l2ust/subrpcer"
-version     = "0.1.3"
+version     = "0.1.4"
 
 [badges]
 maintenance = { status = "actively-developed" }
@@ -22,7 +22,7 @@ sender     = [
 
 [dependencies]
 isahc      = { version = "1.0.3", optional = true, features = ["json"] }
-serde      = { version = "1.0.119" }
+serde      = { version = "1.0.123" }
 serde_json = { version = "1.0.61" }
 thiserror  = { version = "1.0.23", optional = true }
 tracing    = { version = "0.1.22", optional = true }
