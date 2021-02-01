@@ -12,13 +12,17 @@ use githuber::{
 			list_pull_requests_associated_with_a_commit::ListPullRequestsAssociatedWithACommitBuilder,
 		},
 		content::get_repository_content::GetRepositoryContentBuilder,
-		issue::create_an_issue::CreateAnIssueBuilder,
+		issue::{
+			create_an_issue::CreateAnIssueBuilder,
+			create_an_issue_comment::CreateAnIssueCommentBuilder,
+		},
 		release::list_releases::ListReleasesBuilder,
 		repository::list_repository_tags::ListRepositoryTagsBuilder,
 	},
 	responses::{
 		commit::{Commit, PullRequest, User},
 		content::Content,
+		issue::Issue,
 		release::Release,
 		repository::Tag,
 	},
@@ -185,7 +189,10 @@ impl Subalfred {
 		trace!("{:#?}", pull_requests);
 
 		if create_issue {
-			let mut body = String::new();
+			const MAXIMUM_ISSUE_BODY_SIZE: usize = 65536;
+
+			let mut issue_body = vec![String::new()];
+			let mut issue_body_part = issue_body.last_mut().unwrap();
 
 			for PullRequest {
 				html_url,
@@ -194,7 +201,7 @@ impl Subalfred {
 					login,
 					html_url: user_html_url,
 				},
-				body: pull_request_body,
+				body,
 				merged_at,
 				labels,
 				..
@@ -208,31 +215,51 @@ impl Subalfred {
 				} else {
 					""
 				};
-				let pull_request_body = pull_request_body.replace('\n', "\n\t  ");
-				let pull_request_body = pull_request_body.trim_end();
-
-				body.push_str(&format!(
+				let body = body.replace('\n', "\n\t  ");
+				let body = body.trim_end();
+				let formatted_pull_request_body = format!(
 					"- [ ] [{}]({})\n\
 					\t- *by [{}]({}) merged at {}*\n\
 					\t- <details>\n\
 					\t  <summary>Details{}</summary>\n\
 					\t  {}\n\
 					\t  </details>\n",
-					title, html_url, login, user_html_url, merged_at, migration, pull_request_body
-				));
+					title, html_url, login, user_html_url, merged_at, migration, body
+				);
+
+				if issue_body_part.len() + formatted_pull_request_body.len()
+					> MAXIMUM_ISSUE_BODY_SIZE
+				{
+					issue_body.push(String::new());
+					issue_body_part = issue_body.last_mut().unwrap();
+				}
+
+				issue_body_part.push_str(&formatted_pull_request_body);
 			}
 
-			self.create_an_issue(
-				&self.project.owner,
-				&self.project.issue_repo,
-				format!(
-					"Updates (since {} until {}) - by Subalfred",
-					since.unwrap_or("earliest"),
-					until.unwrap_or("latest")
-				),
-				body,
-			)
-			.await?;
+			let issue_number = self
+				.create_an_issue(
+					&self.project.owner,
+					&self.project.issue_repo,
+					format!(
+						"Updates (since {} until {}) - by Subalfred",
+						since.unwrap_or("earliest"),
+						until.unwrap_or("latest")
+					),
+					issue_body.remove(0),
+				)
+				.await?
+				.number;
+
+			for issue_body_part in issue_body {
+				self.create_an_issue_comment(
+					&self.project.owner,
+					&self.project.issue_repo,
+					&issue_number,
+					issue_body_part,
+				)
+				.await?;
+			}
 		}
 
 		Ok(pull_requests)
@@ -260,10 +287,7 @@ impl Subalfred {
 		trace!("{:#?}", pull_requests);
 
 		if create_issue {
-			const MAXIMUM_ISSUE_BODY_SIZE: usize = 65536;
-
-			let mut issue_contents = vec![String::new()];
-			let mut issue_content = issue_contents.last_mut().unwrap();
+			let mut issue_body = String::new();
 
 			for PullRequest {
 				html_url,
@@ -277,25 +301,18 @@ impl Subalfred {
 				..
 			} in &pull_requests
 			{
-				let pull_request_body = body.replace('\n', "\n\t  ");
-				let pull_request_body = pull_request_body.trim_end();
-				let formatted_pull_request_body = format!(
+				let body = body.replace('\n', "\n\t  ");
+				let body = body.trim_end();
+
+				issue_body.push_str(&format!(
 					"- [ ] [{}]({})\n\
 					\t- *by [{}]({}) merged at {}*\n\
 					\t- <details>\n\
 					\t  <summary>Details</summary>\n\
 					\t  {}\n\
 					\t  </details>\n",
-					title, html_url, login, user_html_url, merged_at, pull_request_body
-				);
-
-				if issue_content.len() + formatted_pull_request_body.len() > MAXIMUM_ISSUE_BODY_SIZE
-				{
-					issue_contents.push(String::new());
-					issue_content = issue_contents.last_mut().unwrap();
-				}
-
-				issue_content.push_str(&formatted_pull_request_body);
+					title, html_url, login, user_html_url, merged_at, body
+				));
 			}
 
 			self.create_an_issue(
@@ -306,7 +323,7 @@ impl Subalfred {
 					since.unwrap_or("earliest"),
 					until.unwrap_or("latest")
 				),
-				issue_contents.remove(0),
+				issue_body,
 			)
 			.await?;
 		}
@@ -348,7 +365,8 @@ impl Subalfred {
 		repo: impl Into<String>,
 		title: impl Into<String>,
 		body: impl Into<String>,
-	) -> AnyResult<()> {
+	) -> AnyResult<Issue> {
+		let mut v = vec![];
 		// TODO: error handling
 		// {
 		// 	"message": "Validation Failed",
@@ -372,9 +390,40 @@ impl Subalfred {
 					.build()
 					.unwrap(),
 			)
+			.await?
+			.copy_to(&mut v)
 			.await?;
+		let issue = serde_json::from_slice(&v)?;
 
-		Ok(())
+		trace!("{:#?}", issue);
+
+		Ok(issue)
+	}
+
+	pub async fn create_an_issue_comment(
+		&self,
+		owner: impl Into<String>,
+		repo: impl Into<String>,
+		issue_number: impl ToString,
+		body: impl Into<String>,
+	) -> AnyResult<bool> {
+		let status = self
+			.githuber
+			.send(
+				CreateAnIssueCommentBuilder::default()
+					.owner(owner)
+					.repo(repo)
+					.issue_number(issue_number.to_string())
+					.body(body)
+					.build()
+					.unwrap(),
+			)
+			.await?
+			.status();
+
+		trace!("{:#?}", status);
+
+		Ok(status.is_success())
 	}
 }
 
