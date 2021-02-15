@@ -2,6 +2,7 @@ pub mod author;
 pub mod chain;
 pub mod grandpa;
 pub mod state;
+pub mod system;
 
 #[cfg(feature = "sender")]
 pub mod sender {

@@ -1626,7 +1626,7 @@ dependencies = [
  "subcryptor 0.1.1",
  "subhasher 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "submetadatan 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "subrpcer 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "subrpcer 0.1.4",
  "tracing",
 ]
 
@@ -1699,6 +1699,8 @@ dependencies = [
 [[package]]
 name = "subrpcer"
 version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "12e416a0188e5b8e85a5d1acdb023748e8ab0b5b2cdea35b807e3d08893aa0ce"
 dependencies = [
  "isahc",
  "serde",
@@ -1709,9 +1711,7 @@ dependencies = [
 
 [[package]]
 name = "subrpcer"
-version = "0.1.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "12e416a0188e5b8e85a5d1acdb023748e8ab0b5b2cdea35b807e3d08893aa0ce"
+version = "0.1.5"
 dependencies = [
  "isahc",
  "serde",

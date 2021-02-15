@@ -35,18 +35,8 @@ serde_yaml         = { version = "0.8.15" }
 subcryptor         = { version = "0.1.1" }
 subhasher          = { version = "0.1.1" }
 submetadatan       = { version = "0.1.4", features = ["codec"] }
-subrpcer           = { version = "0.1.4", features = ["raw-params", "sender"] }
-tracing            = { version = "0.1.22" }
-
-[workspace]
-members = [
-	"subcryptor",
-	"subgrandpa",
-	"subhasher",
-	"submetadatan",
-	"subrpcer",
-	"substorager",
-]
+subrpcer           = { version = "0.1.5", features = ["raw-params", "sender"] }
+tracing            = { version = "0.1.23" }
 
 # Local Development
 # [patch.crates-io]
