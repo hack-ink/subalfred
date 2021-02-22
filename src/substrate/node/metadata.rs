@@ -37,7 +37,7 @@ impl Subalfred {
 			.await?
 			.modules
 			.into_iter()
-			.map(|module| module.name)
+			.map(|module| format!("{}: {}", module.name, module.index))
 			.collect())
 	}
 

@@ -7,11 +7,11 @@ impl Subalfred {
 			let data = data.trim_start_matches("0x");
 
 			(
-				format!(r#"array_bytes::hex_str("0x{}")"#, data),
+				format!(r#"array_bytes::bytes("0x{}")"#, data),
 				array_bytes::bytes(data).unwrap(),
 			)
 		} else {
-			(format!(r#""{}""#, data), data.as_bytes().to_vec())
+			(format!("{}", data), data.as_bytes().to_vec())
 		};
 
 		match hasher {
