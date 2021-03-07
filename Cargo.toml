@@ -18,30 +18,43 @@ maintenance = { status = "actively-developed" }
 
 [dependencies]
 anyhow             = { version = "1.0.38" }
-app_dirs2          = { version = "2.3.1" }
-array-bytes        = { version = "0.3.0" }
+app_dirs2          = { version = "2.3.2" }
+array-bytes        = { version = "1.1.0" }
 async-std          = { version = "1.9.0", features = ["attributes"] }
 base58             = { version = "0.1.0" }
 clap               = { version = "3.0.0-beta.2" }
-futures            = { version = "0.3.12" }
+futures            = { version = "0.3.13" }
 githuber           = { version = "0.2.3" }
 isahc              = { version = "1.1.0", features = ["json"] }
-parity-scale-codec = { version = "2.0.0" }
+parity-scale-codec = { version = "2.0.1" }
 pretty_env_logger  = { version = "0.4.0" }
 regex              = { version = "1.4.3" }
-serde              = { version = "1.0.123" }
-serde_json         = { version = "1.0.61" }
-serde_yaml         = { version = "0.8.15" }
+serde              = { version = "1.0.124" }
+serde_json         = { version = "1.0.64" }
+serde_yaml         = { version = "0.8.17" }
 subcryptor         = { version = "0.1.1" }
 subhasher          = { version = "0.1.1" }
 submetadatan       = { version = "0.1.4", features = ["codec"] }
-subrpcer           = { version = "0.1.5", features = ["raw-params", "sender"] }
-tracing            = { version = "0.1.23" }
+subrpcer           = { version = "0.1.6", features = ["raw-params", "sender"] }
+tracing            = { version = "0.1.25" }
+
+# Local Development
+[workspace]
+members = [
+	"subcryptor",
+	"subgrandpa",
+	"subhasher",
+	"submetadatan",
+	"subrpcer",
+	"substorager",
+]
 
 # Local Development
 # [patch.crates-io]
 # githuber     = { path = "../githuber" }
 # subcryptor   = { path = "subcryptor" }
+# subgrandpa   = { path = "subgrandpa" }
 # subhasher    = { path = "subhasher" }
 # submetadatan = { path = "submetadatan" }
 # subrpcer     = { path = "subrpcer" }
+# substorager  = { path = "substorager" }

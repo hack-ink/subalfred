@@ -17,7 +17,7 @@ impl Subalfred {
 
 			serde_json::from_slice::<RpcResult>(&v)?.result
 		};
-		let raw_runtime_metadata_prefixed = array_bytes::bytes(result.as_str().unwrap()).unwrap();
+		let raw_runtime_metadata_prefixed = array_bytes::hex2bytes(result.as_str().unwrap()).unwrap();
 		let runtime_metadata_prefixed =
 			RuntimeMetadataPrefixed::decode(&mut &*raw_runtime_metadata_prefixed)?;
 		let runtime_metadata =
@@ -74,8 +74,8 @@ impl Subalfred {
 fn storage_key(prefix: impl AsRef<[u8]>, item: impl AsRef<[u8]>) -> String {
 	let mut storage_key = String::from("0x");
 
-	storage_key.push_str(&array_bytes::hex_str("", &subhasher::twox_128(prefix)));
-	storage_key.push_str(&array_bytes::hex_str("", &subhasher::twox_128(item)));
+	storage_key.push_str(&array_bytes::bytes2hex("", &subhasher::twox_128(prefix)));
+	storage_key.push_str(&array_bytes::bytes2hex("", &subhasher::twox_128(item)));
 
 	storage_key
 }

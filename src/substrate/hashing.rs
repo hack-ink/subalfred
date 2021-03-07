@@ -7,8 +7,8 @@ impl Subalfred {
 			let data = data.trim_start_matches("0x");
 
 			(
-				format!(r#"array_bytes::bytes("0x{}")"#, data),
-				array_bytes::bytes(data).unwrap(),
+				format!(r#"array_bytes::hex2bytes("0x{}")"#, data),
+				array_bytes::hex2bytes(data).unwrap(),
 			)
 		} else {
 			(format!("{}", data), data.as_bytes().to_vec())
@@ -18,42 +18,42 @@ impl Subalfred {
 			"blake2-128" => format!(
 				"subhasher::blake2_128({}) = {}",
 				data,
-				array_bytes::hex_str("0x", &subhasher::blake2_128(&bytes))
+				array_bytes::bytes2hex("0x", &subhasher::blake2_128(&bytes))
 			),
 			"blake2-256" => format!(
 				"subhasher::blake2_256({}) = {}",
 				data,
-				array_bytes::hex_str("0x", &subhasher::blake2_256(&bytes))
+				array_bytes::bytes2hex("0x", &subhasher::blake2_256(&bytes))
 			),
 			"blake2-128-concat" => format!(
 				"subhasher::blake2_128_concat({}) = {}",
 				data,
-				array_bytes::hex_str("0x", &subhasher::blake2_128_concat(&bytes))
+				array_bytes::bytes2hex("0x", &subhasher::blake2_128_concat(&bytes))
 			),
 			"twox-64" => format!(
 				"subhasher::twox_64({}) = {}",
 				data,
-				array_bytes::hex_str("0x", &subhasher::twox_64(&bytes))
+				array_bytes::bytes2hex("0x", &subhasher::twox_64(&bytes))
 			),
 			"twox-128" => format!(
 				"subhasher::twox_128({}) = {}",
 				data,
-				array_bytes::hex_str("0x", &subhasher::twox_128(&bytes))
+				array_bytes::bytes2hex("0x", &subhasher::twox_128(&bytes))
 			),
 			"twox-256" => format!(
 				"twox256({}) = {}",
 				data,
-				array_bytes::hex_str("0x", &subhasher::twox_256(&bytes))
+				array_bytes::bytes2hex("0x", &subhasher::twox_256(&bytes))
 			),
 			"twox-128-concat" => format!(
 				"twox_128_concat({}) = {}",
 				data,
-				array_bytes::hex_str("0x", &subhasher::twox_64_concat(&bytes))
+				array_bytes::bytes2hex("0x", &subhasher::twox_64_concat(&bytes))
 			),
 			"identity" => format!(
 				"identity({}) = {}",
 				data,
-				array_bytes::hex_str("0x", &bytes)
+				array_bytes::bytes2hex("0x", &bytes)
 			),
 			_ => unreachable!(),
 		}
@@ -63,10 +63,10 @@ impl Subalfred {
 		let mut storage_key = String::from("0x");
 
 		if let Some(prefix) = prefix {
-			storage_key.push_str(&array_bytes::hex_str("", &subhasher::twox_128(prefix)));
+			storage_key.push_str(&array_bytes::bytes2hex("", &subhasher::twox_128(prefix)));
 		}
 		if let Some(item) = item {
-			storage_key.push_str(&array_bytes::hex_str("", &subhasher::twox_128(item)));
+			storage_key.push_str(&array_bytes::bytes2hex("", &subhasher::twox_128(item)));
 		}
 
 		storage_key

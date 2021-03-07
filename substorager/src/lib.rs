@@ -66,7 +66,7 @@ pub fn hex_storage_key_with_prefix(
 	prefix: impl AsRef<[u8]>,
 	item: impl AsRef<[u8]>,
 ) -> String {
-	array_bytes::hex_str(hex_prefix, storage_key(prefix, item))
+	array_bytes::bytes2hex(hex_prefix, storage_key(prefix, item))
 }
 
 pub fn storage_map_key(
@@ -85,7 +85,7 @@ pub fn hex_storage_map_key_with_prefix(
 	item: impl AsRef<[u8]>,
 	key: (impl AsRef<StorageHasher>, impl AsRef<[u8]>),
 ) -> String {
-	array_bytes::hex_str(hex_prefix, storage_map_key(prefix, item, key))
+	array_bytes::bytes2hex(hex_prefix, storage_map_key(prefix, item, key))
 }
 
 pub fn storage_double_map_key(
@@ -107,5 +107,5 @@ pub fn hex_storage_double_map_key_with_prefix(
 	key1: (StorageHasher, impl AsRef<[u8]>),
 	key2: (StorageHasher, impl AsRef<[u8]>),
 ) -> String {
-	array_bytes::hex_str(hex_prefix, storage_double_map_key(prefix, item, key1, key2))
+	array_bytes::bytes2hex(hex_prefix, storage_double_map_key(prefix, item, key1, key2))
 }
