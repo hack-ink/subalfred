@@ -1604,7 +1604,7 @@ dependencies = [
  "serde_yaml",
  "subcryptor 0.1.1",
  "subhasher 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "submetadatan 0.1.4",
+ "submetadatan 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "subrpcer 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "tracing",
 ]
@@ -1658,21 +1658,21 @@ dependencies = [
 
 [[package]]
 name = "submetadatan"
-version = "0.1.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e70b8909ed0512d9f3e3943a2993d4d2462850e9092ba5b897a624ba8ac192d"
-dependencies = [
- "parity-scale-codec",
- "substorager 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "submetadatan"
 version = "0.1.5"
 dependencies = [
  "parity-scale-codec",
  "substorager 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "thiserror",
+]
+
+[[package]]
+name = "submetadatan"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c922bafd7c456672d11ed218d1dba1ce7eaa8dd81ae642473ec9b1056b2ae656"
+dependencies = [
+ "parity-scale-codec",
+ "substorager 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

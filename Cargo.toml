@@ -34,11 +34,10 @@ serde_json         = { version = "1.0.64" }
 serde_yaml         = { version = "0.8.17" }
 subcryptor         = { version = "0.1.1" }
 subhasher          = { version = "0.1.1" }
-submetadatan       = { version = "0.1.4", features = ["codec"] }
-subrpcer           = { version = "0.1.6", features = ["raw-params", "sender"] }
+submetadatan       = { version = "0.1.5", features = ["codec"] }
+subrpcer           = { version = "0.1.7", features = ["raw-params", "sender"] }
 tracing            = { version = "0.1.25" }
 
-# Local Development
 [workspace]
 members = [
 	"subcryptor",
