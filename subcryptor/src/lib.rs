@@ -2,14 +2,14 @@
 pub mod full_crypto {
 	// --- crates.io ---
 	#[cfg(feature = "codec")]
-	use parity_scale_codec::Encode;
+	use parity_scale_codec::{Decode, Encode};
 
 	pub type PublicKey = [u8; 32];
 	pub type Signature = [u8; 64];
 
 	pub const SIGNING_CTX: &[u8] = b"substrate";
 
-	#[cfg_attr(feature = "codec", derive(Encode))]
+	#[cfg_attr(feature = "codec", derive(Encode, Decode))]
 	pub enum MultiSignature {
 		_Ed25519,
 		Sr25519(Signature),

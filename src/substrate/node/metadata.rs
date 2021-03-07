@@ -17,7 +17,8 @@ impl Subalfred {
 
 			serde_json::from_slice::<RpcResult>(&v)?.result
 		};
-		let raw_runtime_metadata_prefixed = array_bytes::hex2bytes(result.as_str().unwrap()).unwrap();
+		let raw_runtime_metadata_prefixed =
+			array_bytes::hex2bytes(result.as_str().unwrap()).unwrap();
 		let runtime_metadata_prefixed =
 			RuntimeMetadataPrefixed::decode(&mut &*raw_runtime_metadata_prefixed)?;
 		let runtime_metadata =

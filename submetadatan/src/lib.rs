@@ -233,15 +233,15 @@ pub use simplify_metadata::*;
 
 // --- crates.io ---
 #[cfg(feature = "codec")]
-use parity_scale_codec::Decode;
+use parity_scale_codec::{Decode, Encode};
 use substorager::StorageType as StorageEntryType;
 
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "codec", derive(Decode))]
+#[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct RuntimeMetadataPrefixed(pub u32, pub RuntimeMetadata);
 
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "codec", derive(Decode))]
+#[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub enum RuntimeMetadata {
 	V0,
 	V1,
@@ -259,14 +259,14 @@ pub enum RuntimeMetadata {
 }
 
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "codec", derive(Decode))]
+#[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct RuntimeMetadataV12 {
 	pub modules: Vec<ModuleMetadata>,
 	pub extrinsic: ExtrinsicMetadata,
 }
 
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "codec", derive(Decode))]
+#[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct ModuleMetadata {
 	pub name: String,
 	pub storage: Option<StorageMetadata>,
@@ -278,13 +278,13 @@ pub struct ModuleMetadata {
 }
 
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "codec", derive(Decode))]
+#[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct StorageMetadata {
 	pub prefix: String,
 	pub entries: Vec<StorageEntryMetadata>,
 }
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "codec", derive(Decode))]
+#[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct StorageEntryMetadata {
 	pub name: String,
 	pub modifier: StorageEntryModifier,
@@ -293,28 +293,28 @@ pub struct StorageEntryMetadata {
 	pub documentation: Vec<String>,
 }
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "codec", derive(Decode))]
+#[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub enum StorageEntryModifier {
 	Optional,
 	Default,
 }
 
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "codec", derive(Decode))]
+#[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct FunctionMetadata {
 	pub name: String,
 	pub arguments: Vec<FunctionArgumentMetadata>,
 	pub documentation: Vec<String>,
 }
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "codec", derive(Decode))]
+#[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct FunctionArgumentMetadata {
 	pub name: String,
 	pub ty: String,
 }
 
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "codec", derive(Decode))]
+#[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct EventMetadata {
 	pub name: String,
 	pub arguments: Vec<String>,
@@ -322,7 +322,7 @@ pub struct EventMetadata {
 }
 
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "codec", derive(Decode))]
+#[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct ModuleConstantMetadata {
 	pub name: String,
 	pub ty: String,
@@ -331,14 +331,14 @@ pub struct ModuleConstantMetadata {
 }
 
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "codec", derive(Decode))]
+#[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct ErrorMetadata {
 	pub name: String,
 	pub documentation: Vec<String>,
 }
 
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "codec", derive(Decode))]
+#[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct ExtrinsicMetadata {
 	pub version: u8,
 	pub signed_extensions: Vec<String>,

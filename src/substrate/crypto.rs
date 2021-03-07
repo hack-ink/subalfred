@@ -11,7 +11,10 @@ impl Subalfred {
 		if account.len() == 48 {
 			public_key = subcryptor::into_public_key(account);
 
-			accounts.push(("Public Key".into(), array_bytes::bytes2hex("0x", &public_key)));
+			accounts.push((
+				"Public Key".into(),
+				array_bytes::bytes2hex("0x", &public_key),
+			));
 		} else {
 			public_key = array_bytes::hex2bytes(account).unwrap();
 
