@@ -11,7 +11,7 @@ impl Subalfred {
 				array_bytes::hex2bytes(data).unwrap(),
 			)
 		} else {
-			(format!("{}", data), data.as_bytes().to_vec())
+			(data.to_string(), data.as_bytes().to_vec())
 		};
 
 		match hasher {

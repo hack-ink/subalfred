@@ -48,24 +48,20 @@ impl Subalfred {
 			.modules
 			.into_iter()
 			.filter_map(|module| {
-				if let Some(storage) = module.storage {
-					Some(
-						storage
-							.entries
-							.iter()
-							.map(|entry| {
-								format!(
-									"{}{}: {}",
-									storage.prefix,
-									entry.name,
-									storage_key(storage.prefix.as_bytes(), entry.name.as_bytes())
-								)
-							})
-							.collect::<Vec<_>>(),
-					)
-				} else {
-					None
-				}
+				module.storage.map(|storage| {
+					storage
+						.entries
+						.iter()
+						.map(|entry| {
+							format!(
+								"{}{}: {}",
+								storage.prefix,
+								entry.name,
+								storage_key(storage.prefix.as_bytes(), entry.name.as_bytes())
+							)
+						})
+						.collect::<Vec<_>>()
+				})
 			})
 			.flatten()
 			.collect())
