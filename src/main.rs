@@ -13,6 +13,7 @@ use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg
 use githuber::Githuber;
 use isahc::AsyncReadResponseExt;
 use serde_json::Value;
+use tracing::trace;
 // --- subalfred ---
 use crate::config::Project;
 
@@ -308,12 +309,8 @@ async fn main() -> AnyResult<()> {
 			.unwrap_or("http://127.0.0.1:9933");
 		let params =
 			|| serde_json::from_str::<Value>(send_rpc_args.value_of("params").unwrap_or("[]"));
-		let rpc = match send_rpc_args
-			.value_of("method")
-			.unwrap()
-			.to_lowercase()
-			.as_str()
-		{
+		let method = send_rpc_args.value_of("method").unwrap();
+		let rpc = match method.to_lowercase().as_str() {
 			"author_submitandwatchextrinsic" | "submitandwatchextrinsic" => {
 				subrpcer::author::submit_and_watch_extrinsic_with_params(params()?)
 			}
@@ -327,7 +324,7 @@ async fn main() -> AnyResult<()> {
 			"state_getstorage" | "getstorage" => {
 				subrpcer::state::get_storage_with_raw_params(params()?)
 			}
-			method => subrpcer::rpc(
+			_ => subrpcer::rpc(
 				method,
 				params()?,
 				send_rpc_args
@@ -338,6 +335,7 @@ async fn main() -> AnyResult<()> {
 			),
 		};
 
+		trace!("{}", serde_json::to_string_pretty(&rpc)?);
 		println!("{}", subrpcer::send_rpc(uri, rpc).await?.text().await?);
 	} else if app_args
 		.subcommand_matches("check-runtime-version")

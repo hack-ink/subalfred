@@ -45,7 +45,7 @@ impl Subalfred {
 				data,
 				array_bytes::bytes2hex("0x", &subhasher::twox_256(&bytes))
 			),
-			"twox-128-concat" => format!(
+			"twox-64-concat" => format!(
 				"twox_128_concat({}) = {}",
 				data,
 				array_bytes::bytes2hex("0x", &subhasher::twox_64_concat(&bytes))
