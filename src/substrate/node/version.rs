@@ -2,8 +2,8 @@
 use std::{fmt::Debug, fs::File, io::Read};
 // --- crates.io ---
 use isahc::AsyncReadResponseExt;
+use regex::Regex;
 use serde::Deserialize;
-use tracing::trace;
 // --- subalfred ---
 use crate::{config::Runtime, substrate::node::RpcResult, AnyResult, Subalfred};
 
@@ -57,11 +57,14 @@ impl Subalfred {
 				extract_runtime_version(&self.githuber.download(download_url).await?.text().await?)
 			};
 			let local_runtime_version = {
-				let mut f = File::open(&format!(
+				let path = format!(
 					"{}/{}",
 					&self.project.local_full_path, runtime_relative_path
-				))
-				.unwrap();
+				);
+
+				tracing::trace!("{}", path);
+
+				let mut f = File::open(&path).unwrap();
 				let mut s = String::new();
 
 				f.read_to_string(&mut s).unwrap();
@@ -76,30 +79,32 @@ impl Subalfred {
 			});
 		}
 
-		trace!("{:#?}", runtimes);
+		tracing::trace!("{:#?}", runtimes);
 
 		Ok(runtimes)
 	}
 }
 
 fn extract_runtime_version(s: &str) -> RuntimeVersion {
-	let extract_name = |s| format!(r#"{} *?: *?create_runtime_str! *?\("(.+?)"\)"#, s);
-	let extract_version = |s| format!(r#"{} *?: *?(\d+)"#, s);
+	let extract_name = |s| format!(r#".*?{} *?:.*?"(.+?)""#, s);
+	let extract_version = |s| format!(r#".*?{} *?: *?(\d+)"#, s);
 
-	let runtime_version_extractor = regex::Regex::new(
+	let runtime_version_extractor = Regex::new(
 		r#"pub +?const +?VERSION *?: +?RuntimeVersion +?= +?RuntimeVersion +?\{(?s)(.+?)\}"#,
 	)
 	.unwrap();
-	let spec_name_extractor = regex::Regex::new(&extract_name("spec_name")).unwrap();
-	let impl_name_extractor = regex::Regex::new(&extract_name("impl_name")).unwrap();
-	let authoring_version_extractor =
-		regex::Regex::new(&extract_version("authoring_version")).unwrap();
-	let spec_version_extractor = regex::Regex::new(&extract_version("spec_version")).unwrap();
-	let impl_version_extractor = regex::Regex::new(&extract_version("impl_version")).unwrap();
+	let spec_name_extractor = Regex::new(&extract_name("spec_name")).unwrap();
+	let impl_name_extractor = Regex::new(&extract_name("impl_name")).unwrap();
+	let authoring_version_extractor = Regex::new(&extract_version("authoring_version")).unwrap();
+	let spec_version_extractor = Regex::new(&extract_version("spec_version")).unwrap();
+	let impl_version_extractor = Regex::new(&extract_version("impl_version")).unwrap();
 	let transaction_version_extractor =
-		regex::Regex::new(&extract_version("transaction_version")).unwrap();
+		Regex::new(&extract_version("transaction_version")).unwrap();
 
 	let runtime_version = &runtime_version_extractor.captures(&s).unwrap()[0];
+
+	tracing::trace!("{}", runtime_version);
+
 	let spec_name = spec_name_extractor.captures(&runtime_version).unwrap()[1].to_string();
 	let impl_name = impl_name_extractor.captures(&runtime_version).unwrap()[1].to_string();
 	let authoring_version = authoring_version_extractor
@@ -128,7 +133,7 @@ fn extract_runtime_version(s: &str) -> RuntimeVersion {
 		transaction_version,
 	};
 
-	trace!("{:#?}", runtime_version);
+	tracing::trace!("{:#?}", runtime_version);
 
 	runtime_version
 }
