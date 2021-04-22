@@ -164,15 +164,15 @@ impl Subalfred {
 							let mut v = vec![];
 
 							if let Err(e) = response.copy_to(&mut v).await {
-								eprintln!("Read Response Body Failed Due To: `{:?}`", e);
+								tracing::error!("Read Response Body Failed Due To: `{:?}`", e);
 							} else {
 								match serde_json::from_slice::<Vec<PullRequest>>(&v) {
 									Ok(pull_requests) => return pull_requests,
-									Err(e) => eprintln!("Serialize Failed Due To: `{:?}`", e),
+									Err(e) => tracing::error!("Serialize Failed Due To: `{:?}`", e),
 								}
 							}
 						}
-						Err(e) => eprintln!("Request Failed Due To: `{:?}`", e),
+						Err(e) => tracing::error!("Request Failed Due To: `{:?}`", e),
 					}
 				}
 			}
@@ -209,7 +209,7 @@ impl Subalfred {
 			{
 				let migration = if labels
 					.iter()
-					.any(|label| &label.name == "D1-runtime-migration")
+					.any(|label| &label.name == "E1-runtimemigration")
 				{
 					" - !!Contains Migration!!"
 				} else {
@@ -281,7 +281,7 @@ impl Subalfred {
 			pull_request
 				.labels
 				.iter()
-				.any(|label| &label.name == "D1-runtime-migration")
+				.any(|label| &label.name == "E1-runtimemigration")
 		});
 
 		trace!("{:#?}", pull_requests);
