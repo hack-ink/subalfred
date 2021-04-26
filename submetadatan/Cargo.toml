@@ -2,12 +2,12 @@
 authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
 description = "submetadatan"
 edition     = "2018"
-homepage    = "https://submetadatan.l2ust.world"
+homepage    = "https://subalfred.l2ust.world"
 license     = "GPL-3.0"
 name        = "submetadatan"
 readme      = "README.md"
-repository  = "https://github.com/l2ust/submetadatan"
-version     = "0.1.6"
+repository  = "https://github.com/l2ust/subalfred"
+version     = "0.1.7"
 
 [badges]
 maintenance = { status = "actively-developed" }
@@ -20,6 +20,6 @@ codec             = [
 simplify-metadata = ["thiserror"]
 
 [dependencies]
-parity-scale-codec = { version = "2.0.1", optional = true, features = ["derive"] }
-substorager        = { version = "0.1.5" }
+parity-scale-codec = { version = "2.1.1", optional = true, features = ["derive"] }
+substorager        = { version = "0.1.6" }
 thiserror          = { version = "1.0.24", optional = true }

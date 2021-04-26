@@ -227,7 +227,6 @@ pub mod simplify_metadata {
 	}
 }
 
-// --- submetadatan ---
 #[cfg(feature = "simplify-metadata")]
 pub use simplify_metadata::*;
 
