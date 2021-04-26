@@ -56,7 +56,6 @@ pub mod sender {
 	}
 }
 
-// --- subrpcer ---
 #[cfg(feature = "sender")]
 pub use sender::*;
 
@@ -66,7 +65,7 @@ use serde_json::{json, Value};
 
 const DEFAULT_ID: u8 = 1;
 
-pub fn rpc(method: impl Serialize, params: impl Serialize, id: impl Serialize) -> Value {
+pub fn rpc(id: impl Serialize, method: impl Serialize, params: impl Serialize) -> Value {
 	json!({
 		"jsonrpc": "2.0",
 		"id": id,

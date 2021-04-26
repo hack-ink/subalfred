@@ -4,16 +4,12 @@ use serde_json::Value;
 // --- subrpcer ---
 use crate::{rpc, DEFAULT_ID};
 
-pub fn round_state_with_id(id: impl Serialize) -> Value {
-	rpc("grandpa_roundState", Value::Null, id)
-}
+#[subrpcer_impl::rpc]
 pub fn round_state() -> Value {
-	round_state_with_id(DEFAULT_ID)
+	rpc(DEFAULT_ID, "grandpa_roundState", Value::Null)
 }
 
-pub fn subscribe_justifications_with_id(id: impl Serialize) -> Value {
-	rpc("grandpa_subscribeJustifications", Value::Null, id)
-}
+#[subrpcer_impl::rpc]
 pub fn subscribe_justifications() -> Value {
-	subscribe_justifications_with_id(DEFAULT_ID)
+	rpc(DEFAULT_ID, "grandpa_subscribeJustifications", Value::Null)
 }
