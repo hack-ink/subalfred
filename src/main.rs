@@ -13,7 +13,6 @@ use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg
 use githuber::Githuber;
 use isahc::AsyncReadResponseExt;
 use serde_json::Value;
-use tracing::trace;
 // --- subalfred ---
 use crate::config::Project;
 
@@ -312,7 +311,7 @@ async fn main() -> AnyResult<()> {
 		let method = send_rpc_args.value_of("method").unwrap();
 		let rpc = match method.to_lowercase().as_str() {
 			"author_submitandwatchextrinsic" | "submitandwatchextrinsic" => {
-				subrpcer::author::submit_and_watch_extrinsic_with_params(params()?)
+				subrpcer::author::submit_and_watch_extrinsic_with_raw_params(params()?)
 			}
 			"chain_getblockhash" | "getblockhash" => {
 				subrpcer::chain::get_block_hash_with_raw_params(params()?)
@@ -335,7 +334,7 @@ async fn main() -> AnyResult<()> {
 			),
 		};
 
-		trace!("{}", serde_json::to_string_pretty(&rpc)?);
+		tracing::trace!("{}", serde_json::to_string_pretty(&rpc)?);
 		println!("{}", subrpcer::send_rpc(uri, rpc).await?.text().await?);
 	} else if app_args
 		.subcommand_matches("check-runtime-version")

@@ -17,25 +17,25 @@ path = "src/main.rs"
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-anyhow             = { version = "1.0.38" }
+anyhow             = { version = "1.0.40" }
 app_dirs2          = { version = "2.3.2" }
 array-bytes        = { version = "1.1.0" }
 async-std          = { version = "1.9.0", features = ["attributes"] }
 base58             = { version = "0.1.0" }
 clap               = { version = "3.0.0-beta.2" }
-futures            = { version = "0.3.13" }
+futures            = { version = "0.3.14" }
 githuber           = { version = "0.2.3" }
-isahc              = { version = "1.1.0", features = ["json"] }
-parity-scale-codec = { version = "2.0.1" }
+isahc              = { version = "1.3.1", features = ["json"] }
+parity-scale-codec = { version = "2.1.1" }
 pretty_env_logger  = { version = "0.4.0" }
-regex              = { version = "1.4.3" }
-serde              = { version = "1.0.124" }
+regex              = { version = "1.4.6" }
+serde              = { version = "1.0.125" }
 serde_json         = { version = "1.0.64" }
 serde_yaml         = { version = "0.8.17" }
-subcryptor         = { version = "0.1.1" }
-subhasher          = { version = "0.1.1" }
-submetadatan       = { version = "0.1.5", features = ["codec"] }
-subrpcer           = { version = "0.1.7", features = ["raw-params", "sender"] }
+subcryptor         = { version = "0.2.0" }
+subhasher          = { version = "0.1.2" }
+submetadatan       = { version = "0.1.7", features = ["codec"] }
+subrpcer           = { version = "0.2.0", features = ["raw-params", "sender"] }
 tracing            = { version = "0.1.25" }
 
 [workspace]
@@ -45,15 +45,17 @@ members = [
 	"subhasher",
 	"submetadatan",
 	"subrpcer",
+	"subrpcer/impl",
 	"substorager",
 ]
 
 # Local Development
-# [patch.crates-io]
-# githuber     = { path = "../githuber" }
-# subcryptor   = { path = "subcryptor" }
-# subgrandpa   = { path = "subgrandpa" }
-# subhasher    = { path = "subhasher" }
-# submetadatan = { path = "submetadatan" }
-# subrpcer     = { path = "subrpcer" }
-# substorager  = { path = "substorager" }
+[patch.crates-io]
+# githuber      = { path = "../githuber" }
+subcryptor    = { path = "subcryptor" }
+subgrandpa    = { path = "subgrandpa" }
+subhasher     = { path = "subhasher" }
+submetadatan  = { path = "submetadatan" }
+subrpcer      = { path = "subrpcer" }
+subrpcer-impl = { path = "subrpcer/impl" }
+substorager   = { path = "substorager" }

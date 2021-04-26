@@ -1,5 +1,5 @@
 // --- crates.io ---
-use subcryptor::NETWORK;
+use subcryptor::Network;
 // --- subalfred ---
 use crate::Subalfred;
 
@@ -28,10 +28,10 @@ impl Subalfred {
 			));
 		}
 
-		for network in &NETWORK {
+		for &(network, prefix) in Network::PREFIXES {
 			accounts.push((
-				network.0.into(),
-				subcryptor::into_ss58_address(&public_key, network.1),
+				network.into(),
+				subcryptor::into_ss58_address(&public_key, prefix),
 			));
 		}
 
