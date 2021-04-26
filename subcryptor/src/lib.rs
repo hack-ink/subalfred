@@ -22,7 +22,6 @@ pub mod full_crypto {
 	}
 }
 
-// --- crates.io ---
 #[cfg(feature = "full-crypto")]
 pub use full_crypto::*;
 #[cfg(feature = "full-crypto")]
@@ -32,44 +31,82 @@ pub use schnorrkel;
 use base58::{FromBase58, ToBase58};
 use blake2_rfc::blake2b::Blake2b;
 
-pub const NETWORK: [(&str, u8); 32] = [
-	("Polkadot", 0),
-	("Kusama", 2),
-	("KatalChain", 3),
-	("Plasm", 5),
-	("Bifrost", 6),
-	("Edgeware", 7),
-	("Karura", 8),
-	("Reynolds", 9),
-	("Acala", 10),
-	("Laminar", 11),
-	("Polymath", 12),
-	("SubstraTee", 13),
-	("Totem", 14),
-	("Synesthesia", 15),
-	("Kulupu", 16),
-	("Dark", 17),
-	("Darwinia", 18),
-	("Geek", 19),
-	("Stafi", 20),
-	("DockTest", 21),
-	("DockMain", 22),
-	("ShiftNrg", 23),
-	("Zero", 24),
-	("Alphaville", 25),
-	("Subsocial", 28),
-	("Phala", 30),
-	("Robonomics", 32),
-	("DataHighway", 33),
-	("Centrifuge", 36),
-	("Nodle", 37),
-	("Substrate", 42),
-	("ChainX", 44),
-];
+macro_rules! ss58 {
+	($(($network:ident, $prefix:expr)),*) => {
+		pub enum Network {
+			$($network = $prefix),*
+		}
+		impl Network {
+			pub const PREFIXES: &'static [(&'static str, u8)] = &[$((stringify!($network), $prefix)),*];
+		}
+		impl Into<u8> for Network {
+			fn into(self) -> u8 {
+				match self {
+					$(Network::$network => $prefix),*
+				}
+			}
+		}
+	};
+}
 
-pub fn into_ss58_address(public_key: impl AsRef<[u8]>, network: u8) -> String {
+ss58! {
+	(PolkadotAccount, 0),
+	(BareSr25519, 1),
+	(Kusama, 2),
+	(BareEd25519, 3),
+	(KatalChain, 4),
+	(Plasm, 5),
+	(Bifrost, 6),
+	(Edgeware, 7),
+	(Karura, 8),
+	(Reynolds, 9),
+	(Acala, 10),
+	(Laminar, 11),
+	(Polymath, 12),
+	(SubstraTee, 13),
+	(Totem, 14),
+	(Synesthesia, 15),
+	(Kulupu, 16),
+	(Dark, 17),
+	(Darwinia, 18),
+	(Geek, 19),
+	(Stafi, 20),
+	(DockTest, 21),
+	(DockMain, 22),
+	(ShiftNrg, 23),
+	(Zero, 24),
+	(Alphaville, 25),
+	(Jupiter, 26),
+	(Patract, 27),
+	(Subsocial, 28),
+	(Dhiway, 29),
+	(Phala, 30),
+	(Litentry, 31),
+	(Robonomics, 32),
+	(DataHighway, 33),
+	(Ares, 34),
+	(Valiu, 35),
+	(Centrifuge, 36),
+	(Nodle, 37),
+	(Kilt, 38),
+	(Polimec, 41),
+	(Substrate, 42),
+	(BareSecp256k1, 43),
+	(ChainX, 44),
+	(Uniarts, 45),
+	(Reserved46, 46),
+	(Reserved47, 47),
+	(Neatcoin, 48),
+	(HydraDX, 63),
+	(Aventus, 65),
+	(Crust, 66),
+	(Sora, 69),
+	(Social, 252)
+}
+
+pub fn into_ss58_address(public_key: impl AsRef<[u8]>, prefix: impl Into<u8>) -> String {
 	let mut bytes = {
-		let mut data = vec![network];
+		let mut data = vec![prefix.into()];
 		data.extend(public_key.as_ref());
 
 		data
