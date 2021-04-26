@@ -3,6 +3,7 @@ use std::hash::Hasher;
 // --- crates.io ---
 use blake2_rfc::blake2b::blake2b;
 use byteorder::{ByteOrder, LittleEndian};
+use parity_scale_codec::Encode;
 use twox_hash::XxHash;
 
 pub fn blake2_128(data: impl AsRef<[u8]>) -> [u8; 16] {
@@ -68,6 +69,6 @@ pub fn twox_64_concat(data: impl AsRef<[u8]>) -> Vec<u8> {
 	v
 }
 
-pub fn identity(data: impl AsRef<[u8]>) -> impl AsRef<[u8]> {
-	data
+pub fn identity(data: impl AsRef<[u8]>) -> Vec<u8> {
+	data.as_ref().encode()
 }
