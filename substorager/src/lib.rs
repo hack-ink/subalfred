@@ -40,11 +40,11 @@ impl StorageHasher {
 		match self {
 			Blake2_128 => subhasher::blake2_128(data).to_vec(),
 			Blake2_256 => subhasher::blake2_256(data).to_vec(),
-			Blake2_128Concat => subhasher::blake2_128_concat(data).to_vec(),
+			Blake2_128Concat => subhasher::blake2_128_concat(data),
 			Twox128 => subhasher::twox_128(data).to_vec(),
 			Twox256 => subhasher::twox_256(data).to_vec(),
-			Twox64Concat => subhasher::twox_64_concat(data).to_vec(),
-			Identity => subhasher::identity(data).as_ref().to_vec(),
+			Twox64Concat => subhasher::twox_64_concat(data),
+			Identity => subhasher::identity(data),
 		}
 	}
 }

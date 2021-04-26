@@ -2,12 +2,12 @@
 authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
 description = "substorager"
 edition     = "2018"
-homepage    = "https://substorager.l2ust.world"
+homepage    = "https://subalfred.l2ust.world"
 license     = "GPL-3.0"
 name        = "substorager"
 readme      = "README.md"
-repository  = "https://github.com/l2ust/substorager"
-version     = "0.1.5"
+repository  = "https://github.com/l2ust/subalfred"
+version     = "0.1.6"
 
 [badges]
 maintenance = { status = "actively-developed" }
@@ -17,5 +17,5 @@ codec = ["parity-scale-codec"]
 
 [dependencies]
 array-bytes        = { version = "1.1.0" }
-parity-scale-codec = { version = "2.0.1", optional = true, features = ["derive"] }
-subhasher          = { version = "0.1.1" }
+parity-scale-codec = { version = "2.1.1", optional = true, features = ["derive"] }
+subhasher          = { version = "0.1.2" }
