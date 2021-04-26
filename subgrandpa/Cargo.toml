@@ -2,12 +2,12 @@
 authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
 description = "subgrandpa"
 edition     = "2018"
-homepage    = "https://subgrandpa.l2ust.world"
+homepage    = "https://subalfred.l2ust.world"
 license     = "GPL-3.0"
 name        = "subgrandpa"
 readme      = "README.md"
-repository  = "https://github.com/l2ust/subgrandpa"
-version     = "0.2.4"
+repository  = "https://github.com/l2ust/subalfred"
+version     = "0.2.5"
 
 [badges]
 maintenance = { status = "actively-developed" }
@@ -16,5 +16,5 @@ maintenance = { status = "actively-developed" }
 codec = ["parity-scale-codec"]
 
 [dependencies]
-parity-scale-codec = { version = "2.0.1", optional = true, features = ["derive"] }
-serde              = { version = "1.0.124", optional = true, features = ["derive"] }
+parity-scale-codec = { version = "2.1.1", optional = true, features = ["derive"] }
+serde              = { version = "1.0.125", optional = true, features = ["derive"] }
