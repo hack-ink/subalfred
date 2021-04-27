@@ -7,24 +7,24 @@ use serde::de::DeserializeOwned;
 use githuber::{
 	pager::Pager,
 	requests::{
-		commit::{
+		commits::{
 			get_a_commit::GetACommitBuilder, list_commits::ListCommitsBuilder,
 			list_pull_requests_associated_with_a_commit::ListPullRequestsAssociatedWithACommitBuilder,
 		},
-		content::get_repository_content::GetRepositoryContentBuilder,
-		issue::{
+		contents::get_repository_content::GetRepositoryContentBuilder,
+		issues::{
 			create_an_issue::CreateAnIssueBuilder,
 			create_an_issue_comment::CreateAnIssueCommentBuilder,
 		},
-		release::list_releases::ListReleasesBuilder,
-		repository::list_repository_tags::ListRepositoryTagsBuilder,
+		releases::list_releases::ListReleasesBuilder,
+		repositories::list_repository_tags::ListRepositoryTagsBuilder,
 	},
 	responses::{
-		commit::{Commit, PullRequest, User},
-		content::Content,
-		issue::Issue,
-		release::Release,
-		repository::Tag,
+		commits::{Commit, PullRequest, User},
+		contents::Content,
+		issues::Issue,
+		releases::Release,
+		repositories::Tag,
 	},
 	GithubApi, Githuber,
 };

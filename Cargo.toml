@@ -24,7 +24,7 @@ async-std          = { version = "1.9.0", features = ["attributes"] }
 base58             = { version = "0.1.0" }
 clap               = { version = "3.0.0-beta.2" }
 futures            = { version = "0.3.14" }
-githuber           = { version = "0.2.3" }
+githuber           = { version = "0.2.6" }
 isahc              = { version = "1.3.1", features = ["json"] }
 parity-scale-codec = { version = "2.1.1" }
 pretty_env_logger  = { version = "0.4.0" }
@@ -35,7 +35,7 @@ serde_yaml         = { version = "0.8.17" }
 subcryptor         = { version = "0.2.0" }
 subhasher          = { version = "0.1.2" }
 submetadatan       = { version = "0.1.7", features = ["codec"] }
-subrpcer           = { version = "0.2.0", features = ["raw-params", "sender"] }
+subrpcer           = { version = "0.2.1", features = ["raw-params", "sender"] }
 tracing            = { version = "0.1.25" }
 
 [workspace]
@@ -51,7 +51,7 @@ members = [
 
 # Local Development
 [patch.crates-io]
-# githuber      = { path = "../githuber" }
+githuber      = { path = "../githuber" }
 subcryptor    = { path = "subcryptor" }
 subgrandpa    = { path = "subgrandpa" }
 subhasher     = { path = "subhasher" }

@@ -774,9 +774,7 @@ dependencies = [
 
 [[package]]
 name = "githuber"
-version = "0.2.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "57a9872139b0ddecd942cfba81fcd97272f8512a4c63ffd36d7bfc22c6fd0e7f"
+version = "0.2.6"
 dependencies = [
  "derive_builder",
  "isahc",
@@ -1619,7 +1617,7 @@ dependencies = [
 
 [[package]]
 name = "subrpcer"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "isahc",
  "serde",
@@ -1631,7 +1629,7 @@ dependencies = [
 
 [[package]]
 name = "subrpcer-impl"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "proc-macro2",
  "quote",
