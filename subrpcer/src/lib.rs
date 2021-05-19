@@ -73,3 +73,10 @@ pub fn rpc(id: impl Serialize, method: impl Serialize, params: impl Serialize) -
 		"params": params
 	})
 }
+
+#[cfg(feature = "tracing")]
+pub fn debug_rpc(rpc: Value) -> Value {
+	tracing::debug!("{}", rpc);
+
+	rpc
+}
