@@ -1590,7 +1590,7 @@ dependencies = [
 
 [[package]]
 name = "subhasher"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "blake2-rfc",
  "byteorder",
@@ -1630,7 +1630,7 @@ dependencies = [
 
 [[package]]
 name = "substorager"
-version = "0.1.6"
+version = "0.1.8"
 dependencies = [
  "array-bytes",
  "parity-scale-codec",

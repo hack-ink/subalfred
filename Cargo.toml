@@ -33,7 +33,7 @@ serde              = { version = "1.0.126" }
 serde_json         = { version = "1.0.64" }
 serde_yaml         = { version = "0.8.17" }
 subcryptor         = { version = "0.2.0" }
-subhasher          = { version = "0.1.2" }
+subhasher          = { version = "0.1.3" }
 submetadatan       = { version = "0.1.7", features = ["codec"] }
 subrpcer           = { version = "0.2.1", features = ["raw-params", "sender"] }
 tracing            = { version = "0.1.26" }

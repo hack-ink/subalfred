@@ -44,7 +44,7 @@ impl StorageHasher {
 			Twox128 => subhasher::twox_128(data).to_vec(),
 			Twox256 => subhasher::twox_256(data).to_vec(),
 			Twox64Concat => subhasher::twox_64_concat(data),
-			Identity => subhasher::identity(data),
+			Identity => subhasher::identity(data).as_ref().to_vec(),
 		}
 	}
 }
@@ -79,6 +79,7 @@ pub fn storage_map_key(
 
 	storage_map_key
 }
+
 pub fn hex_storage_map_key_with_prefix(
 	hex_prefix: impl AsRef<str>,
 	prefix: impl AsRef<[u8]>,

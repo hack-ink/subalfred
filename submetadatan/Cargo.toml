@@ -21,5 +21,5 @@ simplify-metadata = ["thiserror"]
 
 [dependencies]
 parity-scale-codec = { version = "2.1.1", optional = true, features = ["derive"] }
-substorager        = { version = "0.1.6" }
+substorager        = { version = "0.1.8" }
 thiserror          = { version = "1.0.24", optional = true }
