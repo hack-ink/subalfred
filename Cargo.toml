@@ -1,5 +1,6 @@
 [package]
 authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
+build       = "build.rs"
 description = "Your Substrate Alfred"
 edition     = "2018"
 homepage    = "https://subalfred.l2ust.world"
@@ -37,6 +38,9 @@ subhasher          = { version = "0.1.3" }
 submetadatan       = { version = "0.1.7", features = ["codec"] }
 subrpcer           = { version = "0.2.2", features = ["raw-params", "sender"] }
 tracing            = { version = "0.1.26" }
+
+[build-dependencies]
+vergen = { version = "5.1.12" }
 
 [workspace]
 members = [

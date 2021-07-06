@@ -9,7 +9,7 @@ use std::env;
 use anyhow::Result as AnyResult;
 use app_dirs2::AppInfo;
 use async_std::sync::Arc;
-use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg};
+use clap::{App, Arg};
 use githuber::Githuber;
 use isahc::AsyncReadResponseExt;
 use serde_json::Value;
@@ -17,18 +17,24 @@ use serde_json::Value;
 use crate::config::Project;
 
 const APP_INFO: AppInfo = AppInfo {
-	name: crate_name!(),
-	author: crate_authors!(),
+	name: clap::crate_name!(),
+	author: clap::crate_authors!(),
 };
 
 #[async_std::main]
 async fn main() -> AnyResult<()> {
 	// TODO: about
 	// TODO: --json for output
-	let app = App::new(crate_name!())
-		.version(crate_version!())
-		.author(crate_authors!())
-		.about(crate_description!())
+	let app = App::new(clap::crate_name!())
+		.version(concat!(
+			env!("VERGEN_BUILD_SEMVER"),
+			"-",
+			env!("VERGEN_GIT_SHA_SHORT"),
+			"-",
+			env!("VERGEN_CARGO_TARGET_TRIPLE"),
+		))
+		.author(clap::crate_authors!())
+		.about(clap::crate_description!())
 		.arg(
 			Arg::new("log")
 				.about("Enable/Print logs same as the `RUST_LOG`")

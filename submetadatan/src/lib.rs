@@ -114,8 +114,8 @@ pub mod simplify_metadata {
 					Err(Error::MetadataVersionMismatch {
 						expected: "V12".into(),
 						found: $found.into(),
-						})
-					}};
+					})
+				}};
 			}
 
 			match runtime_metadata {
