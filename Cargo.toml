@@ -17,25 +17,25 @@ path = "src/main.rs"
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-anyhow             = { version = "1.0.40" }
+anyhow             = { version = "1.0.41" }
 app_dirs2          = { version = "2.3.2" }
-array-bytes        = { version = "1.1.0" }
+array-bytes        = { version = "1.3.3" }
 async-std          = { version = "1.9.0", features = ["attributes"] }
 base58             = { version = "0.1.0" }
 clap               = { version = "3.0.0-beta.2" }
 futures            = { version = "0.3.15" }
 githuber           = { version = "0.2.6" }
 isahc              = { version = "1.4.0", features = ["json"] }
-parity-scale-codec = { version = "2.1.1" }
+parity-scale-codec = { version = "2.2.0" }
 pretty_env_logger  = { version = "0.4.0" }
-regex              = { version = "1.4.6" }
+regex              = { version = "1.5.4" }
 serde              = { version = "1.0.126" }
 serde_json         = { version = "1.0.64" }
 serde_yaml         = { version = "0.8.17" }
 subcryptor         = { version = "0.2.0" }
 subhasher          = { version = "0.1.3" }
 submetadatan       = { version = "0.1.7", features = ["codec"] }
-subrpcer           = { version = "0.2.1", features = ["raw-params", "sender"] }
+subrpcer           = { version = "0.2.2", features = ["raw-params", "sender"] }
 tracing            = { version = "0.1.26" }
 
 [workspace]
@@ -50,12 +50,12 @@ members = [
 ]
 
 # Local Development
-[patch.crates-io]
-githuber      = { path = "../githuber" }
-subcryptor    = { path = "subcryptor" }
-subgrandpa    = { path = "subgrandpa" }
-subhasher     = { path = "subhasher" }
-submetadatan  = { path = "submetadatan" }
-subrpcer      = { path = "subrpcer" }
-subrpcer-impl = { path = "subrpcer/impl" }
-substorager   = { path = "substorager" }
+# [patch.crates-io]
+# githuber      = { path = "../githuber" }
+# subcryptor    = { path = "subcryptor" }
+# subgrandpa    = { path = "subgrandpa" }
+# subhasher     = { path = "subhasher" }
+# submetadatan  = { path = "submetadatan" }
+# subrpcer      = { path = "subrpcer" }
+# subrpcer-impl = { path = "subrpcer/impl" }
+# substorager   = { path = "substorager" }
