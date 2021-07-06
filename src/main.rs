@@ -324,13 +324,13 @@ async fn main() -> AnyResult<()> {
 				subrpcer::state::get_storage_with_raw_params(params()?)
 			}
 			_ => subrpcer::rpc(
-				method,
-				params()?,
 				send_rpc_args
 					.value_of("id")
 					.unwrap_or("1")
 					.parse::<u32>()
 					.unwrap(),
+				method,
+				params()?,
 			),
 		};
 
