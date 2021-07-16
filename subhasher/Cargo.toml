@@ -7,14 +7,23 @@ license     = "GPL-3.0"
 name        = "subhasher"
 readme      = "README.md"
 repository  = "https://github.com/l2ust/subalfred"
-version     = "0.1.4"
+version     = "0.1.5"
 
 [badges]
 maintenance = { status = "actively-developed" }
 
+[features]
+default = [
+	"std",
+]
+
+std = [
+	"sha2/std",
+]
+
 [dependencies]
 blake2-rfc  = { version = "0.2.18" }
 byteorder   = { version = "1.4.3" }
-sha2        = { version = "0.9.5" }
+sha2        = { version = "0.9.5", default-features = false }
 tiny-keccak = { version = "2.0.2", features = ["keccak"] }
 twox-hash   = { version = "1.6.0" }

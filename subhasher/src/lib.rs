@@ -1,10 +1,12 @@
-#![no_std]
+#![cfg_attr(not(feature = "std"), no_std)]
 
+#[cfg(not(feature = "std"))]
 extern crate alloc;
 
 // --- core ---
 use core::hash::Hasher as _;
 // --- alloc ---
+#[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 // --- crates.io ---
 use blake2_rfc::blake2b::blake2b;
