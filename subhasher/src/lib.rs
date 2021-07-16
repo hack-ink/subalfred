@@ -1,8 +1,16 @@
-// --- std ---
-use std::hash::Hasher;
+#![no_std]
+
+extern crate alloc;
+
+// --- core ---
+use core::hash::Hasher as _;
+// --- alloc ---
+use alloc::vec::Vec;
 // --- crates.io ---
 use blake2_rfc::blake2b::blake2b;
 use byteorder::{ByteOrder, LittleEndian};
+use sha2::{Digest, Sha256};
+use tiny_keccak::{Hasher as _, Keccak};
 use twox_hash::XxHash;
 
 pub fn blake2_128(data: impl AsRef<[u8]>) -> [u8; 16] {
@@ -15,6 +23,13 @@ pub fn blake2_128(data: impl AsRef<[u8]>) -> [u8; 16] {
 pub fn blake2_256(data: impl AsRef<[u8]>) -> [u8; 32] {
 	let mut dest = [0; 32];
 	dest.copy_from_slice(blake2b(32, &[], data.as_ref()).as_bytes());
+
+	dest
+}
+
+pub fn blake2_512(data: impl AsRef<[u8]>) -> [u8; 64] {
+	let mut dest = [0; 64];
+	dest.copy_from_slice(blake2b(64, &[], data.as_ref()).as_bytes());
 
 	dest
 }
@@ -73,4 +88,34 @@ where
 	T: AsRef<[u8]>,
 {
 	data
+}
+
+pub fn keccak_256(data: &[u8]) -> [u8; 32] {
+	let mut keccak = Keccak::v256();
+	keccak.update(data);
+
+	let mut output = [0u8; 32];
+	keccak.finalize(&mut output);
+
+	output
+}
+
+pub fn keccak_512(data: &[u8]) -> [u8; 64] {
+	let mut keccak = Keccak::v512();
+	keccak.update(data);
+
+	let mut output = [0u8; 64];
+	keccak.finalize(&mut output);
+
+	output
+}
+
+pub fn sha2_256(data: impl AsRef<[u8]>) -> [u8; 32] {
+	let mut hasher = Sha256::new();
+	hasher.update(data);
+
+	let mut output = [0u8; 32];
+	output.copy_from_slice(&hasher.finalize());
+
+	output
 }
