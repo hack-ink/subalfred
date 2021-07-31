@@ -12,7 +12,7 @@ pub mod sender {
 			header::CONTENT_TYPE, request::Builder as RequestBuilder, Method as HttpMethod,
 			Response,
 		},
-		AsyncBody as IsahcBody, Error as IsahcError,
+		AsyncBody as IsahcAsyncBody, Body as IsahcBody, Error as IsahcError,
 	};
 	use serde_json::{Error as RawSerdeJsonError, Value};
 	use thiserror::Error as ThisError;
@@ -20,22 +20,45 @@ pub mod sender {
 
 	pub type SubrpcerResult<T> = Result<T, Error>;
 	pub type IsahcResponse = Response<IsahcBody>;
+	pub type IsahcAsyncResponse = Response<IsahcAsyncBody>;
 
 	#[derive(Debug, ThisError)]
+	#[error("{0}")]
 	pub enum Error {
-		#[error("Serde json error")]
 		SerdeJson(#[from] SerdeJsonError),
-		#[error("Isahc error")]
 		Isahc(#[from] IsahcError),
 	}
 
 	#[derive(Debug, ThisError)]
+	#[error("{0}")]
 	pub enum SerdeJsonError {
-		#[error("Raw serde json error")]
 		Raw(#[from] RawSerdeJsonError),
 	}
 
-	pub async fn send_rpc(uri: impl AsRef<str>, body: Value) -> SubrpcerResult<IsahcResponse> {
+	pub fn send_rpc(uri: impl AsRef<str>, body: Value) -> SubrpcerResult<IsahcResponse> {
+		let mut request_builder = RequestBuilder::new()
+			.method(HttpMethod::POST)
+			.uri(uri.as_ref());
+
+		request_builder.headers_mut().unwrap().append(
+			CONTENT_TYPE,
+			"application/json;charset=utf-8".parse().unwrap(),
+		);
+
+		let request = request_builder
+			.body(serde_json::to_vec(&body).map_err(SerdeJsonError::from)?)
+			.unwrap();
+		let result = isahc::send(request)?;
+
+		trace!("{:#?}", result);
+
+		Ok(result)
+	}
+
+	pub async fn send_rpc_async(
+		uri: impl AsRef<str>,
+		body: Value,
+	) -> SubrpcerResult<IsahcAsyncResponse> {
 		let mut request_builder = RequestBuilder::new()
 			.method(HttpMethod::POST)
 			.uri(uri.as_ref());
