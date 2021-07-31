@@ -4,8 +4,10 @@ pub mod grandpa;
 pub mod state;
 pub mod system;
 
-#[cfg(feature = "sender")]
-pub mod sender {
+#[cfg(feature = "client")]
+pub mod client {
+	pub use isahc;
+
 	// --- crates.io ---
 	use isahc::{
 		http::{
@@ -78,8 +80,7 @@ pub mod sender {
 		Ok(result)
 	}
 }
-
-#[cfg(feature = "sender")]
+#[cfg(feature = "client")]
 pub use sender::*;
 
 // --- crates.io ---
