@@ -226,9 +226,11 @@ pub mod simplify_metadata {
 		MetadataVersionMismatch { expected: String, found: String },
 	}
 }
-
 #[cfg(feature = "simplify-metadata")]
 pub use simplify_metadata::*;
+
+#[cfg(feature = "codec")]
+pub use parity_scale_codec;
 
 // --- crates.io ---
 #[cfg(feature = "codec")]
