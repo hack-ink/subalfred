@@ -81,7 +81,7 @@ pub mod client {
 	}
 }
 #[cfg(feature = "client")]
-pub use sender::*;
+pub use client::*;
 
 // --- crates.io ---
 use serde::Serialize;
