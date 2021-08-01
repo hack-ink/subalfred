@@ -3,7 +3,7 @@
 #[cfg(feature = "simple")]
 pub mod simple {
 	// --- std ---
-	use std::convert::{TryFrom, TryInto};
+	use std::convert::TryFrom;
 	// --- crates.io ---
 	use thiserror::Error as ThisError;
 	// --- submetadatan ---
@@ -12,7 +12,7 @@ pub mod simple {
 	pub type Bytes = Vec<u8>;
 	pub type MetadataResult<T> = Result<T, Error>;
 
-	#[derive(Clone, Debug)]
+#[derive(Clone, Debug)]
 	pub struct Metadata {
 		pub modules: Vec<Module>,
 	}
@@ -108,17 +108,15 @@ pub mod simple {
 			use RuntimeMetadata::*;
 
 			match runtime_metadata {
-				V12(metadata) => metadata.try_into(),
+				V12(metadata) => Ok(metadata.into()),
 				_ => Err(Self::Error::NotSupportMetadataVersion(
 					runtime_metadata.tag(),
 				)),
 			}
 		}
 	}
-	impl TryFrom<RuntimeMetadataV12> for Metadata {
-		type Error = Error;
-
-		fn try_from(runtime_metadata: RuntimeMetadataV12) -> Result<Self, Self::Error> {
+	impl From<RuntimeMetadataV12> for Metadata {
+		fn from(runtime_metadata: RuntimeMetadataV12) -> Self {
 			let mut metadata = Self { modules: vec![] };
 
 			for module in runtime_metadata.modules {
@@ -152,7 +150,7 @@ pub mod simple {
 				});
 			}
 
-			Ok(metadata)
+			metadata
 		}
 	}
 

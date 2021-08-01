@@ -7,7 +7,7 @@ license     = "GPL-3.0"
 name        = "submetadatan"
 readme      = "README.md"
 repository  = "https://github.com/l2ust/subalfred"
-version     = "0.3.1"
+version     = "0.3.2"
 
 [badges]
 maintenance = { status = "actively-developed" }
