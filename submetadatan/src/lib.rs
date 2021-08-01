@@ -1,5 +1,7 @@
 #![feature(arbitrary_enum_discriminant)]
 
+// TODO: `module` to `pallet`
+
 #[cfg(feature = "simple")]
 pub mod simple {
 	// --- std ---
@@ -24,8 +26,9 @@ pub mod simple {
 				.iter()
 				.find(|module| module.name == module_name)
 				.ok_or(Error::ModuleNotFound(module_name))?;
+			let storages = module.storages.as_ref().ok_or(Error::StoragesNotFound)?;
 
-			Ok(&module.storages.prefix)
+			Ok(&storages.prefix)
 		}
 
 		pub fn storage(
@@ -40,8 +43,8 @@ pub mod simple {
 				.iter()
 				.find(|module| module.name == module_name)
 				.ok_or(Error::ModuleNotFound(module_name.clone()))?;
-			let item = module
-				.storages
+			let storages = module.storages.as_ref().ok_or(Error::StoragesNotFound)?;
+			let item = storages
 				.items
 				.iter()
 				.find(|item| item.name == item_name)
@@ -88,14 +91,16 @@ pub mod simple {
 				.iter()
 				.position(|module| module.name == module_name)
 				.ok_or(Error::ModuleNotFound(module_name.clone()))?;
-			let call_index = self.modules[module_index]
+			let calls = self.modules[module_index]
 				.calls
-				.iter()
-				.position(|call| call.name == call_name)
-				.ok_or(Error::CallNotFound {
+				.as_ref()
+				.ok_or(Error::CallsNotFound)?;
+			let call_index = calls.iter().position(|call| call.name == call_name).ok_or(
+				Error::CallNotFound {
 					module_name,
 					call_name,
-				})?;
+				},
+			)?;
 
 			Ok([module_index as _, call_index as _])
 		}
@@ -120,28 +125,31 @@ pub mod simple {
 			let mut metadata = Self { modules: vec![] };
 
 			for module in runtime_metadata.modules {
-				let mut storages = Storages {
-					prefix: Default::default(),
-					items: vec![],
+				let storages = if let Some(storage) = module.storage {
+					Some(Storages {
+						prefix: storage.prefix,
+						items: storage
+							.entries
+							.into_iter()
+							.map(|entry| Storage {
+								name: entry.name,
+								r#type: entry.ty,
+							})
+							.collect(),
+					})
+				} else {
+					None
 				};
-				let mut calls = vec![];
-
-				if let Some(storage) = module.storage {
-					storages.prefix = storage.prefix;
-
-					for storage in storage.entries {
-						storages.items.push(Storage {
-							name: storage.name,
-							r#type: storage.ty,
-						});
-					}
-				}
-
-				if let Some(calls_) = module.calls {
-					for call in calls_ {
-						calls.push(Call { name: call.name });
-					}
-				}
+				let calls = if let Some(calls) = module.calls {
+					Some(
+						calls
+							.into_iter()
+							.map(|call| Call { name: call.name })
+							.collect(),
+					)
+				} else {
+					None
+				};
 
 				metadata.modules.push(Module {
 					name: module.name,
@@ -157,9 +165,9 @@ pub mod simple {
 	#[derive(Clone, Debug, PartialEq, Eq)]
 	pub struct Module {
 		pub name: String,
-		// pub events: Vec<Event>,
-		pub storages: Storages,
-		pub calls: Vec<Call>,
+		// pub events: Option<Vec<Event>>,
+		pub storages: Option<Storages>,
+		pub calls: Option<Vec<Call>>,
 	}
 	#[derive(Clone, Debug, PartialEq, Eq)]
 	pub struct Storages {
@@ -180,6 +188,10 @@ pub mod simple {
 	pub enum Error {
 		#[error("Module `{0}` not found")]
 		ModuleNotFound(String),
+		#[error("This pallet doesn't have storages")]
+		StoragesNotFound,
+		#[error("This pallet doesn't have calls")]
+		CallsNotFound,
 		#[error(
 			"Storage item `{}` not found under module `{}`",
 			module_name,
