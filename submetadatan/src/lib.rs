@@ -241,7 +241,7 @@ pub enum RuntimeMetadata {
 	V14,
 }
 impl RuntimeMetadata {
-	fn tag(&self) -> u8 {
+	pub fn tag(&self) -> u8 {
 		unsafe { *(self as *const Self as *const u8) }
 	}
 }
