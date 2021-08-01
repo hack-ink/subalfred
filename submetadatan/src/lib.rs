@@ -12,7 +12,7 @@ pub mod simple {
 	pub type Bytes = Vec<u8>;
 	pub type MetadataResult<T> = Result<T, Error>;
 
-#[derive(Clone, Debug)]
+	#[derive(Clone, Debug, PartialEq, Eq)]
 	pub struct Metadata {
 		pub modules: Vec<Module>,
 	}
@@ -154,24 +154,24 @@ pub mod simple {
 		}
 	}
 
-	#[derive(Clone, Debug)]
+	#[derive(Clone, Debug, PartialEq, Eq)]
 	pub struct Module {
 		pub name: String,
 		// pub events: Vec<Event>,
 		pub storages: Storages,
 		pub calls: Vec<Call>,
 	}
-	#[derive(Clone, Debug)]
+	#[derive(Clone, Debug, PartialEq, Eq)]
 	pub struct Storages {
 		pub prefix: String,
 		pub items: Vec<Storage>,
 	}
-	#[derive(Clone, Debug)]
+	#[derive(Clone, Debug, PartialEq, Eq)]
 	pub struct Storage {
 		pub name: String,
 		pub r#type: StorageEntryType,
 	}
-	#[derive(Clone, Debug)]
+	#[derive(Clone, Debug, PartialEq, Eq)]
 	pub struct Call {
 		pub name: String,
 	}
@@ -214,12 +214,12 @@ pub use parity_scale_codec;
 use parity_scale_codec::{Decode, Encode};
 use substorager::StorageType as StorageEntryType;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct RuntimeMetadataPrefixed(pub u32, pub RuntimeMetadata);
 
 #[repr(u8)]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub enum RuntimeMetadata {
 	V0 = 0,
@@ -244,14 +244,14 @@ impl RuntimeMetadata {
 	}
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct RuntimeMetadataV12 {
 	pub modules: Vec<ModuleMetadata>,
 	pub extrinsic: ExtrinsicMetadata,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct ModuleMetadata {
 	pub name: String,
@@ -263,13 +263,13 @@ pub struct ModuleMetadata {
 	pub index: u8,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct StorageMetadata {
 	pub prefix: String,
 	pub entries: Vec<StorageEntryMetadata>,
 }
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct StorageEntryMetadata {
 	pub name: String,
@@ -278,28 +278,28 @@ pub struct StorageEntryMetadata {
 	pub default: Vec<u8>,
 	pub documentation: Vec<String>,
 }
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub enum StorageEntryModifier {
 	Optional,
 	Default,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct FunctionMetadata {
 	pub name: String,
 	pub arguments: Vec<FunctionArgumentMetadata>,
 	pub documentation: Vec<String>,
 }
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct FunctionArgumentMetadata {
 	pub name: String,
 	pub ty: String,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct EventMetadata {
 	pub name: String,
@@ -307,7 +307,7 @@ pub struct EventMetadata {
 	pub documentation: Vec<String>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct ModuleConstantMetadata {
 	pub name: String,
@@ -316,14 +316,14 @@ pub struct ModuleConstantMetadata {
 	pub documentation: Vec<String>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct ErrorMetadata {
 	pub name: String,
 	pub documentation: Vec<String>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct ExtrinsicMetadata {
 	pub version: u8,
