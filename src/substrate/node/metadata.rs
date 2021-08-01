@@ -68,6 +68,7 @@ impl Subalfred {
 	}
 }
 
+// TODO: use substorager
 fn storage_key(prefix: impl AsRef<[u8]>, item: impl AsRef<[u8]>) -> String {
 	let mut storage_key = String::from("0x");
 

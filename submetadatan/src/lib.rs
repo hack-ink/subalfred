@@ -1,5 +1,7 @@
-#[cfg(feature = "simplify-metadata")]
-pub mod simplify_metadata {
+#![feature(arbitrary_enum_discriminant)]
+
+#[cfg(feature = "simple")]
+pub mod simple {
 	// --- std ---
 	use std::convert::{TryFrom, TryInto};
 	// --- crates.io ---
@@ -21,7 +23,7 @@ pub mod simplify_metadata {
 				.modules
 				.iter()
 				.find(|module| module.name == module_name)
-				.ok_or(Error::ModuleNotFound { module_name })?;
+				.ok_or(Error::ModuleNotFound(module_name))?;
 
 			Ok(&module.storages.prefix)
 		}
@@ -37,9 +39,7 @@ pub mod simplify_metadata {
 				.modules
 				.iter()
 				.find(|module| module.name == module_name)
-				.ok_or(Error::ModuleNotFound {
-					module_name: module_name.clone(),
-				})?;
+				.ok_or(Error::ModuleNotFound(module_name.clone()))?;
 			let item = module
 				.storages
 				.items
@@ -68,6 +68,7 @@ pub mod simplify_metadata {
 				StorageEntryType::Map { hasher, .. } => {
 					Ok(substorager::storage_map_key(prefix, item, (hasher, key)))
 				}
+				// Hint for Hasher
 				r#type => Err(Error::StorageTypeMismatch {
 					expected: "Map".into(),
 					found: r#type.to_owned(),
@@ -86,9 +87,7 @@ pub mod simplify_metadata {
 				.modules
 				.iter()
 				.position(|module| module.name == module_name)
-				.ok_or(Error::ModuleNotFound {
-					module_name: module_name.clone(),
-				})?;
+				.ok_or(Error::ModuleNotFound(module_name.clone()))?;
 			let call_index = self.modules[module_index]
 				.calls
 				.iter()
@@ -101,45 +100,25 @@ pub mod simplify_metadata {
 			Ok([module_index as _, call_index as _])
 		}
 	}
-	#[cfg(feature = "simplify-metadata")]
 	impl TryFrom<RuntimeMetadata> for Metadata {
 		type Error = Error;
 
-		fn try_from(runtime_metadata: RuntimeMetadata) -> Result<Metadata, Self::Error> {
+		fn try_from(runtime_metadata: RuntimeMetadata) -> Result<Self, Self::Error> {
 			// --- submetadatan ---
 			use RuntimeMetadata::*;
 
-			macro_rules! err {
-				($found:expr) => {{
-					Err(Error::MetadataVersionMismatch {
-						expected: "V12".into(),
-						found: $found.into(),
-					})
-				}};
-			}
-
 			match runtime_metadata {
-				V0 => err!("V0"),
-				V1 => err!("V1"),
-				V2 => err!("V2"),
-				V3 => err!("V3"),
-				V4 => err!("V4"),
-				V5 => err!("V5"),
-				V6 => err!("V6"),
-				V7 => err!("V7"),
-				V8 => err!("V8"),
-				V9 => err!("V9"),
-				V10 => err!("V10"),
-				V11 => err!("V11"),
-				V12(runtime_metadata) => runtime_metadata.try_into(),
+				V12(metadata) => metadata.try_into(),
+				_ => Err(Self::Error::NotSupportMetadataVersion(
+					runtime_metadata.tag(),
+				)),
 			}
 		}
 	}
-	#[cfg(feature = "simplify-metadata")]
 	impl TryFrom<RuntimeMetadataV12> for Metadata {
 		type Error = Error;
 
-		fn try_from(runtime_metadata: RuntimeMetadataV12) -> Result<Metadata, Self::Error> {
+		fn try_from(runtime_metadata: RuntimeMetadataV12) -> Result<Self, Self::Error> {
 			let mut metadata = Self { modules: vec![] };
 
 			for module in runtime_metadata.modules {
@@ -201,8 +180,8 @@ pub mod simplify_metadata {
 
 	#[derive(Debug, ThisError)]
 	pub enum Error {
-		#[error("Module `{}` not found", module_name)]
-		ModuleNotFound { module_name: String },
+		#[error("Module `{0}` not found")]
+		ModuleNotFound(String),
 		#[error(
 			"Storage item `{}` not found under module `{}`",
 			module_name,
@@ -222,12 +201,12 @@ pub mod simplify_metadata {
 			module_name: String,
 			call_name: String,
 		},
-		#[error("Metadata version expected `{}` but found `{}`", expected, found)]
-		MetadataVersionMismatch { expected: String, found: String },
+		#[error("Not Support metadata version `{0}`")]
+		NotSupportMetadataVersion(u8),
 	}
 }
-#[cfg(feature = "simplify-metadata")]
-pub use simplify_metadata::*;
+#[cfg(feature = "simple")]
+pub use simple::*;
 
 #[cfg(feature = "codec")]
 pub use parity_scale_codec;
@@ -241,10 +220,11 @@ use substorager::StorageType as StorageEntryType;
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub struct RuntimeMetadataPrefixed(pub u32, pub RuntimeMetadata);
 
+#[repr(u8)]
 #[derive(Clone, Debug)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub enum RuntimeMetadata {
-	V0,
+	V0 = 0,
 	V1,
 	V2,
 	V3,
@@ -257,6 +237,13 @@ pub enum RuntimeMetadata {
 	V10,
 	V11,
 	V12(RuntimeMetadataV12),
+	V13,
+	V14,
+}
+impl RuntimeMetadata {
+	fn tag(&self) -> u8 {
+		unsafe { *(self as *const Self as *const u8) }
+	}
 }
 
 #[derive(Clone, Debug)]

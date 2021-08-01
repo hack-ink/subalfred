@@ -7,7 +7,7 @@ license     = "GPL-3.0"
 name        = "submetadatan"
 readme      = "README.md"
 repository  = "https://github.com/l2ust/subalfred"
-version     = "0.2.0"
+version     = "0.3.0"
 
 [badges]
 maintenance = { status = "actively-developed" }
@@ -17,7 +17,8 @@ codec = [
 	"parity-scale-codec",
 	"substorager/codec",
 ]
-simplify-metadata = ["thiserror"]
+
+simple = ["thiserror"]
 
 [dependencies]
 parity-scale-codec = { version = "2.2.0", optional = true, features = ["derive"] }
