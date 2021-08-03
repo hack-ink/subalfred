@@ -1804,7 +1804,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f9df0bbf1044e93a74955525499a36dfeb9ce06576b5b2b68cb207c24eb3b17f"
 dependencies = [
  "parity-scale-codec",
- "substorager 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "substorager 0.2.0",
 ]
 
 [[package]]
@@ -1812,7 +1812,7 @@ name = "submetadatan"
 version = "0.4.0"
 dependencies = [
  "parity-scale-codec",
- "substorager 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "substorager 0.2.0",
  "thiserror",
 ]
 
@@ -1865,6 +1865,8 @@ dependencies = [
 [[package]]
 name = "substorager"
 version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e25292b791d9a18dc86e8a8cea8c047e7b026adbdfe99070236298d0a0cac30f"
 dependencies = [
  "array-bytes",
  "parity-scale-codec",
@@ -1873,9 +1875,7 @@ dependencies = [
 
 [[package]]
 name = "substorager"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e25292b791d9a18dc86e8a8cea8c047e7b026adbdfe99070236298d0a0cac30f"
+version = "0.3.0"
 dependencies = [
  "array-bytes",
  "parity-scale-codec",

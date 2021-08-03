@@ -120,8 +120,8 @@ pub mod simple {
 			}
 		}
 	}
-	impl From<RuntimeMetadataV12> for Metadata {
-		fn from(runtime_metadata: RuntimeMetadataV12) -> Self {
+	impl From<RuntimeMetadataV13> for Metadata {
+		fn from(runtime_metadata: RuntimeMetadataV13) -> Self {
 			let mut metadata = Self { modules: vec![] };
 
 			for module in runtime_metadata.modules {
@@ -246,8 +246,8 @@ pub enum RuntimeMetadata {
 	V9,
 	V10,
 	V11,
-	V12(RuntimeMetadataV12),
-	V13,
+	V12,
+	V13(RuntimeMetadataV13),
 	V14,
 }
 impl RuntimeMetadata {
@@ -258,7 +258,7 @@ impl RuntimeMetadata {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
-pub struct RuntimeMetadataV12 {
+pub struct RuntimeMetadataV13 {
 	pub modules: Vec<ModuleMetadata>,
 	pub extrinsic: ExtrinsicMetadata,
 }
