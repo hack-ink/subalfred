@@ -113,7 +113,7 @@ pub mod simple {
 			use RuntimeMetadata::*;
 
 			match runtime_metadata {
-				V12(metadata) => Ok(metadata.into()),
+				V13(metadata) => Ok(metadata.into()),
 				_ => Err(Self::Error::NotSupportMetadataVersion(
 					runtime_metadata.tag(),
 				)),
