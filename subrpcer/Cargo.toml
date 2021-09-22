@@ -13,12 +13,13 @@ version     = "0.4.0"
 maintenance = { status = "actively-developed" }
 
 [features]
+raw-params = []
+
 isahc-client = [
 	"isahc",
 	"thiserror",
 	"tracing",
 ]
-raw-params = []
 ureq-client = [
 	"ureq",
 	"thiserror",

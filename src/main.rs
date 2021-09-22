@@ -13,6 +13,7 @@ use clap::{App, Arg};
 use githuber::Githuber;
 use isahc::AsyncReadResponseExt;
 use serde_json::Value;
+use subrpcer::client::i;
 // --- subalfred ---
 use crate::config::Project;
 
@@ -341,7 +342,7 @@ async fn main() -> AnyResult<()> {
 		};
 
 		tracing::trace!("{}", serde_json::to_string_pretty(&rpc)?);
-		println!("{}", subrpcer::send_rpc(uri, rpc).await?.text().await?);
+		println!("{}", i::send_rpc_async(uri, rpc).await?.text().await?);
 	} else if app_args
 		.subcommand_matches("check-runtime-version")
 		.is_some()

@@ -4,6 +4,7 @@ use std::{fmt::Debug, fs::File, io::Read};
 use isahc::AsyncReadResponseExt;
 use regex::Regex;
 use serde::Deserialize;
+use subrpcer::client::i;
 // --- subalfred ---
 use crate::{config::Runtime, substrate::node::RpcResult, AnyResult, Subalfred};
 
@@ -35,7 +36,7 @@ impl Subalfred {
 		{
 			let result = {
 				let mut v = vec![];
-				subrpcer::send_rpc(node_rpc_uri, subrpcer::state::get_runtime_version())
+				i::send_rpc_async(node_rpc_uri, subrpcer::state::get_runtime_version())
 					.await?
 					.copy_to(&mut v)
 					.await?;
