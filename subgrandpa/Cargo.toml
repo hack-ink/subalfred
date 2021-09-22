@@ -16,5 +16,5 @@ maintenance = { status = "actively-developed" }
 codec = ["parity-scale-codec"]
 
 [dependencies]
-parity-scale-codec = { version = "2.2.0", optional = true, features = ["derive"] }
-serde              = { version = "1.0.127", optional = true, features = ["derive"] }
+parity-scale-codec = { version = "2.3.0", optional = true, features = ["derive"] }
+serde              = { version = "1.0.130", optional = true, features = ["derive"] }
