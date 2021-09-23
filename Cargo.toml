@@ -1,5 +1,5 @@
 [package]
-authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
+authors     = ["Xavier Lau <hi@xavier.zone.com>"]
 build       = "build.rs"
 description = "Your Substrate Alfred"
 edition     = "2018"
@@ -23,7 +23,6 @@ app_dirs2          = { version = "2.3.2" }
 array-bytes        = { version = "1.4.0" }
 async-std          = { version = "1.10.0", features = ["attributes"] }
 base58             = { version = "0.2.0" }
-clap               = { version = "3.0.0-beta.4" }
 futures            = { version = "0.3.17" }
 githuber           = { version = "0.2.6" }
 isahc              = { version = "1.5.0", features = ["json"] }
@@ -33,6 +32,7 @@ regex              = { version = "1.5.4" }
 serde              = { version = "1.0.130" }
 serde_json         = { version = "1.0.68" }
 serde_yaml         = { version = "0.8.21" }
+structopt          = { version = "0.3.23" }
 subcryptor         = { version = "0.2.1" }
 subhasher          = { version = "0.1.7" }
 submetadatan       = { version = "0.5.1", features = ["codec"] }
