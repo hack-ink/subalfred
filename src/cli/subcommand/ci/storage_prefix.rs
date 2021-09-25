@@ -36,8 +36,7 @@ impl Chain {
 		match self {
 			Chain::Darwinia => "https://rpc.darwinia.network",
 			Chain::Crab => "https://crab-rpc.darwinia.network",
-			// Chain::Pangolin => "https://pangolin-rpc.darwinia.network",
-			Chain::Pangolin => "https://pangoro-rpc.darwinia.network",
+			Chain::Pangolin => "https://pangolin-rpc.darwinia.network",
 			Chain::Pangoro => "https://pangoro-rpc.darwinia.network",
 		}
 	}
