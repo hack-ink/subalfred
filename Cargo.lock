@@ -316,6 +316,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "631ae5198c9be5e753e5cc215e1bd73c2b466a3565173db433f52bb9d3e66dba"
 
 [[package]]
+name = "cargo_toml"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "067a0b9ae9282dd1f63b6c1e76a065d741fc1733e566dc50b5b5d8a84d7e3c4a"
+dependencies = [
+ "serde",
+ "serde_derive",
+ "toml",
+]
+
+[[package]]
 name = "cc"
 version = "1.0.68"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -368,6 +379,17 @@ dependencies = [
  "textwrap",
  "unicode-width",
  "vec_map",
+]
+
+[[package]]
+name = "colored"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b3616f750b84d8f0de8a58bda93e08e2a81ad3f523089b05f1dffecab48c6cbd"
+dependencies = [
+ "atty",
+ "lazy_static",
+ "winapi",
 ]
 
 [[package]]
@@ -1799,6 +1821,8 @@ dependencies = [
  "array-bytes",
  "async-std",
  "base58 0.2.0",
+ "cargo_toml",
+ "colored",
  "futures",
  "githuber",
  "isahc",
@@ -1815,6 +1839,7 @@ dependencies = [
  "subrpcer 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "tracing",
  "vergen",
+ "walkdir",
 ]
 
 [[package]]
@@ -1886,6 +1911,7 @@ checksum = "78332bee0e8e0257315498ce8b8094388b2036ad4fe66d7bbfabaaa046938695"
 dependencies = [
  "parity-scale-codec",
  "substorager 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "thiserror",
 ]
 
 [[package]]

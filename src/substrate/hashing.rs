@@ -59,12 +59,11 @@ impl Subalfred {
 		}
 	}
 
-	pub fn storage_key(prefix: Option<&str>, item: Option<&str>) -> String {
+	pub fn storage_key(prefix: &str, item: Option<&str>) -> String {
 		let mut storage_key = String::from("0x");
 
-		if let Some(prefix) = prefix {
-			storage_key.push_str(&array_bytes::bytes2hex("", &subhasher::twox_128(prefix)));
-		}
+		storage_key.push_str(&array_bytes::bytes2hex("", &subhasher::twox_128(prefix)));
+
 		if let Some(item) = item {
 			storage_key.push_str(&array_bytes::bytes2hex("", &subhasher::twox_128(item)));
 		}

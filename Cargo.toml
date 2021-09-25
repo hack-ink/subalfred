@@ -23,6 +23,8 @@ app_dirs2          = { version = "2.3.2" }
 array-bytes        = { version = "1.4.0" }
 async-std          = { version = "1.10.0", features = ["attributes"] }
 base58             = { version = "0.2.0" }
+cargo_toml         = { version = "0.10.0" }
+colored            = { version = "2.0.0" }
 futures            = { version = "0.3.17" }
 githuber           = { version = "0.2.6" }
 isahc              = { version = "1.5.0", features = ["json"] }
@@ -35,9 +37,10 @@ serde_yaml         = { version = "0.8.21" }
 structopt          = { version = "0.3.23" }
 subcryptor         = { version = "0.2.1" }
 subhasher          = { version = "0.1.7" }
-submetadatan       = { version = "0.5.1", features = ["codec"] }
+submetadatan       = { version = "0.5.1", features = ["codec", "simple"] }
 subrpcer           = { version = "0.4.0", features = ["raw-params", "isahc-client"] }
 tracing            = { version = "0.1.28" }
+walkdir            = { version = "2.3.2" }
 
 [build-dependencies]
 vergen = { version = "5.1.15" }

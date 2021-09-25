@@ -4,6 +4,11 @@ use subcryptor::Network;
 use crate::Subalfred;
 
 impl Subalfred {
+	pub fn account(account: &str) -> String {
+		// TODO
+		unimplemented!()
+	}
+
 	pub fn accounts(account: &str) -> Vec<(String, String)> {
 		let mut accounts = vec![];
 		let public_key;
