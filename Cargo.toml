@@ -1,5 +1,5 @@
 [package]
-authors     = ["Xavier Lau <hi@xavier.zone.com>"]
+authors     = ["Xavier Lau <hi@xavier.zone>"]
 build       = "build.rs"
 description = "Your Substrate Alfred"
 edition     = "2018"

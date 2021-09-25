@@ -1,5 +1,5 @@
 [package]
-authors     = ["Xavier Lau <hi@xavier.zone.com>"]
+authors     = ["Xavier Lau <hi@xavier.zone>"]
 description = "subrpcer"
 edition     = "2018"
 homepage    = "https://subalfred.l2ust.world"
