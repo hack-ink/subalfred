@@ -4,7 +4,7 @@ use serde_json::Value;
 use structopt::StructOpt;
 use subrpcer::client::i::{self};
 // --- subalfred ---
-use crate::{cli::Run, AnyResult, Subalfred};
+use crate::{cli::Run, AnyResult};
 
 #[derive(Debug, StructOpt)]
 pub struct RpcCmd {

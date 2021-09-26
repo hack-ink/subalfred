@@ -1,7 +1,7 @@
 // --- crates.io ---
 use structopt::StructOpt;
 // --- subalfred ---
-use crate::{cli::Run, AnyResult, Subalfred};
+use crate::{cli::Run, AnyResult};
 
 #[derive(Debug, StructOpt)]
 pub struct HashCmd {

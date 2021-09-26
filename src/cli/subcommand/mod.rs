@@ -1,6 +1,7 @@
 mod account;
 use account::AccountCmd;
 
+//TODO rename?
 mod ci;
 use ci::CiCmd;
 
@@ -35,7 +36,7 @@ macro_rules! impl_subcommand {
 				}
 			}
 		}
-	}
+	};
 }
 
 impl_subcommand![Account, Ci, Hash, Rpc, StorageKey];

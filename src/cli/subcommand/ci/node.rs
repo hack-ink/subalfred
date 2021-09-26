@@ -1,6 +1,5 @@
 // --- std ---
 use std::{
-	collections::HashSet,
 	convert::TryFrom,
 	fmt::Debug,
 	io::{BufRead, BufReader},
@@ -12,14 +11,25 @@ use std::{
 use colored::Colorize;
 use isahc::ReadResponseExt;
 use parity_scale_codec::Decode;
+use serde::Deserialize;
 use serde_json::Value;
 use structopt::{clap::arg_enum, StructOpt};
-use submetadatan::{Metadata, RuntimeMetadataPrefixed, Storage, Storages};
+use submetadatan::{Metadata, RuntimeMetadataPrefixed, Storages};
 use subrpcer::client::i;
 // --- subalfred ---
-use crate::{cli::Run, AnyResult, Subalfred};
+use crate::AnyResult;
 
 const LOCAL_NODE_RPC_END_POINT: &str = "http://localhost:9933";
+
+macro_rules! impl_subcommand {
+	($($cmd:ident),*) => {
+			$(
+				let $cmd = 1;
+			),*
+	};
+}
+
+impl_subcommand![];
 
 // TODO: custom network
 arg_enum! {
@@ -84,8 +94,19 @@ impl<T> ChainType<T> {
 	}
 }
 
+#[derive(Debug, PartialEq, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RuntimeVersion {
+	pub spec_name: String,
+	pub impl_name: String,
+	pub authoring_version: u32,
+	pub spec_version: u32,
+	pub impl_version: u32,
+	pub transaction_version: u32,
+}
+
 #[derive(Debug, StructOpt)]
-pub struct StoragePrefixCmd {
+pub struct NodeCmd {
 	#[structopt(short, long, required = true, takes_value = true)]
 	executable: PathBuf,
 	#[structopt(
@@ -99,7 +120,7 @@ pub struct StoragePrefixCmd {
 	)]
 	chain: Chain,
 }
-impl StoragePrefixCmd {
+impl NodeCmd {
 	fn spawn_local_node(&self) -> AnyResult<Child> {
 		let mut local_node = Command::new(&self.executable)
 			.stdout(Stdio::null())
@@ -117,7 +138,18 @@ impl StoragePrefixCmd {
 		Ok(local_node)
 	}
 
-	fn fetch(uri: impl AsRef<str>) -> AnyResult<Vec<Storages>> {
+	fn fetch_runtime_version(uri: impl AsRef<str>) -> AnyResult<RuntimeVersion> {
+		let result = i::send_rpc(uri, subrpcer::state::get_runtime_version())?
+			.json::<Value>()?
+			.get_mut("result")
+			.ok_or(anyhow::anyhow!(""))?
+			.take();
+		let runtime_version = serde_json::from_value(result)?;
+
+		Ok(runtime_version)
+	}
+
+	fn fetch_metadata(uri: impl AsRef<str>) -> AnyResult<Vec<Storages>> {
 		let metadata = {
 			let mut response =
 				i::send_rpc(uri, subrpcer::state::get_metadata())?.json::<Value>()?;
@@ -187,12 +219,60 @@ impl StoragePrefixCmd {
 	{
 		values.iter().map(f).collect()
 	}
-}
-impl Run for StoragePrefixCmd {
-	fn run(&self) -> AnyResult<()> {
+
+	pub fn run_runtime_version_check(&self) -> AnyResult<()> {
 		let mut local_node = self.spawn_local_node()?;
-		let local_storages = Self::merge(Self::fetch(LOCAL_NODE_RPC_END_POINT)?);
-		let live_storages = Self::merge(Self::fetch(self.chain.rpc_endpoint())?);
+		let local_runtime_version = Self::fetch_runtime_version(LOCAL_NODE_RPC_END_POINT)?;
+		let chain_runtime_version = Self::fetch_runtime_version(self.chain.rpc_endpoint())?;
+
+		local_node.kill()?;
+
+		if local_runtime_version == chain_runtime_version {
+			return Ok(());
+		}
+
+		let mut colored_local_runtime_version = "Local Runtime Version {".to_string();
+		let mut colored_chain_runtime_version = "Chain Runtime Version {".to_string();
+
+		macro_rules! colored_diff {
+			($($field:ident),*) => {
+				$(
+					colored_local_runtime_version.push_str(&format!("\n\t{}: ", stringify!($field)));
+					colored_chain_runtime_version.push_str(&format!("\n\t{}: ", stringify!($field)));
+
+					if local_runtime_version.$field != chain_runtime_version.$field {
+						colored_local_runtime_version.push_str(&local_runtime_version.$field.to_string().green().to_string());
+						colored_chain_runtime_version.push_str(&chain_runtime_version.$field.to_string().red().to_string());
+					} else {
+						colored_local_runtime_version.push_str(&local_runtime_version.$field.to_string());
+						colored_chain_runtime_version.push_str(&chain_runtime_version.$field.to_string());
+					}
+				)*
+			};
+		}
+
+		colored_diff![
+			spec_name,
+			impl_name,
+			authoring_version,
+			spec_version,
+			impl_version,
+			transaction_version
+		];
+
+		colored_local_runtime_version.push_str("\n}");
+		colored_chain_runtime_version.push_str("\n}");
+
+		println!("{}", colored_local_runtime_version);
+		println!("{}", colored_chain_runtime_version);
+
+		Ok(())
+	}
+
+	pub fn run_storage_prefix_check(&self) -> AnyResult<()> {
+		let mut local_node = self.spawn_local_node()?;
+		let local_storages = Self::merge(Self::fetch_metadata(LOCAL_NODE_RPC_END_POINT)?);
+		let live_storages = Self::merge(Self::fetch_metadata(self.chain.rpc_endpoint())?);
 		let mut storages = [
 			Self::wrap(&local_storages, ChainType::wrap_local),
 			Self::wrap(&live_storages, ChainType::wrap_live),
@@ -203,6 +283,7 @@ impl Run for StoragePrefixCmd {
 
 		let mut i = 0;
 
+		// TODO: optimize output
 		while i != storages.len() {
 			let a = &storages[i];
 			let b = if let Some(b) = storages.get(i + 1) {

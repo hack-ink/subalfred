@@ -4,10 +4,12 @@ use args::*;
 mod subcommand;
 use subcommand::*;
 
+// --- std ---
+use std::env;
 // --- crates.io ---
 use structopt::StructOpt;
 // --- subalfred ---
-use crate::{AnyResult, Subalfred};
+use crate::AnyResult;
 
 trait Run {
 	fn run(&self) -> AnyResult<()>;
@@ -39,10 +41,18 @@ impl Run for Opt {
 }
 
 pub fn run() -> AnyResult<()> {
-	let opt = Opt::from_args();
-	let subalfred = Subalfred::init();
+	let Opt { args, subcommand } = Opt::from_args();
 
-	dbg!(&opt);
+	env::set_var(
+		"RUST_LOG",
+		if let Ok(rust_log) = env::var("RUST_LOG") {
+			[rust_log, args.log].join(",")
+		} else {
+			args.log
+		},
+	);
 
-	opt.subcommand.run()
+	// let subalfred = Subalfred::init();
+
+	subcommand.run()
 }

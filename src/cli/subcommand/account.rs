@@ -17,6 +17,7 @@ pub struct AccountCmd {
 impl Run for AccountCmd {
 	fn run(&self) -> AnyResult<()> {
 		let Self { account, network } = self;
+		// TODO: simple output
 		if let Some(network) = network {
 			println!("{}", Subalfred::account(account));
 		} else {

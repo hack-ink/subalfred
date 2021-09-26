@@ -14,9 +14,7 @@ use app_dirs2::AppInfo;
 use async_std::sync::Arc;
 use githuber::Githuber;
 use isahc::AsyncReadResponseExt;
-use serde_json::Value;
-use structopt::{clap, StructOpt};
-use subrpcer::client::i;
+use structopt::clap;
 // --- subalfred ---
 use crate::config::Project;
 
@@ -59,7 +57,6 @@ async fn main() -> AnyResult<()> {
 	// 				)
 	// 				.arg(Arg::new("create-issue").about("").long("create-issue")),
 	// 		)
-	// 		.subcommand(App::new("check-runtime-version").about("Fetch and check the given node's runtime version"))
 	// 		.subcommand(
 	// 			App::new("metadata")
 	// 				.about("Read and parse the given node's metadata")
