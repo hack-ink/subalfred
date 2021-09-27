@@ -8,7 +8,6 @@ use std::{
 	process::{Child, Command, Stdio},
 };
 // --- crates.io ---
-use colored::Colorize;
 use isahc::ReadResponseExt;
 use parity_scale_codec::Decode;
 use serde::Deserialize;
@@ -79,9 +78,9 @@ impl<T> ChainType<T> {
 		D: Debug,
 	{
 		if self.is_live() {
-			println!("{}", format!("+ {}: {:?}", prefix, f(self.inner())).green());
+			println!("{}", format!("+ {}: {:?}", prefix, f(self.inner())));
 		} else {
-			println!("{}", format!("- {}: {:?}", prefix, f(self.inner())).red());
+			println!("{}", format!("- {}: {:?}", prefix, f(self.inner())));
 		}
 	}
 
@@ -237,16 +236,16 @@ impl NodeCmd {
 		macro_rules! colored_diff {
 			($($field:ident),*) => {
 				$(
-					colored_local_runtime_version.push_str(&format!("\n\t{}: ", stringify!($field)));
-					colored_chain_runtime_version.push_str(&format!("\n\t{}: ", stringify!($field)));
-
 					if local_runtime_version.$field != chain_runtime_version.$field {
-						colored_local_runtime_version.push_str(&local_runtime_version.$field.to_string().green().to_string());
-						colored_chain_runtime_version.push_str(&chain_runtime_version.$field.to_string().red().to_string());
+						colored_local_runtime_version.push_str("\n+\t");
+						colored_chain_runtime_version.push_str("\n-\t");
 					} else {
-						colored_local_runtime_version.push_str(&local_runtime_version.$field.to_string());
-						colored_chain_runtime_version.push_str(&chain_runtime_version.$field.to_string());
+						colored_local_runtime_version.push_str("\n\t");
+						colored_chain_runtime_version.push_str("\n\t");
 					}
+
+					colored_local_runtime_version.push_str(&format!("{}: {}", stringify!($field), &local_runtime_version.$field));
+					colored_chain_runtime_version.push_str(&format!("{}: {}", stringify!($field), &chain_runtime_version.$field));
 				)*
 			};
 		}

@@ -24,7 +24,6 @@ array-bytes        = { version = "1.4.0" }
 async-std          = { version = "1.10.0", features = ["attributes"] }
 base58             = { version = "0.2.0" }
 cargo_toml         = { version = "0.10.0" }
-colored            = { version = "2.0.0" }
 futures            = { version = "0.3.17" }
 githuber           = { version = "0.2.6" }
 isahc              = { version = "1.5.0", features = ["json"] }
