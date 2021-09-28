@@ -1823,7 +1823,7 @@ dependencies = [
  "structopt",
  "subcryptor 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "subhasher 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
- "submetadatan 0.5.1",
+ "submetadatan 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "subrpcer 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "tracing",
  "vergen",
@@ -1884,9 +1884,7 @@ dependencies = [
 
 [[package]]
 name = "submetadatan"
-version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "78332bee0e8e0257315498ce8b8094388b2036ad4fe66d7bbfabaaa046938695"
+version = "0.5.2"
 dependencies = [
  "parity-scale-codec",
  "substorager 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1896,6 +1894,8 @@ dependencies = [
 [[package]]
 name = "submetadatan"
 version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "922313a0747eb55bec852af6ff622edf8a81d3127ed28ecba280b3d252219142"
 dependencies = [
  "parity-scale-codec",
  "substorager 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",

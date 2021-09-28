@@ -36,7 +36,7 @@ serde_yaml         = { version = "0.8.21" }
 structopt          = { version = "0.3.23" }
 subcryptor         = { version = "0.2.1" }
 subhasher          = { version = "0.1.7" }
-submetadatan       = { version = "0.5.1", features = ["codec", "simple"] }
+submetadatan       = { version = "0.5.2", features = ["codec", "simple"] }
 subrpcer           = { version = "0.4.0", features = ["raw-params", "isahc-client"] }
 tracing            = { version = "0.1.28" }
 walkdir            = { version = "2.3.2" }

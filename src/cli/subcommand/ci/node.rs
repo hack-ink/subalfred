@@ -230,22 +230,22 @@ impl NodeCmd {
 			return Ok(());
 		}
 
-		let mut colored_local_runtime_version = "Local Runtime Version {".to_string();
-		let mut colored_chain_runtime_version = "Chain Runtime Version {".to_string();
+		let mut runtime_version = "Runtime Version {".to_string();
 
 		macro_rules! colored_diff {
 			($($field:ident),*) => {
 				$(
-					if local_runtime_version.$field != chain_runtime_version.$field {
-						colored_local_runtime_version.push_str("\n+\t");
-						colored_chain_runtime_version.push_str("\n-\t");
-					} else {
-						colored_local_runtime_version.push_str("\n\t");
-						colored_chain_runtime_version.push_str("\n\t");
-					}
+					let field = format!("{}: {}", stringify!($field), &local_runtime_version.$field);
 
-					colored_local_runtime_version.push_str(&format!("{}: {}", stringify!($field), &local_runtime_version.$field));
-					colored_chain_runtime_version.push_str(&format!("{}: {}", stringify!($field), &chain_runtime_version.$field));
+					if local_runtime_version.$field != chain_runtime_version.$field {
+						runtime_version.push_str("\n+\t");
+						runtime_version.push_str(&field);
+						runtime_version.push_str("\n-\t");
+						runtime_version.push_str(&field);
+					} else {
+						runtime_version.push_str("\n\t");
+						runtime_version.push_str(&field);
+					}
 				)*
 			};
 		}
@@ -259,11 +259,9 @@ impl NodeCmd {
 			transaction_version
 		];
 
-		colored_local_runtime_version.push_str("\n}");
-		colored_chain_runtime_version.push_str("\n}");
+		runtime_version.push_str("\n}");
 
-		println!("{}", colored_local_runtime_version);
-		println!("{}", colored_chain_runtime_version);
+		println!("{}", runtime_version);
 
 		Ok(())
 	}
