@@ -1,5 +1,3 @@
-#![feature(arbitrary_enum_discriminant)]
-
 // TODO: `module` to `pallet`
 
 #[cfg(feature = "simple")]
