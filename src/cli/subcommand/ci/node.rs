@@ -239,7 +239,7 @@ impl NodeCmd {
 						runtime_version.push_str(&format!("\n+\t{}: {}", stringify!($field), &local_runtime_version.$field));
 						runtime_version.push_str(&format!("\n-\t{}: {}", stringify!($field), &chain_runtime_version.$field));
 					} else {
-						runtime_version.push_str(format!("\n\t{}: {}", stringify!($field), &local_runtime_version.$field));
+						runtime_version.push_str(&format!("\n\t{}: {}", stringify!($field), &local_runtime_version.$field));
 					}
 				)*
 			};
