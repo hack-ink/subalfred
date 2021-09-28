@@ -57,6 +57,14 @@ enum ChainType<T> {
 	Live(T),
 }
 impl<T> ChainType<T> {
+	fn wrap_local(t: T) -> Self {
+		Self::Local(t)
+	}
+
+	fn wrap_live(t: T) -> Self {
+		Self::Live(t)
+	}
+
 	fn inner(&self) -> &T {
 		match self {
 			ChainType::Local(t) => t,
@@ -71,25 +79,17 @@ impl<T> ChainType<T> {
 		}
 	}
 
-	fn output<'a, 'b, F, D>(&'a self, prefix: &str, f: F)
+	fn output<'a, 'b, F, D>(&'a self, prefix: &str, f: F) -> String
 	where
 		'a: 'b,
 		F: FnOnce(&'b T) -> D,
 		D: Debug,
 	{
 		if self.is_live() {
-			println!("{}", format!("+ {}: {:?}", prefix, f(self.inner())));
+			format!("{}", format!("+ {}: {:?}", prefix, f(self.inner())))
 		} else {
-			println!("{}", format!("- {}: {:?}", prefix, f(self.inner())));
+			format!("{}", format!("- {}: {:?}", prefix, f(self.inner())))
 		}
-	}
-
-	fn wrap_local(t: T) -> Self {
-		Self::Local(t)
-	}
-
-	fn wrap_live(t: T) -> Self {
-		Self::Live(t)
 	}
 }
 
@@ -280,13 +280,12 @@ impl NodeCmd {
 
 		let mut i = 0;
 
-		// TODO: optimize output
 		while i != storages.len() {
 			let a = &storages[i];
 			let b = if let Some(b) = storages.get(i + 1) {
 				b
 			} else {
-				a.output("Pallet", |s| &s.prefix);
+				println!("{}", a.output("Pallet", |s| &s.prefix));
 
 				break;
 			};
@@ -301,13 +300,14 @@ impl NodeCmd {
 				items.sort_by(|a, b| a.inner().name.as_str().cmp(b.inner().name.as_str()));
 
 				let mut j = 0;
+				let mut outputs = vec![];
 
 				while j != items.len() {
 					let a = &items[j];
 					let b = if let Some(b) = items.get(j + 1) {
 						b
 					} else {
-						a.output("\tItem", |s| s);
+						outputs.push(a.output("\tItem", |s| s));
 
 						break;
 					};
@@ -315,9 +315,17 @@ impl NodeCmd {
 					if a.inner() == b.inner() {
 						j += 2;
 					} else {
-						a.output("\tItem", |s| s);
+						outputs.push(a.output("\tItem", |s| s));
 
 						j += 1;
+					}
+				}
+
+				if !outputs.is_empty() {
+					println!("Pallet: {}:", a.inner().prefix);
+
+					for output in outputs {
+						println!("{}", output);
 					}
 				}
 
