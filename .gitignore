@@ -1,24 +1,12 @@
-# IDE
-.idea
-.vscode
-.ignore
-
-# macOS
+# System
 .DS_Store
 
-# PM2
-.pm2.json
+# Integrated Development Environment
+.idea
+.vscode
 
-# Release
-release/
-
-# Rust
-**/*.rs.bk
-**/target/
-.cargo-ok
-Cargo.toml.bak
-expand.rs
-
-# Added by cargo
-
-/target
+# Package Manager
+## Cargo
+target
+## Mpm
+node_modules

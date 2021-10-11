@@ -20,16 +20,6 @@ use crate::AnyResult;
 
 const LOCAL_NODE_RPC_END_POINT: &str = "http://localhost:9933";
 
-macro_rules! impl_subcommand {
-	($($cmd:ident),*) => {
-			$(
-				let $cmd = 1;
-			),*
-	};
-}
-
-impl_subcommand![];
-
 // TODO: custom network
 arg_enum! {
 	#[derive(Debug)]
@@ -86,9 +76,9 @@ impl<T> ChainType<T> {
 		D: Debug,
 	{
 		if self.is_live() {
-			format!("{}", format!("+ {}: {:?}", prefix, f(self.inner())))
-		} else {
 			format!("{}", format!("- {}: {:?}", prefix, f(self.inner())))
+		} else {
+			format!("{}", format!("+ {}: {:?}", prefix, f(self.inner())))
 		}
 	}
 }
@@ -109,13 +99,14 @@ pub struct NodeCmd {
 	#[structopt(short, long, required = true, takes_value = true)]
 	executable: PathBuf,
 	#[structopt(
-		help = "Specific chain name (non case sensitive)",
+		help = "Specific chain (non case sensitive)",
 		short,
 		long,
 		case_insensitive = true,
 		required = true,
 		takes_value = true,
-		possible_values = &Chain::variants()
+		possible_values = &Chain::variants(),
+		value_name = "CHAIN"
 	)]
 	chain: Chain,
 }

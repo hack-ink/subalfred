@@ -3,7 +3,6 @@ use isahc::AsyncReadResponseExt;
 use parity_scale_codec::Decode;
 use submetadatan::{RuntimeMetadata, RuntimeMetadataPrefixed, RuntimeMetadataV13};
 use subrpcer::client::i;
-use tracing::trace;
 // --- subalfred ---
 use crate::{substrate::node::RpcResult, AnyResult, Subalfred};
 
@@ -29,7 +28,7 @@ impl Subalfred {
 				unimplemented!()
 			};
 
-		trace!("{:#?}", runtime_metadata);
+		tracing::trace!("{:#?}", runtime_metadata);
 
 		Ok(runtime_metadata)
 	}

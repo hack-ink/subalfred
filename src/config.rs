@@ -18,7 +18,7 @@ pub struct Config {
 	pub substrate_project: Project,
 }
 impl Config {
-	pub fn load_config() -> Self {
+	pub fn load() -> Self {
 		let app_root_path = get_app_root(AppDataType::UserConfig, &APP_INFO).unwrap();
 		let app_config_path = app_root_path.join("config");
 		let file = if app_config_path.is_file() {
@@ -124,7 +124,7 @@ impl Subalfred {
 		let Config {
 			github_oauth_token,
 			substrate_project,
-		} = Config::load_config();
+		} = Config::load();
 
 		Self {
 			githuber: Arc::new(Githuber::new(github_oauth_token)),

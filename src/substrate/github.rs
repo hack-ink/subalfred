@@ -28,7 +28,6 @@ use githuber::{
 	},
 	GithubApi, Githuber,
 };
-use tracing::trace;
 // --- subalfred ---
 use crate::{AnyResult, Subalfred};
 
@@ -36,21 +35,25 @@ impl Subalfred {
 	pub const SUBSTRATE_GITHUB_OWNER: &'static str = "paritytech";
 	pub const SUBSTRATE_GITHUB_REPO: &'static str = "substrate";
 
-	pub async fn list_tags(&self) -> AnyResult<Vec<Tag>> {
+	pub async fn list_tags(
+		&self,
+		owner: impl AsRef<str>,
+		repo: impl AsRef<str>,
+	) -> AnyResult<Vec<Tag>> {
 		let mut tags = vec![];
 
 		iterate_page_with(
 			&self.githuber,
 			ListRepositoryTagsBuilder::default()
-				.owner(Self::SUBSTRATE_GITHUB_OWNER)
-				.repo(Self::SUBSTRATE_GITHUB_REPO)
+				.owner(owner.as_ref())
+				.repo(repo.as_ref())
 				.build()
 				.unwrap(),
 			|mut tags_: Vec<Tag>| tags.append(&mut tags_),
 		)
 		.await?;
 
-		trace!("{:#?}", tags);
+		tracing::trace!("{:#?}", tags);
 
 		Ok(tags)
 	}
@@ -69,7 +72,7 @@ impl Subalfred {
 		)
 		.await?;
 
-		trace!("{:#?}", releases);
+		tracing::trace!("{:#?}", releases);
 
 		Ok(releases)
 	}
@@ -133,7 +136,7 @@ impl Subalfred {
 		)
 		.await?;
 
-		trace!("{:#?}", commits);
+		tracing::trace!("{:#?}", commits);
 
 		Ok(commits)
 	}
@@ -186,7 +189,7 @@ impl Subalfred {
 
 		pull_requests.sort_by(|a, b| b.merged_at.cmp(&a.merged_at));
 
-		trace!("{:#?}", pull_requests);
+		tracing::trace!("{:#?}", pull_requests);
 
 		if create_issue {
 			const MAXIMUM_ISSUE_BODY_SIZE: usize = 65536;
@@ -284,7 +287,7 @@ impl Subalfred {
 				.any(|label| &label.name == "E1-runtimemigration")
 		});
 
-		trace!("{:#?}", pull_requests);
+		tracing::trace!("{:#?}", pull_requests);
 
 		if create_issue {
 			let mut issue_body = String::new();
@@ -354,7 +357,7 @@ impl Subalfred {
 			.await?;
 		let content = serde_json::from_slice(&v)?;
 
-		trace!("{:#?}", content);
+		tracing::trace!("{:#?}", content);
 
 		Ok(content)
 	}
@@ -395,7 +398,7 @@ impl Subalfred {
 			.await?;
 		let issue = serde_json::from_slice(&v)?;
 
-		trace!("{:#?}", issue);
+		tracing::trace!("{:#?}", issue);
 
 		Ok(issue)
 	}
@@ -421,7 +424,7 @@ impl Subalfred {
 			.await?
 			.status();
 
-		trace!("{:#?}", status);
+		tracing::trace!("{:#?}", status);
 
 		Ok(status.is_success())
 	}

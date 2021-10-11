@@ -52,7 +52,5 @@ pub fn run() -> AnyResult<()> {
 		},
 	);
 
-	// let subalfred = Subalfred::init();
-
 	subcommand.run()
 }

@@ -175,9 +175,7 @@ async fn main() -> AnyResult<()> {
 	// 	let subalfred = Subalfred::init();
 
 	// 	// TODO: beautify output
-	// 	if app_args.subcommand_matches("list-tags").is_some() {
-	// 		println!("{:#?}", subalfred.list_tags().await?);
-	// 	} else if app_args.subcommand_matches("list-releases").is_some() {
+	// 	if app_args.subcommand_matches("list-releases").is_some() {
 	// 		println!("{:#?}", subalfred.list_releases().await?);
 	// 	} else if let Some(list_commits_args) = app_args.subcommand_matches("list-commits") {
 	// 		println!(

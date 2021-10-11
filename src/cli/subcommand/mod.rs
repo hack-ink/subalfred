@@ -1,3 +1,5 @@
+// TODO refactor folder structure
+
 mod account;
 use account::AccountCmd;
 
@@ -13,6 +15,9 @@ use rpc::RpcCmd;
 
 mod storage_key;
 use storage_key::StorageKeyCmd;
+
+mod tags;
+use tags::TagsCmd;
 
 // --- crates.io ---
 use structopt::StructOpt;
@@ -39,4 +44,4 @@ macro_rules! impl_subcommand {
 	};
 }
 
-impl_subcommand![Account, Ci, Hash, Rpc, StorageKey];
+impl_subcommand![Account, Ci, Hash, Rpc, StorageKey, Tags];
