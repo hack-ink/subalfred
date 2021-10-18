@@ -37,7 +37,7 @@ macro_rules! ss58 {
 			$($network = $prefix),*
 		}
 		impl Network {
-			pub const PREFIXES: &[(&str, u8)] = &[$((stringify!($network), $prefix)),*];
+			pub const PREFIXES: &'static [(&'static str, u8)] = &[$((stringify!($network), $prefix)),*];
 		}
 		impl Into<u8> for Network {
 			fn into(self) -> u8 {
