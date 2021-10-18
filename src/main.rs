@@ -30,7 +30,6 @@ async fn main() -> AnyResult<()> {
 
 	cli::run()
 
-	// 		.subcommand(App::new("list-tags").about("List all the tags of Substrate"))
 	// 		.subcommand(App::new("list-releases").about("List all the releases of Substrate"))
 	// 		.subcommand(list_app("list-commits").about("List the specific commits of Substrate"))
 	// 		.subcommand(
