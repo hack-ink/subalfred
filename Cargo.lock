@@ -338,6 +338,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "castaway"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ed247d1586918e46f2bbe0f13b06498db8dab5a8c1093f156652e9f2e0a73fc3"
+
+[[package]]
 name = "cc"
 version = "1.0.71"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1010,11 +1016,12 @@ dependencies = [
 
 [[package]]
 name = "isahc"
-version = "1.5.0"
+version = "1.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "431445cb4ba85a80cb1438a9ae8042dadb78ae4046ecee89ad027b614aa0ddb7"
+checksum = "40ef5402b1791c9fc479ef9871601a2f10e4cc0f14414a5c9c6e043fb51e5a56"
 dependencies = [
  "async-channel",
+ "castaway",
  "crossbeam-utils",
  "curl",
  "curl-sys",
@@ -1820,9 +1827,9 @@ checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
 
 [[package]]
 name = "structopt"
-version = "0.3.23"
+version = "0.3.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bf9d950ef167e25e0bdb073cf1d68e9ad2795ac826f2f3f59647817cf23c0bfa"
+checksum = "6780d7e33b913daa7eb6d3675bf706351e88cc7d19cc173bdd19ab3cac6d2a46"
 dependencies = [
  "clap",
  "lazy_static",
@@ -1831,9 +1838,9 @@ dependencies = [
 
 [[package]]
 name = "structopt-derive"
-version = "0.4.16"
+version = "0.4.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "134d838a2c9943ac3125cf6df165eda53493451b719f3255b2a26b85f772d0ba"
+checksum = "13319edf4ebc516438ef39e03f7fb3d8c1c964163525d47eba3d8e4ba6b5074f"
 dependencies = [
  "heck",
  "proc-macro-error",
@@ -1862,23 +1869,13 @@ dependencies = [
  "serde_json",
  "serde_yaml",
  "structopt",
- "subcryptor 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "subhasher 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
- "submetadatan 0.5.2",
- "subrpcer 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "subcryptor 0.2.1",
+ "subhasher 0.1.7",
+ "submetadatan 0.5.3",
+ "subrpcer 0.4.0",
  "tracing",
  "vergen",
  "walkdir",
-]
-
-[[package]]
-name = "subcryptor"
-version = "0.2.1"
-dependencies = [
- "base58 0.2.0",
- "blake2-rfc",
- "parity-scale-codec",
- "schnorrkel",
 ]
 
 [[package]]
@@ -1892,22 +1889,21 @@ dependencies = [
 ]
 
 [[package]]
-name = "subgrandpa"
-version = "0.2.6"
+name = "subcryptor"
+version = "0.2.2"
 dependencies = [
+ "base58 0.2.0",
+ "blake2-rfc",
  "parity-scale-codec",
- "serde",
+ "schnorrkel",
 ]
 
 [[package]]
-name = "subhasher"
-version = "0.1.7"
+name = "subgrandpa"
+version = "0.2.7"
 dependencies = [
- "blake2-rfc",
- "byteorder",
- "sha2",
- "tiny-keccak",
- "twox-hash",
+ "parity-scale-codec",
+ "serde",
 ]
 
 [[package]]
@@ -1924,36 +1920,34 @@ dependencies = [
 ]
 
 [[package]]
-name = "submetadatan"
-version = "0.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "922313a0747eb55bec852af6ff622edf8a81d3127ed28ecba280b3d252219142"
+name = "subhasher"
+version = "0.1.8"
 dependencies = [
- "parity-scale-codec",
- "substorager 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "thiserror",
+ "blake2-rfc",
+ "byteorder",
+ "sha2",
+ "tiny-keccak",
+ "twox-hash",
 ]
 
 [[package]]
 name = "submetadatan"
 version = "0.5.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "321ea4fc5334f5f6c8aa63b48fe2c375588a49c0cb5f33247d6a66458736251c"
 dependencies = [
  "parity-scale-codec",
- "substorager 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "substorager 0.3.0",
  "thiserror",
 ]
 
 [[package]]
-name = "subrpcer"
-version = "0.4.0"
+name = "submetadatan"
+version = "0.5.4"
 dependencies = [
- "isahc",
- "serde",
- "serde_json",
- "subrpcer-impl 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "parity-scale-codec",
+ "substorager 0.3.0",
  "thiserror",
- "tracing",
- "ureq",
 ]
 
 [[package]]
@@ -1965,18 +1959,22 @@ dependencies = [
  "isahc",
  "serde",
  "serde_json",
- "subrpcer-impl 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "subrpcer-impl 0.1.2",
  "thiserror",
  "tracing",
 ]
 
 [[package]]
-name = "subrpcer-impl"
-version = "0.1.2"
+name = "subrpcer"
+version = "0.4.1"
 dependencies = [
- "proc-macro2",
- "quote",
- "syn",
+ "isahc",
+ "serde",
+ "serde_json",
+ "subrpcer-impl 0.1.2",
+ "thiserror",
+ "tracing",
+ "ureq",
 ]
 
 [[package]]
@@ -1991,12 +1989,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "substorager"
-version = "0.3.0"
+name = "subrpcer-impl"
+version = "0.1.3"
 dependencies = [
- "array-bytes",
- "parity-scale-codec",
- "subhasher 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -2007,7 +2005,16 @@ checksum = "fb216c0470f9bfdd828db62e3e99128b9c99e60e89b6e8fede510663f4425ecb"
 dependencies = [
  "array-bytes",
  "parity-scale-codec",
- "subhasher 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "subhasher 0.1.7",
+]
+
+[[package]]
+name = "substorager"
+version = "0.3.1"
+dependencies = [
+ "array-bytes",
+ "parity-scale-codec",
+ "subhasher 0.1.7",
 ]
 
 [[package]]

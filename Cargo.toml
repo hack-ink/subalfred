@@ -18,31 +18,31 @@ path = "src/main.rs"
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-anyhow             = { version = "1.0.44" }
-app_dirs2          = { version = "2.3.2" }
-array-bytes        = { version = "1.4.0" }
-async-std          = { version = "1.10.0", features = ["attributes"] }
-base58             = { version = "0.2.0" }
-cargo_toml         = { version = "0.10.0" }
-futures            = { version = "0.3.17" }
+anyhow             = { version = "1.0" }
+app_dirs2          = { version = "2.3" }
+array-bytes        = { version = "1.4" }
+async-std          = { version = "1.10", features = ["attributes"] }
+base58             = { version = "0.2" }
+cargo_toml         = { version = "0.10" }
+futures            = { version = "0.3" }
 githuber           = { version = "0.3.0-alpha.1" }
-isahc              = { version = "1.5.0", features = ["json"] }
-parity-scale-codec = { version = "2.3.0" }
-pretty_env_logger  = { version = "0.4.0" }
-regex              = { version = "1.5.4" }
-serde              = { version = "1.0.130" }
-serde_json         = { version = "1.0.68" }
-serde_yaml         = { version = "0.8.21" }
-structopt          = { version = "0.3.23" }
-subcryptor         = { version = "0.2.1" }
-subhasher          = { version = "0.1.7" }
-submetadatan       = { version = "0.5.2", features = ["codec", "simple"] }
-subrpcer           = { version = "0.4.0", features = ["raw-params", "isahc-client"] }
-tracing            = { version = "0.1.28" }
-walkdir            = { version = "2.3.2" }
+isahc              = { version = "1.5", features = ["json"] }
+parity-scale-codec = { version = "2.3" }
+pretty_env_logger  = { version = "0.4" }
+regex              = { version = "1.5" }
+serde              = { version = "1.0" }
+serde_json         = { version = "1.0" }
+serde_yaml         = { version = "0.8" }
+structopt          = { version = "0.3" }
+subcryptor         = { version = "0.2" }
+subhasher          = { version = "0.1" }
+submetadatan       = { version = "0.5", features = ["codec", "simple"] }
+subrpcer           = { version = "0.4", features = ["raw-params", "isahc-client"] }
+tracing            = { version = "0.1" }
+walkdir            = { version = "2.3" }
 
 [build-dependencies]
-vergen = { version = "5.1.15" }
+vergen = { version = "5.1" }
 
 [workspace]
 members = [
@@ -57,7 +57,7 @@ members = [
 
 # Local Development
 # [patch.crates-io]
-#githuber       = { path = "../githuber" }
+# githuber       = { path = "../githuber" }
 # subcryptor    = { path = "subcryptor" }
 # subgrandpa    = { path = "subgrandpa" }
 # subhasher     = { path = "subhasher" }
