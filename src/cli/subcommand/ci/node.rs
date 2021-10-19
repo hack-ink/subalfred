@@ -41,7 +41,7 @@ impl Chain {
 	}
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 enum ChainType<T> {
 	Local(T),
 	Live(T),
@@ -308,16 +308,18 @@ impl NodeCmd {
 				}
 
 				if !outputs.is_empty() {
-					println!("Pallet: {}:", a.inner().prefix);
+					println!("Pallet {}:", a.inner().prefix);
 
 					for output in outputs {
 						println!("{}", output);
 					}
+
+					println!();
 				}
 
 				i += 2;
 			} else {
-				a.output("Pallet", |s| &s.prefix);
+				println!("{}\n", a.output("Pallet", |s| &s.prefix));
 
 				i += 1;
 			}
