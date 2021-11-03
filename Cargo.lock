@@ -1936,7 +1936,7 @@ dependencies = [
 
 [[package]]
 name = "subrpcer"
-version = "0.4.2"
+version = "0.4.3"
 dependencies = [
  "isahc",
  "serde",
