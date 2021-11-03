@@ -7,11 +7,11 @@ use crate::client::Error;
 
 pub type UreqResponse = ureq::Response;
 
-pub fn send_rpc(uri: impl AsRef<str>, body: impl AsRef<Value>) -> Result<UreqResponse, Error> {
+pub fn send_rpc(uri: impl AsRef<str>, body: &Value) -> Result<UreqResponse, Error> {
 	let result = ureq::post(uri.as_ref())
 		.set("Content-Type", "application/json;charset=utf-8")
 		// TODO: accept reference
-		.send_json(body.as_ref().to_owned())?;
+		.send_json(body.to_owned())?;
 
 	tracing::trace!("{:#?}", result);
 
