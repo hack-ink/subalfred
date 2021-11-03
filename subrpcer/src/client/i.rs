@@ -15,7 +15,7 @@ pub type SubrpcerResult<T> = Result<T, Error>;
 pub type IsahcResponse = Response<IsahcBody>;
 pub type IsahcAsyncResponse = Response<IsahcAsyncBody>;
 
-pub fn send_rpc(uri: impl AsRef<str>, body: Value) -> SubrpcerResult<IsahcResponse> {
+pub fn send_rpc(uri: impl AsRef<str>, body: impl AsRef<Value>) -> SubrpcerResult<IsahcResponse> {
 	let mut request_builder = RequestBuilder::new()
 		.method(HttpMethod::POST)
 		.uri(uri.as_ref());
@@ -26,7 +26,7 @@ pub fn send_rpc(uri: impl AsRef<str>, body: Value) -> SubrpcerResult<IsahcRespon
 	);
 
 	let request = request_builder
-		.body(serde_json::to_vec(&body)?)
+		.body(serde_json::to_vec(body.as_ref())?)
 		.unwrap();
 	let result = isahc::send(request)?;
 
@@ -37,7 +37,7 @@ pub fn send_rpc(uri: impl AsRef<str>, body: Value) -> SubrpcerResult<IsahcRespon
 
 pub async fn send_rpc_async(
 	uri: impl AsRef<str>,
-	body: Value,
+	body: impl AsRef<Value>,
 ) -> SubrpcerResult<IsahcAsyncResponse> {
 	let mut request_builder = RequestBuilder::new()
 		.method(HttpMethod::POST)
@@ -49,7 +49,7 @@ pub async fn send_rpc_async(
 	);
 
 	let request = request_builder
-		.body(serde_json::to_vec(&body)?)
+		.body(serde_json::to_vec(body.as_ref())?)
 		.unwrap();
 	let result = isahc::send_async(request).await?;
 

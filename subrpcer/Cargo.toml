@@ -7,7 +7,7 @@ license     = "GPL-3.0"
 name        = "subrpcer"
 readme      = "README.md"
 repository  = "https://github.com/l2ust/subalfred"
-version     = "0.4.1"
+version     = "0.4.2"
 
 [badges]
 maintenance = { status = "actively-developed" }
@@ -33,4 +33,4 @@ serde_json    = { version = "1.0" }
 subrpcer-impl = { version = "0.1" }
 thiserror     = { version = "1.0", optional = true }
 tracing       = { version = "0.1", optional = true }
-ureq          = { version = "2.2", optional = true, features = ["json"] }
+ureq          = { version = "2.3", optional = true, features = ["json"] }
