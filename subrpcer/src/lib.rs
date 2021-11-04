@@ -1,6 +1,7 @@
 pub mod author;
 pub mod chain;
 pub mod grandpa;
+pub mod offchain;
 pub mod state;
 pub mod system;
 
