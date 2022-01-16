@@ -1,34 +1,21 @@
-#![feature(concat_idents)]
-#![feature(with_options)]
-
-// TODO visibilities
-pub mod cli;
-pub mod config;
-pub mod substrate;
+// pub mod substrate;
 
 // --- std ---
-use std::env;
+// use std::env;
 // --- crates.io ---
 use anyhow::Result as AnyResult;
-use app_dirs2::AppInfo;
-use async_std::sync::Arc;
-use githuber::Githuber;
-use isahc::AsyncReadResponseExt;
-use structopt::clap;
-// --- subalfred ---
-use crate::config::Project;
-
-const APP_INFO: AppInfo = AppInfo {
-	name: clap::crate_name!(),
-	author: clap::crate_authors!(),
-};
+// use async_std::sync::Arc;
+// use githuber::Githuber;
+// use isahc::AsyncReadResponseExt;
 
 #[async_std::main]
 async fn main() -> AnyResult<()> {
 	// TODO: about
 	// TODO: --json for output
 
-	cli::run()
+	cli::run()?;
+
+	Ok(())
 
 	// 		.subcommand(App::new("list-releases").about("List all the releases of Substrate"))
 	// 		.subcommand(list_app("list-commits").about("List the specific commits of Substrate"))
@@ -227,13 +214,6 @@ async fn main() -> AnyResult<()> {
 	// 				)
 	// 				.await?
 	// 		);
-	// 	}  else if app_args
-	// 		.subcommand_matches("check-runtime-version")
-	// 		.is_some()
-	// 	{
-	// 		for versions in subalfred.check_runtime_version().await? {
-	// 			println!("{:#?}", versions);
-	// 		}
 	// 	} else if let Some(metadata_args) = app_args.subcommand_matches("metadata") {
 	// 		let uri = metadata_args
 	// 			.value_of("uri")
@@ -315,8 +295,3 @@ async fn main() -> AnyResult<()> {
 // 				),
 // 		)
 // }
-
-struct Subalfred {
-	githuber: Arc<Githuber>,
-	project: Project,
-}

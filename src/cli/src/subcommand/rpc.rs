@@ -1,14 +1,14 @@
 // --- crates.io ---
+use clap::clap;
 use isahc::ReadResponseExt;
 use serde_json::Value;
-use structopt::StructOpt;
 use subrpcer::client::i::{self};
-// --- subalfred ---
+// --- hack-ink ---
 use crate::{cli::Run, AnyResult};
 
-#[derive(Debug, StructOpt)]
+#[derive(Debug, Parser)]
 pub struct RpcCmd {
-	#[structopt(
+	#[clap(
 		short,
 		long,
 		takes_value = true,
@@ -16,7 +16,7 @@ pub struct RpcCmd {
 		default_value = "http://localhost:9933"
 	)]
 	uri: String,
-	#[structopt(
+	#[clap(
 		help = "Support these styles (non case sensitive):\n\
 				\t- state_getRuntimeVersion\n\
 				\t- state_getruntimeversion\n\
@@ -29,7 +29,7 @@ pub struct RpcCmd {
 		value_name = "METHOD"
 	)]
 	method: String,
-	#[structopt(
+	#[clap(
 		short,
 		long,
 		takes_value = true,
@@ -37,7 +37,7 @@ pub struct RpcCmd {
 		default_value = "[]"
 	)]
 	params: Value,
-	#[structopt(
+	#[clap(
 		short,
 		long,
 		takes_value = true,
@@ -73,7 +73,7 @@ impl Run for RpcCmd {
 		};
 
 		tracing::trace!("{}", serde_json::to_string_pretty(&rpc)?);
-		println!("{}", i::send_rpc(uri, rpc)?.text()?);
+		println!("{}", i::send_rpc(uri, &rpc)?.text()?);
 
 		Ok(())
 	}

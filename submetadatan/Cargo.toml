@@ -1,26 +1,19 @@
 [package]
-authors     = ["Xavier Lau <hi@xavier.zone>"]
+authors     = ["Xavier Lau <xavier@inv.cafe>"]
 description = "submetadatan"
-edition     = "2018"
-homepage    = "https://subalfred.l2ust.world"
+edition     = "2021"
+homepage    = "https://subalfred.hack.ink"
 license     = "GPL-3.0"
 name        = "submetadatan"
 readme      = "README.md"
-repository  = "https://github.com/l2ust/subalfred"
-version     = "0.5.4"
+repository  = "https://github.com/hack-ink/subalfred"
+version     = "0.6.0"
 
 [badges]
 maintenance = { status = "actively-developed" }
 
-[features]
-codec = [
-	"parity-scale-codec",
-	"substorager/codec",
-]
-
-simple = ["thiserror"]
-
 [dependencies]
-parity-scale-codec = { version = "2.3", optional = true, features = ["derive"] }
-substorager        = { version = "0.3" }
-thiserror          = { version = "1.0", optional = true }
+# crates.io
+frame-metadata = { version = "14.2", features = ["v14"] }
+scale-info     = { version = "1.0" }
+thiserror      = { version = "1.0" }

@@ -1,7 +1,7 @@
 // --- crates.io ---
 use async_std::task;
-use structopt::{clap::arg_enum, StructOpt};
-// --- subalfred ---
+use clap::{clap, clap::arg_enum};
+// --- hack-ink ---
 use crate::{cli::Run, AnyResult, Subalfred};
 
 arg_enum! {
@@ -25,9 +25,9 @@ impl Project {
 }
 
 // TODO: flatten this to be a shared object
-#[derive(Debug, StructOpt)]
+#[derive(Debug, Parser)]
 pub struct TagsCmd {
-	#[structopt(
+	#[clap(
 		help = "Specific project (non case sensitive)",
 		short,
 		long,

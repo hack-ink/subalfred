@@ -1,12 +1,12 @@
 // --- crates.io ---
-use structopt::StructOpt;
-// --- subalfred ---
+use clap::clap;
+// --- hack-ink ---
 use crate::{cli::Run, AnyResult, Subalfred};
 
-#[derive(Debug, StructOpt)]
-#[structopt(help = "Calculate the storage key for the storage PREFIX/ITEM")]
+#[derive(Debug, Parser)]
+#[clap(help = "Calculate the storage key for the storage PREFIX/ITEM")]
 pub struct StorageKeyCmd {
-	#[structopt(
+	#[clap(
 		short,
 		long,
 		required = true,
@@ -14,7 +14,7 @@ pub struct StorageKeyCmd {
 		value_name = "PREFIX"
 	)]
 	prefix: String,
-	#[structopt(short, long, takes_value = true, value_name = "ITEM")]
+	#[clap(short, long, takes_value = true, value_name = "ITEM")]
 	item: Option<String>,
 }
 impl Run for StorageKeyCmd {

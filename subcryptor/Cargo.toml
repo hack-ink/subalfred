@@ -2,22 +2,30 @@
 authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
 description = "subcryptor"
 edition     = "2018"
-homepage    = "https://subcryptor.l2ust.world"
+homepage    = "https://subcryptor.hack.ink"
 license     = "GPL-3.0"
 name        = "subcryptor"
 readme      = "README.md"
-repository  = "https://github.com/l2ust/subalfred"
-version     = "0.2.2"
+repository  = "https://github.com/hack-ink/subalfred"
+version     = "0.3.0"
 
 [badges]
 maintenance = { status = "actively-developed" }
 
-[features]
-codec       = ["parity-scale-codec"]
-full-crypto = ["schnorrkel"]
 
 [dependencies]
+# crates.io
 base58             = { version = "0.2" }
 blake2-rfc         = { version = "0.2" }
 parity-scale-codec = { version = "2.3", optional = true, features = ["derive"] }
 schnorrkel         = { version = "0.10", optional = true }
+
+[features]
+codec = [
+	# crates.io
+	"parity-scale-codec",
+]
+full-crypto = [
+	# crates.io
+	"schnorrkel",
+]

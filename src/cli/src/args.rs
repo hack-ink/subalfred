@@ -1,15 +1,14 @@
 // --- crates.io ---
-use structopt::StructOpt;
+use clap::Parser;
 
-#[derive(Debug, StructOpt)]
+#[derive(Debug, Parser)]
 pub struct Args {
-	#[structopt(
+	#[clap(
 		long,
 		takes_value = true,
 		value_name = "TARGET=LEVEL,*",
 		default_value = "",
 		global = true
 	)]
-	pub log: String
-	,
+	pub log: String,
 }

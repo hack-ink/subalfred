@@ -1,13 +1,13 @@
 [package]
-authors     = ["Xavier Lau <hi@xavier.zone>"]
+authors     = ["Xavier Lau <xavier@inv.cafe>"]
 description = "subrpcer-impl"
-edition     = "2018"
-homepage    = "https://subalfred.l2ust.world"
+edition     = "2021"
+homepage    = "https://subalfred.hack.ink"
 license     = "GPL-3.0"
 name        = "subrpcer-impl"
 readme      = "README.md"
 repository  = "https://github.com/l2ust/subalfred"
-version     = "0.1.3"
+version     = "0.2.0"
 
 [lib]
 proc-macro = true

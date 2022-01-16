@@ -2,20 +2,13 @@
 use std::{path::PathBuf, process};
 // --- crates.io ---
 use cargo_toml::Manifest;
-use structopt::StructOpt;
 use walkdir::WalkDir;
-// --- subalfred ---
-use crate::{cli::Run, AnyResult, Subalfred};
+// --- hack-ink ---
+use crate::*;
 
-#[derive(Debug, StructOpt)]
-pub struct DefaultFeaturesCmd {
-	#[structopt(short, long, required = true, takes_value = true)]
-	project_dir: PathBuf,
-}
-impl Run for DefaultFeaturesCmd {
-	fn run(&self) -> AnyResult<()> {
-		let dir_name = self
-			.project_dir
+impl Executor {
+	pub fn check_default_features(project_dir: &PathBuf) -> AnyResult<()> {
+		let dir_name = project_dir
 			.file_name()
 			.ok_or(anyhow::anyhow!(""))?
 			.to_str()
@@ -23,7 +16,7 @@ impl Run for DefaultFeaturesCmd {
 		let mut optional_maybe_incomplete_dependencies = vec![];
 		let mut incomplete_dependencies = vec![];
 
-		for entry in WalkDir::new(&self.project_dir)
+		for entry in WalkDir::new(&project_dir)
 			.into_iter()
 			.filter_entry(|entry| {
 				let name = entry.file_name().to_str().unwrap();

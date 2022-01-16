@@ -7,17 +7,9 @@ use parity_scale_codec::{Decode, Encode};
 pub enum StorageType {
 	Plain(String),
 	Map {
-		hasher: StorageHasher,
-		key: String,
-		value: String,
-		unused: bool,
-	},
-	DoubleMap {
-		hasher: StorageHasher,
-		key1: String,
-		key2: String,
-		value: String,
-		key2_hasher: StorageHasher,
+		hashers: Vec<StorageHasher>,
+		key: u64,
+		value: u64,
 	},
 }
 
@@ -34,7 +26,7 @@ pub enum StorageHasher {
 }
 impl StorageHasher {
 	pub fn hash(&self, data: impl AsRef<[u8]>) -> Vec<u8> {
-		// --- substorager ---
+		// --- hack-ink ---
 		use StorageHasher::*;
 
 		match self {

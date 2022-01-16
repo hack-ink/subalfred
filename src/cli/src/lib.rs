@@ -1,3 +1,5 @@
+#![feature(concat_idents)]
+
 mod args;
 use args::*;
 
@@ -7,16 +9,17 @@ use subcommand::*;
 // --- std ---
 use std::env;
 // --- crates.io ---
-use structopt::StructOpt;
-// --- subalfred ---
-use crate::AnyResult;
+use anyhow::Result as AnyResult;
+use clap::Parser;
+// --- hack-ink ---
+use executor::Executor;
 
 trait Run {
 	fn run(&self) -> AnyResult<()>;
 }
 
-#[derive(Debug, StructOpt)]
-#[structopt(
+#[derive(Debug, Parser)]
+#[clap(
 	version = concat!(
 		env!("VERGEN_BUILD_SEMVER"),
 		"-",
@@ -28,20 +31,20 @@ trait Run {
 	about,
 	rename_all = "kebab",
 )]
-struct Opt {
-	#[structopt(subcommand)]
+struct Cli {
+	#[clap(subcommand)]
 	subcommand: Subcommand,
-	#[structopt(flatten)]
+	#[clap(flatten)]
 	args: Args,
 }
-impl Run for Opt {
+impl Run for Cli {
 	fn run(&self) -> AnyResult<()> {
 		self.subcommand.run()
 	}
 }
 
 pub fn run() -> AnyResult<()> {
-	let Opt { args, subcommand } = Opt::from_args();
+	let Cli { args, subcommand } = Cli::parse();
 
 	env::set_var(
 		"RUST_LOG",

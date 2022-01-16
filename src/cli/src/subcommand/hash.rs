@@ -1,11 +1,11 @@
 // --- crates.io ---
-use structopt::StructOpt;
-// --- subalfred ---
+use clap::clap;
+// --- hack-ink ---
 use crate::{cli::Run, AnyResult};
 
-#[derive(Debug, StructOpt)]
+#[derive(Debug, Parser)]
 pub struct HashCmd {
-	#[structopt(required = true, takes_value = true, value_name = "VALUE")]
+	#[clap(required = true, takes_value = true, value_name = "VALUE")]
 	data: String,
 }
 impl Run for HashCmd {

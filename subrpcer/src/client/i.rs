@@ -8,7 +8,7 @@ use isahc::{
 	AsyncBody as IsahcAsyncBody, Body as IsahcBody,
 };
 use serde_json::Value;
-// --- subrpcer ---
+// --- hack-ink ---
 use crate::client::Error;
 
 pub type SubrpcerResult<T> = Result<T, Error>;
@@ -25,9 +25,7 @@ pub fn send_rpc(uri: impl AsRef<str>, body: &Value) -> SubrpcerResult<IsahcRespo
 		"application/json;charset=utf-8".parse().unwrap(),
 	);
 
-	let request = request_builder
-		.body(serde_json::to_vec(body)?)
-		.unwrap();
+	let request = request_builder.body(serde_json::to_vec(body)?).unwrap();
 	let result = isahc::send(request)?;
 
 	tracing::trace!("{:#?}", result);
@@ -48,9 +46,7 @@ pub async fn send_rpc_async(
 		"application/json;charset=utf-8".parse().unwrap(),
 	);
 
-	let request = request_builder
-		.body(serde_json::to_vec(body)?)
-		.unwrap();
+	let request = request_builder.body(serde_json::to_vec(body)?).unwrap();
 	let result = isahc::send_async(request).await?;
 
 	tracing::trace!("{:#?}", result);

@@ -1,13 +1,12 @@
 [package]
-authors     = ["Xavier Lau <hi@xavier.zone>"]
-build       = "build.rs"
+authors     = ["Xavier Lau <xavier@inv.cafe>"]
 description = "Your Substrate Alfred"
-edition     = "2018"
-homepage    = "https://subalfred.l2ust.world"
+edition     = "2021"
+homepage    = "https://subalfred.hack.ink"
 license     = "GPL-3.0"
 name        = "subalfred"
 readme      = "README.md"
-repository  = "https://github.com/l2ust/subalfred"
+repository  = "https://github.com/hack-ink/subalfred"
 version     = "0.1.0"
 
 [[bin]]
@@ -18,34 +17,20 @@ path = "src/main.rs"
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-anyhow             = { version = "1.0" }
-app_dirs2          = { version = "2.3" }
-array-bytes        = { version = "1.4" }
-async-std          = { version = "1.10", features = ["attributes"] }
-base58             = { version = "0.2" }
-cargo_toml         = { version = "0.10" }
-futures            = { version = "0.3" }
-githuber           = { version = "0.3.0-alpha.1" }
-isahc              = { version = "1.5", features = ["json"] }
-parity-scale-codec = { version = "2.3" }
-pretty_env_logger  = { version = "0.4" }
-regex              = { version = "1.5" }
-serde              = { version = "1.0" }
-serde_json         = { version = "1.0" }
-serde_yaml         = { version = "0.8" }
-structopt          = { version = "0.3" }
-subcryptor         = { version = "0.2" }
-subhasher          = { version = "0.1" }
-submetadatan       = { version = "0.5", features = ["codec", "simple"] }
-subrpcer           = { version = "0.4", features = ["raw-params", "isahc-client"] }
-tracing            = { version = "0.1" }
-walkdir            = { version = "2.3" }
+# crates.io
+anyhow    = { version = "1.0" }
+async-std = { version = "1.10", features = ["attributes"] }
+# hack-ink
+cli      = { package = "subalfred-cli", version = "0.1.0", path = "src/cli" }
+executor = { package = "subalfred-executor", version = "0.1.0", path = "src/executor" }
 
-[build-dependencies]
-vergen = { version = "5.1" }
+# [profile.release]
+# lto = true
 
 [workspace]
 members = [
+	"src/cli",
+	"src/executor",
 	"subcryptor",
 	"subgrandpa",
 	"subhasher",
@@ -54,14 +39,3 @@ members = [
 	"subrpcer/impl",
 	"substorager",
 ]
-
-# Local Development
-# [patch.crates-io]
-# githuber       = { path = "../githuber" }
-# subcryptor    = { path = "subcryptor" }
-# subgrandpa    = { path = "subgrandpa" }
-# subhasher     = { path = "subhasher" }
-# submetadatan  = { path = "submetadatan" }
-# subrpcer      = { path = "subrpcer" }
-# subrpcer-impl = { path = "subrpcer/impl" }
-# substorager   = { path = "substorager" }
