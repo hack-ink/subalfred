@@ -1,9 +1,9 @@
-// --- std ---
+// std
 use std::{path::PathBuf, process};
-// --- crates.io ---
+// crates.io
 use cargo_toml::Manifest;
 use walkdir::WalkDir;
-// --- hack-ink ---
+// hack-ink
 use crate::*;
 
 impl Executor {

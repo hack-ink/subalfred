@@ -1,6 +1,6 @@
-// --- crates.io ---
+// crates.io
 use clap::clap;
-// --- hack-ink ---
+// hack-ink
 use crate::{cli::Run, AnyResult, Subalfred};
 
 #[derive(Debug, Parser)]

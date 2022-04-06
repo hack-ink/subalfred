@@ -12,7 +12,6 @@ version     = "0.4.0"
 [badges]
 maintenance = { status = "actively-developed" }
 
-
 [dependencies]
 # crates.io
 array-bytes        = { version = "1.4" }

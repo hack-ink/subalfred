@@ -1,9 +1,9 @@
 pub use frame_metadata::{RuntimeMetadataV14 as LatestRuntimeMetadata, *};
 pub use scale_info::*;
 
-// --- std ---
+// std
 use std::any::TypeId;
-// --- crates.io ---
+// crates.io
 use scale_info::{
 	form::PortableForm, interner::UntrackedSymbol, Field, Type, TypeDef, TypeParameter, Variant,
 };

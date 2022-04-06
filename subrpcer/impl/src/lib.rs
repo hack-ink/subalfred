@@ -1,6 +1,6 @@
-// --- proc-macro ---
+// proc-macro
 use proc_macro::TokenStream;
-// --- crates.io ---
+// crates.io
 use proc_macro2::TokenStream as TokenStream2;
 use syn::{
 	punctuated::Punctuated, spanned::Spanned, token::Comma, Expr, ExprPath, FnArg, Ident, ItemFn,

@@ -3,12 +3,12 @@
 #[cfg(not(feature = "std"))]
 extern crate alloc;
 
-// --- core ---
+// core
 use core::hash::Hasher as _;
-// --- alloc ---
+// alloc
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
-// --- crates.io ---
+// crates.io
 use blake2_rfc::blake2b::blake2b;
 use byteorder::{ByteOrder, LittleEndian};
 use sha2::{Digest, Sha256};

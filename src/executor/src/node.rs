@@ -1,14 +1,14 @@
-// --- std ---
+// std
 use std::{
 	fmt::Debug,
 	io::{BufRead, BufReader},
 	process::{Child, Command, Stdio},
 };
-// --- crates.io ---
+// crates.io
 use parity_scale_codec::Decode;
 use serde::Deserialize;
 use serde_json::Value;
-// --- hack-ink ---
+// hack-ink
 use crate::*;
 use submetadatan::{LatestRuntimeMetadata, RuntimeMetadataPrefixed};
 use subrpcer::client::u;

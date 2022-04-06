@@ -1,8 +1,8 @@
 // pub mod substrate;
 
-// --- std ---
+// std
 // use std::env;
-// --- crates.io ---
+// crates.io
 use anyhow::Result as AnyResult;
 // use async_std::sync::Arc;
 // use githuber::Githuber;

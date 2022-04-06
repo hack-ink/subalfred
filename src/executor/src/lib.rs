@@ -6,7 +6,7 @@ mod crypto;
 #[cfg(feature = "node")]
 mod node;
 
-// --- crates.io ---
+// crates.io
 use anyhow::Result as AnyResult;
 use async_std::sync::Arc;
 use config::Config;

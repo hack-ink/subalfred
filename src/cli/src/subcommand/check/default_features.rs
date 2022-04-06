@@ -1,8 +1,8 @@
-// --- std ---
+// std
 use std::path::PathBuf;
-// --- crates.io ---
+// crates.io
 use clap::Parser;
-// --- hack-ink ---
+// hack-ink
 use crate::*;
 
 #[derive(Debug, Parser)]

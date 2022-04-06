@@ -1,9 +1,9 @@
-// --- crates.io ---
+// crates.io
 use clap::clap;
 use isahc::ReadResponseExt;
 use serde_json::Value;
 use subrpcer::client::i::{self};
-// --- hack-ink ---
+// hack-ink
 use crate::{cli::Run, AnyResult};
 
 #[derive(Debug, Parser)]

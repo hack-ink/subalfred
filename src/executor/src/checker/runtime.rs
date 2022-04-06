@@ -1,6 +1,6 @@
-// --- std ---
+// std
 use std::mem;
-// --- hack-ink ---
+// hack-ink
 use crate::{node::ChainType, *};
 use submetadatan::{
 	form::PortableForm, PalletStorageMetadata, PortableRegistry, StorageEntryMetadata,

@@ -1,4 +1,4 @@
-// --- hack-ink ---
+// hack-ink
 use crate::*;
 use subcryptor::Network;
 

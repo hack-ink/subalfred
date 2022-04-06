@@ -1,6 +1,6 @@
-// --- crates.io ---
+// crates.io
 use clap::Parser;
-// --- hack-ink ---
+// hack-ink
 use crate::*;
 
 #[derive(Debug, Parser)]

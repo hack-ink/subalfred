@@ -6,12 +6,12 @@ use args::*;
 mod subcommand;
 use subcommand::*;
 
-// --- std ---
+// std
 use std::env;
-// --- crates.io ---
+// crates.io
 use anyhow::Result as AnyResult;
 use clap::Parser;
-// --- hack-ink ---
+// hack-ink
 use executor::Executor;
 
 trait Run {

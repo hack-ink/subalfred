@@ -1,4 +1,4 @@
-// --- crates.io ---
+// crates.io
 use clap::Parser;
 
 #[derive(Debug, Parser)]

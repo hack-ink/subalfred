@@ -1,4 +1,4 @@
-// --- crates.io ---
+// crates.io
 #[cfg(feature = "codec")]
 use parity_scale_codec::{Decode, Encode};
 #[cfg(feature = "serde")]

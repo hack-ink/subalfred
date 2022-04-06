@@ -1,7 +1,7 @@
-// --- crates.io ---
+// crates.io
 use async_std::task;
 use clap::{clap, clap::arg_enum};
-// --- hack-ink ---
+// hack-ink
 use crate::{cli::Run, AnyResult, Subalfred};
 
 arg_enum! {

@@ -1,6 +1,6 @@
 #[cfg(feature = "full-crypto")]
 pub mod full_crypto {
-	// --- crates.io ---
+	// crates.io
 	#[cfg(feature = "codec")]
 	use parity_scale_codec::{Decode, Encode};
 
@@ -27,7 +27,7 @@ pub use full_crypto::*;
 #[cfg(feature = "full-crypto")]
 pub use schnorrkel;
 
-// --- crates.io ---
+// crates.io
 use base58::{FromBase58, ToBase58};
 use blake2_rfc::blake2b::Blake2b;
 

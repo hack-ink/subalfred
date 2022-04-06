@@ -1,8 +1,8 @@
 pub use ureq::{self, Error as UreqError};
 
-// --- crates.io ---
+// crates.io
 use serde_json::Value;
-// --- hack-ink ---
+// hack-ink
 use crate::client::Error;
 
 pub type UreqResponse = ureq::Response;

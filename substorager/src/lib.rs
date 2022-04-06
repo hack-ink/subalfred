@@ -1,4 +1,4 @@
-// --- crates.io ---
+// crates.io
 #[cfg(feature = "codec")]
 use parity_scale_codec::{Decode, Encode};
 
@@ -26,7 +26,7 @@ pub enum StorageHasher {
 }
 impl StorageHasher {
 	pub fn hash(&self, data: impl AsRef<[u8]>) -> Vec<u8> {
-		// --- hack-ink ---
+		// hack-ink
 		use StorageHasher::*;
 
 		match self {

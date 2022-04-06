@@ -3,7 +3,7 @@ pub mod i;
 #[cfg(feature = "ureq-client")]
 pub mod u;
 
-// --- crates.io ---
+// crates.io
 use serde_json::Error as SerdeJsonError;
 use thiserror::Error as ThisError;
 

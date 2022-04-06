@@ -16,9 +16,9 @@ use check::CheckCmd;
 // mod tags;
 // use tags::TagsCmd;
 
-// --- crates.io ---
+// crates.io
 use clap::Parser;
-// --- hack-ink ---
+// hack-ink
 use crate::{AnyResult, Run};
 
 macro_rules! impl_subcommand {

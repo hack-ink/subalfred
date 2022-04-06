@@ -1,14 +1,14 @@
 mod template;
 
-// --- std ---
+// std
 use std::{
 	fs::File,
 	io::{Read, Write},
 };
-// --- crates.io ---
+// crates.io
 use app_dirs2::{AppDataType, AppInfo};
 use serde::{Deserialize, Serialize};
-// --- hack-ink ---
+// hack-ink
 use crate::AnyResult;
 use template::TEMPLATE;
 

@@ -4,9 +4,9 @@ use default_features::DefaultFeaturesCmd;
 mod node;
 use node::NodeCmd;
 
-// --- crates.io ---
+// crates.io
 use clap::Parser;
-// --- hack-ink ---
+// hack-ink
 use crate::{AnyResult, Run};
 
 #[derive(Debug, Parser)]

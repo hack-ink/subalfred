@@ -8,7 +8,7 @@ pub mod system;
 #[cfg(any(feature = "isahc-client", feature = "ureq-client"))]
 pub mod client;
 
-// --- crates.io ---
+// crates.io
 use serde::Serialize;
 use serde_json::{json, Value};
 

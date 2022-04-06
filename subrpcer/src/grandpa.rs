@@ -1,7 +1,7 @@
-// --- crates.io ---
+// crates.io
 use serde::Serialize;
 use serde_json::Value;
-// --- hack-ink ---
+// hack-ink
 use crate::{rpc, DEFAULT_ID};
 
 #[subrpcer_impl::rpc]

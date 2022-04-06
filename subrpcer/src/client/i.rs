@@ -1,6 +1,6 @@
 pub use isahc::{self, Error as IsahcError};
 
-// --- crates.io ---
+// crates.io
 use isahc::{
 	http::{
 		header::CONTENT_TYPE, request::Builder as RequestBuilder, Method as HttpMethod, Response,
@@ -8,7 +8,7 @@ use isahc::{
 	AsyncBody as IsahcAsyncBody, Body as IsahcBody,
 };
 use serde_json::Value;
-// --- hack-ink ---
+// hack-ink
 use crate::client::Error;
 
 pub type SubrpcerResult<T> = Result<T, Error>;
