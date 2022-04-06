@@ -14,7 +14,7 @@ maintenance = { status = "actively-developed" }
 
 [dependencies]
 # crates.io
-array-bytes        = { version = "1.4" }
+array-bytes        = { version = "1.5" }
 parity-scale-codec = { version = "2.3", optional = true, features = ["derive"] }
 # hack-ink
 subhasher = { version = "0.2", path = "../subhasher" }
