@@ -1641,7 +1641,7 @@ dependencies = [
 
 [[package]]
 name = "subcryptor"
-version = "0.3.0"
+version = "0.7.0"
 dependencies = [
  "base58",
  "blake2-rfc",
@@ -1651,7 +1651,7 @@ dependencies = [
 
 [[package]]
 name = "subgrandpa"
-version = "0.3.0"
+version = "0.7.0"
 dependencies = [
  "parity-scale-codec",
  "serde",
@@ -1659,7 +1659,7 @@ dependencies = [
 
 [[package]]
 name = "subhasher"
-version = "0.2.0"
+version = "0.7.0"
 dependencies = [
  "blake2-rfc",
  "byteorder",
@@ -1670,7 +1670,7 @@ dependencies = [
 
 [[package]]
 name = "submetadatan"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "frame-metadata",
  "scale-info",
@@ -1679,7 +1679,7 @@ dependencies = [
 
 [[package]]
 name = "subrpcer"
-version = "0.5.0"
+version = "0.7.0"
 dependencies = [
  "isahc",
  "serde",
@@ -1692,7 +1692,7 @@ dependencies = [
 
 [[package]]
 name = "subrpcer-impl"
-version = "0.2.0"
+version = "0.7.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1701,7 +1701,7 @@ dependencies = [
 
 [[package]]
 name = "substorager"
-version = "0.4.0"
+version = "0.7.0"
 dependencies = [
  "array-bytes",
  "parity-scale-codec",

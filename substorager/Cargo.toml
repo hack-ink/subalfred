@@ -7,7 +7,7 @@ license     = "GPL-3.0"
 name        = "substorager"
 readme      = "README.md"
 repository  = "https://github.com/hack-ink/subalfred"
-version     = "0.4.0"
+version     = "0.7.0"
 
 [badges]
 maintenance = { status = "actively-developed" }
@@ -17,7 +17,7 @@ maintenance = { status = "actively-developed" }
 array-bytes        = { version = "1.5" }
 parity-scale-codec = { version = "2.3", optional = true, features = ["derive"] }
 # hack-ink
-subhasher = { version = "0.2", path = "../subhasher" }
+subhasher = { version = "0.7", path = "../subhasher" }
 
 [features]
 codec = [

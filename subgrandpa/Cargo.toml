@@ -7,7 +7,7 @@ license     = "GPL-3.0"
 name        = "subgrandpa"
 readme      = "README.md"
 repository  = "https://github.com/hack-ink/subalfred"
-version     = "0.3.0"
+version     = "0.7.0"
 
 [badges]
 maintenance = { status = "actively-developed" }
