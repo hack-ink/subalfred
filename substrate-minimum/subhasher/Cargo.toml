@@ -1,0 +1,35 @@
+[package]
+authors     = ["Xavier Lau <xavier@inv.cafe>"]
+description = "subhasher"
+edition     = "2021"
+homepage    = "https://subalfred.hack.ink"
+license     = "GPL-3.0"
+name        = "subhasher"
+readme      = "README.md"
+repository  = "https://github.com/hack-ink/subalfred"
+version     = "0.9.0"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[dependencies]
+# crates.io
+blake2-rfc  = { version = "0.2", default-features = false }
+byteorder   = { version = "1.4", default-features = false }
+sha2        = { version = "0.10", default-features = false }
+tiny-keccak = { version = "2.0", features = ["keccak"] }
+twox-hash   = { version = "1.6", default-features = false }
+
+[features]
+default = [
+	# hack-ink
+	"std",
+]
+
+std = [
+	# crates.io
+	"blake2-rfc/std",
+	"byteorder/std",
+	"sha2/std",
+	"twox-hash/std",
+]

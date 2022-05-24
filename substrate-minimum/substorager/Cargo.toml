@@ -1,0 +1,26 @@
+[package]
+authors     = ["Xavier Lau <xavier@inv.cafe>"]
+description = "substorager"
+edition     = "2021"
+homepage    = "https://subalfred.hack.ink"
+license     = "GPL-3.0"
+name        = "substorager"
+readme      = "README.md"
+repository  = "https://github.com/hack-ink/subalfred"
+version     = "0.9.0"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[dependencies]
+# crates.io
+array-bytes        = { version = "1.5" }
+parity-scale-codec = { version = "3.1", optional = true, features = ["derive"] }
+# hack-ink
+subhasher = { version = "0.9", path = "../subhasher" }
+
+[features]
+codec = [
+	# crates.io
+	"parity-scale-codec",
+]

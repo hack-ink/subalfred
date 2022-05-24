@@ -1,5 +1,6 @@
 [package]
 authors     = ["Xavier Lau <xavier@inv.cafe>"]
+build       = "build.rs"
 description = "Your Substrate Alfred"
 edition     = "2021"
 homepage    = "https://subalfred.hack.ink"
@@ -7,35 +8,50 @@ license     = "GPL-3.0"
 name        = "subalfred"
 readme      = "README.md"
 repository  = "https://github.com/hack-ink/subalfred"
-version     = "0.1.0"
+version     = "0.9.0"
 
-[[bin]]
+
+[lib]
 name = "subalfred"
-path = "src/main.rs"
+path = "src/subalfred/lib.rs"
 
 [badges]
 maintenance = { status = "actively-developed" }
 
+[build-dependencies]
+# crates.io
+vergen = { version = "7.1" }
+
 [dependencies]
 # crates.io
-anyhow    = { version = "1.0" }
-async-std = { version = "1.10", features = ["attributes"] }
+anyhow             = { version = "1.0" }
+array-bytes        = { version = "1.5" }
+async-std          = { version = "1.11", features = ["attributes", "tokio1"] }
+cargo_metadata     = { version = "0.14" }
+cargo_toml         = { version = "0.11" }
+clap               = { version = "3.1", features = ["cargo", "derive"] }
+futures            = { version = "0.3" }
+once_cell          = { version = "1.12" }
+parity-scale-codec = { version = "2.3" }
+reqwest            = { version = "0.11", features = ["json"] }
+serde_json         = { version = "1.0" }
+thiserror          = { version = "1.0" }
+tracing-subscriber = { version = "0.3" }
 # hack-ink
-cli      = { package = "subalfred-cli", version = "0.1.0", path = "src/cli" }
-executor = { package = "subalfred-executor", version = "0.1.0", path = "src/executor" }
+subcryptor   = { version = "0.9", path = "substrate-minimum/subcryptor" }
+submetadatan = { version = "0.9", path = "substrate-minimum/submetadatan" }
+subrpcer     = { version = "0.9", path = "substrate-minimum/subrpcer" }
+substorager  = { version = "0.9", path = "substrate-minimum/substorager" }
+subversion   = { version = "0.9", path = "substrate-minimum/subversion", features = ["serde"] }
 
 # [profile.release]
 # lto = true
 
 [workspace]
 members = [
-	"src/cli",
-	"src/executor",
-	"subcryptor",
-	"subgrandpa",
-	"subhasher",
-	"submetadatan",
-	"subrpcer",
-	"subrpcer/impl",
-	"substorager",
+	"substrate-minimum/*",
+	"substrate-minimum/*/impl",
 ]
+
+[[bin]]
+name = "subalfred"
