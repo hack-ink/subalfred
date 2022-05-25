@@ -1,6 +1,7 @@
 // crates.io
 use async_std::task;
 use clap::{ArgEnum, Args};
+use futures::future;
 // hack-ink
 use crate::prelude::*;
 use subalfred::core::{check::runtime, node};
@@ -35,11 +36,21 @@ impl RuntimeCmd {
 		let mut node_process = node::spawn(executable, 23333, chain)?;
 		let local = "http://127.0.0.1:23333";
 
-		// TODO: futures join all
-		for property in properties {
-			match property {
-				Property::Storage => match task::block_on(runtime::check_storage(local, live)) {
-					Ok((pallets_diff, entries_diffs)) => {
+		// TODO: more elegant solution for dispatching futures
+		for result in
+			task::block_on(future::join_all(properties.iter().map(|property| async move {
+				match property {
+					Property::Storage => runtime::check_storage(local, live)
+						.await
+						.map(|s| PropertyContext::Storage(s)),
+					Property::Version => runtime::check_version(local, live)
+						.await
+						.map(|v| PropertyContext::Version(v)),
+				}
+			}))) {
+			match result {
+				Ok(context) => match context {
+					PropertyContext::Storage((pallets_diff, entries_diffs)) => {
 						if !pallets_diff.is_empty() {
 							pallets_diff
 								.into_iter()
@@ -56,18 +67,12 @@ impl RuntimeCmd {
 							println!();
 						});
 					},
-					e => {
-						node_process.kill()?;
-						e?;
-					},
+					PropertyContext::Version(Some(diffs)) => println!("{diffs}"),
+					_ => (),
 				},
-				Property::Version => match task::block_on(runtime::check_version(local, live)) {
-					Ok(Some(diffs)) => println!("{diffs}"),
-					Ok(None) => (),
-					e => {
-						node_process.kill()?;
-						e?;
-					},
+				e => {
+					node_process.kill()?;
+					e?;
 				},
 			}
 		}
@@ -85,4 +90,9 @@ pub enum Property {
 	Storage,
 	/// Check the runtime version.
 	Version,
+}
+
+enum PropertyContext<S, V> {
+	Storage(S),
+	Version(V),
 }

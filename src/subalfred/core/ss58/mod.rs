@@ -4,7 +4,6 @@
 use crate::core::{error, Result};
 use subcryptor::Network;
 
-// TODO: case insensitive
 // TODO: `AccountId20`
 /// Generate the public key and the specific network address for address.
 ///
@@ -12,9 +11,10 @@ use subcryptor::Network;
 /// `network` is case insensitive.
 pub fn of(address: &str, network: &str) -> Result<(String, String)> {
 	let public_key = recover_public_key(address)?;
+	let network_lc = network.to_ascii_lowercase();
 	let prefix = Network::PREFIXES
 		.iter()
-		.find(|(n, _)| *n == network)
+		.find(|(n, _)| n.to_ascii_lowercase() == network_lc)
 		.ok_or_else(|| error::Ss58::UnsupportedNetwork(network.into()))?
 		.1;
 	let hex_public_key = array_bytes::bytes2hex("0x", &public_key);

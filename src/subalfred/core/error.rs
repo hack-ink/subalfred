@@ -36,10 +36,12 @@ pub enum Generic {
 
 #[derive(Debug, ThisError)]
 pub enum Node {
-	#[error("[core::node] failed to start the node, {0:?}")]
-	StartFailed(#[source] std::io::Error),
 	#[error("[core::node] failed to get the RPC result")]
 	GetRpcResultFailed,
+	#[error("[core::node] failed to parse metadata, {0:?}")]
+	ParseMetadataFailed(#[source] submetadatan::Error),
+	#[error("[core::node] failed to start the node, {0:?}")]
+	StartFailed(#[source] std::io::Error),
 }
 
 #[derive(Debug, ThisError)]

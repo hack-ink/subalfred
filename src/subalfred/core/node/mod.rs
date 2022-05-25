@@ -69,9 +69,8 @@ pub async fn runtime_metadata(uri: &str) -> Result<LatestRuntimeMetadata> {
 	})?;
 	let metadata_prefixed = RuntimeMetadataPrefixed::decode(&mut &*codec_metadata)
 		.map_err(|e| error::Generic::CodecError(e))?;
-	// TODO: error handling
 	let metadata = submetadatan::metadata(metadata_prefixed)
-		.map_err(|_| error::Generic::AlmostImpossibleError("TODO"))?;
+		.map_err(|e| error::Node::ParseMetadataFailed(e))?;
 
 	Ok(metadata)
 }
