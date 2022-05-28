@@ -23,8 +23,8 @@ impl SovereignAddressCmd {
 			sovereign_address::of::<32>(*para_id)
 		};
 
-		println!("Relaychain sovereign address: {relaychain_sovereign_address}");
-		println!("Parachain sovereign address: {parachain_sovereign_address}");
+		println!("Relaychain sovereign address {relaychain_sovereign_address}");
+		println!("Parachain sovereign address  {parachain_sovereign_address}");
 
 		Ok(())
 	}

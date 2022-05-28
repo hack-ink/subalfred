@@ -18,6 +18,7 @@ pub struct RuntimeCmd {
 	/// Live chain's RPC HTTP endpoint.
 	#[clap(long, required = true, value_name = "URI")]
 	live: String,
+	// TODO: accept multiple values or not
 	/// The properties to check.
 	#[clap(
 		arg_enum,
@@ -60,7 +61,7 @@ impl RuntimeCmd {
 						}
 
 						entries_diffs.into_iter().for_each(|(prefix, entry_diffs)| {
-							println!("Pallet: {prefix}",);
+							println!("Pallet {prefix}",);
 
 							entry_diffs.into_iter().for_each(|entry_diff| println!("{entry_diff}"));
 

@@ -17,6 +17,7 @@ pub struct AddressCmd {
 	/// List all the networks' addresses.
 	#[clap(long, takes_value = false, conflicts_with = "network")]
 	list_all: bool,
+	// TODO: show prefix
 }
 impl AddressCmd {
 	pub fn run(&self) -> AnyResult<()> {
@@ -24,16 +25,19 @@ impl AddressCmd {
 
 		if *list_all {
 			let (public_key, addresses) = ss58::all(address)?;
+			let max_length = addresses.iter().map(|(n, _)| n.len()).max().unwrap_or(0);
 
-			println!("Public key: {public_key}");
+			println!("{:width$} {public_key}", "Public key", width = max_length);
 
-			// TODO: beautify output
-			addresses.into_iter().for_each(|(network, address)| println!("{network}: {address}"));
+			addresses.into_iter().for_each(|(network, address)| {
+				println!("{network:width$} {address}", width = max_length)
+			});
 		} else {
 			let (public_key, address) = ss58::of(address, network)?;
+			let max_length = "Public key".len().max(network.len());
 
-			println!("Public key: {public_key}");
-			println!("{network}: {address}");
+			println!("{:width$} {public_key}", "Public key", width = max_length);
+			println!("{network:width$} {address}", width = max_length);
 		}
 
 		Ok(())

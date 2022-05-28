@@ -1,3 +1,6 @@
+mod error;
+pub use error::Error;
+
 pub use frame_metadata::{RuntimeMetadataV14 as LatestRuntimeMetadata, *};
 pub use scale_info::*;
 
@@ -7,20 +10,13 @@ use std::any::TypeId;
 use scale_info::{
 	form::PortableForm, interner::UntrackedSymbol, Field, Type, TypeDef, TypeParameter, Variant,
 };
-use thiserror::Error as ThisError;
 
-pub type Result<T> = core::result::Result<T, Error>;
-
-#[derive(Debug, ThisError)]
-pub enum Error {
-	#[error("[submetadatan] unsupported version, {0}")]
-	SubmetadatanUnsupportedVersion(u32),
-}
+pub type Result<T> = std::result::Result<T, Error>;
 
 pub fn metadata(metadata: RuntimeMetadataPrefixed) -> Result<LatestRuntimeMetadata> {
 	match metadata.1 {
 		RuntimeMetadata::V14(metadata) => Ok(metadata),
-		metadata => Err(Error::SubmetadatanUnsupportedVersion(metadata.version())),
+		metadata => Err(Error::UnsupportedVersion(metadata.version())),
 	}
 }
 

@@ -27,8 +27,6 @@ pub enum Generic {
 	#[error(transparent)]
 	CodecError(#[from] parity_scale_codec::Error),
 	#[error(transparent)]
-	IoError(#[from] std::io::Error),
-	#[error(transparent)]
 	ReqwestError(#[from] reqwest::Error),
 	#[error(transparent)]
 	SerdeError(#[from] serde_json::Error),
@@ -46,8 +44,8 @@ pub enum Node {
 
 #[derive(Debug, ThisError)]
 pub enum Ss58 {
-	#[error("[core::ss58] invalid address, {0:?}")]
-	InvalidAddress(String),
-	#[error("[core::ss58] unsupported network, {0:?}")]
-	UnsupportedNetwork(String),
+	#[error("[core::ss58] invalid address, {address:?}")]
+	InvalidAddress { address: String, source: Option<subcryptor::Error> },
+	#[error("[core::ss58] failed to calculate SS58 address, {0:?}")]
+	CalculateSs58AddressFailed(#[source] subcryptor::Error),
 }

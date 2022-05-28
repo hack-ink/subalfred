@@ -1,114 +1,51 @@
-#[cfg(feature = "full-crypto")]
-pub mod full_crypto {
-	// crates.io
-	#[cfg(feature = "codec")] use parity_scale_codec::{Decode, Encode};
+#[cfg(test)] mod test;
 
-	pub type PublicKey = [u8; 32];
-	pub type Signature = [u8; 64];
+mod error;
+pub use error::Error;
 
-	pub const SIGNING_CTX: &[u8] = b"substrate";
-
-	#[cfg_attr(feature = "codec", derive(Encode, Decode))]
-	pub enum MultiSignature {
-		_Ed25519,
-		Sr25519(Signature),
-		_Ecdsa,
-	}
-	impl From<Signature> for MultiSignature {
-		fn from(signature: Signature) -> Self {
-			Self::Sr25519(signature)
-		}
-	}
-}
-
-#[cfg(feature = "full-crypto")] pub use full_crypto::*;
-#[cfg(feature = "full-crypto")] pub use schnorrkel;
+pub use ss58_registry;
 
 // crates.io
 use base58::{FromBase58, ToBase58};
 use blake2_rfc::blake2b::Blake2b;
+use ss58_registry::Ss58AddressFormat;
 
-macro_rules! ss58 {
-	($(($network:ident, $prefix:expr)),*) => {
-		pub enum Network {
-			$($network = $prefix),*
-		}
-		impl Network {
-			pub const PREFIXES: &'static [(&'static str, u8)] = &[$((stringify!($network), $prefix)),*];
-		}
-		impl From<Network> for u8 {
-			fn from(network: Network) -> Self {
-				match network {
-					$(Network::$network => $prefix),*
-				}
-			}
-		}
-	};
+pub type Result<T> = std::result::Result<T, Error>;
+
+pub trait Key {
+	const LEN: usize;
 }
 
-// TODO: update list
-ss58! {
-	(PolkadotAccount, 0),
-	(BareSr25519, 1),
-	(Kusama, 2),
-	(BareEd25519, 3),
-	(KatalChain, 4),
-	(Plasm, 5),
-	(Bifrost, 6),
-	(Edgeware, 7),
-	(Karura, 8),
-	(Reynolds, 9),
-	(Acala, 10),
-	(Laminar, 11),
-	(Polymath, 12),
-	(SubstraTee, 13),
-	(Totem, 14),
-	(Synesthesia, 15),
-	(Kulupu, 16),
-	(Dark, 17),
-	(Darwinia, 18),
-	(Geek, 19),
-	(Stafi, 20),
-	(DockTest, 21),
-	(DockMain, 22),
-	(ShiftNrg, 23),
-	(Zero, 24),
-	(Alphaville, 25),
-	(Jupiter, 26),
-	(Patract, 27),
-	(Subsocial, 28),
-	(Dhiway, 29),
-	(Phala, 30),
-	(Litentry, 31),
-	(Robonomics, 32),
-	(DataHighway, 33),
-	(Ares, 34),
-	(Valiu, 35),
-	(Centrifuge, 36),
-	(Nodle, 37),
-	(Kilt, 38),
-	(Polimec, 41),
-	(Substrate, 42),
-	(BareSecp256k1, 43),
-	(ChainX, 44),
-	(Uniarts, 45),
-	(Reserved46, 46),
-	(Reserved47, 47),
-	(Neatcoin, 48),
-	(HydraDX, 63),
-	(Aventus, 65),
-	(Crust, 66),
-	(Sora, 69),
-	(Social, 252)
+pub struct Ecdsa;
+impl Key for Ecdsa {
+	const LEN: usize = 33;
+}
+pub struct Ed25519;
+impl Key for Ed25519 {
+	const LEN: usize = 32;
+}
+pub struct Sr25519;
+impl Key for Sr25519 {
+	const LEN: usize = 32;
 }
 
-pub fn into_ss58_address(public_key: &[u8], prefix: u8) -> String {
-	let mut bytes = {
-		let mut data = vec![prefix];
-		data.extend(public_key);
+/// Ref: [to_ss58check_with_version](https://github.com/paritytech/substrate/blob/0ba251c9388452c879bfcca425ada66f1f9bc802/primitives/core/src/crypto.rs#L319).
+pub fn ss58_address_of(public_key: &[u8], network: &str) -> Result<String> {
+	let network = Ss58AddressFormat::try_from(network)
+		.map_err(|_| Error::UnsupportedNetwork(network.into()))?;
+	let ident = u16::from(network);
+	let mut bytes = match ident {
+		0..=63 => vec![ident as u8],
+		64..=16_383 => {
+			let first = ((ident & 0b0000_0000_1111_1100) as u8) >> 2;
+			let second = ((ident >> 8) as u8) | ((ident & 0b0000_0000_0000_0011) as u8) << 6;
 
-		data
+			vec![first | 0b01000000, second]
+		},
+		_ => Err(Error::UnsupportedNetwork(network.into()))?,
 	};
+
+	bytes.extend(public_key);
 
 	let blake2b = {
 		let mut context = Blake2b::new(64);
@@ -117,13 +54,24 @@ pub fn into_ss58_address(public_key: &[u8], prefix: u8) -> String {
 
 		context.finalize()
 	};
+
 	bytes.extend(&blake2b.as_bytes()[0..2]);
 
-	bytes.to_base58()
+	Ok(bytes.to_base58())
 }
 
-pub fn into_public_key(ss58_address: &str) -> Vec<u8> {
-	let bytes = ss58_address.from_base58().unwrap();
+/// Ref: [from_ss58check_with_version](https://github.com/paritytech/substrate/blob/0ba251c9388452c879bfcca425ada66f1f9bc802/primitives/core/src/crypto.rs#L264).
+pub fn public_key_of<K>(ss58_address: &str) -> Result<Vec<u8>>
+where
+	K: Key,
+{
+	let bytes = ss58_address.from_base58().map_err(|e| Error::InvalidSs58Address(e))?;
+	let prefix_len = match bytes[0] {
+		0..=63 => 1,
+		64..=127 => 2,
+		prefix => Err(Error::InvalidPrefix(prefix))?,
+	};
 
-	bytes[1..bytes.len() - 2].to_vec()
+	// TODO: error handling
+	Ok(bytes[prefix_len..K::LEN + prefix_len].to_vec())
 }

@@ -41,12 +41,11 @@ pub async fn runtime_version(uri: &str) -> Result<RuntimeVersion> {
 		.await?
 		.json::<Value>()
 		.await
-		.map_err(|e| error::Generic::ReqwestError(e))?
+		.map_err(error::Generic::from)?
 		.get_mut("result")
 		.ok_or(error::Node::GetRpcResultFailed)?
 		.take();
-	let runtime_version =
-		serde_json::from_value(result).map_err(|e| error::Generic::SerdeError(e))?;
+	let runtime_version = serde_json::from_value(result).map_err(error::Generic::from)?;
 
 	Ok(runtime_version)
 }
@@ -57,7 +56,7 @@ pub async fn runtime_metadata(uri: &str) -> Result<LatestRuntimeMetadata> {
 		.await?
 		.json::<Value>()
 		.await
-		.map_err(|e| error::Generic::ReqwestError(e))?
+		.map_err(error::Generic::from)?
 		.get_mut("result")
 		.ok_or(error::Node::GetRpcResultFailed)?
 		.take();
@@ -67,8 +66,8 @@ pub async fn runtime_metadata(uri: &str) -> Result<LatestRuntimeMetadata> {
 	let codec_metadata = array_bytes::hex2bytes(hex_codec_metadata).map_err(|_| {
 		error::Generic::AlmostImpossibleError("[core::node] `codec_metadata` is non-hex")
 	})?;
-	let metadata_prefixed = RuntimeMetadataPrefixed::decode(&mut &*codec_metadata)
-		.map_err(|e| error::Generic::CodecError(e))?;
+	let metadata_prefixed =
+		RuntimeMetadataPrefixed::decode(&mut &*codec_metadata).map_err(error::Generic::from)?;
 	let metadata = submetadatan::metadata(metadata_prefixed)
 		.map_err(|e| error::Node::ParseMetadataFailed(e))?;
 
