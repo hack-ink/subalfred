@@ -45,7 +45,14 @@ pub enum Node {
 #[derive(Debug, ThisError)]
 pub enum Ss58 {
 	#[error("[core::ss58] invalid address, {address:?}")]
-	InvalidAddress { address: String, source: Option<subcryptor::Error> },
+	InvalidAddress { address: String, source: Option<Ss58InvalidAddressSource> },
 	#[error("[core::ss58] failed to calculate SS58 address, {0:?}")]
 	CalculateSs58AddressFailed(#[source] subcryptor::Error),
+}
+#[derive(Debug, ThisError)]
+pub enum Ss58InvalidAddressSource {
+	#[error("{0:?}")]
+	ArrayBytes(array_bytes::Error),
+	#[error(transparent)]
+	Subcryptor(subcryptor::Error),
 }

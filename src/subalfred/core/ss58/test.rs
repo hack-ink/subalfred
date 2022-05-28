@@ -22,7 +22,7 @@ fn of_should_work() {
 fn of_should_fail() {
 	let (_, hex_public_key, _, address) = test_data();
 	let network = "UnsupportedNetwork";
-	let expect_result = Err(format!("[core::ss58] unsupported network, {:?}", network));
+	let expect_result = Err(format!("[core::ss58] failed to calculate SS58 address, UnsupportedNetwork({:?})", network));
 
 	assert_eq!(of(&address, network).map_err(|e| e.to_string()), expect_result);
 	assert_eq!(of(&hex_public_key, network).map_err(|e| e.to_string()), expect_result);
