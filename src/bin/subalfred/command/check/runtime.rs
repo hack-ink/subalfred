@@ -1,7 +1,8 @@
+// std
+use std::{error::Error, process::Child};
 // crates.io
 use async_std::task;
 use clap::{ArgEnum, Args};
-use futures::future;
 // hack-ink
 use crate::prelude::*;
 use subalfred::core::{check::runtime, node};
@@ -18,64 +19,58 @@ pub struct RuntimeCmd {
 	/// Live chain's RPC HTTP endpoint.
 	#[clap(long, required = true, value_name = "URI")]
 	live: String,
-	// TODO: accept multiple values or not
-	/// The properties to check.
-	#[clap(
-		arg_enum,
-		long,
-		required = true,
-		multiple_values = true,
-		use_value_delimiter = true,
-		value_name = "[PROPERTY]"
-	)]
-	properties: Vec<Property>,
+	/// The property to check.
+	#[clap(arg_enum, long, required = true, value_name = "PROPERTY")]
+	property: Property,
 }
 impl RuntimeCmd {
 	pub fn run(&self) -> AnyResult<()> {
-		let Self { executable, chain, live, properties } = self;
+		fn map_err_and_kill_node_process<T, E>(
+			result: Result<T, E>,
+			node_process: &mut Child,
+		) -> AnyResult<T>
+		where
+			E: 'static + Error + Send + Sync,
+		{
+			if result.is_err() {
+				node_process.kill()?;
+			}
+
+			Ok(result?)
+		}
+
+		let Self { executable, chain, live, property } = self;
 		// TODO: if the port is already in used
 		let mut node_process = node::spawn(executable, 23333, chain)?;
 		let local = "http://127.0.0.1:23333";
 
-		// TODO: more elegant solution for dispatching futures
-		for result in
-			task::block_on(future::join_all(properties.iter().map(|property| async move {
-				match property {
-					Property::Storage => runtime::check_storage(local, live)
-						.await
-						.map(|s| PropertyContext::Storage(s)),
-					Property::Version => runtime::check_version(local, live)
-						.await
-						.map(|v| PropertyContext::Version(v)),
+		match property {
+			Property::Storage => {
+				let result = task::block_on(runtime::check_storage(local, live));
+				let (pallets_diff, entries_diffs) =
+					map_err_and_kill_node_process(result, &mut node_process)?;
+
+				if !pallets_diff.is_empty() {
+					pallets_diff.into_iter().for_each(|pallet_diff| println!("{pallet_diff}"));
+
+					println!();
 				}
-			}))) {
-			match result {
-				Ok(context) => match context {
-					PropertyContext::Storage((pallets_diff, entries_diffs)) => {
-						if !pallets_diff.is_empty() {
-							pallets_diff
-								.into_iter()
-								.for_each(|pallet_diff| println!("{pallet_diff}"));
 
-							println!();
-						}
+				entries_diffs.into_iter().for_each(|(prefix, entry_diffs)| {
+					println!("Pallet {prefix}",);
 
-						entries_diffs.into_iter().for_each(|(prefix, entry_diffs)| {
-							println!("Pallet {prefix}",);
+					entry_diffs.into_iter().for_each(|entry_diff| println!("{entry_diff}"));
 
-							entry_diffs.into_iter().for_each(|entry_diff| println!("{entry_diff}"));
+					println!();
+				});
+			},
+			Property::Version => {
+				let result = task::block_on(runtime::check_version(local, live));
 
-							println!();
-						});
-					},
-					PropertyContext::Version(Some(diffs)) => println!("{diffs}"),
-					_ => (),
-				},
-				e => {
-					node_process.kill()?;
-					e?;
-				},
-			}
+				if let Some(diffs) = map_err_and_kill_node_process(result, &mut node_process)? {
+					println!("{diffs}")
+				}
+			},
 		}
 
 		node_process.kill()?;
@@ -91,9 +86,4 @@ pub enum Property {
 	Storage,
 	/// Check the runtime version.
 	Version,
-}
-
-enum PropertyContext<S, V> {
-	Storage(S),
-	Version(V),
 }
