@@ -12,6 +12,10 @@ use submetadatan::{LatestRuntimeMetadata, RuntimeMetadataPrefixed};
 use subrpcer::state;
 use subversion::RuntimeVersion;
 
+const E_CODEC_METADATA_IS_NON_HEX: &str = "[core::node] `codec_metadata` is non-hex";
+const E_HEX_METADATA_IS_NON_STR: &str = "[core::node] `hex_codec_metadata` is non-str";
+const E_STDERR_IS_EMPTY: &str = "[core::node `stderr` is empty]";
+
 /// Spawn a Substrate standard node.
 pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 	let mut node = Command::new(executable)
@@ -19,13 +23,13 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 		.stderr(Stdio::piped())
 		.args(&[&format!("--rpc-port={rpc_port}"), "--chain", &format!("{}-dev", chain), "--tmp"])
 		.spawn()
-		.map_err(|e| error::Node::StartFailed(e))?;
-	let output =
-		BufReader::new(node.stderr.take().ok_or_else(|| {
-			error::Generic::AlmostImpossibleError("[core::node `stderr` is empty]")
-		})?);
+		.map_err(error::Node::StartFailed)?;
+	let output = BufReader::new(
+		node.stderr.take().ok_or(error::Generic::AlmostImpossible(E_STDERR_IS_EMPTY))?,
+	);
 
 	// Ensure the node is fully startup.
+	// TODO: emit the error or not
 	for line in output.lines().filter_map(::std::io::Result::ok) {
 		if line.contains("Idle") {
 			break;
@@ -60,16 +64,14 @@ pub async fn runtime_metadata(uri: &str) -> Result<LatestRuntimeMetadata> {
 		.get_mut("result")
 		.ok_or(error::Node::GetRpcResultFailed)?
 		.take();
-	let hex_codec_metadata = result.as_str().ok_or(error::Generic::AlmostImpossibleError(
-		"[core::node] `hex_codec_metadata` is non-str",
-	))?;
-	let codec_metadata = array_bytes::hex2bytes(hex_codec_metadata).map_err(|_| {
-		error::Generic::AlmostImpossibleError("[core::node] `codec_metadata` is non-hex")
-	})?;
+	let hex_codec_metadata =
+		result.as_str().ok_or(error::Generic::AlmostImpossible(E_HEX_METADATA_IS_NON_STR))?;
+	let codec_metadata = array_bytes::hex2bytes(hex_codec_metadata)
+		.map_err(|_| error::Generic::AlmostImpossible(E_CODEC_METADATA_IS_NON_HEX))?;
 	let metadata_prefixed =
 		RuntimeMetadataPrefixed::decode(&mut &*codec_metadata).map_err(error::Generic::from)?;
-	let metadata = submetadatan::metadata(metadata_prefixed)
-		.map_err(|e| error::Node::ParseMetadataFailed(e))?;
+	let metadata =
+		submetadatan::metadata(metadata_prefixed).map_err(error::Node::ParseMetadataFailed)?;
 
 	Ok(metadata)
 }

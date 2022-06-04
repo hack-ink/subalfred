@@ -1,32 +1,41 @@
 mod address;
 use address::AddressCmd;
 
-mod storage_key;
-use storage_key::StorageKeyCmd;
-
 mod check;
 use check::CheckCmd;
+
+// TODO: move to a single crate
+mod workspace;
+use workspace::WorkspaceCmd;
+
+mod storage_key;
+use storage_key::StorageKeyCmd;
 
 mod xcm;
 use xcm::XcmCmd;
 
-// crates.io
-use clap::Subcommand;
-// hack-ink
-use crate::prelude::*;
-
+// TODO: rewrite into attribute macro.
 #[macro_export]
 macro_rules! impl_cmd {
-	(name: $cmd:ident,$($(#[$meta:meta])?$subcmd:ident),*,) => {
-		#[derive(Debug, Subcommand)]
+	(
+		$(#[$doc:meta])*
+		$cmd:ident {
+			$(
+				$(#[$clap_attr:meta])*
+				$subcmd:ident
+			),*,
+		}
+	) => {
+		$(#[$doc])*
+		#[derive(Debug, clap::Subcommand)]
 		pub enum $cmd {
 			$(
-				$(#[$meta])?
+				$(#[$clap_attr])*
 				$subcmd(concat_idents!($subcmd, Cmd))
 			),*
 		}
 		impl $cmd {
-			pub fn run(&self) -> AnyResult<()> {
+			pub fn run(&self) -> $crate::prelude::AnyResult<()> {
 				match self {
 					$(
 						Self::$subcmd(subcmd) => { subcmd.run() }
@@ -38,11 +47,14 @@ macro_rules! impl_cmd {
 }
 
 impl_cmd! {
-	name: Cmd,
-	Address,
-	StorageKey,
-	#[clap(subcommand)]
-	Xcm,
-	#[clap(subcommand)]
-	Check,
+	Cmd {
+		Address,
+		#[clap(subcommand)]
+		Check,
+		StorageKey,
+		#[clap(subcommand)]
+		Workspace,
+		#[clap(subcommand)]
+		Xcm,
+	}
 }

@@ -16,8 +16,7 @@ pub fn rpc(_: TokenStream, input: TokenStream) -> TokenStream {
 	let call_vis = call.vis;
 	let call_sig = call.sig;
 	let call_name = call_sig.ident.clone();
-	let call_with_id_name =
-		format!("{}_with_id", call_name.to_string()).parse::<TokenStream2>().unwrap();
+	let call_with_id_name = format!("{}_with_id", call_name).parse::<TokenStream2>().unwrap();
 	let inputs = call_sig.inputs.clone();
 	let input_names = inputs
 		.iter()
@@ -81,11 +80,9 @@ pub fn rpc(_: TokenStream, input: TokenStream) -> TokenStream {
 
 	if !inputs.is_empty() {
 		let call_with_raw_params_name =
-			format!("{}_with_raw_params", call_name.to_string()).parse::<TokenStream2>().unwrap();
+			format!("{}_with_raw_params", call_name).parse::<TokenStream2>().unwrap();
 		let call_with_raw_params_and_id_name =
-			format!("{}_and_id", call_with_raw_params_name.to_string())
-				.parse::<TokenStream2>()
-				.unwrap();
+			format!("{}_and_id", call_with_raw_params_name).parse::<TokenStream2>().unwrap();
 
 		token_stream.extend(quote::quote! {
 			#[cfg(feature = "raw-params")]

@@ -18,10 +18,13 @@ pub struct AddressCmd {
 	#[clap(long, takes_value = false, conflicts_with = "network")]
 	list_all: bool,
 	// TODO: show prefix
+	/// Show the network(s)' prefix(es).
+	#[clap(long, takes_value = false)]
+	show_prefix: bool,
 }
 impl AddressCmd {
 	pub fn run(&self) -> AnyResult<()> {
-		let Self { address, network, list_all } = self;
+		let Self { address, network, list_all, show_prefix: _ } = self;
 
 		if *list_all {
 			let (public_key, addresses) = ss58::all(address)?;

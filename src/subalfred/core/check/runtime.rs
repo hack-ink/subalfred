@@ -1,7 +1,10 @@
 // std
-use std::{fmt::Debug, ops::Deref};
+use std::{
+	fmt::{Debug, Write},
+	ops::Deref,
+};
 // hack-ink
-use crate::core::{node, Result};
+use crate::core::{error, node, Result};
 use submetadatan::{
 	form::PortableForm, LatestRuntimeMetadata, PalletStorageMetadata, PortableRegistry,
 	StorageEntryMetadata,
@@ -23,15 +26,15 @@ pub async fn check_version(a_uri: &str, b_uri: &str) -> Result<Option<String>> {
 
 	let mut result = String::new();
 
-	format!("{a:#?}").lines().zip(format!("{b:#?}").lines()).for_each(|(a, b)| {
+	for (a, b) in format!("{a:#?}").lines().zip(format!("{b:#?}").lines()) {
 		if a == b {
-			result.push_str(&format!("{a}\n",));
+			writeln!(result, "{a}").map_err(error::Generic::from)?;
 		} else {
 			// Skip the first space to suit the format.
-			result.push_str(&format!("-{}\n", &b[1..]));
-			result.push_str(&format!("+{}\n", &a[1..]));
+			writeln!(result, "-{}", &b[1..]).map_err(error::Generic::from)?;
+			writeln!(result, "+{}", &a[1..]).map_err(error::Generic::from)?;
 		}
-	});
+	}
 
 	Ok(Some(result))
 }
@@ -84,10 +87,7 @@ pub async fn check_storage(
 		}
 
 		fn opposite(&self, other: &Self) -> bool {
-			match (self, other) {
-				(Either::A(_), Either::A(_)) | (Either::B(_), Either::B(_)) => false,
-				_ => true,
-			}
+			!matches!((self, other), (Either::A(_), Either::A(_)) | (Either::B(_), Either::B(_)))
 		}
 
 		fn output(&self) -> String

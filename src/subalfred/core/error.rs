@@ -14,31 +14,39 @@ pub enum Error {
 
 #[derive(Debug, ThisError)]
 pub enum Cargo {
-	#[error("[core::cargo] failed to exec `cargo metadata`, {0:?}")]
+	#[error("[core::cargo] failed to exec `cargo metadata`")]
 	ExecMetadataFailed(#[source] cargo_metadata::Error),
-	#[error("[core::cargo] failed to open the manifest file, {0:?}")]
+	#[error("[core::cargo] failed to open the manifest file")]
 	OpenManifestFailed(#[source] cargo_toml::Error),
 }
 
 #[derive(Debug, ThisError)]
 pub enum Generic {
+	// TODO: use `.expect` or not
 	#[error("{0:?}")]
-	AlmostImpossibleError(&'static str),
+	AlmostImpossible(&'static str),
 	#[error(transparent)]
-	CodecError(#[from] parity_scale_codec::Error),
+	Codec(#[from] parity_scale_codec::Error),
 	#[error(transparent)]
-	ReqwestError(#[from] reqwest::Error),
+	Fmt(#[from] std::fmt::Error),
 	#[error(transparent)]
-	SerdeError(#[from] serde_json::Error),
+	Io(#[from] std::io::Error),
+	// TODO: show path or not
+	// #[error("failed to open the file, {file:?}")]
+	// OpenFile { file: String, source: std::io::Error },
+	#[error(transparent)]
+	Reqwest(#[from] reqwest::Error),
+	#[error(transparent)]
+	Serde(#[from] serde_json::Error),
 }
 
 #[derive(Debug, ThisError)]
 pub enum Node {
 	#[error("[core::node] failed to get the RPC result")]
 	GetRpcResultFailed,
-	#[error("[core::node] failed to parse metadata, {0:?}")]
+	#[error("[core::node] failed to parse metadata")]
 	ParseMetadataFailed(#[source] submetadatan::Error),
-	#[error("[core::node] failed to start the node, {0:?}")]
+	#[error("[core::node] failed to start the node")]
 	StartFailed(#[source] std::io::Error),
 }
 
@@ -46,7 +54,7 @@ pub enum Node {
 pub enum Ss58 {
 	#[error("[core::ss58] invalid address, {address:?}")]
 	InvalidAddress { address: String, source: Option<Ss58InvalidAddressSource> },
-	#[error("[core::ss58] failed to calculate SS58 address, {0:?}")]
+	#[error("[core::ss58] failed to calculate SS58 address")]
 	CalculateSs58AddressFailed(#[source] subcryptor::Error),
 }
 #[derive(Debug, ThisError)]

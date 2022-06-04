@@ -4,7 +4,6 @@
 use crate::core::{error, Result};
 use subcryptor::{ss58_registry::ALL_SS58_ADDRESS_FORMAT_NAMES, Sr25519};
 
-// TODO: `AccountId20`
 /// Generate the public key and the specific network address for address.
 ///
 /// `address` could be public key or SS58 address.
@@ -13,7 +12,7 @@ pub fn of(address: &str, network: &str) -> Result<(String, String)> {
 	let public_key = recover_public_key(address)?;
 	let hex_public_key = array_bytes::bytes2hex("0x", &public_key);
 	let address = subcryptor::ss58_address_of(&public_key, network)
-		.map_err(|e| error::Ss58::CalculateSs58AddressFailed(e))?;
+		.map_err(error::Ss58::CalculateSs58AddressFailed)?;
 
 	Ok((hex_public_key, address))
 }
@@ -30,7 +29,7 @@ pub fn all(address: &str) -> Result<(String, Vec<(&'static str, String)>)> {
 		addresses.push((
 			network,
 			subcryptor::ss58_address_of(&public_key, network)
-				.map_err(|e| error::Ss58::CalculateSs58AddressFailed(e))?,
+				.map_err(error::Ss58::CalculateSs58AddressFailed)?,
 		));
 	}
 

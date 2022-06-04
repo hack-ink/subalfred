@@ -59,18 +59,18 @@ pub fn twox_64(data: &[u8]) -> [u8; 8] {
 
 pub fn twox_128(data: &[u8]) -> [u8; 16] {
 	let mut dest = [0; 16];
-	twox(&mut dest, &data, 0);
-	twox(&mut dest, &data, 1);
+	twox(&mut dest, data, 0);
+	twox(&mut dest, data, 1);
 
 	dest
 }
 
 pub fn twox_256(data: &[u8]) -> [u8; 32] {
 	let mut dest = [0; 32];
-	twox(&mut dest, &data, 0);
-	twox(&mut dest, &data, 1);
-	twox(&mut dest, &data, 2);
-	twox(&mut dest, &data, 3);
+	twox(&mut dest, data, 0);
+	twox(&mut dest, data, 1);
+	twox(&mut dest, data, 2);
+	twox(&mut dest, data, 3);
 
 	dest
 }

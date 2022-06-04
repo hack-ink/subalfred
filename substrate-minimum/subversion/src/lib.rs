@@ -1,7 +1,7 @@
 // crates.io
 #[cfg(feature = "serde")] use serde::Deserialize;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Deserialize), serde(rename_all = "camelCase"))]
 pub struct RuntimeVersion {
 	pub spec_name: String,

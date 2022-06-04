@@ -79,11 +79,7 @@ pub fn cmp_type(
 			false
 		}
 	} else {
-		if b.is_none() {
-			true
-		} else {
-			false
-		}
+		b.is_none()
 	}
 }
 
@@ -111,10 +107,8 @@ pub fn cmp_type_params(
 			} else {
 				return false;
 			}
-		} else {
-			if !b.ty().is_none() {
-				return false;
-			}
+		} else if b.ty().is_some() {
+			return false;
 		}
 	}
 

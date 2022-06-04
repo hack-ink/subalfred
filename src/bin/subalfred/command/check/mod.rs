@@ -1,16 +1,13 @@
-mod default_features;
-use default_features::DefaultFeaturesCmd;
+mod std_feature;
+use std_feature::StdFeatureCmd;
 
 mod runtime;
 use runtime::RuntimeCmd;
 
-// crates.io
-use clap::Subcommand;
-// hack-ink
-use crate::{impl_cmd, prelude::*};
-
-impl_cmd! {
-	name: CheckCmd,
-	DefaultFeatures,
-	Runtime,
+crate::impl_cmd! {
+	#[doc="Some checking tools are pretty useful for runtime development."]
+	CheckCmd {
+		Runtime,
+		StdFeature,
+	}
 }

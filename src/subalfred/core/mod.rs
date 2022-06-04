@@ -2,11 +2,10 @@ pub mod error;
 pub use error::Error;
 
 pub mod cargo;
-pub mod deps;
+pub mod check;
+pub mod future;
 pub mod http;
 pub mod node;
-
-pub mod check;
 pub mod ss58;
 pub mod xcm;
 
