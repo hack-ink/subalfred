@@ -7,7 +7,7 @@ use std::{borrow::Cow, path::Path};
 // crates.io
 use cargo_metadata::{Metadata, MetadataCommand, Package};
 use cargo_toml::Manifest;
-use futures::stream::{self, StreamExt, TryStreamExt};
+use futures::stream::{self, StreamExt};
 use regex::Captures;
 // hack-ink
 use crate::core::{error, system, Result};
@@ -47,8 +47,7 @@ where
 pub async fn update_members_versions(manifest_path: &str, to: &str) -> Result<()> {
 	let metadata = metadata(manifest_path)?;
 	let members = members(&metadata)?;
-
-	stream::iter(&members)
+	let mut tasks = stream::iter(&members)
 		.map(|pkg| async {
 			let members_deps = pkg
 				.dependencies
@@ -71,9 +70,11 @@ pub async fn update_members_versions(manifest_path: &str, to: &str) -> Result<()
 			system::swap_file_data(&pkg.manifest_path, content.as_bytes())
 		})
 		// Process 64 files concurrently.
-		.buffer_unordered(64)
-		.try_collect()
-		.await?;
+		.buffer_unordered(64);
+
+	while let Some(r) = tasks.next().await {
+		r?;
+	}
 
 	Ok(())
 }
