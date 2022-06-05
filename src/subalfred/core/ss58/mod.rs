@@ -4,33 +4,39 @@
 use crate::core::{error, Result};
 use subcryptor::{ss58_registry::ALL_SS58_ADDRESS_FORMAT_NAMES, Sr25519};
 
+#[derive(Debug)]
+pub struct Address<'a> {
+	pub network: &'a str,
+	pub prefix: u16,
+	pub value: String,
+}
+
 /// Generate the public key and the specific network address for address.
 ///
 /// `address` could be public key or SS58 address.
 /// `network` is case insensitive.
-pub fn of(address: &str, network: &str) -> Result<(String, String)> {
+pub fn of<'a>(address: &str, network: &'a str) -> Result<(String, Address<'a>)> {
 	let public_key = recover_public_key(address)?;
 	let hex_public_key = array_bytes::bytes2hex("0x", &public_key);
-	let address = subcryptor::ss58_address_of(&public_key, network)
+	let (prefix, address) = subcryptor::ss58_address_of(&public_key, network)
 		.map_err(error::Ss58::CalculateSs58AddressFailed)?;
 
-	Ok((hex_public_key, address))
+	Ok((hex_public_key, Address { network, prefix, value: address }))
 }
 
 /// Generate the public key and all the network addresses for the address.
 ///
 /// `address` could be public key or SS58 address.
-pub fn all(address: &str) -> Result<(String, Vec<(&'static str, String)>)> {
+pub fn all(address: &str) -> Result<(String, Vec<Address>)> {
 	let public_key = recover_public_key(address)?;
 	let hex_public_key = array_bytes::bytes2hex("0x", &public_key);
 	let mut addresses = Vec::new();
 
 	for network in ALL_SS58_ADDRESS_FORMAT_NAMES {
-		addresses.push((
-			network,
-			subcryptor::ss58_address_of(&public_key, network)
-				.map_err(error::Ss58::CalculateSs58AddressFailed)?,
-		));
+		let (prefix, address) = subcryptor::ss58_address_of(&public_key, network)
+			.map_err(error::Ss58::CalculateSs58AddressFailed)?;
+
+		addresses.push(Address { network, prefix, value: address });
 	}
 
 	Ok((hex_public_key, addresses))

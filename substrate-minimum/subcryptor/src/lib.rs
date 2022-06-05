@@ -30,15 +30,15 @@ impl Key for Sr25519 {
 }
 
 /// Ref: [to_ss58check_with_version](https://github.com/paritytech/substrate/blob/0ba251c9388452c879bfcca425ada66f1f9bc802/primitives/core/src/crypto.rs#L319).
-pub fn ss58_address_of(public_key: &[u8], network: &str) -> Result<String> {
+pub fn ss58_address_of(public_key: &[u8], network: &str) -> Result<(u16, String)> {
 	let network = Ss58AddressFormat::try_from(network)
 		.map_err(|_| Error::UnsupportedNetwork(network.into()))?;
-	let ident = u16::from(network);
-	let mut bytes = match ident {
-		0..=63 => vec![ident as u8],
+	let prefix = u16::from(network);
+	let mut bytes = match prefix {
+		0..=63 => vec![prefix as u8],
 		64..=16_383 => {
-			let first = ((ident & 0b0000_0000_1111_1100) as u8) >> 2;
-			let second = ((ident >> 8) as u8) | ((ident & 0b0000_0000_0000_0011) as u8) << 6;
+			let first = ((prefix & 0b0000_0000_1111_1100) as u8) >> 2;
+			let second = ((prefix >> 8) as u8) | ((prefix & 0b0000_0000_0000_0011) as u8) << 6;
 
 			vec![first | 0b01000000, second]
 		},
@@ -57,7 +57,7 @@ pub fn ss58_address_of(public_key: &[u8], network: &str) -> Result<String> {
 
 	bytes.extend(&blake2b.as_bytes()[0..2]);
 
-	Ok(bytes.to_base58())
+	Ok((prefix, bytes.to_base58()))
 }
 
 /// Ref: [from_ss58check_with_version](https://github.com/paritytech/substrate/blob/0ba251c9388452c879bfcca425ada66f1f9bc802/primitives/core/src/crypto.rs#L264).

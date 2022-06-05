@@ -2,7 +2,7 @@
 use clap::Args;
 // hack-ink
 use crate::prelude::*;
-use subalfred::core::ss58;
+use subalfred::core::ss58::{self, Address};
 
 /// Convert the PUBLIC KEY/SS58 ADDRESS from SS58 ADDRESS/PUBLIC KEY.
 #[derive(Debug, Args)]
@@ -17,30 +17,40 @@ pub struct AddressCmd {
 	/// List all the networks' addresses.
 	#[clap(long, takes_value = false, conflicts_with = "network")]
 	list_all: bool,
-	// TODO: show prefix
 	/// Show the network(s)' prefix(es).
 	#[clap(long, takes_value = false)]
 	show_prefix: bool,
 }
 impl AddressCmd {
 	pub fn run(&self) -> AnyResult<()> {
-		let Self { address, network, list_all, show_prefix: _ } = self;
+		let Self { address, network, list_all, show_prefix } = self;
 
 		if *list_all {
 			let (public_key, addresses) = ss58::all(address)?;
-			let max_length = addresses.iter().map(|(n, _)| n.len()).max().unwrap_or(0);
+			let max_length =
+				addresses.iter().map(|address| address.network.len()).max().unwrap_or(0);
 
-			println!("{:width$} {public_key}", "Public key", width = max_length);
+			println!("Public-key {public_key}");
 
-			addresses.into_iter().for_each(|(network, address)| {
-				println!("{network:width$} {address}", width = max_length)
-			});
+			if *show_prefix {
+				addresses.into_iter().for_each(|Address { network, prefix, value }| {
+					println!("{network:width$} {prefix:5} {value}", width = max_length)
+				});
+			} else {
+				addresses.into_iter().for_each(|Address { network, value, .. }| {
+					println!("{network:width$} {value}", width = max_length)
+				});
+			}
 		} else {
-			let (public_key, address) = ss58::of(address, network)?;
-			let max_length = "Public key".len().max(network.len());
+			let (public_key, Address { network, prefix, value }) = ss58::of(address, network)?;
 
-			println!("{:width$} {public_key}", "Public key", width = max_length);
-			println!("{network:width$} {address}", width = max_length);
+			println!("Public-key {public_key}");
+
+			if *show_prefix {
+				println!("{network} {prefix} {value}");
+			} else {
+				println!("{network} {value}");
+			}
 		}
 
 		Ok(())
