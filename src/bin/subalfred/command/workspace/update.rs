@@ -22,7 +22,7 @@ impl UpdateCmd {
 	pub fn run(&self) -> AnyResult<()> {
 		let Self { manifest_path, version } = self;
 
-		task::block_on(cargo::update_members_version(manifest_path, version))?;
+		task::block_on(cargo::update_members_versions(manifest_path, version))?;
 
 		Ok(())
 	}

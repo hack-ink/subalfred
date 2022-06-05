@@ -3,23 +3,17 @@
 mod util;
 
 // std
-use std::{
-	borrow::Cow,
-	fs::{self, File},
-	io::{Read, Write},
-	path::Path,
-};
+use std::{borrow::Cow, path::Path};
 // crates.io
 use cargo_metadata::{Metadata, MetadataCommand, Package};
 use cargo_toml::Manifest;
-use futures::future;
-use regex::{Captures, Regex};
+use futures::stream::{self, StreamExt, TryStreamExt};
+use regex::Captures;
 // hack-ink
 use crate::core::{error, system, Result};
 
-const E_BUILD_REGEX_FAILED: &str = "[core::cargo] failed to build the `Regex`";
-const E_CALC_SWAP_PATH_FAILED: &str = "[core::cargo] failed to calculate the swap file path";
 const E_PKG_NOT_FOUND: &str = "[core::cargo] package not found";
+const E_BUILD_REGEX_FAILED: &str = "[core::cargo] failed to build the `Regex`";
 
 /// Get the `cargo metadata` result.
 pub fn metadata(manifest_path: &str) -> Result<Metadata> {
@@ -42,69 +36,44 @@ pub fn members(metadata: &Metadata) -> Result<Vec<&Package>> {
 }
 
 /// Read the [`Manifest`] from the given path.
-pub fn manifest(path: impl AsRef<Path>) -> Result<Manifest> {
+pub fn manifest<P>(path: P) -> Result<Manifest>
+where
+	P: AsRef<Path>,
+{
 	Ok(Manifest::from_path(path).map_err(error::Cargo::OpenManifestFailed)?)
 }
 
 // TODO: optimize the algorithm
-pub async fn update_members_version(manifest_path: &str, to: &str) -> Result<()> {
+pub async fn update_members_versions(manifest_path: &str, to: &str) -> Result<()> {
 	let metadata = metadata(manifest_path)?;
 	let members = members(&metadata)?;
 
-	// If the futures are too large, switch to `FuturesUnordered`.
-	// TODO: handling result
-	let _ = future::join_all(members.iter().map(|pkg| async {
-		// Move the ownership here.
-		let swapped_path = system::swap_file_path(&pkg.manifest_path)
-			.ok_or(error::Generic::AlmostImpossible(E_CALC_SWAP_PATH_FAILED))?;
-		let member_deps = pkg
-			.dependencies
-			.iter()
-			.filter(|dep| members.iter().any(|pkg| dep.name == pkg.name))
-			.collect::<Vec<_>>();
+	stream::iter(&members)
+		.map(|pkg| async {
+			let members_deps = pkg
+				.dependencies
+				.iter()
+				.filter(|dep| members.iter().any(|pkg| dep.name == pkg.name))
+				.collect::<Vec<_>>();
+			let content = system::read_file_to_string(&pkg.manifest_path)?;
+			let content = content.replacen(&pkg.version.to_string(), to, 1);
+			let content = if members_deps.is_empty() {
+				Cow::Owned(content)
+			} else {
+				util::find_member_dep_regex(&members_deps)?.replace_all(
+					&content,
+					|captures: &Captures| {
+						format!("{}\"{}\"", &captures[1], util::align_version(&captures[3], to))
+					},
+				)
+			};
 
-		// Read.
-		let content = {
-			let mut file = File::open(&pkg.manifest_path).map_err(error::Generic::Io)?;
-			let mut content = String::new();
-
-			file.read_to_string(&mut content).map_err(error::Generic::Io)?;
-
-			content
-		};
-
-		// Replace content.
-		let content = content.replacen(&pkg.version.to_string(), to, 1);
-		let content = if member_deps.is_empty() {
-			Cow::Borrowed(content.as_str())
-		} else {
-			let regex = Regex::new(&format!(
-				"(({}) *?= *?\\{{ *?version *?= *?)\"(.+?)\"",
-				member_deps
-					.iter()
-					.map(|dep| dep.name.replace('-', "\\-"))
-					.collect::<Vec<_>>()
-					.join("|"),
-			))
-			.map_err(|_| error::Generic::AlmostImpossible(E_BUILD_REGEX_FAILED))?;
-
-			regex.replace_all(&content, |captures: &Captures| {
-				format!("{}\"{}\"", &captures[1], util::align_version(&captures[3], to))
-			})
-		};
-
-		// Write.
-		{
-			let mut file = File::create(&swapped_path).map_err(error::Generic::Io)?;
-			file.write_all(content.as_bytes()).map_err(error::Generic::Io)?;
-		}
-
-		// Replace.
-		fs::rename(swapped_path, &pkg.manifest_path).map_err(error::Generic::Io)?;
-
-		Result::Ok(())
-	}))
-	.await;
+			system::swap_file_data(&pkg.manifest_path, content.as_bytes())
+		})
+		// Process 64 files concurrently.
+		.buffer_unordered(64)
+		.try_collect()
+		.await?;
 
 	Ok(())
 }

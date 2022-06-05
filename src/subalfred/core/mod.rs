@@ -3,7 +3,6 @@ pub use error::Error;
 
 pub mod cargo;
 pub mod check;
-pub mod future;
 pub mod http;
 pub mod node;
 pub mod ss58;

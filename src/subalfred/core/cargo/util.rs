@@ -1,7 +1,11 @@
 // std
 use std::borrow::Cow;
 // crates.io
-use cargo_metadata::{Metadata, Package, PackageId};
+use cargo_metadata::{Dependency, Metadata, Package, PackageId};
+use regex::Regex;
+// hack-ink
+use super::E_BUILD_REGEX_FAILED;
+use crate::core::{error, Result};
 
 #[derive(Debug)]
 pub enum VersionSpec {
@@ -22,6 +26,14 @@ impl From<&str> for VersionSpec {
 
 pub fn find_package<'a>(metadata: &'a Metadata, id: &PackageId) -> Option<&'a Package> {
 	metadata.packages.iter().find(|pkg| &pkg.id == id)
+}
+
+pub fn find_member_dep_regex(members_deps: &[&Dependency]) -> Result<Regex> {
+	Ok(Regex::new(&format!(
+		"(({}) *?= *?\\{{ *?version *?= *?)\"(.+?)\"",
+		members_deps.iter().map(|dep| dep.name.replace('-', "\\-")).collect::<Vec<_>>().join("|"),
+	))
+	.map_err(|_| error::Generic::AlmostImpossible(E_BUILD_REGEX_FAILED))?)
 }
 
 pub fn align_version<'a>(from: &str, to: &'a str) -> Cow<'a, str> {
