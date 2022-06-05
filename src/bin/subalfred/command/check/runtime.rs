@@ -5,7 +5,7 @@ use async_std::task;
 use clap::{ArgEnum, Args};
 // hack-ink
 use crate::prelude::*;
-use subalfred::core::{check::runtime, node};
+use subalfred::core::{check::runtime, node, system};
 
 /// Compare the local node runtime version with live's.
 #[derive(Debug, Args)]
@@ -40,13 +40,13 @@ impl RuntimeCmd {
 		}
 
 		let Self { executable, chain, live, property } = self;
-		// TODO: if the port is already in used
-		let mut node_process = node::spawn(executable, 23333, chain)?;
-		let local = "http://127.0.0.1:23333";
+		let rpc_port = system::random_available_port()?;
+		let mut node_process = node::spawn(executable, rpc_port, chain)?;
+		let local = format!("http://127.0.0.1:{rpc_port}");
 
 		match property {
 			Property::Storage => {
-				let result = task::block_on(runtime::check_storage(local, live));
+				let result = task::block_on(runtime::check_storage(&local, live));
 				let (pallets_diff, entries_diffs) =
 					map_err_and_kill_node_process(result, &mut node_process)?;
 
@@ -65,7 +65,7 @@ impl RuntimeCmd {
 				});
 			},
 			Property::Version => {
-				let result = task::block_on(runtime::check_version(local, live));
+				let result = task::block_on(runtime::check_version(&local, live));
 
 				if let Some(diffs) = map_err_and_kill_node_process(result, &mut node_process)? {
 					println!("{diffs}")
