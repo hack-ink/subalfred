@@ -50,8 +50,7 @@ where
 }
 
 pub fn random_available_port() -> Result<u16> {
-	// Skip the system ports.
-	// Starting from 1001.
+	// Skip the system ports, starting from 1001.
 	for port in 1001..u16::MAX {
 		if TcpListener::bind(("127.0.0.1", port)).is_ok() {
 			return Ok(port);
