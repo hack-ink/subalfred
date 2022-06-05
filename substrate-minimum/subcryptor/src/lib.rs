@@ -65,13 +65,19 @@ pub fn public_key_of<K>(ss58_address: &str) -> Result<Vec<u8>>
 where
 	K: Key,
 {
-	let bytes = ss58_address.from_base58().map_err(Error::InvalidSs58Address)?;
+	let bytes = ss58_address.from_base58().map_err(|e| Error::InvalidSs58Address {
+		address: ss58_address.into(),
+		source: Some(error::InvalidSs58AddressSource::Base58(e)),
+	})?;
 	let prefix_len = match bytes[0] {
 		0..=63 => 1,
 		64..=127 => 2,
 		prefix => Err(Error::InvalidPrefix(prefix))?,
 	};
 
-	// TODO: error handling
+	if !bytes.len() >= K::LEN + prefix_len - 1 {
+		Err(Error::InvalidSs58Address { address: ss58_address.into(), source: None })?;
+	}
+
 	Ok(bytes[prefix_len..K::LEN + prefix_len].to_vec())
 }
