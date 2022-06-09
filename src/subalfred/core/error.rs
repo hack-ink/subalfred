@@ -7,6 +7,8 @@ pub enum Error {
 	#[error(transparent)]
 	Generic(#[from] Generic),
 	#[error(transparent)]
+	Key(#[from] Key),
+	#[error(transparent)]
 	Node(#[from] Node),
 	#[error(transparent)]
 	Ss58(#[from] Ss58),
@@ -22,7 +24,6 @@ pub enum Cargo {
 
 #[derive(Debug, ThisError)]
 pub enum Generic {
-	// TODO: use `.expect` or not
 	#[error("{0:?}")]
 	AlmostImpossible(&'static str),
 	#[error(transparent)]
@@ -31,13 +32,16 @@ pub enum Generic {
 	Fmt(#[from] std::fmt::Error),
 	#[error(transparent)]
 	Io(#[from] std::io::Error),
-	// TODO: show path or not
-	// #[error("failed to open the file, {file:?}")]
-	// OpenFile { file: String, source: std::io::Error },
 	#[error(transparent)]
 	Reqwest(#[from] reqwest::Error),
 	#[error(transparent)]
 	Serde(#[from] serde_json::Error),
+}
+
+#[derive(Debug, ThisError)]
+pub enum Key {
+	#[error("[core::key] invalid sub-seed, index out of bound")]
+	InvalidSubSeed,
 }
 
 #[derive(Debug, ThisError)]

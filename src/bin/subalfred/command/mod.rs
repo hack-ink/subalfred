@@ -1,18 +1,15 @@
-mod address;
-use address::AddressCmd;
-
 mod check;
 use check::CheckCmd;
 
-// TODO: move to a single crate
-mod workspace;
-use workspace::WorkspaceCmd;
+mod key;
+use key::KeyCmd;
 
 mod storage_key;
 use storage_key::StorageKeyCmd;
 
-mod xcm;
-use xcm::XcmCmd;
+// TODO: move to a single crate
+mod workspace;
+use workspace::WorkspaceCmd;
 
 // TODO: rewrite into attribute macro.
 #[macro_export]
@@ -48,13 +45,11 @@ macro_rules! impl_cmd {
 
 impl_cmd! {
 	Cmd {
-		Address,
 		#[clap(subcommand)]
 		Check,
+		Key,
 		StorageKey,
 		#[clap(subcommand)]
 		Workspace,
-		#[clap(subcommand)]
-		Xcm,
 	}
 }

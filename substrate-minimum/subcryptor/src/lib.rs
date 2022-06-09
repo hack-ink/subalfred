@@ -75,7 +75,7 @@ where
 		prefix => Err(Error::InvalidPrefix(prefix))?,
 	};
 
-	if !(bytes.len() >= K::LEN + prefix_len - 1) {
+	if bytes.len() < (K::LEN + prefix_len - 1) {
 		Err(Error::InvalidSs58Address { address: ss58_address.into(), source: None })?;
 	}
 

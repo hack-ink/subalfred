@@ -78,8 +78,3 @@ pub async fn update_members_versions(manifest_path: &str, to: &str) -> Result<()
 
 	Ok(())
 }
-
-#[allow(unused)]
-pub async fn update_deps_version(manifest_path: &str, from: &str, to: &str) -> Result<()> {
-	Ok(())
-}
