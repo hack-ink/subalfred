@@ -5,8 +5,8 @@ use super::*;
 use subrpcer::system;
 
 #[async_std::test]
-async fn send_rpc_should_work() {
-	let result = send_rpc("https://rpc.polkadot.io", &system::chain()).await;
+async fn send_jsonrpc_should_work() {
+	let result = send_jsonrpc("https://rpc.polkadot.io", &system::chain()).await;
 
 	assert!(result.is_ok());
 

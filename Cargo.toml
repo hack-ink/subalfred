@@ -41,6 +41,7 @@ thiserror          = { version = "1.0" }
 tracing-subscriber = { version = "0.3" }
 # hack-ink
 subcryptor   = { version = "0.9", path = "substrate-minimum/subcryptor" }
+subhasher    = { version = "0.9", path = "substrate-minimum/subhasher" }
 submetadatan = { version = "0.9", path = "substrate-minimum/submetadatan" }
 subrpcer     = { version = "0.9", path = "substrate-minimum/subrpcer" }
 substorager  = { version = "0.9", path = "substrate-minimum/substorager" }

@@ -1,6 +1,10 @@
 #![feature(concat_idents)]
+#![warn(missing_docs)]
 
-pub mod prelude {
+//! TODO: doc
+
+/// Useful tools set for development.
+mod prelude {
 	pub use anyhow::Result as AnyResult;
 }
 use prelude::AnyResult;

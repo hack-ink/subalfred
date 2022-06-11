@@ -13,6 +13,7 @@ use crate::core::{error, Result};
 const E_CALC_SWAP_PATH_FAILED: &str = "[core::system] failed to calculate the swap file path";
 const E_NO_AVAILABLE_PORT_FOUND: &str = "[core::system] failed to find an available port";
 
+/// Read the file's content to a [`String`].
 pub fn read_file_to_string<P>(path: P) -> Result<String>
 where
 	P: AsRef<Path>,
@@ -25,6 +26,9 @@ where
 	Ok(content)
 }
 
+/// Swap the file's data with the given one.
+///
+/// This function will create a temporary file first. Then perform the file-swapping.
 pub fn swap_file_data<P>(path: P, data: &[u8]) -> Result<()>
 where
 	P: AsRef<Utf8Path>,
@@ -49,9 +53,11 @@ where
 	Some(path.with_file_name(format!(".{file_name}.swp")))
 }
 
+/// Search a available port.
+///
+/// Skip the system ports, starting from 1001.
 pub fn random_available_port() -> Result<u16> {
-	// Skip the system ports, starting from 1001.
-	for port in 1001..u16::MAX {
+	for port in 1025..u16::MAX {
 		if TcpListener::bind(("127.0.0.1", port)).is_ok() {
 			return Ok(port);
 		}

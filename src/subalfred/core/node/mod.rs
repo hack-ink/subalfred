@@ -41,7 +41,7 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 
 /// Fetch the runtime version from a node.
 pub async fn runtime_version(uri: &str) -> Result<RuntimeVersion> {
-	let result = http::send_rpc(uri, &state::get_runtime_version())
+	let result = http::send_jsonrpc(uri, &state::get_runtime_version())
 		.await?
 		.json::<Value>()
 		.await
@@ -56,7 +56,7 @@ pub async fn runtime_version(uri: &str) -> Result<RuntimeVersion> {
 
 /// Fetch the runtime metadata from a node.
 pub async fn runtime_metadata(uri: &str) -> Result<LatestRuntimeMetadata> {
-	let result = http::send_rpc(uri, &state::get_metadata())
+	let result = http::send_jsonrpc(uri, &state::get_metadata())
 		.await?
 		.json::<Value>()
 		.await

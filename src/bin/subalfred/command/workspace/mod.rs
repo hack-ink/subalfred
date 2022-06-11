@@ -1,10 +1,9 @@
 mod update;
-use update::{UpdateCmd, UpdateDepsCmd};
+use update::UpdateCmd;
 
 crate::impl_cmd! {
 	#[doc="Workspace manager."]
 	WorkspaceCmd {
 		Update,
-		UpdateDeps,
 	}
 }

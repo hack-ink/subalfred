@@ -4,10 +4,14 @@
 use crate::core::{error, Result};
 use subcryptor::{ss58_registry::ALL_SS58_ADDRESS_FORMAT_NAMES, Sr25519};
 
+/// Network address.
 #[derive(Debug)]
 pub struct Address<'a> {
+	/// Network name.
 	pub network: &'a str,
+	/// Network prefix.
 	pub prefix: u16,
+	/// Address value.
 	pub value: String,
 }
 

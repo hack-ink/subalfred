@@ -1,12 +1,22 @@
+/// Error library.
 pub mod error;
 pub use error::Error;
 
+/// The core library about interacting with Cargo.
 pub mod cargo;
-pub mod check;
+/// The core library about interacting with HTTP.
 pub mod http;
-pub mod key;
+/// The core library about interacting with Substrate-based node.
 pub mod node;
-pub mod ss58;
+/// The core library about interacting with OS.
 pub mod system;
 
+/// Substrate checkers library.
+pub mod check;
+/// Substrate keys library.
+pub mod key;
+/// SS58 address library.
+pub mod ss58;
+
+/// Subalfred core lib's `Result` type.
 pub type Result<T> = ::std::result::Result<T, Error>;

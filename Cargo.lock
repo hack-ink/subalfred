@@ -1707,6 +1707,7 @@ dependencies = [
  "reqwest",
  "serde_json",
  "subcryptor",
+ "subhasher",
  "submetadatan",
  "subrpcer",
  "substorager",

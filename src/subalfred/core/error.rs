@@ -1,5 +1,7 @@
 use thiserror::Error as ThisError;
 
+/// The core libraries' main `Error` type.
+#[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Error {
 	#[error(transparent)]
@@ -14,6 +16,8 @@ pub enum Error {
 	Ss58(#[from] Ss58),
 }
 
+/// The core Cargo error type.
+#[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Cargo {
 	#[error("[core::cargo] failed to exec `cargo metadata`")]
@@ -22,6 +26,8 @@ pub enum Cargo {
 	OpenManifestFailed(#[source] cargo_toml::Error),
 }
 
+/// The generic error type.
+#[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Generic {
 	#[error("{0:?}")]
@@ -38,12 +44,16 @@ pub enum Generic {
 	Serde(#[from] serde_json::Error),
 }
 
+/// The core key error type.
+#[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Key {
 	#[error("[core::key] invalid sub-seed, index out of bound")]
 	InvalidSubSeed,
 }
 
+/// The core node error type.
+#[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Node {
 	#[error("[core::node] failed to get the RPC result")]
@@ -54,6 +64,8 @@ pub enum Node {
 	StartFailed(#[source] std::io::Error),
 }
 
+/// The core SS58 error type.
+#[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Ss58 {
 	#[error("[core::ss58] invalid address, {address:?}")]
@@ -61,6 +73,8 @@ pub enum Ss58 {
 	#[error("[core::ss58] failed to calculate SS58 address")]
 	CalculateSs58AddressFailed(#[source] subcryptor::Error),
 }
+/// The sub-error type of [`Ss58::InvalidAddress`].
+#[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Ss58InvalidAddressSource {
 	#[error("{0:?}")]

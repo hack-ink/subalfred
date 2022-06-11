@@ -1,6 +1,9 @@
 mod check;
 use check::CheckCmd;
 
+mod hash;
+use hash::HashCmd;
+
 mod key;
 use key::KeyCmd;
 
@@ -12,6 +15,7 @@ mod workspace;
 use workspace::WorkspaceCmd;
 
 // TODO: rewrite into attribute macro.
+/// Quickly define and implement a command containing serval subcommands.
 #[macro_export]
 macro_rules! impl_cmd {
 	(
@@ -47,6 +51,7 @@ impl_cmd! {
 	Cmd {
 		#[clap(subcommand)]
 		Check,
+		Hash,
 		Key,
 		StorageKey,
 		#[clap(subcommand)]
