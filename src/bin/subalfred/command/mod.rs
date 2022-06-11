@@ -48,6 +48,7 @@ macro_rules! impl_cmd {
 }
 
 impl_cmd! {
+	#[doc="The main CMD of Subalfred."]
 	Cmd {
 		#[clap(subcommand)]
 		Check,

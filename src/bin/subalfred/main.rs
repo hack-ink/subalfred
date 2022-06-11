@@ -6,6 +6,18 @@
 /// Useful tools set for development.
 mod prelude {
 	pub use anyhow::Result as AnyResult;
+
+	// std
+	use std::fmt::Debug;
+	// crates.io
+	use anyhow::Error;
+
+	pub fn debug_err<E>(e: E) -> Error
+	where
+		E: Debug,
+	{
+		anyhow::anyhow!("{e:?}")
+	}
 }
 use prelude::AnyResult;
 

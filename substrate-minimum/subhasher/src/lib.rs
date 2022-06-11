@@ -50,14 +50,14 @@ fn twox(dest: &mut [u8], data: &[u8], seed: u64) {
 	LittleEndian::write_u64(&mut dest[i..i + 8], h.finish());
 }
 
-pub fn twox_64(data: &[u8]) -> [u8; 8] {
+pub fn twox64(data: &[u8]) -> [u8; 8] {
 	let mut dest = [0; 8];
 	twox(&mut dest, data, 0);
 
 	dest
 }
 
-pub fn twox_128(data: &[u8]) -> [u8; 16] {
+pub fn twox128(data: &[u8]) -> [u8; 16] {
 	let mut dest = [0; 16];
 	twox(&mut dest, data, 0);
 	twox(&mut dest, data, 1);
@@ -65,7 +65,7 @@ pub fn twox_128(data: &[u8]) -> [u8; 16] {
 	dest
 }
 
-pub fn twox_256(data: &[u8]) -> [u8; 32] {
+pub fn twox256(data: &[u8]) -> [u8; 32] {
 	let mut dest = [0; 32];
 	twox(&mut dest, data, 0);
 	twox(&mut dest, data, 1);
@@ -75,9 +75,9 @@ pub fn twox_256(data: &[u8]) -> [u8; 32] {
 	dest
 }
 
-pub fn twox_64_concat(data: &[u8]) -> Vec<u8> {
+pub fn twox64_concat(data: &[u8]) -> Vec<u8> {
 	let data = data;
-	let mut v = twox_64(data).to_vec();
+	let mut v = twox64(data).to_vec();
 	v.extend_from_slice(data);
 
 	v
@@ -90,7 +90,7 @@ where
 	data
 }
 
-pub fn keccak_256(data: &[u8]) -> [u8; 32] {
+pub fn keccak256(data: &[u8]) -> [u8; 32] {
 	let mut keccak = Keccak::v256();
 	keccak.update(data);
 
@@ -100,7 +100,7 @@ pub fn keccak_256(data: &[u8]) -> [u8; 32] {
 	output
 }
 
-pub fn keccak_512(data: &[u8]) -> [u8; 64] {
+pub fn keccak512(data: &[u8]) -> [u8; 64] {
 	let mut keccak = Keccak::v512();
 	keccak.update(data);
 

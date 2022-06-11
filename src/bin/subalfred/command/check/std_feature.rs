@@ -4,6 +4,7 @@ use clap::Args;
 use crate::prelude::*;
 use subalfred::core::check::std_feature;
 
+// TODO: check if the dependency has the std feature.
 /// Check if the crates' `std` features are enabled correctly.
 #[derive(Debug, Args)]
 pub struct StdFeatureCmd {

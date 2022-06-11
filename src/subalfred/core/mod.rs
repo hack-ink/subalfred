@@ -13,7 +13,7 @@ pub mod system;
 
 /// Substrate checkers library.
 pub mod check;
-/// Substrate keys library.
+/// Substrate key library.
 pub mod key;
 /// SS58 address library.
 pub mod ss58;

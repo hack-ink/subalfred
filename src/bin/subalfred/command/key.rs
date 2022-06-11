@@ -9,7 +9,7 @@ use subalfred::core::{
 	ss58::{self, Address},
 };
 
-/// Convert the PUBLIC KEY/SS58 ADDRESS from SS58 ADDRESS/PUBLIC KEY.
+/// Convert the public key/ss58 address from ss58 address/public key.
 #[derive(Debug, Args)]
 pub struct KeyCmd {
 	/// Public key or SS58 address.
@@ -35,7 +35,7 @@ impl KeyCmd {
 		let key = if let Some(key_type) = key_type {
 			Cow::Owned(array_bytes::bytes2hex(
 				"0x",
-				match key_type {
+				&match key_type {
 					KeyType::Pallet => KeyTypeId::pallet().to_key::<32>(key.as_bytes())?,
 					KeyType::Parachain => KeyTypeId::parachain().to_key::<32>(key.as_bytes())?,
 					KeyType::Sibling => KeyTypeId::sibling().to_key::<32>(key.as_bytes())?,
@@ -77,16 +77,9 @@ impl KeyCmd {
 	}
 }
 
-/// The key type.
 #[derive(Clone, Debug, ArgEnum)]
 pub enum KeyType {
-	/// Aka `PalletId`, `ModuleId` in Substrate,
-	/// which use for calculating the module's account address.
 	Pallet,
-	/// Aka `ParaId` in Polkadot,
-	/// which use for calculating the sovereign address on relaychain.
 	Parachain,
-	/// Aka `SiblingI in Polkadot,
-	/// which use for calculating the sovereign address on parachain.
 	Sibling,
 }

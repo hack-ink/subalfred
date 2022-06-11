@@ -6,6 +6,7 @@ use crate::prelude::*;
 use subalfred::core::cargo;
 
 /// Update the workspace members' crate versions.
+/// 
 /// Pretty useful while you are going to publish a new release.
 #[derive(Debug, Args)]
 pub struct UpdateCmd {
