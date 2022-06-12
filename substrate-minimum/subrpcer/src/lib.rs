@@ -1,11 +1,20 @@
 pub mod author;
+pub mod babe;
 pub mod chain;
 pub mod grandpa;
+pub mod net;
 pub mod offchain;
+pub mod payment;
+pub mod rpc;
 pub mod state;
 pub mod system;
 
 #[cfg(any(feature = "isahc-client", feature = "reqwest-client"))] pub mod client;
+
+mod prelude {
+	pub use serde::Serialize;
+	pub use serde_json::Value;
+}
 
 // TODO: optimize the option param
 

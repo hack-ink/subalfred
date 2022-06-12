@@ -30,11 +30,11 @@ pub fn rpc(_: TokenStream, input: TokenStream) -> TokenStream {
 	// -> Value
 	let output = call.sig.output.clone();
 	// {
-	// 	crate::rpc_once("chain_getBlockHash", json!([block_number]))
+	// 	crate::rpc_once("chain_getBlockHash", serde_json::json!([block_number]))
 	// }
 	// ->
 	// {
-	// 	crate::rpc(id, "chain_getBlockHash", json!([block_number]))
+	// 	crate::rpc(id, "chain_getBlockHash", serde_json::json!([block_number]))
 	// }
 	let call_block = {
 		let args = if let Stmt::Expr(Expr::Call(c)) = &call.block.stmts[0] {
