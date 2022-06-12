@@ -9,14 +9,14 @@ use syn::*;
 pub fn rpc(_: TokenStream, input: TokenStream) -> TokenStream {
 	let call = syn::parse_macro_input!(input as ItemFn);
 
-	#[cfg(feature = "debug")]
-	dbg!(&call);
+	// #[cfg(feature = "debug")]
+	// dbg!(&call);
 
 	// get_block_hash_once
 	// ->
 	// get_block_hash
 	let call_name =
-		call.sig.ident.to_string().rsplit_once("_").unwrap().0.parse::<TokenStream2>().unwrap();
+		call.sig.ident.to_string().rsplit_once('_').unwrap().0.parse::<TokenStream2>().unwrap();
 	// block_number: impl Serialize
 	// ->
 	// id: u32, block_number: impl Serialize
