@@ -5,21 +5,25 @@ pub mod offchain;
 pub mod state;
 pub mod system;
 
-#[cfg(any(feature = "isahc-client", feature = "ureq-client"))] pub mod client;
+#[cfg(any(feature = "isahc-client", feature = "reqwest-client"))] pub mod client;
+
+// TODO: optimize the option param
 
 // crates.io
 use serde::Serialize;
 use serde_json::{json, Value};
 
-const DEFAULT_ID: u8 = 1;
-
-pub fn rpc(id: impl Serialize, method: impl Serialize, params: impl Serialize) -> Value {
+pub fn rpc(id: u32, method: &str, params: impl Serialize) -> Value {
 	json!({
 		"jsonrpc": "2.0",
 		"id": id,
 		"method": method,
 		"params": params
 	})
+}
+
+pub fn rpc_once(method: &str, params: impl Serialize) -> Value {
+	crate::rpc(0, method, params)
 }
 
 #[cfg(feature = "tracing")]

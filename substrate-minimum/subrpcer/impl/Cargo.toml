@@ -19,3 +19,9 @@ maintenance = { status = "actively-developed" }
 proc-macro2 = { version = "1.0" }
 quote       = { version = "1.0" }
 syn         = { version = "1.0", features = ["full"] }
+
+[features]
+debug = [
+	# crates.io
+	"syn/extra-traits",
+]

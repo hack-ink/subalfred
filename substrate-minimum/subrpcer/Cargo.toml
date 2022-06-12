@@ -24,7 +24,11 @@ ureq       = { version = "2.4", optional = true, features = ["json"] }
 subrpcer-impl = { version = "0.9", path = "impl" }
 
 [features]
-raw-params = []
+debug = [
+	# hack-ink
+	"subrpcer-impl/debug",
+]
+
 
 reqwest-client = [
 	# crates.io
