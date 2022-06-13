@@ -83,10 +83,7 @@ pub fn twox64_concat(data: &[u8]) -> Vec<u8> {
 	v
 }
 
-pub fn identity<T>(data: T) -> T
-where
-	T: AsRef<[u8]>,
-{
+pub fn identity(data: &[u8]) -> &[u8] {
 	data
 }
 

@@ -1,18 +1,22 @@
 // crates.io
 use clap::Args;
+use futures::executor;
 // hack-ink
 use crate::prelude::*;
+use subalfred::core::node::re_genesis;
 
 ///
 #[derive(Debug, Args)]
 pub struct ReGenesisCmd {
-	///
-	#[clap(long, required = true, value_name = "")]
-	_todo: String,
+	/// Live chain's RPC HTTP endpoint.
+	#[clap(required = true, value_name = "")]
+	live: String,
 }
 impl ReGenesisCmd {
 	pub fn run(&self) -> AnyResult<()> {
-		let Self { _todo } = self;
+		let Self { live } = self;
+
+		executor::block_on(re_genesis::run(live))?;
 
 		Ok(())
 	}

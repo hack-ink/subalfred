@@ -19,11 +19,10 @@ mod prelude {
 // TODO: optimize the option param
 
 // crates.io
-use serde::Serialize;
-use serde_json::{json, Value};
+use prelude::*;
 
-pub fn rpc(id: u32, method: &str, params: impl Serialize) -> Value {
-	json!({
+pub fn rpc(id: usize, method: &str, params: Value) -> Value {
+	serde_json::json!({
 		"jsonrpc": "2.0",
 		"id": id,
 		"method": method,
@@ -31,7 +30,7 @@ pub fn rpc(id: u32, method: &str, params: impl Serialize) -> Value {
 	})
 }
 
-pub fn rpc_once(method: &str, params: impl Serialize) -> Value {
+pub fn rpc_once(method: &str, params: Value) -> Value {
 	crate::rpc(0, method, params)
 }
 

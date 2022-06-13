@@ -1,12 +1,12 @@
 // crates.io
-use async_std::task;
 use clap::Args;
+use futures::executor;
 // hack-ink
 use crate::prelude::*;
 use subalfred::core::cargo;
 
 /// Update the workspace members' crate versions.
-/// 
+///
 /// Pretty useful while you are going to publish a new release.
 #[derive(Debug, Args)]
 pub struct UpdateCmd {
@@ -21,7 +21,7 @@ impl UpdateCmd {
 	pub fn run(&self) -> AnyResult<()> {
 		let Self { manifest_path, version } = self;
 
-		task::block_on(cargo::update_members_versions(manifest_path, version))?;
+		executor::block_on(cargo::update_members_versions(manifest_path, version))?;
 
 		Ok(())
 	}

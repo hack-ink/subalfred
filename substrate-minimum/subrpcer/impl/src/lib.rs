@@ -19,12 +19,12 @@ pub fn rpc(_: TokenStream, input: TokenStream) -> TokenStream {
 		call.sig.ident.to_string().rsplit_once('_').unwrap().0.parse::<TokenStream2>().unwrap();
 	// block_number: impl Serialize
 	// ->
-	// id: u32, block_number: impl Serialize
+	// id: usize, block_number: impl Serialize
 	let call_inputs = {
 		let inputs = call.sig.inputs.clone();
 
 		quote::quote! {
-			id: u32, #inputs
+			id: usize, #inputs
 		}
 	};
 	// -> Value

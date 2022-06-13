@@ -26,8 +26,7 @@ use cli::Cli;
 
 mod command;
 
-#[async_std::main]
-async fn main() -> AnyResult<()> {
+fn main() -> AnyResult<()> {
 	tracing_subscriber::fmt::init();
 
 	Cli::new().run()

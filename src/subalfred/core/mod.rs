@@ -6,10 +6,14 @@ pub use error::Error;
 pub mod cargo;
 /// The core library about interacting with HTTP.
 pub mod http;
+/// The core library about interacting with JSONRPC.
+pub mod jsonrpc;
 /// The core library about interacting with Substrate-based node.
 pub mod node;
 /// The core library about interacting with OS.
 pub mod system;
+/// The core library about interacting with websocket.
+pub mod websocket;
 
 /// Substrate checkers library.
 pub mod check;

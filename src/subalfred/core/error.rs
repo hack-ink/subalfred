@@ -40,8 +40,6 @@ pub enum Generic {
 	Io(#[from] std::io::Error),
 	#[error(transparent)]
 	Reqwest(#[from] reqwest::Error),
-	#[error(transparent)]
-	Serde(#[from] serde_json::Error),
 }
 
 /// The core key error type.
@@ -56,8 +54,6 @@ pub enum Key {
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Node {
-	#[error("[core::node] failed to get the RPC result")]
-	GetRpcResultFailed,
 	#[error("[core::node] failed to parse metadata")]
 	ParseMetadataFailed(#[source] submetadatan::Error),
 	#[error("[core::node] failed to start the node")]

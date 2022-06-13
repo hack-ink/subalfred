@@ -18,13 +18,7 @@ impl StorageKeyCmd {
 	pub fn run(&self) -> AnyResult<()> {
 		let Self { prefix, item } = self;
 
-		println!(
-			"{}",
-			array_bytes::bytes2hex(
-				"0x",
-				&substorager::storage_key(prefix.as_bytes(), item.as_bytes())
-			)
-		);
+		println!("{}", substorager::storage_key(prefix.as_bytes(), item.as_bytes()));
 
 		Ok(())
 	}

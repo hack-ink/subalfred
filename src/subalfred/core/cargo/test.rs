@@ -1,5 +1,4 @@
 // crates.io
-use camino::Utf8PathBuf;
 use cargo_metadata::{Metadata, MetadataCommand};
 // hack-ink
 use super::*;
@@ -37,32 +36,14 @@ fn members_manifests_should_work() {
 }
 
 #[test]
-fn swap_file_path_should_work() {
-	let paths = [
-		"/subalfred/Cargo.toml".into(),
-		"/subalfred/substrate-minimum/subrpcer/impl/Cargo.toml".into(),
-	];
-	let swapped_paths =
-		paths.into_iter().map(|path| swap_file_path(&path).unwrap()).collect::<Vec<_>>();
-
-	assert_eq!(
-		swapped_paths,
-		vec![
-			Utf8PathBuf::from("/subalfred/.Cargo.toml.swp"),
-			Utf8PathBuf::from("/subalfred/substrate-minimum/subrpcer/impl/.Cargo.toml.swp"),
-		]
-	);
-}
-
-#[test]
 fn align_version_should_work() {
 	["0", "0.0", "0.0.0"].iter().for_each(|from| {
 		["1", "1.0", "1.0.0"].iter().for_each(|to| {
 			dbg!(from, to);
 			match *from {
-				"0" => assert_eq!(align_version(from, to), "1"),
-				"0.0" => assert_eq!(align_version(from, to), "1.0"),
-				"0.0.0" => assert_eq!(align_version(from, to), "1.0.0"),
+				"0" => assert_eq!(util::align_version(from, to), "1"),
+				"0.0" => assert_eq!(util::align_version(from, to), "1.0"),
+				"0.0.0" => assert_eq!(util::align_version(from, to), "1.0.0"),
 				_ => unreachable!(),
 			}
 		});
