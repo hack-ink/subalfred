@@ -51,6 +51,9 @@ subrpcer     = { version = "0.9", path = "substrate-minimum/subrpcer" }
 substorager  = { version = "0.9", path = "substrate-minimum/substorager" }
 subversion   = { version = "0.9", path = "substrate-minimum/subversion", features = ["serde"] }
 
+[features]
+debug-websocket = []
+
 # [profile.release]
 # lto = true
 

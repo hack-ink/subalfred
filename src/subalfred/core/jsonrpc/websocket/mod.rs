@@ -48,13 +48,25 @@ impl Client {
 			.map_err(error::Generic::Tungstenite)?
 			.0
 			.split();
-		let (tx, rx) = mpsc::channel(self.concurrency_limit * 2);
+		let (tx, rx) = mpsc::channel(1);
 
 		tokio::spawn(async move {
 			let system_health_req = serde_json::to_string(&system::health_once()).unwrap();
 			let rx = stream::unfold(rx, |mut r| async { r.recv().await.map(|c| (c, r)) });
 
 			futures::pin_mut!(rx);
+
+			#[cfg(feature = "debug-websocket")]
+			{
+				let mut rx = rx;
+
+				loop {
+					match rx.next().await.unwrap() {
+						call @ Call::Debug(_) => tracing::info!("{call:?}"),
+						_ => unreachable!(),
+					}
+				}
+			}
 
 			// TODO: clean dead items?
 			let mut pool = Pool::new();
@@ -96,10 +108,12 @@ impl Client {
 
 				match future::select(rxs_fut, tick_fut).await {
 					Left((Left((maybe_call, maybe_resp_fut)), tick_fut_)) => {
-						tracing::warn!("Received 1");
-
 						if let Some(call) = maybe_call {
 							match call {
+								#[cfg(feature = "debug-websocket")]
+								Call::Debug(_) => {
+									tracing::info!("{call:?}");
+								},
 								Call::Single(RawCall { id, request, notifier }) => {
 									tracing::debug!("{request}");
 
@@ -117,27 +131,21 @@ impl Client {
 							//
 						}
 
-						tracing::warn!("Done 1");
-
 						rxs_fut = future::select(rx.next(), maybe_resp_fut);
 						tick_fut = tick_fut_;
 					},
 					Left((Right((maybe_resp, maybe_call_fut)), tick_fut_)) => {
-						tracing::warn!("Received 2");
-
 						if let Some(resp) = maybe_resp {
 							pool.on_ws_recv(resp).await.unwrap()
 						} else {
 							//
 						}
 
-						tracing::warn!("Done 2\n\n");
-
 						rxs_fut = future::select(maybe_call_fut, ws_rx.next());
 						tick_fut = tick_fut_;
 					},
 					Right((_, rxs_fut_)) => {
-						// tracing::debug!("Tick(system_health)");
+						tracing::debug!("Tick(system_health)");
 
 						ws_tx.send(Message::Text(system_health_req.clone())).await.unwrap();
 
@@ -191,30 +199,13 @@ impl Websocket {
 		D: DeserializeOwned,
 		R: Into<RawRequest<'a, Value>>,
 	{
-		loop {
-			let id = 1;
-			let (method, params) = subrpcer::system::health_raw();
-			let (tx, rx) = oneshot::channel();
-
-			self.messenger
-				.send(Call::Single(RawCall {
-					id,
-					request: serde_json::to_string(&Request {
-						jsonrpc: Self::VERSION,
-						id,
-						method,
-						params,
-					})
-					.map_err(error::Generic::Serde)?,
-					notifier: tx,
-				}))
-				.await
-				.map_err(|_| error::Tokio::MpscSend)?;
-
-			let response = time::timeout(self.request_timeout, rx)
-				.await
-				.map_err(error::Tokio::Elapsed)?
-				.map_err(error::Tokio::OneshotRecv)?;
+		#[cfg(feature = "debug-websocket")]
+		{
+			for i in 0..110 {
+				// let r = self.messenger.try_send(Call::Debug(i));
+				// tracing::trace!("{r:?}");
+				self.messenger.send(Call::Debug(i)).await.unwrap();
+			}
 		}
 
 		let RequestQueueGuard { lock: id, .. } = self.request_queue.next()?;
@@ -333,7 +324,7 @@ impl Pool {
 	async fn process_raw_response(&mut self, raw_response: &str) {
 		if let Ok(response) = serde_json::from_str::<RequestResponse>(raw_response) {
 			if response.id == 0 {
-				// tracing::debug!("Tick({raw_response})");
+				tracing::debug!("Tick({raw_response})");
 
 				return;
 			}
@@ -357,6 +348,8 @@ impl Pool {
 
 #[derive(Debug)]
 enum Call {
+	#[cfg(feature = "debug-websocket")]
+	Debug(u128),
 	Single(RawCall<RequestNotifier>),
 	Batch(RawCall<BatchNotifier>),
 }
