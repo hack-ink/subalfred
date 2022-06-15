@@ -5,15 +5,39 @@ use thiserror::Error as ThisError;
 #[derive(Debug, ThisError)]
 pub enum Error {
 	#[error(transparent)]
+	Debug(#[from] Debug),
+
+	#[error(transparent)]
 	Cargo(#[from] Cargo),
 	#[error(transparent)]
 	Generic(#[from] Generic),
+	#[error(transparent)]
+	Jsonrpc(#[from] Jsonrpc),
 	#[error(transparent)]
 	Key(#[from] Key),
 	#[error(transparent)]
 	Node(#[from] Node),
 	#[error(transparent)]
 	Ss58(#[from] Ss58),
+	#[error(transparent)]
+	Tokio(#[from] Tokio),
+}
+
+/// Print the error directly.
+#[derive(Debug)]
+pub struct Debug(String);
+impl std::fmt::Display for Debug {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		std::fmt::Debug::fmt(self, f)
+	}
+}
+impl std::error::Error for Debug {}
+/// Convert the error to [`Debug`].
+pub fn quick_debug<E>(e: E) -> Debug
+where
+	E: std::fmt::Debug,
+{
+	Debug(format!("{e:?}"))
 }
 
 /// The core Cargo error type.
@@ -40,6 +64,20 @@ pub enum Generic {
 	Io(#[from] std::io::Error),
 	#[error(transparent)]
 	Reqwest(#[from] reqwest::Error),
+	#[error(transparent)]
+	Serde(#[from] serde_json::Error),
+	#[error(transparent)]
+	Tungstenite(#[from] tokio_tungstenite::tungstenite::Error),
+}
+
+/// The core JSONRPC error type.
+#[allow(missing_docs)]
+#[derive(Debug, ThisError)]
+pub enum Jsonrpc {
+	#[error("[core::jsonrpc] empty batch")]
+	EmptyBatch,
+	#[error("[core::jsonrpc] exceeded the maximum number of request queue size, {0}")]
+	ExceededRequestQueueMaxSize(crate::core::jsonrpc::Id),
 }
 
 /// The core key error type.
@@ -77,4 +115,17 @@ pub enum Ss58InvalidAddressSource {
 	ArrayBytes(array_bytes::Error),
 	#[error(transparent)]
 	Subcryptor(subcryptor::Error),
+}
+
+/// The core tokio error type.
+#[allow(missing_docs)]
+#[derive(Debug, ThisError)]
+pub enum Tokio {
+	#[error(transparent)]
+	OneshotRecv(tokio::sync::oneshot::error::RecvError),
+	// https://github.com/tokio-rs/tokio/blob/master/tokio/src/sync/mpsc/error.rs#L12
+	#[error("channel closed")]
+	MpscSend,
+	#[error(transparent)]
+	Elapsed(tokio::time::error::Elapsed),
 }

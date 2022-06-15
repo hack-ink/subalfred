@@ -12,8 +12,6 @@ pub mod jsonrpc;
 pub mod node;
 /// The core library about interacting with OS.
 pub mod system;
-/// The core library about interacting with websocket.
-pub mod websocket;
 
 /// Substrate checkers library.
 pub mod check;

@@ -64,8 +64,8 @@ pub async fn update_members_versions(manifest_path: &str, to: &str) -> Result<()
 			} else {
 				util::find_member_dep_regex(&members_deps)?.replace_all(
 					&content,
-					|captures: &Captures| {
-						format!("{}\"{}\"", &captures[1], util::align_version(&captures[3], to))
+					|caps: &Captures| {
+						format!("{}\"{}\"", &caps[1], util::align_version(&caps[3], to))
 					},
 				)
 			};

@@ -26,8 +26,7 @@ use cli::Cli;
 
 mod command;
 
-fn main() -> AnyResult<()> {
-	tracing_subscriber::fmt::init();
-
+#[tokio::main]
+async fn main() -> AnyResult<()> {
 	Cli::new().run()
 }

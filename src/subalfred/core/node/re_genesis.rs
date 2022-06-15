@@ -1,17 +1,37 @@
 // hack-ink
-use crate::core::{http, Result};
+use crate::core::{
+	jsonrpc::websocket::{self, Websocket},
+	Result,
+};
 use subrpcer::state;
 use substorager::StorageKey;
 
-const COUNT: u16 = 512;
+const PAGE_SIZE: usize = 1;
+const BATCH_SIZE: usize = 512;
 
+/// TODO
 pub async fn run(uri: &str) -> Result<()> {
-	get_pairs_paged(uri, StorageKey::new()).await?;
+	let ws = websocket::connect(uri).await?;
+
+	get_pairs_paged(&ws, StorageKey::new(), None).await?;
 
 	Ok(())
 }
 
-async fn get_pairs_paged(uri: &str, prefix: StorageKey) -> Result<()> {
+async fn get_pairs_paged(ws: &Websocket, prefix: StorageKey, at: Option<()>) -> Result<()> {
+	let keys = get_keys_paged(ws, prefix, at).await?;
+
+	for chunk_keys in keys.chunks(BATCH_SIZE) {
+		ws.batch::<Vec<String>, _>(
+			chunk_keys.iter().cloned().map(|key| state::get_storage_raw(key, at)).collect(),
+		)
+		.await?;
+	}
+
+	Ok(())
+}
+
+async fn get_keys_paged(ws: &Websocket, prefix: StorageKey, at: Option<()>) -> Result<Vec<String>> {
 	let prefix = prefix.to_string();
 	let mut start_key = None::<String>;
 	let mut keys = Vec::new();
@@ -20,17 +40,20 @@ async fn get_pairs_paged(uri: &str, prefix: StorageKey) -> Result<()> {
 		tracing::info!("Downloaded {} keys.", keys.len());
 
 		// TODO: does the `downloaded_keys` contains `start_key`
-		let response = http::send_jsonrpc::<_, Vec<String>>(
-			uri,
-			&state::get_keys_paged_once(&prefix, COUNT, start_key.as_ref(), None::<()>),
-		)
-		.await?;
+		let response = ws
+			.request::<Vec<String>, _>(state::get_keys_paged_raw(
+				&prefix,
+				PAGE_SIZE,
+				start_key.as_ref(),
+				at,
+			))
+			.await?;
 		let downloaded_keys = response.result;
-		let downloaded_keys_count = downloaded_keys.len() as u16;
+		let downloaded_keys_count = downloaded_keys.len();
 
 		keys.extend(downloaded_keys);
 
-		if downloaded_keys_count < COUNT {
+		if downloaded_keys_count < PAGE_SIZE {
 			tracing::info!("Downloaded {} keys.", keys.len());
 
 			break;
@@ -41,5 +64,5 @@ async fn get_pairs_paged(uri: &str, prefix: StorageKey) -> Result<()> {
 		}
 	}
 
-	Ok(())
+	Ok(keys)
 }

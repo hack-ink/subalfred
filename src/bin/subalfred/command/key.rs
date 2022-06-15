@@ -9,6 +9,8 @@ use subalfred::core::{
 	ss58::{self, Address},
 };
 
+// TODO: detect if it is a pallet account or sovereign account
+
 /// Convert the public key/ss58 address from ss58 address/public key.
 #[derive(Debug, Args)]
 pub struct KeyCmd {
@@ -47,8 +49,7 @@ impl KeyCmd {
 
 		if *list_all {
 			let (public_key, addresses) = ss58::all(&key)?;
-			let max_length =
-				addresses.iter().map(|address| address.network.len()).max().unwrap_or(0);
+			let max_length = addresses.iter().map(|addr| addr.network.len()).max().unwrap_or(0);
 
 			println!("Public-key {public_key}");
 

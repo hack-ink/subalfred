@@ -9,13 +9,13 @@ use std::{
 // crates.io
 use parity_scale_codec::Decode;
 // hack-ink
-use crate::core::{error, http, Result};
+use crate::core::{error, jsonrpc::http, Result};
 use submetadatan::{LatestRuntimeMetadata, RuntimeMetadataPrefixed};
 use subrpcer::state;
 use subversion::RuntimeVersion;
 
 const E_CODEC_METADATA_IS_NON_HEX: &str = "[core::node] `codec_metadata` is non-hex";
-const E_STDERR_IS_EMPTY: &str = "[core::node `stderr` is empty]";
+const E_STDERR_IS_EMPTY: &str = "[core::node] `stderr` is empty";
 
 /// Spawn a Substrate standard node.
 pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
@@ -42,14 +42,12 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 
 /// Fetch the runtime version from a node.
 pub async fn runtime_version(uri: &str) -> Result<RuntimeVersion> {
-	Ok(http::send_jsonrpc::<_, RuntimeVersion>(uri, &state::get_runtime_version_once())
-		.await?
-		.result)
+	Ok(http::send::<_, RuntimeVersion>(uri, &state::get_runtime_version_once()).await?.result)
 }
 
 /// Fetch the runtime metadata from a node.
 pub async fn runtime_metadata(uri: &str) -> Result<LatestRuntimeMetadata> {
-	let response = http::send_jsonrpc::<_, String>(uri, &state::get_metadata_once()).await?;
+	let response = http::send::<_, String>(uri, &state::get_metadata_once()).await?;
 	let codec_metadata = array_bytes::hex2bytes(&response.result)
 		.map_err(|_| error::Generic::AlmostImpossible(E_CODEC_METADATA_IS_NON_HEX))?;
 	let metadata_prefixed =

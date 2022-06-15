@@ -28,15 +28,13 @@ impl Cli {
 	pub fn new() -> Self {
 		let cli = Self::parse();
 
-		env::set_var("RUST_LOG", {
-			let log = cli.global_args.log.as_deref().unwrap_or("");
+		if let Ok(extra_log) = env::var("RUST_LOG") {
+			env::set_var("RUST_LOG", format!("{},{extra_log}", &cli.global_args.log));
+		} else {
+			env::set_var("RUST_LOG", &cli.global_args.log);
+		}
 
-			if let Ok(extra_log) = env::var("RUST_LOG") {
-				format!("{log},{extra_log}")
-			} else {
-				log.into()
-			}
-		});
+		tracing_subscriber::fmt::init();
 
 		cli
 	}
@@ -49,6 +47,6 @@ impl Cli {
 #[derive(Debug, Args)]
 pub struct GlobalArgs {
 	/// Set a custom logging filter. Also, work with the `RUST_LOG` environment variable.
-	#[clap(long, value_name = "TARGET=LEVEL,*", global = true)]
-	pub log: Option<String>,
+	#[clap(global = true, long, value_name = "TARGET=LEVEL,*", default_value = "")]
+	pub log: String,
 }
