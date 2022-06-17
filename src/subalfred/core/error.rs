@@ -1,6 +1,8 @@
+//! Subalfred core error collections.
+
 use thiserror::Error as ThisError;
 
-/// The core libraries' main `Error` type.
+/// Main error.
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Error {
@@ -32,6 +34,8 @@ impl std::fmt::Display for Debug {
 	}
 }
 impl std::error::Error for Debug {}
+/// Quick debug helper.
+///
 /// Convert the error to [`struct@Debug`].
 pub fn quick_debug<E>(e: E) -> Debug
 where
@@ -40,7 +44,7 @@ where
 	Debug(format!("{e:?}"))
 }
 
-/// The core Cargo error type.
+/// Cargo error.
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Cargo {
@@ -50,7 +54,7 @@ pub enum Cargo {
 	OpenManifestFailed(#[source] cargo_toml::Error),
 }
 
-/// The generic error type.
+/// Generic error.
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Generic {
@@ -70,7 +74,7 @@ pub enum Generic {
 	Tungstenite(#[from] tokio_tungstenite::tungstenite::Error),
 }
 
-/// The core JSONRPC error type.
+/// JSONRPC error.
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Jsonrpc {
@@ -80,7 +84,7 @@ pub enum Jsonrpc {
 	ExceededRequestQueueMaxSize(crate::core::jsonrpc::Id),
 }
 
-/// The core key error type.
+/// Key error.
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Key {
@@ -88,7 +92,7 @@ pub enum Key {
 	InvalidSubSeed,
 }
 
-/// The core node error type.
+/// Node error.
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Node {
@@ -98,7 +102,7 @@ pub enum Node {
 	StartFailed(#[source] std::io::Error),
 }
 
-/// The core SS58 error type.
+/// SS58 error..
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Ss58 {
@@ -107,7 +111,7 @@ pub enum Ss58 {
 	#[error("[core::ss58] failed to calculate SS58 address")]
 	CalculateSs58AddressFailed(#[source] subcryptor::Error),
 }
-/// The sub-error type of [`Ss58::InvalidAddress`].
+/// Sub-error of [`Ss58::InvalidAddress`].
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Ss58InvalidAddressSource {
@@ -117,7 +121,7 @@ pub enum Ss58InvalidAddressSource {
 	Subcryptor(subcryptor::Error),
 }
 
-/// The core tokio error type.
+/// Tokio error.
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Tokio {

@@ -1,4 +1,5 @@
-/// Error library.
+//! Subalfred core libraries.
+
 pub mod error;
 pub use error::Error;
 
