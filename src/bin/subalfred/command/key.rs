@@ -5,13 +5,15 @@ use clap::{ArgEnum, Args};
 // hack-ink
 use crate::prelude::*;
 use subalfred::core::{
-	key::KeyTypeId,
+	key::{Key, PalletId, ParaId, SiblId},
 	ss58::{self, Address},
 };
 
+pub type ChainId = u32;
+
 // TODO: detect if it is a pallet account or sovereign account
 
-/// Convert the public key/ss58 address from ss58 address/public key.
+/// Convert the public key/SS58 address from SS58 address/public key.
 #[derive(Debug, Args)]
 pub struct KeyCmd {
 	/// Public key or SS58 address.
@@ -21,7 +23,6 @@ pub struct KeyCmd {
 	#[clap(arg_enum, long, value_name = "KEY TYPE")]
 	key_type: Option<KeyType>,
 	/// Network address format.
-	/// If not set, the default network is `Substrate`.
 	#[clap(long, value_name = "NAME", default_value = "Substrate", conflicts_with = "list-all")]
 	network: String,
 	/// List all the networks' addresses.
@@ -35,14 +36,7 @@ impl KeyCmd {
 	pub fn run(&self) -> AnyResult<()> {
 		let Self { key, key_type, network, list_all, show_prefix } = self;
 		let key = if let Some(key_type) = key_type {
-			Cow::Owned(array_bytes::bytes2hex(
-				"0x",
-				&match key_type {
-					KeyType::Pallet => KeyTypeId::pallet().to_key::<32>(key.as_bytes())?,
-					KeyType::Parachain => KeyTypeId::parachain().to_key::<32>(key.as_bytes())?,
-					KeyType::Sibling => KeyTypeId::sibling().to_key::<32>(key.as_bytes())?,
-				},
-			))
+			Cow::Owned(array_bytes::bytes2hex("0x", &key_type.to_key::<32>(key)?))
 		} else {
 			Cow::Borrowed(key)
 		};
@@ -83,4 +77,14 @@ pub enum KeyType {
 	Pallet,
 	Parachain,
 	Sibling,
+}
+impl KeyType {
+	fn to_key<const N: usize>(&self, s: &str) -> AnyResult<[u8; N]> {
+		Ok(match self {
+			KeyType::Pallet =>
+				PalletId(array_bytes::slice2array(s.as_bytes()).map_err(quick_error)?).to_key()?,
+			KeyType::Parachain => ParaId(s.parse::<ChainId>()?).to_key()?,
+			KeyType::Sibling => SiblId(s.parse::<ChainId>()?).to_key()?,
+		})
+	}
 }
