@@ -1,28 +1,28 @@
 // hack-ink
 use crate::core::{
-	jsonrpc::websocket::{self, Websocket},
+	jsonrpc::websocket::{Ws, WsInitializer},
 	Result,
 };
 use subrpcer::state;
 use substorager::StorageKey;
 
-const PAGE_SIZE: usize = 1;
+const PAGE_SIZE: usize = 512;
 const BATCH_SIZE: usize = 512;
 
 /// TODO
 pub async fn run(uri: &str) -> Result<()> {
-	let ws = websocket::connect(uri).await?;
+	let ws = WsInitializer::new().connect(uri).await?;
 
 	get_pairs_paged(&ws, StorageKey::new(), None).await?;
 
 	Ok(())
 }
 
-async fn get_pairs_paged(ws: &Websocket, prefix: StorageKey, at: Option<()>) -> Result<()> {
+async fn get_pairs_paged(ws: &Ws, prefix: StorageKey, at: Option<()>) -> Result<()> {
 	let keys = get_keys_paged(ws, prefix, at).await?;
 
 	for chunk_keys in keys.chunks(BATCH_SIZE) {
-		ws.batch::<Vec<String>, _>(
+		ws.batch::<String, _>(
 			chunk_keys.iter().cloned().map(|key| state::get_storage_raw(key, at)).collect(),
 		)
 		.await?;
@@ -31,7 +31,7 @@ async fn get_pairs_paged(ws: &Websocket, prefix: StorageKey, at: Option<()>) -> 
 	Ok(())
 }
 
-async fn get_keys_paged(ws: &Websocket, prefix: StorageKey, at: Option<()>) -> Result<Vec<String>> {
+async fn get_keys_paged(ws: &Ws, prefix: StorageKey, at: Option<()>) -> Result<Vec<String>> {
 	let prefix = prefix.to_string();
 	let mut start_key = None::<String>;
 	let mut keys = Vec::new();
@@ -52,6 +52,9 @@ async fn get_keys_paged(ws: &Websocket, prefix: StorageKey, at: Option<()>) -> R
 		let downloaded_keys_count = downloaded_keys.len();
 
 		keys.extend(downloaded_keys);
+
+		// Debug.
+		break;
 
 		if downloaded_keys_count < PAGE_SIZE {
 			tracing::info!("Downloaded {} keys.", keys.len());

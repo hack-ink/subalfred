@@ -1,6 +1,5 @@
 // crates.io
 use clap::Args;
-use futures::executor;
 // hack-ink
 use crate::prelude::*;
 use subalfred::core::node::re_genesis;
@@ -13,10 +12,11 @@ pub struct ReGenesisCmd {
 	live: String,
 }
 impl ReGenesisCmd {
-	pub fn run(&self) -> AnyResult<()> {
+	#[tokio::main]
+	pub async fn run(&self) -> AnyResult<()> {
 		let Self { live } = self;
 
-		executor::block_on(re_genesis::run(live))?;
+		re_genesis::run(live).await?;
 
 		Ok(())
 	}

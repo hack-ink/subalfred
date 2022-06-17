@@ -1,5 +1,5 @@
 //! Full functionality JSONRPC websocket client implementation.
-//! Follow https://www.jsonrpc.org/specification specification.
+//! Follow <https://www.jsonrpc.org/specification> specification.
 
 // std
 use std::{collections::HashMap, str, sync::Arc, time::Duration};
@@ -31,42 +31,57 @@ type BatchResponse = Vec<RequestResponse>;
 type BatchNotifier = oneshot::Sender<BatchResponse>;
 type BatchPool = HashMap<Id, BatchNotifier>;
 
-/// The websocket builder.
-///
-/// Connect this to acquire a websocket object.
+/// The websocket initializer.
 #[derive(Debug)]
-pub struct Client {
-	concurrency_limit: Id,
-	interval: Duration,
-	request_timeout: Duration,
+pub struct WsInitializer {
+	/// Concurrent tasks count limit.
+	pub concurrency_limit: Id,
+	/// Tick interval.
+	pub interval: Duration,
+	/// Request timeout.
+	pub request_timeout: Duration,
 }
-impl Client {
-	/// Connect to the given URI.
-	pub async fn connect(self, uri: &str) -> Result<Websocket> {
+impl WsInitializer {
+	/// Create a default initializer.
+	pub fn new() -> Self {
+		Default::default()
+	}
+
+	/// Set the [`concurrency_limit`](#structfield.concurrency_limit).
+	pub fn concurrency_limit(mut self, concurrency_limit: Id) -> Self {
+		self.concurrency_limit = concurrency_limit;
+
+		self
+	}
+
+	/// Set the [`interval`](#structfield.interval).
+	pub fn interval(mut self, interval: Duration) -> Self {
+		self.interval = interval;
+
+		self
+	}
+
+	/// Set the [`request_timeout`](#structfield.request_timeout).
+	pub fn request_timeout(mut self, request_timeout: Duration) -> Self {
+		self.request_timeout = request_timeout;
+
+		self
+	}
+
+	/// Initialize the websocket stream.
+	pub async fn connect(self, uri: &str) -> Result<Ws> {
 		let (mut ws_tx, mut ws_rx) = tokio_tungstenite::connect_async(uri)
 			.await
 			.map_err(error::Generic::Tungstenite)?
 			.0
 			.split();
-		let (tx, rx) = mpsc::channel(1);
+		let (tx, rx) = mpsc::channel(self.concurrency_limit);
 
 		tokio::spawn(async move {
 			let system_health_req = serde_json::to_string(&system::health_once()).unwrap();
 			let rx = stream::unfold(rx, |mut r| async { r.recv().await.map(|c| (c, r)) });
 
 			futures::pin_mut!(rx);
-
-			#[cfg(feature = "debug-websocket")]
-			{
-				let mut rx = rx;
-
-				loop {
-					match rx.next().await.unwrap() {
-						call @ Call::Debug(_) => tracing::info!("{call:?}"),
-						_ => unreachable!(),
-					}
-				}
-			}
 
 			// TODO: clean dead items?
 			let mut pool = Pool::new();
@@ -110,18 +125,18 @@ impl Client {
 					Left((Left((maybe_call, maybe_resp_fut)), tick_fut_)) => {
 						if let Some(call) = maybe_call {
 							match call {
-								#[cfg(feature = "debug-websocket")]
-								Call::Debug(_) => {
-									tracing::info!("{call:?}");
-								},
+								// Debug.
+								// Call::Debug(_) => {
+								// 	tracing::info!("{call:?}");
+								// },
 								Call::Single(RawCall { id, request, notifier }) => {
-									tracing::debug!("{request}");
+									tracing::debug!("SingleRequest({request})");
 
 									ws_tx.send(Message::Text(request)).await.unwrap();
 									pool.requests.insert(id, notifier);
 								},
 								Call::Batch(RawCall { id, request, notifier }) => {
-									tracing::debug!("{request}");
+									tracing::debug!("BatchRequests({request})");
 
 									ws_tx.send(Message::Text(request)).await.unwrap();
 									pool.batches.insert(id, notifier);
@@ -145,7 +160,7 @@ impl Client {
 						tick_fut = tick_fut_;
 					},
 					Right((_, rxs_fut_)) => {
-						tracing::debug!("Tick(system_health)");
+						tracing::debug!("TickRequest({system_health_req})");
 
 						ws_tx.send(Message::Text(system_health_req.clone())).await.unwrap();
 
@@ -156,7 +171,7 @@ impl Client {
 			}
 		});
 
-		Ok(Websocket {
+		Ok(Ws {
 			messenger: tx,
 			request_queue: RequestQueue {
 				size: self.concurrency_limit,
@@ -168,7 +183,7 @@ impl Client {
 		})
 	}
 }
-impl Default for Client {
+impl Default for WsInitializer {
 	fn default() -> Self {
 		Self {
 			concurrency_limit: 512,
@@ -177,20 +192,16 @@ impl Default for Client {
 		}
 	}
 }
-/// Connect to the given URI with default configurations.
-pub async fn connect(uri: &str) -> Result<Websocket> {
-	Client::default().connect(uri).await
-}
 
-/// Websocket instance.
+/// Ws instance.
 ///
 /// Use this to interact with the server.
-pub struct Websocket {
+pub struct Ws {
 	messenger: Messenger,
 	request_queue: RequestQueue,
 	request_timeout: Duration,
 }
-impl Websocket {
+impl Ws {
 	const VERSION: &'static str = "2.0";
 
 	/// Send a single request.
@@ -199,19 +210,13 @@ impl Websocket {
 		D: DeserializeOwned,
 		R: Into<RawRequest<'a, Value>>,
 	{
-		#[cfg(feature = "debug-websocket")]
-		{
-			for i in 0..110 {
-				// let r = self.messenger.try_send(Call::Debug(i));
-				// tracing::trace!("{r:?}");
-				self.messenger.send(Call::Debug(i)).await.unwrap();
-			}
-		}
-
 		let RequestQueueGuard { lock: id, .. } = self.request_queue.next()?;
 		let RawRequest { method, params } = raw_request.into();
 		let (tx, rx) = oneshot::channel();
 
+		// TODO: use `send_timeout`
+		// Debug.
+		// self.messenger.send(Call::Debug(id)).await.map_err(|_| error::Tokio::MpscSend)?;
 		self.messenger
 			.send(Call::Single(RawCall {
 				id,
@@ -266,13 +271,15 @@ impl Websocket {
 		let request = serde_json::to_string(&requests).map_err(error::Generic::Serde)?;
 		let (tx, rx) = oneshot::channel();
 
+		// TODO: use `send_timeout`
 		self.messenger
 			.send(Call::Batch(RawCall { id, request, notifier: tx }))
 			.await
 			.map_err(|_| error::Tokio::MpscSend)?;
 
-		let mut responses = rx
+		let mut responses = time::timeout(self.request_timeout, rx)
 			.await
+			.map_err(error::Tokio::Elapsed)?
 			.map_err(error::Tokio::OneshotRecv)?
 			.into_iter()
 			.map(|r| {
@@ -324,10 +331,12 @@ impl Pool {
 	async fn process_raw_response(&mut self, raw_response: &str) {
 		if let Ok(response) = serde_json::from_str::<RequestResponse>(raw_response) {
 			if response.id == 0 {
-				tracing::debug!("Tick({raw_response})");
+				tracing::debug!("TickResponse({raw_response})");
 
 				return;
 			}
+
+			tracing::debug!("RequestResponse({raw_response})");
 
 			let notifier = self.requests.remove(&response.id).unwrap();
 
@@ -335,6 +344,8 @@ impl Pool {
 				tracing::error!("{e:?}");
 			}
 		} else if let Ok(responses) = serde_json::from_str::<BatchResponse>(raw_response) {
+			tracing::debug!("BatchResponse({raw_response})");
+
 			let notifier = self.batches.remove(&responses.first().unwrap().id).unwrap();
 
 			if let Err(e) = notifier.send(responses) {
@@ -348,8 +359,8 @@ impl Pool {
 
 #[derive(Debug)]
 enum Call {
-	#[cfg(feature = "debug-websocket")]
-	Debug(u128),
+	// Debug.
+	// Debug(Id),
 	Single(RawCall<RequestNotifier>),
 	Batch(RawCall<BatchNotifier>),
 }

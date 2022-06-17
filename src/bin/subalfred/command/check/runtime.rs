@@ -2,7 +2,6 @@
 use std::{error::Error, process::Child};
 // crates.io
 use clap::{ArgEnum, Args};
-use tokio::runtime::Runtime;
 // hack-ink
 use crate::prelude::*;
 use subalfred::core::{check::runtime, node, system};
@@ -24,7 +23,8 @@ pub struct RuntimeCmd {
 	property: Property,
 }
 impl RuntimeCmd {
-	pub fn run(&self) -> AnyResult<()> {
+	#[tokio::main]
+	pub async fn run(&self) -> AnyResult<()> {
 		fn map_err_and_kill_node_process<T, E>(
 			result: Result<T, E>,
 			node_process: &mut Child,
@@ -46,7 +46,7 @@ impl RuntimeCmd {
 
 		match property {
 			Property::Storage => {
-				let result = Runtime::new()?.block_on(runtime::check_storage(&local, live));
+				let result = runtime::check_storage(&local, live).await;
 				let (pallets_diff, entries_diffs) =
 					map_err_and_kill_node_process(result, &mut node_process)?;
 
@@ -65,7 +65,7 @@ impl RuntimeCmd {
 				});
 			},
 			Property::Version => {
-				let result = Runtime::new()?.block_on(runtime::check_version(&local, live));
+				let result = runtime::check_version(&local, live).await;
 
 				if let Some(diffs) = map_err_and_kill_node_process(result, &mut node_process)? {
 					println!("{diffs}")

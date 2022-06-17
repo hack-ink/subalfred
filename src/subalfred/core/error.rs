@@ -32,7 +32,7 @@ impl std::fmt::Display for Debug {
 	}
 }
 impl std::error::Error for Debug {}
-/// Convert the error to [`Debug`].
+/// Convert the error to [`struct@Debug`].
 pub fn quick_debug<E>(e: E) -> Debug
 where
 	E: std::fmt::Debug,

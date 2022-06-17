@@ -22,19 +22,19 @@ use workspace::WorkspaceCmd;
 #[macro_export]
 macro_rules! impl_cmd {
 	(
-		$(#[$doc:meta])*
+		$(#[doc=$doc:expr])?
 		$cmd:ident {
 			$(
-				$(#[$clap_attr:meta])*
+				$(#[clap($clap_attr:ident)])?
 				$subcmd:ident
 			),*,
 		}
 	) => {
-		$(#[$doc])*
+		$(#[doc=$doc])?
 		#[derive(Debug, clap::Subcommand)]
 		pub enum $cmd {
 			$(
-				$(#[$clap_attr])*
+				$(#[clap($clap_attr)])?
 				$subcmd(concat_idents!($subcmd, Cmd))
 			),*
 		}

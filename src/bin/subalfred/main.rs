@@ -12,7 +12,7 @@ mod prelude {
 	// crates.io
 	use anyhow::Error;
 
-	pub fn debug_err<E>(e: E) -> Error
+	pub fn quick_error<E>(e: E) -> Error
 	where
 		E: Debug,
 	{
@@ -26,7 +26,7 @@ use cli::Cli;
 
 mod command;
 
-#[tokio::main]
-async fn main() -> AnyResult<()> {
+// #[tokio::main]
+fn main() -> AnyResult<()> {
 	Cli::new().run()
 }

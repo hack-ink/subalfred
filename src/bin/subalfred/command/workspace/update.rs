@@ -1,6 +1,5 @@
 // crates.io
 use clap::Args;
-use futures::executor;
 // hack-ink
 use crate::prelude::*;
 use subalfred::core::cargo;
@@ -18,10 +17,11 @@ pub struct UpdateCmd {
 	version: String,
 }
 impl UpdateCmd {
-	pub fn run(&self) -> AnyResult<()> {
+	#[tokio::main]
+	pub async fn run(&self) -> AnyResult<()> {
 		let Self { manifest_path, version } = self;
 
-		executor::block_on(cargo::update_members_versions(manifest_path, version))?;
+		cargo::update_members_versions(manifest_path, version).await?;
 
 		Ok(())
 	}
