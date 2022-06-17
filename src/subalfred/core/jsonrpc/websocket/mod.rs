@@ -4,9 +4,11 @@
 // std
 use std::{collections::HashMap, str, sync::Arc, time::Duration};
 // crates.io
+use futures::{future::Fuse, FutureExt, SinkExt, StreamExt};
+#[cfg(all(feature = "futures-selector", not(feature = "tokio-selector")))]
 use futures::{
-	future::{self, Either::*, Fuse},
-	stream, FutureExt, SinkExt, StreamExt,
+	future::{self, Either::*},
+	stream,
 };
 use serde::de::DeserializeOwned;
 use serde_json::Value;
@@ -77,52 +79,84 @@ impl WsInitializer {
 			.split();
 		let (tx, rx) = mpsc::channel(self.concurrency_limit);
 
+		#[cfg(all(feature = "tokio-selector", not(feature = "futures-selector")))]
+		tokio::spawn(async move {
+			let system_health_req = serde_json::to_string(&system::health_once()).unwrap();
+			let mut rx = rx;
+			// TODO: clean dead items?
+			let mut pool = Pool::new();
+			// Minimum interval is 1ms.
+			let interval = self.interval.max(Duration::from_millis(1));
+			let mut interval = IntervalStream::new(time::interval(interval));
+			// Disable the tick, if the interval is zero.
+			let mut interval_fut =
+				if self.interval.is_zero() { Fuse::terminated() } else { interval.next().fuse() };
+
+			loop {
+				tokio::select! {
+					_ = &mut interval_fut => {
+						tracing::debug!("TickRequest({system_health_req})");
+
+						ws_tx.send(Message::Text(system_health_req.clone())).await.unwrap();
+
+						interval_fut = interval.next().fuse();
+					},
+					maybe_call = rx.recv() => {
+						if let Some(call) = maybe_call {
+							match call {
+								// Debug.
+								// Call::Debug(_) => {
+								// 	tracing::info!("{call:?}");
+								// }
+								Call::Single(RawCall { id, request, notifier }) => {
+									tracing::debug!("SingleRequest({request})");
+
+									ws_tx.send(Message::Text(request)).await.unwrap();
+									pool.requests.insert(id, notifier);
+								}
+								Call::Batch(RawCall { id, request, notifier }) => {
+									tracing::debug!("BatchRequests({request})");
+
+									ws_tx.send(Message::Text(request)).await.unwrap();
+									pool.batches.insert(id, notifier);
+								}
+							}
+						} else {
+							//
+						}
+					},
+					maybe_resp = ws_rx.next() => {
+						if let Some(resp) = maybe_resp {
+							pool.on_ws_recv(resp).await.unwrap()
+						} else {
+							//
+						}
+					}
+				}
+			}
+		});
+
+		#[cfg(all(feature = "futures-selector", not(feature = "tokio-selector")))]
 		tokio::spawn(async move {
 			let system_health_req = serde_json::to_string(&system::health_once()).unwrap();
 			let rx = stream::unfold(rx, |mut r| async { r.recv().await.map(|c| (c, r)) });
 
 			futures::pin_mut!(rx);
 
+			let mut rxs_fut = future::select(rx.next(), ws_rx.next());
+
 			// TODO: clean dead items?
 			let mut pool = Pool::new();
-			let mut rxs_fut = future::select(rx.next(), ws_rx.next());
 			// Minimum interval is 1ms.
 			let interval = self.interval.max(Duration::from_millis(1));
 			let mut interval = IntervalStream::new(time::interval(interval));
 			// Disable the tick, if the interval is zero.
-			let mut tick_fut =
+			let mut interval_fut =
 				if self.interval.is_zero() { Fuse::terminated() } else { interval.next().fuse() };
 
 			loop {
-				// tokio::select! {
-				// 	_ = tick => {
-				// 		tracing::debug!("Tick(system_health)");
-				//
-				// 		ws_tx.send(Message::Text(system_health_req.clone())).await.unwrap();
-				// 	},
-				// 	maybe_recv = ws_rx.next() => pool.on_ws_recv(maybe_recv).await.unwrap(),
-				// 	msg = rx.recv() => {
-				// 		if let Some(msg) = msg {
-				// 			match msg {
-				// 				Call::Single(RawCall { id, request, notifier }) => {
-				// 					tracing::debug!("{request}");
-				//
-				// 					ws_tx.send(Message::Text(request)).await.unwrap();
-				// 					pool.requests.insert(id, notifier);
-				// 				}
-				// 				Call::Batch(RawCall { id, request, notifier }) => {
-				// 					tracing::debug!("{request}");
-				//
-				// 					ws_tx.send(Message::Text(request)).await.unwrap();
-				// 					pool.batches.insert(id, notifier);
-				// 				}
-				// 			}
-				// 		}
-				// 	}
-				// }
-
-				match future::select(rxs_fut, tick_fut).await {
-					Left((Left((maybe_call, maybe_resp_fut)), tick_fut_)) => {
+				match future::select(rxs_fut, interval_fut).await {
+					Left((Left((maybe_call, maybe_resp_fut)), interval_fut_)) => {
 						if let Some(call) = maybe_call {
 							match call {
 								// Debug.
@@ -147,9 +181,9 @@ impl WsInitializer {
 						}
 
 						rxs_fut = future::select(rx.next(), maybe_resp_fut);
-						tick_fut = tick_fut_;
+						interval_fut = interval_fut_;
 					},
-					Left((Right((maybe_resp, maybe_call_fut)), tick_fut_)) => {
+					Left((Right((maybe_resp, maybe_call_fut)), interval_fut_)) => {
 						if let Some(resp) = maybe_resp {
 							pool.on_ws_recv(resp).await.unwrap()
 						} else {
@@ -157,7 +191,7 @@ impl WsInitializer {
 						}
 
 						rxs_fut = future::select(maybe_call_fut, ws_rx.next());
-						tick_fut = tick_fut_;
+						interval_fut = interval_fut_;
 					},
 					Right((_, rxs_fut_)) => {
 						tracing::debug!("TickRequest({system_health_req})");
@@ -165,7 +199,7 @@ impl WsInitializer {
 						ws_tx.send(Message::Text(system_health_req.clone())).await.unwrap();
 
 						rxs_fut = rxs_fut_;
-						tick_fut = interval.next().fuse();
+						interval_fut = interval.next().fuse();
 					},
 				}
 			}
