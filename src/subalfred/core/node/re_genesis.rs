@@ -23,7 +23,7 @@ async fn get_pairs_paged(ws: &Ws, prefix: StorageKey, at: Option<()>) -> Result<
 
 	for chunk_keys in keys.chunks(BATCH_SIZE) {
 		ws.batch::<String, _>(
-			chunk_keys.iter().cloned().map(|key| state::get_storage_raw(key, at)).collect(),
+			chunk_keys.iter().map(|key| state::get_storage_raw(key, at)).collect(),
 		)
 		.await?;
 	}

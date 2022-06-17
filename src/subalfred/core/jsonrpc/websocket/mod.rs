@@ -1,17 +1,22 @@
 //! Full functionality JSONRPC websocket client implementation.
 //! Follow <https://www.jsonrpc.org/specification> specification.
 
+#[cfg(any(
+	all(feature = "futures-selector", feature = "tokio-selector"),
+	not(any(feature = "futures-selector", feature = "tokio-selector"))
+))]
+compile_error!(
+	"`futures-selector` conflicts with `tokio-selector`. But at least one of them must be enabled."
+);
+
 // std
 use std::{collections::HashMap, str, sync::Arc, time::Duration};
 // crates.io
-#[cfg(any(feature = "futures-selector", feature = "tokio-selector"))]
-use futures::future::Fuse;
-#[cfg(all(feature = "futures-selector", not(feature = "tokio-selector")))]
-use futures::{
+use futures::{future::Fuse, FutureExt, SinkExt, StreamExt};
+#[cfg(feature = "futures-selector")] use futures::{
 	future::{self, Either::*},
 	stream,
 };
-use futures::{FutureExt, SinkExt, StreamExt};
 use serde::de::DeserializeOwned;
 use serde_json::Value;
 use tokio::{
@@ -81,7 +86,7 @@ impl WsInitializer {
 			.split();
 		let (tx, rx) = mpsc::channel(self.concurrency_limit);
 
-		#[cfg(all(feature = "tokio-selector", not(feature = "futures-selector")))]
+		#[cfg(feature = "tokio-selector")]
 		tokio::spawn(async move {
 			let system_health_req = serde_json::to_string(&system::health_once()).unwrap();
 			let mut rx = rx;
@@ -138,7 +143,7 @@ impl WsInitializer {
 			}
 		});
 
-		#[cfg(all(feature = "futures-selector", not(feature = "tokio-selector")))]
+		#[cfg(feature = "futures-selector")]
 		tokio::spawn(async move {
 			let system_health_req = serde_json::to_string(&system::health_once()).unwrap();
 			let rx = stream::unfold(rx, |mut r| async { r.recv().await.map(|c| (c, r)) });
