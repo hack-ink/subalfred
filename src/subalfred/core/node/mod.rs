@@ -1,3 +1,5 @@
+//! The core library about how Subalfred interacts with Substrate-based node.
+
 /// TODO
 pub mod re_genesis;
 

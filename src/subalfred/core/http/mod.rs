@@ -1,3 +1,5 @@
+//! The core library about how Subalfred interacts with HTTP.
+
 // std
 use std::sync::Arc;
 // crates.io

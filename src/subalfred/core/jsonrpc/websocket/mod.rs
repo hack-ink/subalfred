@@ -4,12 +4,14 @@
 // std
 use std::{collections::HashMap, str, sync::Arc, time::Duration};
 // crates.io
-use futures::{future::Fuse, FutureExt, SinkExt, StreamExt};
+#[cfg(any(feature = "futures-selector", feature = "tokio-selector"))]
+use futures::future::Fuse;
 #[cfg(all(feature = "futures-selector", not(feature = "tokio-selector")))]
 use futures::{
 	future::{self, Either::*},
 	stream,
 };
+use futures::{FutureExt, SinkExt, StreamExt};
 use serde::de::DeserializeOwned;
 use serde_json::Value;
 use tokio::{

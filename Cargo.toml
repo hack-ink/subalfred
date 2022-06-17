@@ -55,8 +55,10 @@ subversion   = { version = "0.9", path = "substrate-minimum/subversion", feature
 default = [
 	"tokio-selector",
 ]
+
+# At least one selected feature must be enabled.
 futures-selector = []
-tokio-selector = []
+tokio-selector   = []
 
 # [profile.release]
 # lto = true

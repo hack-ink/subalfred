@@ -1,3 +1,5 @@
+//! SS58-prefix address algorithm implementation.
+
 #[cfg(test)] mod test;
 
 // hack-ink

@@ -1,3 +1,5 @@
+//! The core library about how Subalfred interacts with OS/System.
+
 #[cfg(test)] mod test;
 
 // std
@@ -11,6 +13,9 @@ use std::{
 use camino::{Utf8Path, Utf8PathBuf};
 // hack-ink
 use crate::core::{error, Result};
+
+/// System port.
+pub type Port = u16;
 
 const E_CALC_SWAP_PATH_FAILED: &str = "[core::system] failed to calculate the swap file path";
 const E_NO_AVAILABLE_PORT_FOUND: &str = "[core::system] failed to find an available port";
@@ -58,8 +63,8 @@ where
 /// Search a available port.
 ///
 /// Skip the system ports, starting from 1001.
-pub fn random_available_port() -> Result<u16> {
-	for port in 1025..u16::MAX {
+pub fn random_available_port() -> Result<Port> {
+	for port in 1025..Port::MAX {
 		if TcpListener::bind(("127.0.0.1", port)).is_ok() {
 			return Ok(port);
 		}

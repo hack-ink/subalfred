@@ -1,3 +1,5 @@
+//! Substrate keys implementations.
+
 // crates.io
 use parity_scale_codec::Encode;
 // hack-ink
