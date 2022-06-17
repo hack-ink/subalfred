@@ -25,7 +25,7 @@ vergen = { version = "7.2" }
 [dependencies]
 # crates.io
 anyhow             = { version = "1.0" }
-array-bytes        = { version = "1.6" }
+array-bytes        = { version = "2.0" }
 camino             = { version = "1.0" }
 cargo_metadata     = { version = "0.14" }
 cargo_toml         = { version = "0.11" }
@@ -50,9 +50,6 @@ submetadatan = { version = "0.9", path = "substrate-minimum/submetadatan" }
 subrpcer     = { version = "0.9", path = "substrate-minimum/subrpcer" }
 substorager  = { version = "0.9", path = "substrate-minimum/substorager" }
 subversion   = { version = "0.9", path = "substrate-minimum/subversion", features = ["serde"] }
-
-[features]
-debug-websocket = []
 
 # [profile.release]
 # lto = true

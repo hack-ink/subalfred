@@ -45,6 +45,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c5b210fcebfebcdd3ac59145390e5a4c16a980f4a18d4b676cd96dee09926854"
 
 [[package]]
+name = "array-bytes"
+version = "2.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "30725d201df311b571b927e5a175a394e3763e11451c2e6415a84dc6e891fb6d"
+
+[[package]]
 name = "arrayvec"
 version = "0.4.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1497,7 +1503,7 @@ name = "subalfred"
 version = "0.9.0"
 dependencies = [
  "anyhow",
- "array-bytes",
+ "array-bytes 2.0.1",
  "camino",
  "cargo_metadata",
  "cargo_toml",
@@ -1589,7 +1595,7 @@ dependencies = [
 name = "substorager"
 version = "0.9.0"
 dependencies = [
- "array-bytes",
+ "array-bytes 1.6.0",
  "parity-scale-codec 3.1.5",
  "subhasher",
 ]
