@@ -26,7 +26,7 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 		.stderr(Stdio::piped())
 		.args(&[&format!("--rpc-port={rpc_port}"), "--chain", &format!("{}-dev", chain), "--tmp"])
 		.spawn()
-		.map_err(error::Node::StartFailed)?;
+		.map_err(error::Node::StartNodeFailed)?;
 	let output = BufReader::new(
 		node.stderr.take().ok_or(error::Generic::AlmostImpossible(E_STDERR_IS_EMPTY))?,
 	);

@@ -61,7 +61,7 @@ impl RequestQueue {
 	fn next(&self) -> Result<RequestQueueGuard<Id>> {
 		let active = Arc::strong_count(&self.active);
 
-		tracing::debug!("RequestQueue({active}/{})", self.size);
+		tracing::trace!("RequestQueue({active}/{})", self.size);
 
 		if active == self.size {
 			Err(error::Jsonrpc::ExceededRequestQueueMaxSize(self.size))?
@@ -76,7 +76,7 @@ impl RequestQueue {
 	fn take(&self, count: Id) -> Result<RequestQueueGuard<Vec<Id>>> {
 		let active = Arc::strong_count(&self.active);
 
-		tracing::debug!("RequestQueue({active}/{})", self.size);
+		tracing::trace!("RequestQueue({active}/{})", self.size);
 
 		if active == self.size {
 			Err(error::Jsonrpc::ExceededRequestQueueMaxSize(self.size))?

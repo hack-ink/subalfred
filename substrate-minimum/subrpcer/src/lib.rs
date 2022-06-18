@@ -36,7 +36,7 @@ pub fn rpc_once(method: &str, params: Value) -> Value {
 
 #[cfg(feature = "tracing")]
 pub fn debug(rpc: Value) -> Value {
-	tracing::debug!("{rpc:?}");
+	tracing::trace!("{rpc:?}");
 
 	rpc
 }

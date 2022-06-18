@@ -47,6 +47,6 @@ impl Cli {
 #[derive(Debug, Args)]
 pub struct GlobalArgs {
 	/// Set a custom logging filter. Also, work with the `RUST_LOG` environment variable.
-	#[clap(global = true, long, value_name = "TARGET=LEVEL,*", default_value = "")]
+	#[clap(global = true, long, value_name = "TARGET=LEVEL,*", default_value = "info")]
 	pub log: String,
 }

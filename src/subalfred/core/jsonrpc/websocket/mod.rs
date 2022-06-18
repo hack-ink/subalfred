@@ -102,7 +102,7 @@ impl WsInitializer {
 			loop {
 				tokio::select! {
 					_ = &mut interval_fut => {
-						tracing::debug!("TickRequest({system_health_req})");
+						tracing::trace!("TickRequest({system_health_req})");
 
 						ws_tx.send(Message::Text(system_health_req.clone())).await.unwrap();
 
@@ -116,13 +116,13 @@ impl WsInitializer {
 								// 	tracing::info!("{call:?}");
 								// }
 								Call::Single(RawCall { id, request, notifier }) => {
-									tracing::debug!("SingleRequest({request})");
+									tracing::trace!("SingleRequest({request})");
 
 									ws_tx.send(Message::Text(request)).await.unwrap();
 									pool.requests.insert(id, notifier);
 								}
 								Call::Batch(RawCall { id, request, notifier }) => {
-									tracing::debug!("BatchRequests({request})");
+									tracing::trace!("BatchRequests({request})");
 
 									ws_tx.send(Message::Text(request)).await.unwrap();
 									pool.batches.insert(id, notifier);
@@ -171,13 +171,13 @@ impl WsInitializer {
 								// 	tracing::info!("{call:?}");
 								// },
 								Call::Single(RawCall { id, request, notifier }) => {
-									tracing::debug!("SingleRequest({request})");
+									tracing::trace!("SingleRequest({request})");
 
 									ws_tx.send(Message::Text(request)).await.unwrap();
 									pool.requests.insert(id, notifier);
 								},
 								Call::Batch(RawCall { id, request, notifier }) => {
-									tracing::debug!("BatchRequests({request})");
+									tracing::trace!("BatchRequests({request})");
 
 									ws_tx.send(Message::Text(request)).await.unwrap();
 									pool.batches.insert(id, notifier);
@@ -201,7 +201,7 @@ impl WsInitializer {
 						interval_fut = interval_fut_;
 					},
 					Right((_, rxs_fut_)) => {
-						tracing::debug!("TickRequest({system_health_req})");
+						tracing::trace!("TickRequest({system_health_req})");
 
 						ws_tx.send(Message::Text(system_health_req.clone())).await.unwrap();
 
@@ -228,8 +228,8 @@ impl Default for WsInitializer {
 	fn default() -> Self {
 		Self {
 			concurrency_limit: 512,
-			interval: Duration::from_secs(0),
-			request_timeout: Duration::from_secs(5),
+			interval: Duration::from_secs(10),
+			request_timeout: Duration::from_secs(10),
 		}
 	}
 }
@@ -356,10 +356,10 @@ impl Pool {
 					Message::Binary(raw_resp) =>
 						self.process_raw_response(str::from_utf8(&raw_resp).unwrap()).await,
 					Message::Text(raw_resp) => self.process_raw_response(&raw_resp).await,
-					Message::Ping(_) => tracing::debug!("Ping"),
-					Message::Pong(_) => tracing::debug!("Pong"),
-					Message::Close(_) => unimplemented!("Close"),
-					Message::Frame(_) => unimplemented!("Frame"),
+					Message::Ping(_) => tracing::warn!("Ping"),
+					Message::Pong(_) => tracing::warn!("Pong"),
+					Message::Close(_) => tracing::warn!("Close"),
+					Message::Frame(_) => tracing::warn!("Frame"),
 				}
 
 				Ok(())
@@ -372,12 +372,12 @@ impl Pool {
 	async fn process_raw_response(&mut self, raw_response: &str) {
 		if let Ok(response) = serde_json::from_str::<RequestResponse>(raw_response) {
 			if response.id == 0 {
-				tracing::debug!("TickResponse({raw_response})");
+				tracing::trace!("TickResponse({raw_response})");
 
 				return;
 			}
 
-			tracing::debug!("RequestResponse({raw_response})");
+			tracing::trace!("RequestResponse({raw_response})");
 
 			let notifier = self.requests.remove(&response.id).unwrap();
 
@@ -385,7 +385,7 @@ impl Pool {
 				tracing::error!("{e:?}");
 			}
 		} else if let Ok(responses) = serde_json::from_str::<BatchResponse>(raw_response) {
-			tracing::debug!("BatchResponse({raw_response})");
+			tracing::trace!("BatchResponse({raw_response})");
 
 			let notifier = self.batches.remove(&responses.first().unwrap().id).unwrap();
 

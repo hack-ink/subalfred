@@ -30,7 +30,9 @@ camino             = { version = "1.0" }
 cargo_metadata     = { version = "0.14" }
 cargo_toml         = { version = "0.11" }
 clap               = { version = "3.2", features = ["cargo", "derive"] }
+console            = { version = "0.15" }
 futures            = { version = "0.3" }
+indicatif          = { version = "0.17.0-rc.11" }
 once_cell          = { version = "1.12" }
 parity-scale-codec = { version = "2.3" }
 regex              = { version = "1.5" }

@@ -16,6 +16,7 @@ where
 	/// Sub-seed type.
 	type SubSeed: Encode;
 
+	/// Sub-seed, used to derive the key.
 	fn sub_seed(self) -> Self::SubSeed;
 
 	/// Convert the [`KeyTypeId`] to `[u8; N]`

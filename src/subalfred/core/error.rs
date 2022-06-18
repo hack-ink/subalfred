@@ -96,10 +96,12 @@ pub enum Key {
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Node {
+	#[error("[core::node] key-values' count mismatched, expect {expect} got {got}")]
+	KeyValuesCountMismatched { expect: usize, got: usize },
 	#[error("[core::node] failed to parse metadata")]
 	ParseMetadataFailed(#[source] submetadatan::Error),
 	#[error("[core::node] failed to start the node")]
-	StartFailed(#[source] std::io::Error),
+	StartNodeFailed(#[source] std::io::Error),
 }
 
 /// SS58 error..
