@@ -7,7 +7,7 @@ use thiserror::Error as ThisError;
 #[derive(Debug, ThisError)]
 pub enum Error {
 	#[error(transparent)]
-	Debug(#[from] Debug),
+	Quick(#[from] Quick),
 
 	#[error(transparent)]
 	Cargo(#[from] Cargo),
@@ -27,21 +27,21 @@ pub enum Error {
 
 /// Print the error directly.
 #[derive(Debug)]
-pub struct Debug(String);
-impl std::fmt::Display for Debug {
+pub struct Quick(String);
+impl std::fmt::Display for Quick {
 	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
 		std::fmt::Debug::fmt(self, f)
 	}
 }
-impl std::error::Error for Debug {}
+impl std::error::Error for Quick {}
 /// Quick debug helper.
 ///
-/// Convert the error to [`struct@Debug`].
-pub fn quick_debug<E>(e: E) -> Debug
+/// Convert the error to [`Quick`].
+pub fn quick_error<E>(e: E) -> Quick
 where
 	E: std::fmt::Debug,
 {
-	Debug(format!("{e:?}"))
+	Quick(format!("{e:?}"))
 }
 
 /// Cargo error.

@@ -45,18 +45,16 @@ async fn get_pairs_paged(
 	tokio::spawn({
 		let ws = ws.clone();
 
-		async move {
-			get_keys_paged(ws.clone(), prefix, at, fetch_progress, get_keys_paged_tx).await.unwrap()
-		}
+		async move { get_keys_paged(ws, prefix, at, fetch_progress, get_keys_paged_tx).await.unwrap() }
 	});
 
 	let mut pairs = Vec::new();
 
 	progress.set_style(
 		ProgressStyle::with_template(
-			"{spinner:.cyan} {elapsed:>9.yellow} 📂 stored  {pos:>8.cyan} {msg:.green}(...)",
+			"{spinner:.cyan} {elapsed:>9.yellow}  📂 stored {pos:>8.cyan} {msg:.green}(...)",
 		)
-		.unwrap()
+		.map_err(error::quick_error)?
 		.tick_chars("⠁⠂⠄⡀⢀⠠⠐⠈ "),
 	);
 
@@ -115,13 +113,13 @@ async fn get_keys_paged(
 	let mut start_key = None::<String>;
 	let mut keys_count = 0_usize;
 	// Debug.
-	let mut i = 0;
+	// let mut i = 0;
 
 	progress.set_style(
 		ProgressStyle::with_template(
 			"{spinner:.cyan} {elapsed:>9.yellow} 🔍 fetched {pos:>8.cyan} {msg:.green}(...)",
 		)
-		.unwrap()
+		.map_err(error::quick_error)?
 		.tick_chars("⠁⠂⠄⡀⢀⠠⠐⠈ "),
 	);
 
@@ -162,10 +160,10 @@ async fn get_keys_paged(
 		}
 
 		// Debug.
-		if i < 5 {
-			i += 1;
-		} else {
-			return Ok(());
-		}
+		// if i < 5 {
+		// 	i += 1;
+		// } else {
+		// 	return Ok(());
+		// }
 	}
 }
