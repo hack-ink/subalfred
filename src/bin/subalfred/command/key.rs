@@ -45,7 +45,7 @@ impl KeyCmd {
 			let (public_key, addresses) = ss58::all(&key)?;
 			let max_length = addresses.iter().map(|addr| addr.network.len()).max().unwrap_or(0);
 
-			println!("Public-key {public_key}");
+			println!("public-key {public_key}");
 
 			if *show_prefix {
 				addresses.into_iter().for_each(|Address { network, prefix, value }| {
@@ -59,7 +59,7 @@ impl KeyCmd {
 		} else {
 			let (public_key, Address { network, prefix, value }) = ss58::of(&key, network)?;
 
-			println!("Public-key {public_key}");
+			println!("public-key {public_key}");
 
 			if *show_prefix {
 				println!("{network} {prefix} {value}");

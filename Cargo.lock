@@ -1546,7 +1546,6 @@ dependencies = [
  "cargo_metadata",
  "cargo_toml",
  "clap",
- "console",
  "futures",
  "indicatif",
  "once_cell",
