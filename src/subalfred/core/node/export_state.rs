@@ -226,7 +226,7 @@ fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<(
 	.map(|s| array_bytes::bytes2hex("0x", &subhasher::twox128(s)))
 	.collect::<Vec<_>>();
 
-	dbg!(storage_prefixes);
+	dbg!(&storage_prefixes);
 
 	top = Value::Object(Map::new());
 
