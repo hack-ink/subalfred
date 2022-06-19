@@ -228,7 +228,7 @@ fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<(
 
 	dbg!(&storage_prefixes);
 
-	top = Value::Object(Map::new());
+	*top = Value::Object(Map::new());
 
 	pairs.into_iter().for_each(|(k, v)| {
 		if !storage_prefixes.iter().any(|p| k.starts_with(p)) {
