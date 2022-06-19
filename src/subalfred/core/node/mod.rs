@@ -1,7 +1,7 @@
 //! The core library about how Subalfred interacts with Substrate-based node.
 
 /// TODO
-pub mod re_genesis;
+pub mod export_state;
 
 // std
 use std::{
@@ -18,6 +18,7 @@ use subversion::RuntimeVersion;
 
 const E_CODEC_METADATA_IS_NON_HEX: &str = "[core::node] `codec_metadata` is non-hex";
 const E_STDERR_IS_EMPTY: &str = "[core::node] `stderr` is empty";
+const E_INVALID_PROGRESS_BAR_TEMPLATE: &str = "[core::node] invalid progress bar template]";
 
 /// Spawn a Substrate standard node.
 pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
@@ -42,7 +43,7 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 	Ok(node)
 }
 
-/// Fetch the runtime version from a node.
+/// Get the runtime version from a node.
 pub async fn runtime_version(uri: &str) -> Result<RuntimeVersion> {
 	Ok(http::send::<_, RuntimeVersion>(uri, &state::get_runtime_version_once()).await?.result)
 }

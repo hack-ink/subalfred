@@ -10,6 +10,7 @@ use std::{
 	path::Path,
 };
 // crates.io
+// TODO: remove
 use camino::{Utf8Path, Utf8PathBuf};
 // hack-ink
 use crate::core::{error, Result};
@@ -20,7 +21,7 @@ pub type Port = u16;
 const E_CALC_SWAP_PATH_FAILED: &str = "[core::system] failed to calculate the swap file path";
 const E_NO_AVAILABLE_PORT_FOUND: &str = "[core::system] failed to find an available port";
 
-/// Read the file's content to a [`String`].
+/// Read the file's content to [`String`].
 pub fn read_file_to_string<P>(path: P) -> Result<String>
 where
 	P: AsRef<Path>,
@@ -33,6 +34,29 @@ where
 	Ok(content)
 }
 
+/// Read the file's content to [`Vec<u8>`].
+pub fn read_file_to_vec<P>(path: P) -> Result<Vec<u8>>
+where
+	P: AsRef<Path>,
+{
+	let mut file = File::open(path).map_err(error::Generic::Io)?;
+	let mut content = Vec::new();
+
+	file.read_to_end(&mut content).map_err(error::Generic::Io)?;
+
+	Ok(content)
+}
+
+/// Write the data to the given path file.
+pub fn write_data_to_file<P>(path: P, data: &[u8]) -> Result<()>
+where
+	P: AsRef<Path>,
+{
+	let mut file = File::create(path).map_err(error::Generic::Io)?;
+
+	Ok(file.write_all(data).map_err(error::Generic::Io)?)
+}
+
 /// Swap the file's data with the given one.
 ///
 /// This function will create a temporary file first. Then perform the file-swapping.
@@ -43,9 +67,8 @@ where
 	let path = path.as_ref();
 	let swapped_path =
 		swapped_file_path(path).ok_or(error::Generic::AlmostImpossible(E_CALC_SWAP_PATH_FAILED))?;
-	let mut file = File::create(&swapped_path).map_err(error::Generic::Io)?;
 
-	file.write_all(data).map_err(error::Generic::Io)?;
+	write_data_to_file(&swapped_path, data)?;
 	fs::rename(swapped_path, path).map_err(error::Generic::Io)?;
 
 	Ok(())

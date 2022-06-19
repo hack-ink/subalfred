@@ -1,14 +1,14 @@
 mod check;
 use check::CheckCmd;
 
+mod export_state;
+use export_state::ExportStateCmd;
+
 mod hash;
 use hash::HashCmd;
 
 mod key;
 use key::KeyCmd;
-
-mod re_genesis;
-use re_genesis::ReGenesisCmd;
 
 mod storage_key;
 use storage_key::StorageKeyCmd;
@@ -55,9 +55,9 @@ impl_cmd! {
 	Cmd {
 		#[clap(subcommand)]
 		Check,
+		ExportState,
 		Hash,
 		Key,
-		ReGenesis,
 		StorageKey,
 		#[clap(subcommand)]
 		Workspace,
