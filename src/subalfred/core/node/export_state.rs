@@ -3,7 +3,7 @@ use std::{path::Path, sync::Arc, time::Instant};
 // crates.io
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 use once_cell::sync::Lazy;
-use serde_json::Value;
+use serde_json::{Map, Value};
 use tokio::sync::mpsc::{self, Sender};
 // hack-ink
 use super::E_INVALID_PROGRESS_BAR_TEMPLATE;
@@ -225,6 +225,10 @@ fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<(
 	.iter()
 	.map(|s| array_bytes::bytes2hex("0x", &subhasher::twox128(s)))
 	.collect::<Vec<_>>();
+
+	dbg!(storage_prefixes);
+
+	top = Value::Object(Map::new());
 
 	pairs.into_iter().for_each(|(k, v)| {
 		if !storage_prefixes.iter().any(|p| k.starts_with(p)) {
