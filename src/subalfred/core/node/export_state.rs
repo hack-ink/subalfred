@@ -229,6 +229,8 @@ fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<(
 	pairs.into_iter().for_each(|(k, v)| {
 		if !storage_prefixes.iter().any(|p| k.starts_with(p)) {
 			top[k] = Value::String(v);
+		} else {
+			top[k] = Value::Null;
 		}
 	});
 
