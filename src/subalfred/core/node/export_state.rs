@@ -144,7 +144,7 @@ async fn get_keys_paged(
 	let progress = &PROGRESSES.1;
 
 	// Debug.
-	let mut i = 0;
+	// let mut i = 0;
 
 	loop {
 		let response = ws
@@ -183,11 +183,11 @@ async fn get_keys_paged(
 		}
 
 		// Debug.
-		if i < 5 {
-			i += 1;
-		} else {
-			return Ok(());
-		}
+		// if i < 5 {
+		// 	i += 1;
+		// } else {
+		// 	return Ok(());
+		// }
 	}
 }
 
