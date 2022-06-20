@@ -227,7 +227,7 @@ fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<(
 		let mut s = Vec::new();
 
 		if *skip_authority {
-			s.extend_from_slice(&[b"Session".as_slice(), b"Babe", b"Grandpa", b"Authorship"]);
+			s.extend_from_slice(&[b"Session".as_slice(), b"Babe", b"Grandpa", b"FinalityTracker", b"Authorship"]);
 		}
 		if *skip_collective {
 			s.extend_from_slice(&[b"Sudo".as_slice(), b"Babe", b"Grandpa", b"Authorship"]);
