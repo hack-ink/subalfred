@@ -218,8 +218,6 @@ fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<(
 		b"Session".as_slice(),
 		b"Babe",
 		b"Grandpa",
-		b"GrandpaFinality",
-		b"FinalityTracker",
 		b"Authorship",
 	]
 	.iter()
