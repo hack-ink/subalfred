@@ -218,11 +218,13 @@ fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<(
 
 	let top = json
 		.get_mut("genesis")
-		.ok_or(error::Node::InvalidSpecificationFile("`json[genesis]`"))?
+		.ok_or(error::Node::InvalidSpecificationFile)?
 		.get_mut("raw")
-		.ok_or(error::Node::InvalidSpecificationFile("`json[genesis][raw]`"))?
+		.ok_or(error::Node::InvalidSpecificationFile)?
 		.get_mut("top")
-		.ok_or(error::Node::InvalidSpecificationFile("`json[genesis][raw][top]`"))?;
+		.ok_or(error::Node::InvalidSpecificationFile)?
+		.as_object_mut()
+		.ok_or(error::Node::InvalidSpecificationFile)?;
 	let skip_storages = {
 		let mut s = Vec::new();
 
@@ -257,40 +259,18 @@ fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<(
 		// this algorithm is a shit
 		// we can read the storage prefixes from metadata
 		if !skip_storages.iter().any(|p| k.starts_with(p)) {
-			top[k] = Value::String(v);
+			top[&k] = Value::String(v);
 		}
 	});
 
 	if *skip_authority {
+		let system_last_runtime_upgrade =
+			substorager::storage_key(b"System", b"LastRuntimeUpgrade").to_string();
 		let staking_force_era = substorager::storage_key(b"Staking", b"ForceEra").to_string();
 
-		top[staking_force_era] = Value::String("0x2".into());
+		let _ = top.remove(&system_last_runtime_upgrade);
+		top[&staking_force_era] = Value::String("0x2".into());
 	}
-	// if *skip_collective {
-	// 	let alice = Value::String(
-	// 		"0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d".into(),
-	// 	);
-	// 	let alice_members = Value::String(
-	// 		"0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d".into(),
-	// 	);
-	// 	let alice_phragmen_election =
-	// Value::String("
-	// 0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d0010a5d4e800000000000000000000000010a5d4e80000000000000000000000"
-	// .into()); 	let sudo = substorager::storage_key(b"Sudo", b"Key").to_string();
-	// 	let technical_membership =
-	// 		substorager::storage_key(b"TechnicalMembership", b"Members").to_string();
-	// 	let technical_committee =
-	// 		substorager::storage_key(b"TechnicalCommittee", b"Members").to_string();
-	// 	let phragmen_election =
-	// 		substorager::storage_key(b"PhragmenElection", b"Members").to_string();
-	// 	let council = substorager::storage_key(b"Council", b"Members").to_string();
-
-	// 	top[sudo] = alice;
-	// 	top[technical_membership] = alice_members.clone();
-	// 	top[technical_committee] = alice_members.clone();
-	// 	top[phragmen_election] = alice_phragmen_election;
-	// 	top[council] = alice_members;
-	// }
 
 	system::write_data_to_file(path, &serde_json::to_vec(&json).map_err(error::Generic::Serde)?)?;
 
