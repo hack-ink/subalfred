@@ -3,7 +3,7 @@ use std::{path::Path, sync::Arc, time::Instant};
 // crates.io
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 use once_cell::sync::Lazy;
-use serde_json::{Map, Value};
+use serde_json::Value;
 use tokio::sync::mpsc::{self, Sender};
 // hack-ink
 use super::E_INVALID_PROGRESS_BAR_TEMPLATE;
@@ -44,9 +44,12 @@ const KEY_LENGTH: usize = 64;
 /// Export configurations.
 #[derive(Debug)]
 pub struct ExportConfig {
+	/// Save the exported result to.
 	pub path: String,
-	pub renew_authorities: bool,
-	pub renew_government: bool,
+	/// Skip exporting the authority related storages.
+	pub skip_authority: bool,
+	/// Skip exporting the collective and sudo related storages.
+	pub skip_collective: bool,
 	// TODO
 	// pub renew_runtime_code: bool,
 }
@@ -165,7 +168,7 @@ async fn get_keys_paged(
 		}
 
 		{
-			tracing::trace!("fetched  {} keys", keys_count);
+			tracing::trace!("fetched {keys_count} keys");
 
 			let key = start_key.clone().unwrap_or_default();
 
@@ -193,7 +196,7 @@ async fn get_keys_paged(
 
 // TODO: async
 fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<()> {
-	let ExportConfig { path, renew_authorities, renew_government } = config;
+	let ExportConfig { path, skip_authority, skip_collective } = config;
 	let path = Path::new(path);
 	let mut json = if path.is_file() {
 		serde_json::from_slice(&system::read_file_to_vec(path)?).map_err(error::Generic::Serde)?
@@ -206,6 +209,13 @@ fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<(
 			}
 		})
 	};
+
+	// Use a different spec name.
+	json["name"] = Value::String(format!("{}-export", json["name"].as_str().unwrap_or_default()));
+	json["id"] = Value::String(format!("{}-export", json["id"].as_str().unwrap_or_default()));
+	// Clear the bootnodes.
+	json["bootNodes"] = Value::Array(Vec::new());
+
 	let top = json
 		.get_mut("genesis")
 		.ok_or(error::Node::InvalidSpecificationFile("`json[genesis]`"))?
@@ -213,59 +223,62 @@ fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<(
 		.ok_or(error::Node::InvalidSpecificationFile("`json[genesis][raw]`"))?
 		.get_mut("top")
 		.ok_or(error::Node::InvalidSpecificationFile("`json[genesis][raw][top]`"))?;
-	// TODO: optimize
-	let storage_prefixes = [
-		b"Session".as_slice(),
-		b"Babe",
-		b"Grandpa",
-		b"Authorship",
-	]
-	.iter()
+	let skip_storages = {
+		let mut s = Vec::new();
+
+		if *skip_authority {
+			s.extend_from_slice(&[b"Session".as_slice(), b"Babe", b"Grandpa", b"Authorship"]);
+		}
+		if *skip_collective {
+			s.extend_from_slice(&[b"Sudo".as_slice(), b"Babe", b"Grandpa", b"Authorship"]);
+		}
+
+		s
+	}
+	.into_iter()
 	.map(|s| array_bytes::bytes2hex("0x", &subhasher::twox128(s)))
 	.collect::<Vec<_>>();
 
-	dbg!(&storage_prefixes);
-
-	*top = Value::Object(Map::new());
-
 	pairs.into_iter().for_each(|(k, v)| {
-		if !storage_prefixes.iter().any(|p| k.starts_with(p)) {
+		// TODO:
+		// time complexity is O(n^2)
+		// this algorithm is a shit
+		// we can read the storage prefixes from metadata
+		if !skip_storages.iter().any(|p| k.starts_with(p)) {
 			top[k] = Value::String(v);
-		} else {
-			top[k] = Value::Null;
 		}
 	});
 
-	// TODO: remove boot nodes
-
-	if *renew_authorities {
+	if *skip_authority {
 		let staking_force_era = substorager::storage_key(b"Staking", b"ForceEra").to_string();
 
 		top[staking_force_era] = Value::String("0x2".into());
 	}
-	if *renew_government {
-		let alice = Value::String(
-			"0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d".into(),
-		);
-		let alice_members = Value::String(
-			"0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d".into(),
-		);
-		let alice_phragmen_election = Value::String("0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d0010a5d4e800000000000000000000000010a5d4e80000000000000000000000".into());
-		let sudo = substorager::storage_key(b"Sudo", b"Key").to_string();
-		let technical_membership =
-			substorager::storage_key(b"TechnicalMembership", b"Members").to_string();
-		let technical_committee =
-			substorager::storage_key(b"TechnicalCommittee", b"Members").to_string();
-		let phragmen_election =
-			substorager::storage_key(b"PhragmenElection", b"Members").to_string();
-		let council = substorager::storage_key(b"Council", b"Members").to_string();
+	// if *skip_collective {
+	// 	let alice = Value::String(
+	// 		"0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d".into(),
+	// 	);
+	// 	let alice_members = Value::String(
+	// 		"0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d".into(),
+	// 	);
+	// 	let alice_phragmen_election =
+	// Value::String("
+	// 0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d0010a5d4e800000000000000000000000010a5d4e80000000000000000000000"
+	// .into()); 	let sudo = substorager::storage_key(b"Sudo", b"Key").to_string();
+	// 	let technical_membership =
+	// 		substorager::storage_key(b"TechnicalMembership", b"Members").to_string();
+	// 	let technical_committee =
+	// 		substorager::storage_key(b"TechnicalCommittee", b"Members").to_string();
+	// 	let phragmen_election =
+	// 		substorager::storage_key(b"PhragmenElection", b"Members").to_string();
+	// 	let council = substorager::storage_key(b"Council", b"Members").to_string();
 
-		top[sudo] = alice;
-		top[technical_membership] = alice_members.clone();
-		top[technical_committee] = alice_members.clone();
-		top[phragmen_election] = alice_phragmen_election;
-		top[council] = alice_members;
-	}
+	// 	top[sudo] = alice;
+	// 	top[technical_membership] = alice_members.clone();
+	// 	top[technical_committee] = alice_members.clone();
+	// 	top[phragmen_election] = alice_phragmen_election;
+	// 	top[council] = alice_members;
+	// }
 
 	system::write_data_to_file(path, &serde_json::to_vec(&json).map_err(error::Generic::Serde)?)?;
 

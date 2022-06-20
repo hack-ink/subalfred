@@ -29,24 +29,24 @@ impl ExportStateCmd {
 
 #[derive(Debug, Args)]
 pub struct ExportConfigArgs {
-	/// Output to this URI.
-	///
-	/// If the given URI is a HTTP address. It will be downloaded first.
-	#[clap(long, value_name = "URI", default_value = "exported-state.json")]
-	pub output: String,
+	/// Save the exported result to.
+	#[clap(long, value_name = "PATH", default_value = "exported-state.json")]
+	pub path: String,
+	/// Skip exporting the authority related storages.
 	#[clap(long, takes_value = false)]
-	pub renew_authorities: bool,
+	pub skip_authority: bool,
+	/// Skip exporting the collective and sudo related storages.
 	#[clap(long, takes_value = false)]
-	pub renew_government: bool,
+	pub skip_collective: bool,
 	// TODO
 	// pub renew_runtime_code: bool,
 }
 impl Into<ExportConfig> for &ExportConfigArgs {
 	fn into(self) -> ExportConfig {
 		ExportConfig {
-			path: self.output.clone(),
-			renew_authorities: self.renew_authorities.clone(),
-			renew_government: self.renew_government.clone(),
+			path: self.path.clone(),
+			skip_authority: self.skip_authority.clone(),
+			skip_collective: self.skip_collective.clone(),
 			// TODO
 			// renew_runtime_code: self.renew_runtime_code,
 		}

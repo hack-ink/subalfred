@@ -255,7 +255,6 @@ impl Ws {
 		let RawRequest { method, params } = raw_request.into();
 		let (tx, rx) = oneshot::channel();
 
-		// TODO: use `send_timeout`
 		// Debug.
 		// self.messenger.send(Call::Debug(id)).await.map_err(|_| error::Tokio::MpscSend)?;
 		self.messenger
@@ -312,7 +311,6 @@ impl Ws {
 		let request = serde_json::to_string(&requests).map_err(error::Generic::Serde)?;
 		let (tx, rx) = oneshot::channel();
 
-		// TODO: use `send_timeout`
 		self.messenger
 			.send(Call::Batch(RawCall { id, request, notifier: tx }))
 			.await

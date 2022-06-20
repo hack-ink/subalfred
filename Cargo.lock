@@ -1542,7 +1542,6 @@ version = "0.9.0"
 dependencies = [
  "anyhow",
  "array-bytes 2.0.1",
- "camino",
  "cargo_metadata",
  "cargo_toml",
  "clap",

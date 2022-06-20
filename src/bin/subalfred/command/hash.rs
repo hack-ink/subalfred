@@ -5,7 +5,6 @@ use clap::{ArgEnum, Args};
 // hack-ink
 use crate::prelude::*;
 
-// TODO: accept 0b array
 /// Hash the hex with the specific hasher.
 #[derive(Debug, Args)]
 pub struct HashCmd {

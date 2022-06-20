@@ -7,11 +7,8 @@ use std::{
 	fs::{self, File},
 	io::{Read, Write},
 	net::TcpListener,
-	path::Path,
+	path::{Path, PathBuf},
 };
-// crates.io
-// TODO: remove
-use camino::{Utf8Path, Utf8PathBuf};
 // hack-ink
 use crate::core::{error, Result};
 
@@ -62,7 +59,7 @@ where
 /// This function will create a temporary file first. Then perform the file-swapping.
 pub fn swap_file_data<P>(path: P, data: &[u8]) -> Result<()>
 where
-	P: AsRef<Utf8Path>,
+	P: AsRef<Path>,
 {
 	let path = path.as_ref();
 	let swapped_path =
@@ -73,12 +70,12 @@ where
 
 	Ok(())
 }
-fn swapped_file_path<P>(path: P) -> Option<Utf8PathBuf>
+fn swapped_file_path<P>(path: P) -> Option<PathBuf>
 where
-	P: AsRef<Utf8Path>,
+	P: AsRef<Path>,
 {
 	let path = path.as_ref();
-	let file_name = path.file_name()?;
+	let file_name = path.file_name()?.to_string_lossy();
 
 	Some(path.with_file_name(format!(".{file_name}.swp")))
 }

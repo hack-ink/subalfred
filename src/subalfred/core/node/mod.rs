@@ -33,9 +33,8 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 	);
 
 	// Ensure the node is fully startup.
-	// TODO: emit the error or not
-	for line in output.lines().filter_map(::std::io::Result::ok) {
-		if line.contains("Idle") {
+	for line in output.lines() {
+		if line.map_err(error::Generic::Io)?.contains("Idle") {
 			break;
 		}
 	}
