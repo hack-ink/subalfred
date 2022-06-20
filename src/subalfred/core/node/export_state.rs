@@ -269,7 +269,7 @@ fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<(
 		let staking_force_era = substorager::storage_key(b"Staking", b"ForceEra").to_string();
 
 		let _ = top.remove(&system_last_runtime_upgrade);
-		top.insert(staking_force_era, Value::String("0x2".into()));
+		top.insert(staking_force_era, Value::String("0x02".into()));
 	}
 
 	system::write_data_to_file(path, &serde_json::to_vec(&json).map_err(error::Generic::Serde)?)?;
