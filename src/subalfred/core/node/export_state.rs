@@ -259,7 +259,7 @@ fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<(
 		// this algorithm is a shit
 		// we can read the storage prefixes from metadata
 		if !skip_storages.iter().any(|p| k.starts_with(p)) {
-			top[&k] = Value::String(v);
+			top.insert(k, Value::String(v));
 		}
 	});
 
@@ -269,7 +269,7 @@ fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<(
 		let staking_force_era = substorager::storage_key(b"Staking", b"ForceEra").to_string();
 
 		let _ = top.remove(&system_last_runtime_upgrade);
-		top[&staking_force_era] = Value::String("0x2".into());
+		top.insert(staking_force_era, Value::String("0x2".into()));
 	}
 
 	system::write_data_to_file(path, &serde_json::to_vec(&json).map_err(error::Generic::Serde)?)?;
