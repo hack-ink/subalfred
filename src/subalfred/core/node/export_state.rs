@@ -22,14 +22,14 @@ static PROGRESSES: Lazy<(MultiProgress, ProgressBar, ProgressBar)> = Lazy::new(|
 
 	fetch_progress.set_style(
 		ProgressStyle::with_template(
-			"{spinner:.cyan} {elapsed:>9.yellow} 📂  stored {pos:>8.cyan} {msg:.green}(...)",
+			"{spinner:.cyan} {elapsed:>9.yellow} 🔍 fetched {pos:>8.cyan} {msg:.green}(...)",
 		)
 		.expect(E_INVALID_PROGRESS_BAR_TEMPLATE)
 		.tick_chars("⠁⠂⠄⡀⢀⠠⠐⠈ "),
 	);
 	store_progress.set_style(
 		ProgressStyle::with_template(
-			"{spinner:.cyan} {elapsed:>9.yellow} 🔍 fetched {pos:>8.cyan} {msg:.green}(...)",
+			"{spinner:.cyan} {elapsed:>9.yellow} 📂  stored {pos:>8.cyan} {msg:.green}(...)",
 		)
 		.expect(E_INVALID_PROGRESS_BAR_TEMPLATE)
 		.tick_chars("⠁⠂⠄⡀⢀⠠⠐⠈ "),
