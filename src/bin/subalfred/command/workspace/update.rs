@@ -21,7 +21,7 @@ impl UpdateCmd {
 	pub async fn run(&self) -> AnyResult<()> {
 		let Self { manifest_path, version } = self;
 
-		cargo::update_members_versions(manifest_path, version).await?;
+		cargo::update_member_versions(manifest_path, version).await?;
 
 		Ok(())
 	}

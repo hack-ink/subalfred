@@ -49,7 +49,7 @@ where
 /// Update all the workspace members' versions with the given one.
 ///
 /// If a workspace member depends on another one, the dependency will also be updated.
-pub async fn update_members_versions(manifest_path: &str, to: &str) -> Result<()> {
+pub async fn update_member_versions(manifest_path: &str, to: &str) -> Result<()> {
 	let metadata = metadata(manifest_path)?;
 	let members = members(&metadata)?;
 	let mut tasks = stream::iter(&members)

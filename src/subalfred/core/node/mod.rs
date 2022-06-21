@@ -50,7 +50,11 @@ pub async fn runtime_version(uri: &str) -> Result<RuntimeVersion> {
 /// Fetch the runtime metadata from a node.
 pub async fn runtime_metadata(uri: &str) -> Result<LatestRuntimeMetadata> {
 	let response = http::send::<_, String>(uri, &state::get_metadata_once()).await?;
-	let codec_metadata = array_bytes::hex2bytes(&response.result)
+
+	parse_raw_runtime_metadata(&response.result)
+}
+fn parse_raw_runtime_metadata(raw_runtime_metadata: &str) -> Result<LatestRuntimeMetadata> {
+	let codec_metadata = array_bytes::hex2bytes(raw_runtime_metadata)
 		.map_err(|_| error::Generic::AlmostImpossible(E_CODEC_METADATA_IS_NON_HEX))?;
 	let metadata_prefixed =
 		RuntimeMetadataPrefixed::decode(&mut &*codec_metadata).map_err(error::Generic::Codec)?;

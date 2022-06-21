@@ -31,7 +31,13 @@ impl ExportStateCmd {
 pub struct ExportConfigArgs {
 	/// Save the exported result to.
 	#[clap(long, value_name = "PATH", default_value = "exported-state.json")]
-	pub path: String,
+	pub output: String,
+	/// Fetch the data according to metadata's pallet storage records.
+	///
+	/// This means if there is any old storage prefix that can not be found in the current
+	/// runtime's pallet storage names will be ignored.
+	#[clap(long, takes_value = false)]
+	pub from_metadata: bool,
 	/// Skip exporting the authority related storages.
 	#[clap(long, takes_value = false)]
 	pub skip_authority: bool,
@@ -44,7 +50,8 @@ pub struct ExportConfigArgs {
 impl Into<ExportConfig> for &ExportConfigArgs {
 	fn into(self) -> ExportConfig {
 		ExportConfig {
-			path: self.path.clone(),
+			output: self.output.clone(),
+			from_metadata: self.from_metadata.clone(),
 			skip_authority: self.skip_authority.clone(),
 			skip_collective: self.skip_collective.clone(),
 			// TODO

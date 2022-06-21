@@ -47,16 +47,16 @@ impl RuntimeCmd {
 		match property {
 			Property::Storage => {
 				let result = runtime::check_storage(&local, live).await;
-				let (pallets_diff, entries_diffs) =
+				let (pallet_diffs, entry_diffs) =
 					map_err_and_kill_node_process(result, &mut node_process)?;
 
-				if !pallets_diff.is_empty() {
-					pallets_diff.into_iter().for_each(|pallet_diff| println!("{pallet_diff}"));
+				if !pallet_diffs.is_empty() {
+					pallet_diffs.into_iter().for_each(|pallet_diff| println!("{pallet_diff}"));
 
 					println!();
 				}
 
-				entries_diffs.into_iter().for_each(|(prefix, entry_diffs)| {
+				entry_diffs.into_iter().for_each(|(prefix, entry_diffs)| {
 					println!("Pallet {prefix}",);
 
 					entry_diffs.into_iter().for_each(|entry_diff| println!("{entry_diff}"));

@@ -112,8 +112,8 @@ pub async fn check_storage(
 		}
 	}
 
-	let mut pallets_diff = Vec::new();
-	let mut entries_diffs = Vec::new();
+	let mut pallet_diff = Vec::new();
+	let mut entry_diffs = Vec::new();
 	let ((a_types, a_storages), (b_types, b_storages)) = {
 		// TODO: consider moving this to util
 		fn parse_metadata(
@@ -148,7 +148,7 @@ pub async fn check_storage(
 		let b = if let Some(b) = storages.get(i + 1) {
 			b
 		} else {
-			pallets_diff.push(a.output());
+			pallet_diff.push(a.output());
 
 			break;
 		};
@@ -174,11 +174,11 @@ pub async fn check_storage(
 					b
 				} else {
 					if let Some(i) =
-						entries_diffs.iter().position(|(p, _): &(String, Vec<String>)| p == prefix)
+						entry_diffs.iter().position(|(p, _): &(String, Vec<String>)| p == prefix)
 					{
-						entries_diffs[i].1.push(a.output());
+						entry_diffs[i].1.push(a.output());
 					} else {
-						entries_diffs.push((prefix.to_string(), vec![a.output()]));
+						entry_diffs.push((prefix.to_string(), vec![a.output()]));
 					}
 
 					break;
@@ -188,10 +188,10 @@ pub async fn check_storage(
 					j += 2;
 				} else {
 					// TODO: get type diffs
-					if let Some(i) = entries_diffs.iter().position(|(p, _)| p == prefix) {
-						entries_diffs[i].1.push(a.output());
+					if let Some(i) = entry_diffs.iter().position(|(p, _)| p == prefix) {
+						entry_diffs[i].1.push(a.output());
 					} else {
-						entries_diffs.push((prefix.to_string(), vec![a.output()]));
+						entry_diffs.push((prefix.to_string(), vec![a.output()]));
 					}
 
 					j += 1;
@@ -200,11 +200,11 @@ pub async fn check_storage(
 
 			i += 2;
 		} else {
-			pallets_diff.push(a.output());
+			pallet_diff.push(a.output());
 
 			i += 1;
 		}
 	}
 
-	Ok((pallets_diff, entries_diffs))
+	Ok((pallet_diff, entry_diffs))
 }

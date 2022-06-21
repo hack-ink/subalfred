@@ -88,7 +88,7 @@ impl WsInitializer {
 
 		#[cfg(feature = "tokio-selector")]
 		tokio::spawn(async move {
-			let system_health_req = serde_json::to_string(&system::health_once()).unwrap();
+			let system_health_request = serde_json::to_string(&system::health_once()).unwrap();
 			let mut rx = rx;
 			// TODO: clean dead items?
 			let mut pool = Pool::new();
@@ -102,9 +102,9 @@ impl WsInitializer {
 			loop {
 				tokio::select! {
 					_ = &mut interval_fut => {
-						tracing::trace!("TickRequest({system_health_req})");
+						tracing::trace!("TickRequest({system_health_request})");
 
-						ws_tx.send(Message::Text(system_health_req.clone())).await.unwrap();
+						ws_tx.send(Message::Text(system_health_request.clone())).await.unwrap();
 
 						interval_fut = interval.next().fuse();
 					},
@@ -113,7 +113,7 @@ impl WsInitializer {
 							match call {
 								// Debug.
 								// Call::Debug(_) => {
-								// 	tracing::info!("{call:?}");
+								// 	tracing::debug!("{call:?}");
 								// }
 								Call::Single(RawCall { id, request, notifier }) => {
 									tracing::trace!("SingleRequest({request})");
@@ -132,9 +132,9 @@ impl WsInitializer {
 							//
 						}
 					},
-					maybe_resp = ws_rx.next() => {
-						if let Some(resp) = maybe_resp {
-							pool.on_ws_recv(resp).await.unwrap()
+					maybe_response = ws_rx.next() => {
+						if let Some(response) = maybe_response {
+							pool.on_ws_recv(response).await.unwrap()
 						} else {
 							//
 						}
@@ -145,7 +145,7 @@ impl WsInitializer {
 
 		#[cfg(feature = "futures-selector")]
 		tokio::spawn(async move {
-			let system_health_req = serde_json::to_string(&system::health_once()).unwrap();
+			let system_health_request = serde_json::to_string(&system::health_once()).unwrap();
 			let rx = stream::unfold(rx, |mut r| async { r.recv().await.map(|c| (c, r)) });
 
 			futures::pin_mut!(rx);
@@ -163,12 +163,12 @@ impl WsInitializer {
 
 			loop {
 				match future::select(rxs_fut, interval_fut).await {
-					Left((Left((maybe_call, maybe_resp_fut)), interval_fut_)) => {
+					Left((Left((maybe_call, maybe_response_fut)), interval_fut_)) => {
 						if let Some(call) = maybe_call {
 							match call {
 								// Debug.
 								// Call::Debug(_) => {
-								// 	tracing::info!("{call:?}");
+								// 	tracing::debug!("{call:?}");
 								// },
 								Call::Single(RawCall { id, request, notifier }) => {
 									tracing::trace!("SingleRequest({request})");
@@ -187,12 +187,12 @@ impl WsInitializer {
 							//
 						}
 
-						rxs_fut = future::select(rx.next(), maybe_resp_fut);
+						rxs_fut = future::select(rx.next(), maybe_response_fut);
 						interval_fut = interval_fut_;
 					},
-					Left((Right((maybe_resp, maybe_call_fut)), interval_fut_)) => {
-						if let Some(resp) = maybe_resp {
-							pool.on_ws_recv(resp).await.unwrap()
+					Left((Right((maybe_response, maybe_call_fut)), interval_fut_)) => {
+						if let Some(response) = maybe_response {
+							pool.on_ws_recv(response).await.unwrap()
 						} else {
 							//
 						}
@@ -201,9 +201,9 @@ impl WsInitializer {
 						interval_fut = interval_fut_;
 					},
 					Right((_, rxs_fut_)) => {
-						tracing::trace!("TickRequest({system_health_req})");
+						tracing::trace!("TickRequest({system_health_request})");
 
-						ws_tx.send(Message::Text(system_health_req.clone())).await.unwrap();
+						ws_tx.send(Message::Text(system_health_request.clone())).await.unwrap();
 
 						rxs_fut = rxs_fut_;
 						interval_fut = interval.next().fuse();
@@ -302,8 +302,8 @@ impl Ws {
 		let requests = ids
 			.into_iter()
 			.zip(raw_requests.into_iter())
-			.map(|(id, raw_req)| {
-				let RawRequest { method, params } = raw_req.into();
+			.map(|(id, raw_request)| {
+				let RawRequest { method, params } = raw_request.into();
 
 				Request { jsonrpc: Self::VERSION, id, method, params }
 			})
@@ -351,9 +351,9 @@ impl Pool {
 		match response {
 			Ok(msg) => {
 				match msg {
-					Message::Binary(raw_resp) =>
-						self.process_raw_response(str::from_utf8(&raw_resp).unwrap()).await,
-					Message::Text(raw_resp) => self.process_raw_response(&raw_resp).await,
+					Message::Binary(raw_response) =>
+						self.process_raw_response(str::from_utf8(&raw_response).unwrap()).await,
+					Message::Text(raw_response) => self.process_raw_response(&raw_response).await,
 					Message::Ping(_) => tracing::warn!("Ping"),
 					Message::Pong(_) => tracing::warn!("Pong"),
 					Message::Close(_) => tracing::warn!("Close"),

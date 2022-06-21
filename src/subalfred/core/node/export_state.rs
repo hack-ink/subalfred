@@ -45,7 +45,12 @@ const KEY_LENGTH: usize = 64;
 #[derive(Debug)]
 pub struct ExportConfig {
 	/// Save the exported result to.
-	pub path: String,
+	pub output: String,
+	/// Fetch the data according to metadata's pallet storage records.
+	///
+	/// This means if there is any old storage prefix that can not be found in the current
+	/// runtime's pallet storage names will be ignored.
+	pub from_metadata: bool,
 	/// Skip exporting the authority related storages.
 	pub skip_authority: bool,
 	/// Skip exporting the collective and sudo related storages.
@@ -62,6 +67,9 @@ pub async fn run(uri: &str, at: Option<String>, config: ExportConfig) -> Result<
 	} else {
 		Some(ws.request::<String, _>(chain::get_finalized_head_raw()).await?.result)
 	};
+	// let metadata = super::parse_raw_runtime_metadata(
+	// 	&ws.request::<String, _>(state::get_metadata_raw()).await?.result,
+	// )?;
 	let start_time = Instant::now();
 	let pairs = get_pairs_paged(ws.clone(), StorageKey::new(), at).await?;
 
@@ -196,8 +204,8 @@ async fn get_keys_paged(
 
 // TODO: async
 fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<()> {
-	let ExportConfig { path, skip_authority, skip_collective } = config;
-	let path = Path::new(path);
+	let ExportConfig { output, skip_authority, skip_collective, .. } = config;
+	let path = Path::new(output);
 	let mut json = if path.is_file() {
 		serde_json::from_slice(&system::read_file_to_vec(path)?).map_err(error::Generic::Serde)?
 	} else {
@@ -226,32 +234,32 @@ fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<(
 		.as_object_mut()
 		.ok_or(error::Node::InvalidSpecificationFile)?;
 	let skip_storages = {
-		let mut s = Vec::new();
+		let mut v = Vec::new();
 
 		if *skip_authority {
-			s.extend_from_slice(&[
-				b"Session".as_slice(),
-				b"Babe",
-				b"Grandpa",
-				b"FinalityTracker",
-				b"Authorship",
-			]);
+			[b"Babe".as_slice(), b"Authorship", b"Session", b"Grandpa", b"Beefy"]
+				.iter()
+				.for_each(|s| v.push(array_bytes::bytes2hex("0x", &subhasher::twox128(s))));
+			[(b"Staking".as_slice(), b"Validators".as_slice()), (b"Staking", b"Nominators")]
+				.iter()
+				.for_each(|(p, i)| {
+					v.push(array_bytes::bytes2hex("0x", &substorager::storage_key(p, i)))
+				});
 		}
-		if *skip_collective {
-			s.extend_from_slice(&[
-				b"Sudo".as_slice(),
-				b"PhragmenElection",
-				b"Council",
-				b"TechnicalMembership",
-				b"TechnicalCommittee",
-			]);
-		}
+		// if *skip_collective {
+		// 	[
+		// 		b"Council".as_slice(),
+		// 		b"TechnicalCommittee",
+		// 		b"PhragmenElection",
+		// 		b"TechnicalMembership",
+		// 		b"Sudo",
+		// 	]
+		// 	.iter()
+		// 	.for_each(|s| v.push(array_bytes::bytes2hex("0x", &subhasher::twox128(s))));
+		// }
 
-		s
-	}
-	.into_iter()
-	.map(|s| array_bytes::bytes2hex("0x", &subhasher::twox128(s)))
-	.collect::<Vec<_>>();
+		v
+	};
 
 	pairs.into_iter().for_each(|(k, v)| {
 		// TODO:
@@ -270,6 +278,33 @@ fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<(
 
 		let _ = top.remove(&system_last_runtime_upgrade);
 		top.insert(staking_force_era, Value::String("0x02".into()));
+	}
+	if *skip_collective {
+		let alice = Value::String(
+			"0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d".into(),
+		);
+		let alice_members = Value::String(
+			"0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d".into(),
+		);
+		let alice_phragmen_election =
+	Value::String("
+	0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d0010a5d4e800000000000000000000000010a5d4e80000000000000000000000"
+	.into());
+
+		let council = substorager::storage_key(b"Council", b"Members").to_string();
+		let technical_committee =
+			substorager::storage_key(b"TechnicalCommittee", b"Members").to_string();
+		let phragmen_election =
+			substorager::storage_key(b"PhragmenElection", b"Members").to_string();
+		let technical_membership =
+			substorager::storage_key(b"TechnicalMembership", b"Members").to_string();
+		let sudo = substorager::storage_key(b"Sudo", b"Key").to_string();
+
+		top.insert(council, alice_members.clone());
+		top.insert(technical_committee, alice_members.clone());
+		top.insert(technical_membership, alice_members);
+		top.insert(phragmen_election, alice_phragmen_election);
+		top.insert(sudo, alice);
 	}
 
 	system::write_data_to_file(path, &serde_json::to_vec(&json).map_err(error::Generic::Serde)?)?;
