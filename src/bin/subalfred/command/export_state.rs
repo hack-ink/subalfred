@@ -44,8 +44,6 @@ pub struct ExportConfigArgs {
 	/// Skip exporting the collective and sudo related storages.
 	#[clap(long, takes_value = false)]
 	pub skip_collective: bool,
-	// TODO
-	// pub renew_runtime_code: bool,
 }
 impl Into<ExportConfig> for &ExportConfigArgs {
 	fn into(self) -> ExportConfig {
@@ -54,8 +52,6 @@ impl Into<ExportConfig> for &ExportConfigArgs {
 			from_metadata: self.from_metadata.clone(),
 			skip_authority: self.skip_authority.clone(),
 			skip_collective: self.skip_collective.clone(),
-			// TODO
-			// renew_runtime_code: self.renew_runtime_code,
 		}
 	}
 }

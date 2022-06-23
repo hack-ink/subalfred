@@ -55,8 +55,6 @@ pub struct ExportConfig {
 	pub skip_authority: bool,
 	/// Skip exporting the collective and sudo related storages.
 	pub skip_collective: bool,
-	// TODO
-	// pub renew_runtime_code: bool,
 }
 
 /// Start re-genesis process.
@@ -82,6 +80,7 @@ pub async fn run(uri: &str, at: Option<String>, config: ExportConfig) -> Result<
 	Ok(())
 }
 
+// TODO: move to jsonrpc
 async fn get_pairs_paged(
 	ws: Arc<Ws>,
 	prefix: StorageKey,
@@ -121,7 +120,7 @@ async fn get_pairs_paged(
 			if let Some(v) = v.result {
 				pairs.push((k, v));
 			} else {
-				tracing::warn!("[core::re_genesis] {k} has null value");
+				tracing::warn!("{k} has null value");
 			}
 		});
 
