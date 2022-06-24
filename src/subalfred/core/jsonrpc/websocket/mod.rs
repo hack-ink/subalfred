@@ -10,13 +10,14 @@ compile_error!(
 );
 
 // std
-use std::{collections::HashMap, str, sync::Arc, time::Duration};
+use std::{str, sync::Arc, time::Duration};
 // crates.io
 use futures::{future::Fuse, FutureExt, SinkExt, StreamExt};
 #[cfg(feature = "futures-selector")] use futures::{
 	future::{self, Either::*},
 	stream,
 };
+use fxhash::FxHashMap;
 use serde::de::DeserializeOwned;
 use serde_json::Value;
 use tokio::{
@@ -34,11 +35,11 @@ type Messenger = mpsc::Sender<Call>;
 
 type RequestResponse = Response<Value>;
 type RequestNotifier = oneshot::Sender<RequestResponse>;
-type RequestPool = HashMap<Id, RequestNotifier>;
+type RequestPool = FxHashMap<Id, RequestNotifier>;
 
 type BatchResponse = Vec<RequestResponse>;
 type BatchNotifier = oneshot::Sender<BatchResponse>;
-type BatchPool = HashMap<Id, BatchNotifier>;
+type BatchPool = FxHashMap<Id, BatchNotifier>;
 
 /// The websocket initializer.
 #[derive(Debug)]

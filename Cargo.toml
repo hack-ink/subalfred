@@ -30,6 +30,7 @@ cargo_metadata     = { version = "0.14" }
 cargo_toml         = { version = "0.11" }
 clap               = { version = "3.2", features = ["cargo", "derive"] }
 futures            = { version = "0.3" }
+fxhash             = { version = "0.2" }
 indicatif          = { version = "0.17.0-rc.11" }
 once_cell          = { version = "1.12" }
 parity-scale-codec = { version = "2.3" }
