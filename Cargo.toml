@@ -26,7 +26,7 @@ vergen = { version = "7.2" }
 # crates.io
 anyhow             = { version = "1.0" }
 array-bytes        = { version = "2.0" }
-cargo_metadata     = { version = "0.14" }
+cargo_metadata     = { version = "0.15" }
 cargo_toml         = { version = "0.11" }
 clap               = { version = "3.2", features = ["cargo", "derive"] }
 futures            = { version = "0.3" }
