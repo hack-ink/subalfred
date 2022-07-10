@@ -82,7 +82,7 @@ impl KeyType {
 	fn to_key<const N: usize>(&self, s: &str) -> AnyResult<[u8; N]> {
 		Ok(match self {
 			KeyType::Pallet =>
-				PalletId(array_bytes::slice2array(s.as_bytes()).map_err(quick_error)?).to_key()?,
+				PalletId(array_bytes::slice2array(s.as_bytes()).map_err(quick_err)?).to_key()?,
 			KeyType::Parachain => ParaId(s.parse::<ChainId>()?).to_key()?,
 			KeyType::Sibling => SiblId(s.parse::<ChainId>()?).to_key()?,
 		})

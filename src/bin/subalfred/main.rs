@@ -12,7 +12,7 @@ mod prelude {
 	// crates.io
 	use anyhow::Error;
 
-	pub fn quick_error<E>(e: E) -> Error
+	pub fn quick_err<E>(e: E) -> Error
 	where
 		E: Debug,
 	{

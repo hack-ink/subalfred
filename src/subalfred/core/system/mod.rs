@@ -63,7 +63,7 @@ where
 {
 	let path = path.as_ref();
 	let swapped_path =
-		swapped_file_path(path).ok_or(error::Generic::AlmostImpossible(E_CALC_SWAP_PATH_FAILED))?;
+		swapped_file_path(path).ok_or(error::almost_impossible(E_CALC_SWAP_PATH_FAILED))?;
 
 	write_data_to_file(&swapped_path, data)?;
 	fs::rename(swapped_path, path).map_err(error::Generic::Io)?;
@@ -90,5 +90,5 @@ pub fn random_available_port() -> Result<Port> {
 		}
 	}
 
-	Err(error::Generic::AlmostImpossible(E_NO_AVAILABLE_PORT_FOUND))?
+	Err(error::almost_impossible(E_NO_AVAILABLE_PORT_FOUND))?
 }

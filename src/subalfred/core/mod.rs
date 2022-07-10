@@ -7,6 +7,7 @@ pub mod cargo;
 pub mod http;
 pub mod jsonrpc;
 pub mod node;
+pub mod substrate_client;
 pub mod system;
 
 pub mod check;

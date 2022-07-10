@@ -24,7 +24,7 @@ impl HashCmd {
 		let data = if *bstring {
 			Cow::Borrowed(value.as_bytes())
 		} else {
-			Cow::Owned(array_bytes::hex2bytes(value).map_err(quick_error)?)
+			Cow::Owned(array_bytes::hex2bytes(value).map_err(quick_err)?)
 		};
 		let bytes = match hasher {
 			Hasher::blake2_128 => subhasher::blake2_128(&data).to_vec(),

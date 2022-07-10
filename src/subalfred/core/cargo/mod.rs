@@ -32,7 +32,7 @@ pub fn members(metadata: &Metadata) -> Result<Vec<&Package>> {
 		.iter()
 		.map(|id| {
 			Ok(util::find_package(metadata, id)
-				.ok_or(error::Generic::AlmostImpossible(E_PKG_NOT_FOUND))?)
+				.ok_or(error::almost_impossible(E_PKG_NOT_FOUND))?)
 		})
 		.collect::<Result<_>>()
 }

@@ -25,7 +25,7 @@ pub async fn check_version(a_uri: &str, b_uri: &str) -> Result<Option<String>> {
 		return Ok(None);
 	}
 	let mut result = String::new();
-	let to_e = |_| error::Generic::AlmostImpossible(E_WRITE_TO_STRING_FAILED);
+	let to_e = |_| error::almost_impossible(E_WRITE_TO_STRING_FAILED);
 
 	for (a, b) in format!("{a:#?}").lines().zip(format!("{b:#?}").lines()) {
 		if a == b {

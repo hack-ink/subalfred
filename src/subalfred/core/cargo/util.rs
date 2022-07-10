@@ -33,7 +33,7 @@ pub fn find_member_dep_regex(members_deps: &[&Dependency]) -> Result<Regex> {
 		"(({}) *?= *?\\{{ *?version *?= *?)\"(.+?)\"",
 		members_deps.iter().map(|dep| dep.name.replace('-', "\\-")).collect::<Vec<_>>().join("|"),
 	))
-	.map_err(|_| error::Generic::AlmostImpossible(E_BUILD_REGEX_FAILED))?)
+	.map_err(|_| error::almost_impossible(E_BUILD_REGEX_FAILED))?)
 }
 
 pub fn align_version<'a>(from: &str, to: &'a str) -> Cow<'a, str> {

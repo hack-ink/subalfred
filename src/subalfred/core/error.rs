@@ -6,9 +6,8 @@ use thiserror::Error as ThisError;
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Error {
-	#[error(transparent)]
-	Quick(#[from] Quick),
-
+	// #[error(transparent)]
+	// Simple(#[from] Simple),
 	#[error(transparent)]
 	Cargo(#[from] Cargo),
 	#[error(transparent)]
@@ -25,24 +24,24 @@ pub enum Error {
 	Tokio(#[from] Tokio),
 }
 
-/// Print the error directly.
-#[derive(Debug)]
-pub struct Quick(String);
-impl std::fmt::Display for Quick {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		std::fmt::Debug::fmt(self, f)
-	}
-}
-impl std::error::Error for Quick {}
-/// Quick debug helper.
-///
-/// Convert the error to [`Quick`].
-pub fn quick_error<E>(e: E) -> Quick
-where
-	E: std::fmt::Debug,
-{
-	Quick(format!("{e:?}"))
-}
+// /// Print the error directly.
+// #[derive(Debug)]
+// pub struct Simple(String);
+// impl std::fmt::Display for Simple {
+// 	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+// 		std::fmt::Debug::fmt(self, f)
+// 	}
+// }
+// impl std::error::Error for Simple {}
+// /// Simple debug helper.
+// ///
+// /// Convert the error to [`Simple`].
+// pub fn quick_err<E>(e: E) -> Simple
+// where
+// 	E: std::fmt::Debug,
+// {
+// 	Simple(format!("{e:?}"))
+// }
 
 /// Cargo error.
 #[allow(missing_docs)]
@@ -72,6 +71,10 @@ pub enum Generic {
 	Serde(#[from] serde_json::Error),
 	#[error(transparent)]
 	Tungstenite(#[from] tokio_tungstenite::tungstenite::Error),
+}
+/// [`Generic::AlmostImpossible`] error helper.
+pub fn almost_impossible(e_msg: &'static str) -> Generic {
+	Generic::AlmostImpossible(e_msg)
 }
 
 /// JSONRPC error.

@@ -18,9 +18,8 @@ use subversion::RuntimeVersion;
 
 const E_CODEC_METADATA_IS_NON_HEX: &str = "[core::node] `codec_metadata` is non-hex";
 const E_STDERR_IS_EMPTY: &str = "[core::node] `stderr` is empty";
-const E_INVALID_PROGRESS_BAR_TEMPLATE: &str = "[core::node] invalid progress bar template]";
 
-/// Spawn a Substrate standard node.
+/// Spawn a Substrate-Like standard node.
 pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 	let mut node = Command::new(executable)
 		.stdout(Stdio::null())
@@ -28,9 +27,8 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 		.args(&[&format!("--rpc-port={rpc_port}"), "--chain", &format!("{}-dev", chain), "--tmp"])
 		.spawn()
 		.map_err(error::Node::StartNodeFailed)?;
-	let output = BufReader::new(
-		node.stderr.take().ok_or(error::Generic::AlmostImpossible(E_STDERR_IS_EMPTY))?,
-	);
+	let output =
+		BufReader::new(node.stderr.take().ok_or(error::almost_impossible(E_STDERR_IS_EMPTY))?);
 
 	// Ensure the node is fully startup.
 	for line in output.lines() {
@@ -42,12 +40,12 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 	Ok(node)
 }
 
-/// Get the runtime version from a node.
+/// Get runtime version from node.
 pub async fn runtime_version(uri: &str) -> Result<RuntimeVersion> {
 	Ok(http::send::<_, RuntimeVersion>(uri, &state::get_runtime_version_once()).await?.result)
 }
 
-/// Fetch the runtime metadata from a node.
+/// Fetch runtime metadata from node.
 pub async fn runtime_metadata(uri: &str) -> Result<LatestRuntimeMetadata> {
 	let response = http::send::<_, String>(uri, &state::get_metadata_once()).await?;
 
@@ -55,7 +53,7 @@ pub async fn runtime_metadata(uri: &str) -> Result<LatestRuntimeMetadata> {
 }
 fn parse_raw_runtime_metadata(raw_runtime_metadata: &str) -> Result<LatestRuntimeMetadata> {
 	let codec_metadata = array_bytes::hex2bytes(raw_runtime_metadata)
-		.map_err(|_| error::Generic::AlmostImpossible(E_CODEC_METADATA_IS_NON_HEX))?;
+		.map_err(|_| error::almost_impossible(E_CODEC_METADATA_IS_NON_HEX))?;
 	let metadata_prefixed =
 		RuntimeMetadataPrefixed::decode(&mut &*codec_metadata).map_err(error::Generic::Codec)?;
 	let metadata =

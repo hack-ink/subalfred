@@ -1,7 +1,7 @@
 //! The core library about how Subalfred interacts with JSONRPC.
 
 pub mod http;
-pub mod websocket;
+pub mod ws;
 
 // std
 use std::sync::{

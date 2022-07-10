@@ -26,13 +26,13 @@ vergen = { version = "7.2" }
 # crates.io
 anyhow             = { version = "1.0" }
 array-bytes        = { version = "2.0" }
+async-trait        = { version = "0.1" }
 cargo_metadata     = { version = "0.15" }
 cargo_toml         = { version = "0.11" }
 clap               = { version = "3.2", features = ["cargo", "derive"] }
 futures            = { version = "0.3" }
 fxhash             = { version = "0.2" }
-indicatif          = { version = "0.17.0-rc.11" }
-once_cell          = { version = "1.12" }
+once_cell          = { version = "1.13" }
 parity-scale-codec = { version = "2.3" }
 regex              = { version = "1.5" }
 reqwest            = { version = "0.11", features = ["json"] }

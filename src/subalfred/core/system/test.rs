@@ -1,3 +1,5 @@
+// std
+use std::path::PathBuf;
 // hack-ink
 use super::*;
 
@@ -9,8 +11,8 @@ fn swap_file_path_should_work() {
 			.map(|path| swapped_file_path(path).unwrap())
 			.collect::<Vec<_>>(),
 		vec![
-			Utf8PathBuf::from("/subalfred/.Cargo.toml.swp"),
-			Utf8PathBuf::from("/subalfred/substrate-minimum/subrpcer/impl/.Cargo.toml.swp"),
+			PathBuf::from("/subalfred/.Cargo.toml.swp"),
+			PathBuf::from("/subalfred/substrate-minimum/subrpcer/impl/.Cargo.toml.swp"),
 		]
 	);
 }

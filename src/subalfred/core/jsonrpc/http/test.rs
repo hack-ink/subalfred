@@ -1,5 +1,3 @@
-// crates.io
-use serde_json::Value;
 // hack-ink
 use super::*;
 use subrpcer::system;

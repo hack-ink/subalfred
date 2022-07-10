@@ -1,209 +1,93 @@
 // std
-use std::{path::Path, sync::Arc, time::Instant};
+use std::{
+	path::Path,
+	time::{Duration, Instant},
+};
 // crates.io
-use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
-use once_cell::sync::Lazy;
+use clap::Args;
+use fxhash::FxHashSet;
 use serde_json::Value;
-use tokio::sync::mpsc::{self, Sender};
 // hack-ink
-use super::E_INVALID_PROGRESS_BAR_TEMPLATE;
 use crate::core::{
 	error,
-	jsonrpc::websocket::{Ws, WsInitializer},
+	jsonrpc::ws::Initializer,
+	substrate_client::{Api, Client},
 	system, Result,
 };
-use subrpcer::{chain, state};
 use substorager::StorageKey;
 
-static PROGRESSES: Lazy<(MultiProgress, ProgressBar, ProgressBar)> = Lazy::new(|| {
-	let progresses = MultiProgress::new();
-	let fetch_progress = progresses.add(ProgressBar::new(u64::MAX));
-	let store_progress = progresses.insert_after(&fetch_progress, ProgressBar::new(u64::MAX));
-
-	fetch_progress.set_style(
-		ProgressStyle::with_template(
-			"{spinner:.cyan} {elapsed:>9.yellow} 🔍 fetched {pos:>8.cyan} {msg:.green}(...)",
-		)
-		.expect(E_INVALID_PROGRESS_BAR_TEMPLATE)
-		.tick_chars("⠁⠂⠄⡀⢀⠠⠐⠈ "),
-	);
-	store_progress.set_style(
-		ProgressStyle::with_template(
-			"{spinner:.cyan} {elapsed:>9.yellow} 📂  stored {pos:>8.cyan} {msg:.green}(...)",
-		)
-		.expect(E_INVALID_PROGRESS_BAR_TEMPLATE)
-		.tick_chars("⠁⠂⠄⡀⢀⠠⠐⠈ "),
-	);
-
-	(progresses, fetch_progress, store_progress)
-});
-
-const PAGE_SIZE: usize = 512;
-const KEY_LENGTH: usize = 64;
-
 /// Export configurations.
-#[derive(Debug)]
-pub struct ExportConfig {
+#[derive(Debug, Args)]
+pub struct Config {
 	/// Save the exported result to.
+	#[clap(long, value_name = "PATH", default_value = "exported-state.json")]
 	pub output: String,
-	/// Fetch the data according to metadata's pallet storage records.
+	/// Fetch all the data.
 	///
-	/// This means if there is any old storage prefix that can not be found in the current
+	/// Note:
+	/// The default behaviour is fetching according to metadata's pallet storage records,
+	/// which means if there is any old storage prefix that can not be found in the current
 	/// runtime's pallet storage names will be ignored.
-	pub from_metadata: bool,
+	#[clap(long, takes_value = false)]
+	pub all: bool,
+	// pub pallets: Vec<String>,
+	/// TODO:doc
+	#[clap(long, use_value_delimiter = true, value_name = "[PALLET_NAME]")]
+	pub skip_pallets: Vec<String>,
 	/// Skip exporting the authority related storages.
+	#[clap(long, takes_value = false)]
 	pub skip_authority: bool,
 	/// Skip exporting the collective and sudo related storages.
+	#[clap(long, takes_value = false)]
 	pub skip_collective: bool,
 }
 
 /// Start re-genesis process.
-pub async fn run(uri: &str, at: Option<String>, config: ExportConfig) -> Result<()> {
-	let ws = Arc::new(WsInitializer::new().connect(uri).await?);
-	let at = if at.is_some() {
-		at
-	} else {
-		Some(ws.request::<String, _>(chain::get_finalized_head_raw()).await?.result)
-	};
-	// let metadata = super::parse_raw_runtime_metadata(
-	// 	&ws.request::<String, _>(state::get_metadata_raw()).await?.result,
-	// )?;
+pub async fn run(uri: &str, at: Option<String>, config: &Config) -> Result<()> {
 	let start_time = Instant::now();
-	let pairs = get_pairs_paged(ws.clone(), StorageKey::new(), at).await?;
+	let client =
+		Client::initialize(Initializer::new().request_timeout(Duration::from_secs(600)), uri)
+			.await?;
+	let at = if at.is_some() { at } else { Some(client.get_finalized_head().await?) };
+	let Config { all, skip_pallets, .. } = config;
+	let pairs = if *all {
+		client.get_pairs_paged(StorageKey::new(), at).await?
+	} else {
+		let pallets = super::parse_raw_runtime_metadata(&client.get_runtime_metadata().await?)?
+			.pallets
+			.into_iter()
+			.filter_map(|pallet| pallet.storage.map(|_| pallet.name))
+			.collect::<FxHashSet<_>>();
+		let skip_pallets = skip_pallets.iter().cloned().collect::<FxHashSet<_>>();
+		let filtered_pallets = pallets.difference(&skip_pallets);
+		let mut pairs = Vec::new();
 
-	PROGRESSES.0.clear().map_err(error::Generic::Io)?;
+		for pallet in filtered_pallets {
+			tracing::trace!("fetching from {pallet}");
 
-	println!("✓ fully exported {} pairs, takes {}s", pairs.len(), start_time.elapsed().as_secs());
+			let mut fetched_pairs = client
+				.get_pairs_paged(
+					StorageKey(subhasher::twox128(pallet.as_bytes()).to_vec()),
+					at.clone(),
+				)
+				.await?;
 
-	dump_to_json(pairs, &config)?;
+			pairs.append(&mut fetched_pairs);
+		}
+
+		pairs
+	};
+	let pairs_count = pairs.len();
+
+	store(pairs, &config)?;
+
+	println!("✓ fully exported {pairs_count} pairs, takes {}s", start_time.elapsed().as_secs());
 
 	Ok(())
 }
 
-// TODO: move to jsonrpc
-async fn get_pairs_paged(
-	ws: Arc<Ws>,
-	prefix: StorageKey,
-	at: Option<String>,
-) -> Result<Vec<(String, String)>> {
-	let (get_keys_paged_tx, mut get_keys_paged_rx) = mpsc::channel(PAGE_SIZE);
-
-	tokio::spawn({
-		let ws = ws.clone();
-		let at = at.clone();
-
-		async move { get_keys_paged(ws, prefix, at, get_keys_paged_tx).await.unwrap() }
-	});
-
-	let mut pairs = Vec::new();
-	let progress = &PROGRESSES.2;
-
-	while let Some(keys) = get_keys_paged_rx.recv().await {
-		let values = ws
-			.batch::<Option<String>, _>(
-				keys.iter().map(|key| state::get_storage_raw(key, at.as_ref())).collect(),
-			)
-			.await?;
-		let keys_count = keys.len();
-		let values_count = values.len();
-
-		if keys_count != values_count {
-			return Err(error::Node::KeyValuesCountMismatched {
-				expect: keys_count,
-				got: values_count,
-			})?;
-		}
-
-		let progress_display_key = keys.get(0).map(ToOwned::to_owned).unwrap_or_default();
-
-		keys.into_iter().zip(values.into_iter()).for_each(|(k, v)| {
-			if let Some(v) = v.result {
-				pairs.push((k, v));
-			} else {
-				tracing::warn!("{k} has null value");
-			}
-		});
-
-		{
-			let pairs_count = pairs.len();
-
-			tracing::trace!("stored {pairs_count} pairs");
-
-			progress.set_position(pairs_count as _);
-			progress.set_message(
-				progress_display_key[..progress_display_key.len().min(KEY_LENGTH)].to_string(),
-			);
-		}
-	}
-
-	progress.set_length(progress.position());
-	progress.finish();
-
-	Ok(pairs)
-}
-
-async fn get_keys_paged(
-	ws: Arc<Ws>,
-	prefix: StorageKey,
-	at: Option<String>,
-	get_keys_paged_tx: Sender<Vec<String>>,
-) -> Result<()> {
-	let prefix = prefix.to_string();
-	let mut start_key = None::<String>;
-	let mut keys_count = 0;
-	let progress = &PROGRESSES.1;
-
-	// Debug.
-	// let mut i = 0;
-
-	loop {
-		let response = ws
-			.request::<Vec<String>, _>(state::get_keys_paged_raw(
-				&prefix,
-				PAGE_SIZE,
-				start_key.as_ref(),
-				at.as_ref(),
-			))
-			.await?;
-		let downloaded_keys = response.result;
-		let downloaded_keys_count = downloaded_keys.len();
-
-		keys_count += downloaded_keys_count;
-
-		if let Some(key) = downloaded_keys.last() {
-			start_key = Some(key.to_owned());
-		}
-
-		{
-			tracing::trace!("fetched {keys_count} keys");
-
-			let key = start_key.clone().unwrap_or_default();
-
-			progress.set_position(keys_count as _);
-			progress.set_message(key[..key.len().min(KEY_LENGTH)].to_string());
-		}
-
-		get_keys_paged_tx.send(downloaded_keys).await.map_err(|_| error::Tokio::MpscSend)?;
-
-		if downloaded_keys_count < PAGE_SIZE {
-			progress.set_length(progress.position());
-			progress.finish();
-
-			return Ok(());
-		}
-
-		// Debug.
-		// if i < 5 {
-		// 	i += 1;
-		// } else {
-		// 	return Ok(());
-		// }
-	}
-}
-
-// TODO: async
-fn dump_to_json(pairs: Vec<(String, String)>, config: &ExportConfig) -> Result<()> {
-	let ExportConfig { output, skip_authority, skip_collective, .. } = config;
+fn store(pairs: Vec<(String, String)>, config: &Config) -> Result<()> {
+	let Config { output, skip_authority, skip_collective, .. } = config;
 	let path = Path::new(output);
 	let mut json = if path.is_file() {
 		serde_json::from_slice(&system::read_file_to_vec(path)?).map_err(error::Generic::Serde)?

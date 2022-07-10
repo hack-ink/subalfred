@@ -43,7 +43,7 @@ type BatchPool = FxHashMap<Id, BatchNotifier>;
 
 /// The websocket initializer.
 #[derive(Debug)]
-pub struct WsInitializer {
+pub struct Initializer {
 	/// Concurrent tasks count limit.
 	pub concurrency_limit: Id,
 	/// Tick interval.
@@ -51,7 +51,7 @@ pub struct WsInitializer {
 	/// Request timeout.
 	pub request_timeout: Duration,
 }
-impl WsInitializer {
+impl Initializer {
 	/// Create a default initializer.
 	pub fn new() -> Self {
 		Default::default()
@@ -225,7 +225,7 @@ impl WsInitializer {
 		})
 	}
 }
-impl Default for WsInitializer {
+impl Default for Initializer {
 	fn default() -> Self {
 		Self {
 			concurrency_limit: 512,
@@ -296,10 +296,8 @@ impl Ws {
 		}
 
 		let RequestQueueGuard { lock: ids, .. } = self.request_queue.take(raw_requests.len())?;
-		let id = ids
-			.first()
-			.ok_or(error::Generic::AlmostImpossible(E_REQUEST_QUEUE_GUARD_BROKE))?
-			.to_owned();
+		let id =
+			ids.first().ok_or(error::almost_impossible(E_REQUEST_QUEUE_GUARD_BROKE))?.to_owned();
 		let requests = ids
 			.into_iter()
 			.zip(raw_requests.into_iter())
