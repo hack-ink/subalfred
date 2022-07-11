@@ -1,6 +1,5 @@
 //! The core library about how Subalfred interacts with Substrate-based node.
 
-/// TODO
 pub mod export_state;
 
 // std
@@ -19,7 +18,7 @@ use subversion::RuntimeVersion;
 const E_CODEC_METADATA_IS_NON_HEX: &str = "[core::node] `codec_metadata` is non-hex";
 const E_STDERR_IS_EMPTY: &str = "[core::node] `stderr` is empty";
 
-/// Spawn a Substrate-Like standard node.
+/// Spawn a Substrate-Base standard node.
 pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 	let mut node = Command::new(executable)
 		.stdout(Stdio::null())

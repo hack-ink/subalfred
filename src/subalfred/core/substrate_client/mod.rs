@@ -1,4 +1,4 @@
-//! Substrate-Like API client implementation.
+//! Substrate-Base API client implementation.
 
 // TODO: maybe HTTP
 
@@ -29,7 +29,7 @@ const PAGE_SIZE: usize = 512;
 const E_GET_KEYS_PAGED_TX_NOT_FOUND: &str =
 	"[core::substrate_client] `GET_KEYS_PAGED_TX` not found";
 
-/// Substrate-Like API websocket client.
+/// Substrate-Base API websocket client.
 #[derive(Clone)]
 pub struct Client {
 	/// Websocket connection.

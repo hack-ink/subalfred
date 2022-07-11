@@ -31,8 +31,7 @@ pub fn members(metadata: &Metadata) -> Result<Vec<&Package>> {
 		.workspace_members
 		.iter()
 		.map(|id| {
-			Ok(util::find_package(metadata, id)
-				.ok_or(error::almost_impossible(E_PKG_NOT_FOUND))?)
+			Ok(util::find_package(metadata, id).ok_or(error::almost_impossible(E_PKG_NOT_FOUND))?)
 		})
 		.collect::<Result<_>>()
 }

@@ -1,3 +1,5 @@
+//! Export the state of Substrate-Base chain.
+
 // std
 use std::{
 	path::Path,
@@ -20,6 +22,8 @@ use substorager::StorageKey;
 #[derive(Debug, Args)]
 pub struct Config {
 	/// Save the exported result to.
+	///
+	/// If the file is already exists, its content will be updated.
 	#[clap(long, value_name = "PATH", default_value = "exported-state.json")]
 	pub output: String,
 	/// Timeout for the fetching.
@@ -27,22 +31,51 @@ pub struct Config {
 	pub timeout: u64,
 	/// Fetch all the data.
 	///
+	/// So, it conflicts with any other filter option.
+	///
 	/// Note:
-	/// The default behaviour is fetching according to metadata's pallet storage records,
-	/// which means if there is any old storage prefix that can not be found in the current
-	/// runtime's pallet storage names will be ignored.
-	#[clap(long, takes_value = false, conflicts_with_all = &["skip-pallets", "fork-off"])]
+	/// The default behaviour (without this option) is fetching according to metadata's pallet
+	/// storage records, which means if there is any old storage prefix that can not be found in
+	/// the current runtime's pallet storage names will be ignored.
+	#[clap(long, takes_value = false, conflicts_with_all = &["skip-pallets", "fork-off"], verbatim_doc_comment)]
 	pub all: bool,
-	// pub pallets: Vec<String>,
-	/// TODO:doc
+	/// Skip these pallets, while fetching.
+	///
+	/// It's useful when you want to skip the 'large' pallets.
 	#[clap(long, use_value_delimiter = true, value_name = "[PALLET_NAME]", conflicts_with = "all")]
 	pub skip_pallets: Vec<String>,
-	/// TODO:doc
-	#[clap(long, takes_value = false, conflicts_with = "all")]
+	/// Fork off the chain.
+	///
+	/// Recommend to run with the `--output` option.
+	///
+	/// It will:
+	/// - Skip `["System", "Babe", "Authorship", "Session", "Grandpa", "Beefy"]` pallets, but keep
+	///   the `System::Account` data. (in order to make the new chain runnable)
+	/// - Change the spec id/name to `*-export`.
+	/// - Clear the bootnodes.
+	/// - Set the `Staking::ForceEra` to `ForceNone`. (in order to prevent the validator set from
+	///   changing mid-test)
+	///
+	/// Usually use this as below to get a runnable fork-off chain, and you can do whatever you
+	/// want on it. Test new features, runtime upgrade, etc.
+	/// ```sh
+	/// # In general, dev chain's validator is `//Alice`, which is good for us to test locally.
+	/// xxx-node --build-spec xxx-dev > xxx.json
+	/// subalfred export-state wss://xxx --fork-off --skip-governance --output xxx.json --log subalfred::core::xxx-node
+	/// xxx-node --chain xxx.json --alice --tmp
+	/// ```
+	#[clap(long, takes_value = false, conflicts_with = "all", verbatim_doc_comment)]
 	pub fork_off: bool,
-	/// TODO:doc
-	#[clap(long, takes_value = false, conflicts_with = "all")]
-	pub skip_governance: bool,
+	/// Use `//Alice` to control the governance.
+	///
+	/// It's useful when you want to test the runtime upgrade.
+	///
+	/// It will:
+	/// - Replace the sudo key with `//Alice`, if the pallet existed.
+	/// - Replace the phragmen election/council members with `//Alice`,if the pallet existed.
+	/// - Replace the technical membership/tech.comm members with `//Alice`, if the pallet existed.
+	#[clap(long, takes_value = false, conflicts_with = "all", verbatim_doc_comment)]
+	pub simple_governance: bool,
 }
 
 /// Start re-genesis process.
@@ -148,7 +181,7 @@ pub async fn run(uri: &str, at: Option<String>, config: &Config) -> Result<()> {
 }
 
 fn store(pairs: Vec<(String, String)>, config: &Config) -> Result<()> {
-	let Config { output, fork_off, skip_governance, .. } = config;
+	let Config { output, fork_off, simple_governance, .. } = config;
 	let path = Path::new(output);
 	let mut json = if path.is_file() {
 		serde_json::from_slice(&system::read_file_to_vec(path)?).map_err(error::Generic::Serde)?
@@ -182,24 +215,18 @@ fn store(pairs: Vec<(String, String)>, config: &Config) -> Result<()> {
 	});
 
 	if *fork_off {
-		// let system_last_runtime_upgrade =
-		// 	substorager::storage_key(b"System", b"LastRuntimeUpgrade").to_string();
 		let staking_force_era = substorager::storage_key(b"Staking", b"ForceEra").to_string();
 
-		// let _ = top.remove(&system_last_runtime_upgrade);
 		top.insert(staking_force_era, Value::String("0x02".into()));
 	}
-	if *skip_governance {
+	if *simple_governance {
 		let alice = Value::String(
 			"0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d".into(),
 		);
 		let alice_members = Value::String(
 			"0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d".into(),
 		);
-		let alice_phragmen_election =
-	Value::String("
-	0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d0010a5d4e800000000000000000000000010a5d4e80000000000000000000000"
-	.into());
+		let alice_phragmen_election = Value::String("0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d0010a5d4e800000000000000000000000010a5d4e80000000000000000000000".into());
 
 		let council = substorager::storage_key(b"Council", b"Members").to_string();
 		let technical_committee =

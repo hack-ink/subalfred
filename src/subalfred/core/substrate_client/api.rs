@@ -1,4 +1,4 @@
-//! Substrate-Like API collections.
+//! Substrate-Base API collections.
 
 // subalfred
 use crate::core::Result;
