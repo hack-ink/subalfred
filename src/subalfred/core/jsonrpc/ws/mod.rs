@@ -292,7 +292,8 @@ impl Ws {
 		R: Into<RawRequest<'a, Value>>,
 	{
 		if raw_requests.is_empty() {
-			Err(error::Jsonrpc::EmptyBatch)?;
+			return Ok(Vec::new());
+			// Err(error::Jsonrpc::EmptyBatch)?;
 		}
 
 		let RequestQueueGuard { lock: ids, .. } = self.request_queue.take(raw_requests.len())?;

@@ -81,8 +81,8 @@ pub fn almost_impossible(e_msg: &'static str) -> Generic {
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Jsonrpc {
-	#[error("[core::jsonrpc] empty batch")]
-	EmptyBatch,
+	// #[error("[core::jsonrpc] empty batch")]
+	// EmptyBatch,
 	#[error("[core::jsonrpc] exceeded the maximum number of request queue size, {0}")]
 	ExceededRequestQueueMaxSize(crate::core::jsonrpc::Id),
 }

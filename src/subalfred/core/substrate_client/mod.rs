@@ -76,6 +76,7 @@ impl Api for Client {
 		let mut pairs = Vec::new();
 
 		while let Some(keys) = get_keys_paged_rx.recv().await {
+			// TODO: warning while batch empty
 			let values = self
 				.ws
 				.batch::<Option<String>, _>(
