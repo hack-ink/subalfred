@@ -51,7 +51,7 @@ pub struct Config {
 	/// It will:
 	/// - Skip `["System", "Babe", "Authorship", "Session", "Grandpa", "Beefy"]` pallets, but keep
 	///   the `System::Account` data. (in order to make the new chain runnable)
-	/// - Change the spec id/name to `*-export`.
+	/// - Change the id and impl name to `*-export`.
 	/// - Clear the bootnodes.
 	/// - Set the `Staking::ForceEra` to `ForceNone`. (in order to prevent the validator set from
 	///   changing mid-test)
@@ -72,8 +72,9 @@ pub struct Config {
 	///
 	/// It will:
 	/// - Replace the sudo key with `//Alice`, if the pallet existed.
-	/// - Replace the phragmen election/council members with `//Alice`,if the pallet existed.
-	/// - Replace the technical membership/tech.comm members with `//Alice`, if the pallet existed.
+	/// - Replace the phragmen election and council members with `//Alice`, if the pallet existed.
+	/// - Replace the technical membership and tech.comm members with `//Alice`, if the pallet
+	///   existed.
 	#[clap(long, takes_value = false, conflicts_with = "all", verbatim_doc_comment)]
 	pub simple_governance: bool,
 }
@@ -195,9 +196,10 @@ fn store(pairs: Vec<(String, String)>, config: &Config) -> Result<()> {
 		})
 	};
 
-	// Use a different spec name.
+	// Use a different id and impl name.
+	json["id"] = Value::String(format!("{}-export", json["id"].as_str().unwrap_or_default()));
 	json["name"] = Value::String(format!("{}-export", json["name"].as_str().unwrap_or_default()));
-	json["id"] = Value::String(format!("{}-export", json["id"].as_str().unwrap_or_default())); // Clear the bootnodes.
+	// Clear the bootnodes.
 	json["bootNodes"] = Value::Array(Vec::new());
 
 	let top = json
