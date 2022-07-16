@@ -21,7 +21,7 @@ impl ExportStateCmd {
 	pub async fn run(&self) -> AnyResult<()> {
 		let Self { live, at, config } = self;
 
-		export_state::run(live, at.clone(), &config).await?;
+		export_state::run(live, at.clone(), config).await?;
 
 		Ok(())
 	}

@@ -1,4 +1,4 @@
-//! Substrate-Base API collections.
+//! Substrate-Like API collections.
 
 // subalfred
 use crate::core::Result;
@@ -20,6 +20,6 @@ pub trait Api {
 		at: Option<String>,
 	) -> Result<Vec<(String, String)>>;
 
-	/// TODO: doc
-	async fn get_keys_paged(&self, prefix: StorageKey, at: Option<String>) -> Result<Vec<String>>;
+	// async fn get_keys_paged(&self, prefix: StorageKey, at: Option<String>) ->
+	// Result<Vec<String>>;
 }

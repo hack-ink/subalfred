@@ -8,10 +8,7 @@ pub use api::Api;
 // std
 use std::sync::Arc;
 // crates.io
-use tokio::sync::{
-	mpsc::{self, Sender},
-	Mutex,
-};
+use tokio::sync::mpsc::{self, Sender};
 // subalfred
 use crate::core::{
 	error,
@@ -21,29 +18,75 @@ use crate::core::{
 use subrpcer::{chain, state};
 use substorager::StorageKey;
 
-type TxId = u8;
-
-const GET_KEYS_PAGED_TX_ID: TxId = 0;
 const PAGE_SIZE: usize = 512;
-
-const E_GET_KEYS_PAGED_TX_NOT_FOUND: &str =
-	"[core::substrate_client] `GET_KEYS_PAGED_TX` not found";
 
 /// Substrate-Base API websocket client.
 #[derive(Clone)]
 pub struct Client {
 	/// Websocket connection.
 	ws: Arc<Ws>,
-	/// Some txs which use for organizing the tasks to speed up the async process.
-	txs: Arc<Mutex<Vec<(TxId, Tx)>>>,
 }
 impl Client {
-	/// TODO: doc
+	/// Initialize the client with the given initializer.
 	pub async fn initialize(initializer: Initializer, uri: &str) -> Result<Self> {
-		Ok(Self {
-			ws: Arc::new(initializer.connect(uri).await?),
-			txs: Arc::new(Mutex::new(Vec::new())),
-		})
+		Ok(Self { ws: Arc::new(initializer.connect(uri).await?) })
+	}
+}
+impl Client {
+	async fn get_keys_paged_concurrent(
+		&self,
+		prefix: StorageKey,
+		at: Option<String>,
+		tx: Sender<Vec<String>>,
+	) -> Result<()> {
+		let prefix = prefix.to_string();
+		let mut start_key = None::<String>;
+		let mut keys_count = 0;
+
+		// Debug.
+		// let mut i = 0;
+
+		loop {
+			let response = self
+				.ws
+				.request::<Vec<String>, _>(state::get_keys_paged_raw(
+					&prefix,
+					PAGE_SIZE,
+					start_key.as_ref(),
+					at.as_ref(),
+				))
+				.await?;
+			let downloaded_keys = response.result;
+			let downloaded_keys_count = downloaded_keys.len();
+
+			keys_count += downloaded_keys_count;
+
+			if let Some(key) = downloaded_keys.last() {
+				start_key = Some(key.to_owned());
+			} else {
+				tracing::warn!(
+					"no keys found under prefix({prefix}) start_key({})",
+					start_key.unwrap_or_default()
+				);
+
+				return Ok(());
+			}
+
+			tracing::trace!("fetched {keys_count} keys");
+
+			tx.send(downloaded_keys).await.map_err(|_| error::Tokio::MpscSend)?;
+
+			if downloaded_keys_count < PAGE_SIZE {
+				return Ok(());
+			}
+
+			// Debug.
+			// if i < 5 {
+			// 	i += 1;
+			// } else {
+			// 	return Ok(());
+			// }
+		}
 	}
 }
 #[async_trait::async_trait]
@@ -63,14 +106,13 @@ impl Api for Client {
 	) -> Result<Vec<(String, String)>> {
 		let (get_keys_paged_tx, mut get_keys_paged_rx) = mpsc::channel(PAGE_SIZE);
 
-		// FIXME: multiple id
-		self.txs.lock().await.push((GET_KEYS_PAGED_TX_ID, Tx::Strings(get_keys_paged_tx)));
-
 		tokio::spawn({
 			let at = at.clone();
 			let self_cloned = self.clone();
 
-			async move { self_cloned.get_keys_paged(prefix, at).await.unwrap() }
+			async move {
+				self_cloned.get_keys_paged_concurrent(prefix, at, get_keys_paged_tx).await.unwrap()
+			}
 		});
 
 		let mut pairs = Vec::new();
@@ -108,83 +150,4 @@ impl Api for Client {
 
 		Ok(pairs)
 	}
-
-	async fn get_keys_paged(&self, prefix: StorageKey, at: Option<String>) -> Result<Vec<String>> {
-		let prefix = prefix.to_string();
-		let mut start_key = None::<String>;
-		let mut keys_count = 0;
-
-		// Debug.
-		// let mut i = 0;
-
-		loop {
-			let response = self
-				.ws
-				.request::<Vec<String>, _>(state::get_keys_paged_raw(
-					&prefix,
-					PAGE_SIZE,
-					start_key.as_ref(),
-					at.as_ref(),
-				))
-				.await?;
-			let downloaded_keys = response.result;
-			let downloaded_keys_count = downloaded_keys.len();
-
-			keys_count += downloaded_keys_count;
-
-			if let Some(key) = downloaded_keys.last() {
-				start_key = Some(key.to_owned());
-			}
-
-			tracing::trace!("fetched {keys_count} keys");
-
-			self.txs
-				.lock()
-				.await
-				.iter()
-				.find_map(get_tx_as(GET_KEYS_PAGED_TX_ID, Tx::as_strings_tx))
-				.ok_or(error::almost_impossible(E_GET_KEYS_PAGED_TX_NOT_FOUND))?
-				.send(downloaded_keys)
-				.await
-				.map_err(|_| error::Tokio::MpscSend)?;
-
-			if downloaded_keys_count < PAGE_SIZE {
-				let mut txs = self.txs.lock().await;
-
-				if let Some(i) = txs.iter().position(|(tx_id, _)| tx_id == &GET_KEYS_PAGED_TX_ID) {
-					txs.remove(i);
-				}
-
-				// The result is useless, when the `Client::txs` is enabled.
-				// Because in every single loop,
-				// `GET_KEYS_PAGED_TX` will yield the result to outside.
-				return Ok(Vec::new());
-			}
-
-			// Debug.
-			// if i < 5 {
-			// 	i += 1;
-			// } else {
-			// 	return Ok(());
-			// }
-		}
-	}
-}
-
-enum Tx {
-	Strings(Sender<Vec<String>>),
-}
-impl Tx {
-	fn as_strings_tx(&self) -> Option<&Sender<Vec<String>>> {
-		match self {
-			Self::Strings(tx) => Some(tx),
-		}
-	}
-}
-
-fn get_tx_as<F, T>(tx_id: TxId, mut tx_as: F) -> impl FnMut(&(TxId, Tx)) -> Option<&Sender<T>>
-where
-	F: FnMut(&Tx) -> Option<&Sender<T>>,
-{
-	move |(tx_id_, tx)| if tx_id_ == &tx_id { tx_as(tx) } else { None }
 }

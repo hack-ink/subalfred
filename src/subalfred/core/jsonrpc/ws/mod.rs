@@ -297,8 +297,10 @@ impl Ws {
 		}
 
 		let RequestQueueGuard { lock: ids, .. } = self.request_queue.take(raw_requests.len())?;
-		let id =
-			ids.first().ok_or(error::almost_impossible(E_REQUEST_QUEUE_GUARD_BROKE))?.to_owned();
+		let id = ids
+			.first()
+			.ok_or_else(|| error::almost_impossible(E_REQUEST_QUEUE_GUARD_BROKE))?
+			.to_owned();
 		let requests = ids
 			.into_iter()
 			.zip(raw_requests.into_iter())
@@ -354,10 +356,10 @@ impl Pool {
 					Message::Binary(raw_response) =>
 						self.process_raw_response(str::from_utf8(&raw_response).unwrap()).await,
 					Message::Text(raw_response) => self.process_raw_response(&raw_response).await,
-					Message::Ping(_) => tracing::warn!("Ping"),
-					Message::Pong(_) => tracing::warn!("Pong"),
-					Message::Close(_) => tracing::warn!("Close"),
-					Message::Frame(_) => tracing::warn!("Frame"),
+					Message::Ping(_) => tracing::warn!("ping"),
+					Message::Pong(_) => tracing::warn!("pong"),
+					Message::Close(_) => tracing::warn!("close"),
+					Message::Frame(_) => tracing::warn!("frame"),
 				}
 
 				Ok(())

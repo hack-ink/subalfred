@@ -174,7 +174,7 @@ pub async fn run(uri: &str, at: Option<String>, config: &Config) -> Result<()> {
 	};
 	let pairs_count = pairs.len();
 
-	store(pairs, &config)?;
+	store(pairs, config)?;
 
 	println!("✓ fully exported {pairs_count} pairs, takes {}s", start_time.elapsed().as_secs());
 
