@@ -7,8 +7,8 @@
 ### An All-In-One [Substrate](https://github.com/paritytech/substrate) Development Toolbox.
 
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Checks](https://github.com/hack-ink/subalfred/workflows/Checks/badge.svg?branch=main)](https://github.com/hack-ink/subalfred/actions/workflows/ci.yml)
-[![Release](https://github.com/hack-ink/subalfred/workflows/Release/badge.svg?branch=main)](https://github.com/hack-ink/subalfred/actions/workflows/ci.yml)
+[![Checks](https://github.com/hack-ink/subalfred/workflows/checks/badge.svg?branch=main)](https://github.com/hack-ink/subalfred/actions/workflows/ci.yml)
+[![Release](https://github.com/hack-ink/subalfred/workflows/release/badge.svg?branch=main)](https://github.com/hack-ink/subalfred/actions/workflows/ci.yml)
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/hack-ink/subalfred)](https://github.com/hack-ink/subalfred/tags)
 [![GitHub code lines](https://tokei.rs/b1/github/hack-ink/subalfred)](https://github.com/hack-ink/subalfred)
 [![GitHub last commit](https://img.shields.io/github/last-commit/hack-ink/subalfred?color=red&style=plastic)](https://github.com/hack-ink/subalfred)

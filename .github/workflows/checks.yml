@@ -1,4 +1,4 @@
-name: Checks
+name: checks
 on:
   push:
     branches:
@@ -9,12 +9,12 @@ on:
 
 jobs:
   cargo_test:
-    name: Cargo test
+    name: cargo test
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch latest code
+      - name: fetch latest code
         uses: actions/checkout@v3
-      - name: Install Rust nightly toolchain
+      - name: install Rust nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
