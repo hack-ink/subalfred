@@ -1,4 +1,4 @@
-name: release
+name: Release
 on:
   push:
     tags:
@@ -7,12 +7,12 @@ on:
 
 jobs:
   release:
-    name: release
+    name: Release
     runs-on: ubuntu-latest
     steps:
-      - name: fetch latest code
+      - name: Fetch latest code
         uses: actions/checkout@v3
-      - name: install Rust nightly toolchain
+      - name: Install Rust nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
@@ -22,15 +22,15 @@ jobs:
         with:
           command: build
           args: --release
-      - name: compress
+      - name: Compress
         run: |
           mv target/release/subalfred .
           tar cf subalfred.tar.zst subalfred -I pzstd
-      - name: hash
+      - name: Hash
         run: |
           sha256sum subalfred.tar.zst subalfred | tee SHA256
           md5sum subalfred.tar.zst subalfred | tee MD5
-      - name: publish
+      - name: Publish
         uses: softprops/action-gh-release@v1
         with:
           discussion_category_name: Announcements
