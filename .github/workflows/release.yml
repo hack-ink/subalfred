@@ -4,9 +4,6 @@ on:
     tags:
       - v*.*.*
       - v*.*.*-rc*
-  pull_request:
-    branches:
-      - main
 
 jobs:
   release:
@@ -33,12 +30,12 @@ jobs:
         run: |
           sha256sum subalfred.tar.zst subalfred | tee SHA256
           md5sum subalfred.tar.zst subalfred | tee MD5
-      # - name: Publish
-      #   uses: softprops/action-gh-release@v1
-      #   with:
-      #     discussion_category_name: Announcements
-      #     generate_release_notes: true
-      #     files: |
-      #       subalfred.tar.zst
-      #       SHA256
-      #       MD5
+      - name: Publish
+        uses: softprops/action-gh-release@v1
+        with:
+          discussion_category_name: Announcements
+          generate_release_notes: true
+          files: |
+            subalfred.tar.zst
+            SHA256
+            MD5

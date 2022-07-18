@@ -1,4 +1,4 @@
-name: CI
+name: Checks
 on:
   push:
     branches:
@@ -8,8 +8,8 @@ on:
       - main
 
 jobs:
-  internal_test:
-    name: Internal test
+  cargo_test:
+    name: Cargo test
     runs-on: ubuntu-latest
     steps:
       - name: Fetch latest code
@@ -19,12 +19,12 @@ jobs:
         with:
           toolchain: nightly
           default: true
-      - name: Test
+      - name: default-features test
         uses: actions-rs/cargo@v1
         with:
           command: test
           args: --all
-      - name: Test
+      - name: no-default-features test
         uses: actions-rs/cargo@v1
         with:
           command: test
