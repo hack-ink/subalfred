@@ -9,8 +9,8 @@ fn test_data() -> Metadata {
 
 #[test]
 fn members_manifests_should_work() {
-	fn remove_common_prefix(s: &str) -> String {
-		s.split_once("/subalfred").unwrap().1.to_owned()
+	fn remove_prefix(s: &str) -> String {
+		s.rsplit_once("/subalfred").unwrap().1.to_owned()
 	}
 
 	let metadata = test_data();
@@ -19,7 +19,7 @@ fn members_manifests_should_work() {
 		members(&metadata)
 			.unwrap()
 			.iter()
-			.map(|pkg| { (pkg.name.as_str(), remove_common_prefix(&pkg.manifest_path.as_str())) })
+			.map(|pkg| { (pkg.name.as_str(), remove_prefix(&pkg.manifest_path.as_str())) })
 			.collect::<Vec<_>>(),
 		vec![
 			("subcryptor", "/substrate-minimum/subcryptor/Cargo.toml".into()),
