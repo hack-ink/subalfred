@@ -27,7 +27,7 @@ jobs:
           args: --release
       - name: Compress
         run: |
-          mv target/releases/subalfred .
+          mv target/release/subalfred .
           tar cf subalfred.tar.zst subalfred -I pzstd
       - name: Hash
         run: |
