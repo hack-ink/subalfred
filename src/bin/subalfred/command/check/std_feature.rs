@@ -15,11 +15,14 @@ pub struct StdFeatureCmd {
 impl StdFeatureCmd {
 	pub fn run(&self) -> AnyResult<()> {
 		let Self { manifest_path } = self;
+		// TODO: check cargo metadata
 		let disabled_std_deps = std_feature::check(manifest_path)?;
 
 		disabled_std_deps
 			.into_iter()
 			.for_each(|(alias, path)| println!("`{alias}`'s std feature was disabled in `{path}`"));
+
+		// TODO: exit status
 
 		Ok(())
 	}
