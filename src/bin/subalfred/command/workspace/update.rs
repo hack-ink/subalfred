@@ -18,7 +18,7 @@ pub struct UpdateCmd {
 }
 impl UpdateCmd {
 	#[tokio::main]
-	pub async fn run(&self) -> AnyResult<()> {
+	pub async fn run(&self) -> Result<()> {
 		let Self { manifest_path, version } = self;
 
 		cargo::update_member_versions(manifest_path, version).await?;

@@ -11,7 +11,7 @@ use std::sync::{
 // crates.io
 use serde::{Deserialize, Serialize};
 // hack-ink
-use crate::core::{error, Result};
+use crate::core::prelude::*;
 
 /// JSONRPC Id.
 pub type Id = usize;

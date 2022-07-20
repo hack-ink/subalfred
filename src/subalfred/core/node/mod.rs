@@ -10,7 +10,7 @@ use std::{
 // crates.io
 use parity_scale_codec::Decode;
 // hack-ink
-use crate::core::{error, jsonrpc::http, Result};
+use crate::core::{jsonrpc::http, prelude::*};
 use submetadatan::{LatestRuntimeMetadata, RuntimeMetadataPrefixed};
 use subrpcer::state;
 use subversion::RuntimeVersion;

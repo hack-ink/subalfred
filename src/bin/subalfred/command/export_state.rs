@@ -18,7 +18,7 @@ pub struct ExportStateCmd {
 }
 impl ExportStateCmd {
 	#[tokio::main]
-	pub async fn run(&self) -> AnyResult<()> {
+	pub async fn run(&self) -> Result<()> {
 		let Self { live, at, config } = self;
 
 		export_state::run(live, at.clone(), config).await?;

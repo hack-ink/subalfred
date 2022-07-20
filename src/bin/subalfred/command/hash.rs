@@ -19,7 +19,7 @@ pub struct HashCmd {
 	bstring: bool,
 }
 impl HashCmd {
-	pub fn run(&self) -> AnyResult<()> {
+	pub fn run(&self) -> Result<()> {
 		let Self { value, hasher, bstring } = self;
 		let data = if *bstring {
 			Cow::Borrowed(value.as_bytes())

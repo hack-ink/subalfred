@@ -18,8 +18,9 @@ fn test_data() -> (Vec<u8>, String, Address<'static>) {
 
 #[test]
 fn of_should_work() {
-	let (_, hex_public_key, address) = test_data();
-	let expect_result = Ok((hex_public_key.clone(), address.clone()));
+	let data = test_data();
+	let (_, hex_public_key, address) = &data;
+	let expect_result = Ok(data.clone());
 
 	assert_eq!(of(&hex_public_key, &address.network).map_err(|_| ()), expect_result);
 	assert_eq!(of(&address.value, &address.network).map_err(|_| ()), expect_result);

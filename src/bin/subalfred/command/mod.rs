@@ -39,7 +39,7 @@ macro_rules! impl_cmd {
 			),*
 		}
 		impl $cmd {
-			pub fn run(&self) -> $crate::prelude::AnyResult<()> {
+			pub fn run(&self) -> $crate::prelude::Result<()> {
 				match self {
 					$(
 						Self::$subcmd(subcmd) => { subcmd.run() }

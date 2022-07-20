@@ -93,6 +93,8 @@ pub enum Jsonrpc {
 pub enum Key {
 	#[error("[core::key] invalid sub-seed, index out of bound")]
 	InvalidSubSeed,
+	#[error("[core::key] invalid key")]
+	InvalidKey,
 }
 
 /// Node error.

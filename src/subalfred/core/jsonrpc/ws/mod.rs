@@ -28,7 +28,7 @@ use tokio_stream::wrappers::IntervalStream;
 use tokio_tungstenite::tungstenite::{error::Result as WsResult, Message};
 // hack-ink
 use super::*;
-use crate::core::{error, Result};
+use crate::core::prelude::*;
 use subrpcer::system;
 
 type Messenger = mpsc::Sender<Call>;
