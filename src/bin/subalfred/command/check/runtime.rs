@@ -24,11 +24,11 @@ pub struct RuntimeCmd {
 }
 impl RuntimeCmd {
 	#[tokio::main]
-	pub async fn run(&self) -> AnyResult<()> {
+	pub async fn run(&self) -> Result<()> {
 		fn map_err_and_kill_node_process<T, E>(
 			result: Result<T, E>,
 			node_process: &mut Child,
-		) -> AnyResult<T>
+		) -> Result<T>
 		where
 			E: 'static + Error + Send + Sync,
 		{

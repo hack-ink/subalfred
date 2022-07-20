@@ -5,7 +5,7 @@ use cargo_metadata::{Dependency, Metadata, Package, PackageId};
 use regex::Regex;
 // hack-ink
 use super::E_BUILD_REGEX_FAILED;
-use crate::core::{error, Result};
+use crate::core::prelude::*;
 
 #[derive(Debug)]
 pub enum VersionSpec {

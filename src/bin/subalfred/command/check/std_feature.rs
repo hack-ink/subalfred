@@ -13,7 +13,7 @@ pub struct StdFeatureCmd {
 	manifest_path: String,
 }
 impl StdFeatureCmd {
-	pub fn run(&self) -> AnyResult<()> {
+	pub fn run(&self) -> Result<()> {
 		let Self { manifest_path } = self;
 		// TODO: check cargo metadata
 		let disabled_std_deps = std_feature::check(manifest_path)?;

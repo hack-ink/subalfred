@@ -6,7 +6,7 @@
 use serde::{de::DeserializeOwned, Serialize};
 // hack-ink
 use super::*;
-use crate::core::{error, http::CLIENT, Result};
+use crate::core::{http::CLIENT, prelude::*};
 
 /// Send the JSONRPC through the [`CLIENT`] with the given JSON.
 pub async fn send<S, D>(uri: &str, s: &S) -> Result<Response<D>>
