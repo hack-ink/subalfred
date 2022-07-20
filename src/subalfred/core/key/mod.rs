@@ -1,9 +1,14 @@
 //! Substrate keys implementations.
 
+// std
+use std::{
+	fmt::{Display, Formatter, Result as FmtResult},
+	mem,
+};
 // crates.io
-use parity_scale_codec::Encode;
+use parity_scale_codec::{Decode, Encode};
 // hack-ink
-use crate::core::{error, Result};
+use crate::core::prelude::*;
 
 /// Substrate/Polkadot keys like.
 pub trait Key
@@ -59,10 +64,33 @@ macro_rules! impl_keys {
 					self.0
 				}
 			}
+			impl TryFrom<&[u8]> for $name {
+				type Error = Error;
+
+				fn try_from(key: &[u8]) -> Result<Self> {
+					let id_size = Self::ID.len();
+					// Note:
+					// These sub-seed types' mem size have the exact same size as `<$ty as Encode>::size_hint(&Default::default())`.
+					// If introduce some complex types in the future, might need to use the formula above to calculate the size.
+					let sub_seed_size = mem::size_of::<$ty>();
+
+					if key.len() < id_size + sub_seed_size {
+						Err(error::Key::InvalidKey)?;
+					}
+
+					let id = &key[..id_size];
+					let sub_seed = &key[id_size..id_size + sub_seed_size];
+
+					if id != Self::ID {
+						Err(error::Key::InvalidKey)?;
+					}
+
+					Ok(Self(<$ty>::decode(&mut &*sub_seed).map_err(error::Generic::Codec)?))
+				}
+			}
 		)+
 	};
 }
-
 impl_keys! {
 	#[doc="Unique identifier of a pallet, aka `ModuleId`."]
 	#[id=*b"modl"]
@@ -73,4 +101,19 @@ impl_keys! {
 	#[doc="Unique identifier of a sibling chain."]
 	#[id=*b"sibl"]
 	SiblId(u32),
+}
+impl Display for PalletId {
+	fn fmt(&self, f: &mut Formatter) -> FmtResult {
+		write!(f, "PalletId({})", String::from_utf8_lossy(&self.0))
+	}
+}
+impl Display for ParaId {
+	fn fmt(&self, f: &mut Formatter) -> FmtResult {
+		write!(f, "ParaId({})", &self.0)
+	}
+}
+impl Display for SiblId {
+	fn fmt(&self, f: &mut Formatter) -> FmtResult {
+		write!(f, "SiblId({})", &self.0)
+	}
 }

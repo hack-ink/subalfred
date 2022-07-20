@@ -12,7 +12,7 @@ use cargo_toml::Manifest;
 use futures::stream::{self, StreamExt};
 use regex::Captures;
 // hack-ink
-use crate::core::{error, system, Result};
+use crate::core::{prelude::*, system};
 
 const E_PKG_NOT_FOUND: &str = "[core::cargo] package not found";
 const E_BUILD_REGEX_FAILED: &str = "[core::cargo] failed to build the `Regex`";

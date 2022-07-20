@@ -5,7 +5,9 @@
 
 /// Useful tools set for development.
 mod prelude {
-	pub use anyhow::Result as AnyResult;
+	pub use ::std::result::Result as StdResult;
+
+	pub use anyhow::Result;
 
 	// std
 	use std::fmt::Debug;
@@ -19,7 +21,7 @@ mod prelude {
 		anyhow::anyhow!("{e:?}")
 	}
 }
-use prelude::AnyResult;
+use prelude::Result;
 
 mod cli;
 use cli::Cli;
@@ -27,6 +29,6 @@ use cli::Cli;
 mod command;
 
 // #[tokio::main]
-fn main() -> AnyResult<()> {
+fn main() -> Result<()> {
 	Cli::new().run()
 }

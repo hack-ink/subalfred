@@ -4,7 +4,7 @@ use std::{
 	ops::Deref,
 };
 // hack-ink
-use crate::core::{error, node, Result};
+use crate::core::{node, prelude::*};
 use submetadatan::{
 	form::PortableForm, LatestRuntimeMetadata, PalletStorageMetadata, PortableRegistry,
 	StorageEntryMetadata,

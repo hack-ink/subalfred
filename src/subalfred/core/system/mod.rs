@@ -10,7 +10,7 @@ use std::{
 	path::{Path, PathBuf},
 };
 // hack-ink
-use crate::core::{error, Result};
+use crate::core::prelude::*;
 
 /// System port.
 pub type Port = u16;

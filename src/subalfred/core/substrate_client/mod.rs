@@ -11,9 +11,8 @@ use std::sync::Arc;
 use tokio::sync::mpsc::{self, Sender};
 // subalfred
 use crate::core::{
-	error,
 	jsonrpc::ws::{Initializer, Ws},
-	Result,
+	prelude::*,
 };
 use subrpcer::{chain, state};
 use substorager::StorageKey;

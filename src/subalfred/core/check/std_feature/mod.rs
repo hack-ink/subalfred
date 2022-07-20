@@ -1,7 +1,7 @@
 #[cfg(test)] mod test;
 
 // hack-ink
-use crate::core::{cargo, Result};
+use crate::core::{cargo, prelude::*};
 
 /// Check if the crates' `std` features are enabled correctly.
 pub fn check(manifest_path: &str) -> Result<Vec<(String, String)>> {

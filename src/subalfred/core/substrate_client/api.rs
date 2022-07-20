@@ -1,7 +1,7 @@
 //! Substrate-Like API collections.
 
 // subalfred
-use crate::core::Result;
+use crate::core::prelude::*;
 use substorager::StorageKey;
 
 /// TODO: doc

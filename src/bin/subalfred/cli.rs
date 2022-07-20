@@ -39,7 +39,7 @@ impl Cli {
 		cli
 	}
 
-	pub fn run(&self) -> AnyResult<()> {
+	pub fn run(&self) -> Result<()> {
 		self.subcmd.run()
 	}
 }

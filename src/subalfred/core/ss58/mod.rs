@@ -3,7 +3,7 @@
 #[cfg(test)] mod test;
 
 // hack-ink
-use crate::core::{error, Result};
+use crate::core::prelude::*;
 use subcryptor::{ss58_registry::ALL_SS58_ADDRESS_FORMAT_NAMES, Sr25519};
 
 /// Network address.
@@ -22,19 +22,19 @@ pub struct Address<'a> {
 ///
 /// `address` could be public key or SS58 address.
 /// `network` is case insensitive.
-pub fn of<'a>(address: &str, network: &'a str) -> Result<(String, Address<'a>)> {
+pub fn of<'a>(address: &str, network: &'a str) -> Result<(Vec<u8>, String, Address<'a>)> {
 	let public_key = recover_public_key(address)?;
 	let hex_public_key = array_bytes::bytes2hex("0x", &public_key);
 	let (prefix, address) = subcryptor::ss58_address_of(&public_key, network)
 		.map_err(error::Ss58::CalculateSs58AddressFailed)?;
 
-	Ok((hex_public_key, Address { network, prefix, value: address }))
+	Ok((public_key, hex_public_key, Address { network, prefix, value: address }))
 }
 
 /// Generate the public key and all the network addresses for the address.
 ///
 /// `address` could be public key or SS58 address.
-pub fn all(address: &str) -> Result<(String, Vec<Address>)> {
+pub fn all(address: &str) -> Result<(Vec<u8>, String, Vec<Address>)> {
 	let public_key = recover_public_key(address)?;
 	let hex_public_key = array_bytes::bytes2hex("0x", &public_key);
 	let mut addresses = Vec::new();
@@ -46,7 +46,7 @@ pub fn all(address: &str) -> Result<(String, Vec<Address>)> {
 		addresses.push(Address { network, prefix, value: address });
 	}
 
-	Ok((hex_public_key, addresses))
+	Ok((public_key, hex_public_key, addresses))
 }
 
 /// Recover the public key from the given address.

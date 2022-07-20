@@ -15,7 +15,7 @@ pub struct StorageKeyCmd {
 	item: String,
 }
 impl StorageKeyCmd {
-	pub fn run(&self) -> AnyResult<()> {
+	pub fn run(&self) -> Result<()> {
 		let Self { prefix, item } = self;
 
 		println!("{}", substorager::storage_key(prefix.as_bytes(), item.as_bytes()));
