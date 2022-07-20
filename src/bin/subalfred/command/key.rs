@@ -1,5 +1,5 @@
 // std
-use std::borrow::Cow;
+use std::{borrow::Cow, fmt::Write};
 // crates.io
 use clap::{ArgEnum, Args};
 // hack-ink
@@ -10,8 +10,6 @@ use subalfred::core::{
 };
 
 pub type ChainId = u32;
-
-// TODO: detect if it is a pallet account or sovereign account
 
 /// Convert the public key/SS58 address from SS58 address/public key.
 #[derive(Debug, Args)]
@@ -33,7 +31,7 @@ pub struct KeyCmd {
 	show_prefix: bool,
 }
 impl KeyCmd {
-	pub fn run(&self) -> AnyResult<()> {
+	pub fn run(&self) -> Result<()> {
 		let Self { key, key_type, network, list_all, show_prefix } = self;
 		let key = if let Some(key_type) = key_type {
 			Cow::Owned(array_bytes::bytes2hex("0x", &key_type.to_key::<32>(key)?))
@@ -42,10 +40,14 @@ impl KeyCmd {
 		};
 
 		if *list_all {
-			let (public_key, addresses) = ss58::all(&key)?;
+			let (public_key, mut hex_public_key, addresses) = ss58::all(&key)?;
 			let max_length = addresses.iter().map(|addr| addr.network.len()).max().unwrap_or(0);
 
-			println!("public-key {public_key}");
+			if let Ok(special_key) = try_get_key_type_from_public_key(public_key) {
+				write!(hex_public_key, " {special_key}")?;
+			}
+
+			println!("public-key {hex_public_key}");
 
 			if *show_prefix {
 				addresses.into_iter().for_each(|Address { network, prefix, value }| {
@@ -57,9 +59,14 @@ impl KeyCmd {
 				});
 			}
 		} else {
-			let (public_key, Address { network, prefix, value }) = ss58::of(&key, network)?;
+			let (public_key, mut hex_public_key, Address { network, prefix, value }) =
+				ss58::of(&key, network)?;
 
-			println!("public-key {public_key}");
+			if let Ok(special_key) = try_get_key_type_from_public_key(public_key) {
+				write!(hex_public_key, " {special_key}")?;
+			}
+
+			println!("public-key {hex_public_key}",);
 
 			if *show_prefix {
 				println!("{network} {prefix} {value}");
@@ -79,7 +86,7 @@ pub enum KeyType {
 	Sibling,
 }
 impl KeyType {
-	fn to_key<const N: usize>(&self, s: &str) -> AnyResult<[u8; N]> {
+	fn to_key<const N: usize>(&self, s: &str) -> Result<[u8; N]> {
 		Ok(match self {
 			KeyType::Pallet =>
 				PalletId(array_bytes::slice2array(s.as_bytes()).map_err(quick_err)?).to_key()?,
@@ -87,4 +94,13 @@ impl KeyType {
 			KeyType::Sibling => SiblId(s.parse::<ChainId>()?).to_key()?,
 		})
 	}
+}
+
+fn try_get_key_type_from_public_key(public_key: impl AsRef<[u8]>) -> Result<String> {
+	let public_key = public_key.as_ref();
+
+	Ok(PalletId::try_from(public_key)
+		.map(|k| ToString::to_string(&k))
+		.or_else(|_| ParaId::try_from(public_key).map(|k| ToString::to_string(&k)))
+		.or_else(|_| SiblId::try_from(public_key).map(|k| ToString::to_string(&k)))?)
 }
