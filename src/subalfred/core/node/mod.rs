@@ -23,7 +23,7 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 	let mut node = Command::new(executable)
 		.stdout(Stdio::null())
 		.stderr(Stdio::piped())
-		.args(&[&format!("--rpc-port={rpc_port}"), "--chain", &format!("{}-dev", chain), "--tmp"])
+		.args(&[&format!("--rpc-port={rpc_port}"), "--chain", chain, "--tmp"])
 		.spawn()
 		.map_err(error::Node::StartNodeFailed)?;
 	let output = BufReader::new(
@@ -32,7 +32,11 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 
 	// Ensure the node is fully startup.
 	for line in output.lines() {
-		if line.map_err(error::Generic::Io)?.contains("Idle") {
+		let line = line.map_err(error::Generic::Io)?;
+
+		tracing::trace!("node({rpc_port}) output: {line}");
+
+		if line.contains("Idle") {
 			break;
 		}
 	}
