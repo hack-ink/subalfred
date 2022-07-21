@@ -37,7 +37,7 @@ jobs:
           sudo mv $SCCACHE_FILE/sccache /usr/bin
           sudo chmod u+x /usr/bin/sccache
       - name: Cache cargo
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.cargo/registry
@@ -46,7 +46,7 @@ jobs:
           key: cargo-${{ env.GITHUB_CACHE_VERSION }}-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: cargo-${{ env.GITHUB_CACHE_VERSION }}-
       - name: Cache sccache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ env.SCCACHE_DIR}}
           key: sccache-${{ env.GITHUB_CACHE_VERSION }}-${{ hashFiles('**/Cargo.lock') }}
