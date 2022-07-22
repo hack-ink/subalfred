@@ -20,7 +20,7 @@ maintenance = { status = "actively-developed" }
 
 [build-dependencies]
 # crates.io
-vergen = { version = "7.2" }
+vergen = { version = "7.3" }
 
 [dependencies]
 # crates.io
