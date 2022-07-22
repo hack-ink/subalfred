@@ -20,6 +20,7 @@
 ## Philosophies
 - **Lighting Fast**
 - **Less Dependencies**
+- **No `unsafe {}`/`.expect()`/`.unwrap()`**
 - **Easy to Use**
 - **Strive for Excellence**
 
@@ -72,11 +73,11 @@ SUBCOMMANDS:
 - [system](src/subalfred/core/system)
 
 ### Substrate Minimum Libraries
-- [subcryptor](substrate-minimum/subcryptor)
-- [subgrandpa](substrate-minimum/subgrandpa)
-- [subhasher](substrate-minimum/subhasher)
-- [submetadatan](substrate-minimum/submetadatan)
-- [subrpcer](substrate-minimum/subrpcer)
-  - [impl](substrate-minimum/subrpcer/impl)
-- [substorager](substrate-minimum/substorager)
-- [subversion](substrate-minimum/subversion)
+- [subcryptor](substrate-minimal/subcryptor)
+- [subgrandpa](substrate-minimal/subgrandpa)
+- [subhasher](substrate-minimal/subhasher)
+- [submetadatan](substrate-minimal/submetadatan)
+- [subrpcer](substrate-minimal/subrpcer)
+  - [impl](substrate-minimal/subrpcer/impl)
+- [substorager](substrate-minimal/substorager)
+- [subversion](substrate-minimal/subversion)
