@@ -72,7 +72,7 @@ SUBCOMMANDS:
 - [substrate-client](src/subalfred/core/substrate-client)
 - [system](src/subalfred/core/system)
 
-### Substrate Minimum Libraries
+### Substrate Minimal Libraries
 - [subcryptor](substrate-minimal/subcryptor)
 - [subgrandpa](substrate-minimal/subgrandpa)
 - [subhasher](substrate-minimal/subhasher)
