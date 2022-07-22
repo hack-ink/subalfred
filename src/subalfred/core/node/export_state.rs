@@ -229,7 +229,6 @@ fn store(pairs: Vec<(String, String)>, config: &Config) -> Result<()> {
 			"0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d".into(),
 		);
 		let alice_phragmen_election = Value::String("0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d0010a5d4e800000000000000000000000010a5d4e80000000000000000000000".into());
-
 		let council = substorager::storage_key(b"Council", b"Members").to_string();
 		let technical_committee =
 			substorager::storage_key(b"TechnicalCommittee", b"Members").to_string();

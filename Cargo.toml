@@ -45,12 +45,12 @@ tokio-tungstenite  = { version = "0.17", features = ["rustls-tls-native-roots"] 
 tracing            = { version = "0.1" }
 tracing-subscriber = { version = "0.3" }
 # hack-ink
-subcryptor   = { version = "0.9", path = "substrate-minimum/subcryptor" }
-subhasher    = { version = "0.9", path = "substrate-minimum/subhasher" }
-submetadatan = { version = "0.9", path = "substrate-minimum/submetadatan" }
-subrpcer     = { version = "0.9", path = "substrate-minimum/subrpcer" }
-substorager  = { version = "0.9", path = "substrate-minimum/substorager" }
-subversion   = { version = "0.9", path = "substrate-minimum/subversion", features = ["serde"] }
+subcryptor   = { version = "0.9", path = "substrate-minimal/subcryptor" }
+subhasher    = { version = "0.9", path = "substrate-minimal/subhasher" }
+submetadatan = { version = "0.9", path = "substrate-minimal/submetadatan" }
+subrpcer     = { version = "0.9", path = "substrate-minimal/subrpcer" }
+substorager  = { version = "0.9", path = "substrate-minimal/substorager" }
+subversion   = { version = "0.9", path = "substrate-minimal/subversion", features = ["serde"] }
 
 [features]
 default = [
@@ -66,8 +66,8 @@ tokio-selector   = []
 
 [workspace]
 members = [
-	"substrate-minimum/*",
-	"substrate-minimum/*/impl",
+	"substrate-minimal/*",
+	"substrate-minimal/*/impl",
 ]
 
 [[bin]]
