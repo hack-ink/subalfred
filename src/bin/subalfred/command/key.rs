@@ -9,11 +9,11 @@ use subalfred::core::{
 	ss58::{self, Address},
 };
 
-pub type ChainId = u32;
+type ChainId = u32;
 
 /// Convert the public key/SS58 address from SS58 address/public key.
 #[derive(Debug, Args)]
-pub struct KeyCmd {
+pub(crate) struct KeyCmd {
 	/// Public key or SS58 address.
 	#[clap(required = true, value_name = "PUBLIC KEY/SS58 ADDRESS")]
 	key: String,
@@ -31,7 +31,7 @@ pub struct KeyCmd {
 	show_prefix: bool,
 }
 impl KeyCmd {
-	pub fn run(&self) -> Result<()> {
+	pub(crate) fn run(&self) -> Result<()> {
 		let Self { key, key_type, network, list_all, show_prefix } = self;
 		let key = if let Some(key_type) = key_type {
 			Cow::Owned(array_bytes::bytes2hex("0x", &key_type.to_key::<32>(key)?))
@@ -80,7 +80,7 @@ impl KeyCmd {
 }
 
 #[derive(Clone, Debug, ArgEnum)]
-pub enum KeyType {
+enum KeyType {
 	Pallet,
 	Parachain,
 	Sibling,

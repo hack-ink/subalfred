@@ -8,7 +8,7 @@ use subalfred::core::cargo;
 ///
 /// Pretty useful while you are going to publish a new release.
 #[derive(Debug, Args)]
-pub struct UpdateCmd {
+pub(crate) struct UpdateCmd {
 	/// Path to the root `Cargo.toml`.
 	#[clap(long, value_name = "PATH", default_value = "./Cargo.toml")]
 	manifest_path: String,
@@ -18,7 +18,7 @@ pub struct UpdateCmd {
 }
 impl UpdateCmd {
 	#[tokio::main]
-	pub async fn run(&self) -> Result<()> {
+	pub(crate) async fn run(&self) -> Result<()> {
 		let Self { manifest_path, version } = self;
 
 		cargo::update_member_versions(manifest_path, version).await?;

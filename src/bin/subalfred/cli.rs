@@ -18,14 +18,14 @@ use crate::{command::Cmd, prelude::*};
 	about,
 	rename_all = "kebab",
 )]
-pub struct Cli {
+pub(crate) struct Cli {
 	#[clap(subcommand)]
 	subcmd: Cmd,
 	#[clap(flatten)]
 	global_args: GlobalArgs,
 }
 impl Cli {
-	pub fn new() -> Self {
+	pub(crate) fn new() -> Self {
 		let cli = Self::parse();
 
 		if let Ok(extra_log) = env::var("RUST_LOG") {
@@ -39,14 +39,14 @@ impl Cli {
 		cli
 	}
 
-	pub fn run(&self) -> Result<()> {
+	pub(crate) fn run(&self) -> Result<()> {
 		self.subcmd.run()
 	}
 }
 
 #[derive(Debug, Args)]
-pub struct GlobalArgs {
+struct GlobalArgs {
 	/// Set a custom logging filter. Also, work with the `RUST_LOG` environment variable.
 	#[clap(global = true, long, value_name = "TARGET=LEVEL,*", default_value = "info")]
-	pub log: String,
+	log: String,
 }
