@@ -8,7 +8,7 @@ use subalfred::core::{check::runtime, node, system};
 
 /// Compare the local node runtime version with live's.
 #[derive(Debug, Args)]
-pub struct RuntimeCmd {
+pub(crate) struct RuntimeCmd {
 	/// Path to the executable.
 	#[clap(long, required = true, value_name = "PATH")]
 	executable: String,
@@ -24,7 +24,7 @@ pub struct RuntimeCmd {
 }
 impl RuntimeCmd {
 	#[tokio::main]
-	pub async fn run(&self) -> Result<()> {
+	pub(crate) async fn run(&self) -> Result<()> {
 		fn map_err_and_kill_node_process<T, E>(
 			result: Result<T, E>,
 			node_process: &mut Child,
@@ -81,7 +81,7 @@ impl RuntimeCmd {
 
 /// Runtime's property.
 #[derive(Clone, Debug, ArgEnum)]
-pub enum Property {
+enum Property {
 	/// Check the runtime storage.
 	Storage,
 	/// Check the runtime version.

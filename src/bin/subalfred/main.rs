@@ -3,7 +3,6 @@
 
 //! TODO: doc
 
-/// Useful tools set for development.
 mod prelude {
 	pub use ::std::result::Result as StdResult;
 
@@ -21,14 +20,11 @@ mod prelude {
 		anyhow::anyhow!("{e:?}")
 	}
 }
-use prelude::Result;
 
 mod cli;
-use cli::Cli;
-
 mod command;
 
 // #[tokio::main]
-fn main() -> Result<()> {
-	Cli::new().run()
+fn main() -> prelude::Result<()> {
+	cli::Cli::new().run()
 }

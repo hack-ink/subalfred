@@ -4,6 +4,9 @@ use check::CheckCmd;
 mod export_state;
 use export_state::ExportStateCmd;
 
+mod get;
+use get::GetCmd;
+
 mod hash;
 use hash::HashCmd;
 
@@ -32,14 +35,14 @@ macro_rules! impl_cmd {
 	) => {
 		$(#[doc=$doc])?
 		#[derive(Debug, clap::Subcommand)]
-		pub enum $cmd {
+		pub(crate) enum $cmd {
 			$(
 				$(#[clap($clap_attr)])?
 				$subcmd(concat_idents!($subcmd, Cmd))
 			),*
 		}
 		impl $cmd {
-			pub fn run(&self) -> $crate::prelude::Result<()> {
+			pub(crate) fn run(&self) -> $crate::prelude::Result<()> {
 				match self {
 					$(
 						Self::$subcmd(subcmd) => { subcmd.run() }
@@ -56,6 +59,7 @@ impl_cmd! {
 		#[clap(subcommand)]
 		Check,
 		ExportState,
+		Get,
 		Hash,
 		Key,
 		StorageKey,

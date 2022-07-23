@@ -7,7 +7,7 @@ use crate::prelude::*;
 
 /// Hash the hex with the specific hasher.
 #[derive(Debug, Args)]
-pub struct HashCmd {
+pub(crate) struct HashCmd {
 	/// Value to be hashed.
 	#[clap(required = true, value_name = "HEX/BINARY STRING")]
 	value: String,
@@ -19,7 +19,7 @@ pub struct HashCmd {
 	bstring: bool,
 }
 impl HashCmd {
-	pub fn run(&self) -> Result<()> {
+	pub(crate) fn run(&self) -> Result<()> {
 		let Self { value, hasher, bstring } = self;
 		let data = if *bstring {
 			Cow::Borrowed(value.as_bytes())
@@ -48,7 +48,7 @@ impl HashCmd {
 
 #[allow(non_camel_case_types)]
 #[derive(Clone, Debug, ArgEnum)]
-pub enum Hasher {
+enum Hasher {
 	blake2_128,
 	blake2_128_concat,
 	blake2_256,
