@@ -17,8 +17,8 @@ pub fn get_metadata_once() -> Value {
 }
 
 #[subrpcer_impl::rpc]
-pub fn get_runtime_version_once() -> Value {
-	crate::rpc_once("state_getRuntimeVersion", Value::Null)
+pub fn get_runtime_version_once(at: Option<impl Serialize>) -> Value {
+	crate::rpc_once("state_getRuntimeVersion", serde_json::json!([at]))
 }
 
 #[subrpcer_impl::rpc]

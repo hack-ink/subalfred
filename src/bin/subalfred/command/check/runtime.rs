@@ -79,11 +79,8 @@ impl RuntimeCmd {
 	}
 }
 
-/// Runtime's property.
 #[derive(Clone, Debug, ArgEnum)]
 enum Property {
-	/// Check the runtime storage.
 	Storage,
-	/// Check the runtime version.
 	Version,
 }

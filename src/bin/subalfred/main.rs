@@ -1,7 +1,7 @@
 #![feature(concat_idents)]
 #![warn(missing_docs)]
 
-//! TODO: doc
+//! Subalfred CLI start entry point.
 
 mod prelude {
 	pub use ::std::result::Result as StdResult;

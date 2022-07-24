@@ -49,8 +49,9 @@ subcryptor   = { version = "0.9", path = "substrate-minimal/subcryptor" }
 subhasher    = { version = "0.9", path = "substrate-minimal/subhasher" }
 submetadatan = { version = "0.9", path = "substrate-minimal/submetadatan" }
 subrpcer     = { version = "0.9", path = "substrate-minimal/subrpcer" }
+subruntimer   = { version = "0.9", path = "substrate-minimal/subruntimer", features = ["serde"] }
 substorager  = { version = "0.9", path = "substrate-minimal/substorager" }
-subversion   = { version = "0.9", path = "substrate-minimal/subversion", features = ["serde"] }
+subversioner   = { version = "0.9", path = "substrate-minimal/subversioner", features = ["serde"] }
 
 [features]
 default = [

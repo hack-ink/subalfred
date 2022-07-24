@@ -3,11 +3,12 @@
 // TODO: maybe HTTP
 
 mod api;
-pub use api::Api;
+pub use api::BasicApi;
 
 // std
 use std::sync::Arc;
 // crates.io
+use serde::{de::DeserializeOwned, Serialize};
 use tokio::sync::mpsc::{self, Sender};
 // subalfred
 use crate::core::{
@@ -15,7 +16,9 @@ use crate::core::{
 	prelude::*,
 };
 use subrpcer::{chain, state};
+use subruntimer::Header;
 use substorager::StorageKey;
+use subversioner::RuntimeVersion;
 
 const PAGE_SIZE: usize = 512;
 
@@ -89,18 +92,43 @@ impl Client {
 	}
 }
 #[async_trait::async_trait]
-impl Api for Client {
+impl BasicApi for Client {
+	async fn get_block_hash<BlockNumber>(&self, block_number: Option<BlockNumber>) -> Result<String>
+	where
+		BlockNumber: Send + Serialize,
+	{
+		Ok(self.ws.request(chain::get_block_hash_raw(block_number)).await?.result)
+	}
+
 	async fn get_finalized_head(&self) -> Result<String> {
-		Ok(self.ws.request::<String, _>(chain::get_finalized_head_raw()).await?.result)
+		Ok(self.ws.request(chain::get_finalized_head_raw()).await?.result)
 	}
 
 	async fn get_runtime_metadata(&self) -> Result<String> {
-		Ok(self.ws.request::<String, _>(state::get_metadata_raw()).await?.result)
+		Ok(self.ws.request(state::get_metadata_raw()).await?.result)
+	}
+
+	async fn get_header<BlockNumber, Hash>(
+		&self,
+		hash: Option<Hash>,
+	) -> Result<Header<BlockNumber, Hash>>
+	where
+		BlockNumber: Send + DeserializeOwned,
+		Hash: Send + Serialize + DeserializeOwned,
+	{
+		Ok(self.ws.request(chain::get_header_raw(hash)).await?.result)
+	}
+
+	async fn get_runtime_version<Hash>(&self, at: Option<Hash>) -> Result<RuntimeVersion>
+	where
+		Hash: Send + Serialize,
+	{
+		Ok(self.ws.request(state::get_runtime_version_raw(at)).await?.result)
 	}
 
 	async fn get_pairs_paged(
 		&self,
-		prefix: StorageKey,
+		prefix: substorager::StorageKey,
 		at: Option<String>,
 	) -> Result<Vec<(String, String)>> {
 		let (get_keys_paged_tx, mut get_keys_paged_rx) = mpsc::channel(PAGE_SIZE);

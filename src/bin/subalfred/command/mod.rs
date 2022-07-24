@@ -59,6 +59,7 @@ impl_cmd! {
 		#[clap(subcommand)]
 		Check,
 		ExportState,
+		#[clap(subcommand)]
 		Get,
 		Hash,
 		Key,

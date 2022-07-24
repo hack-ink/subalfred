@@ -29,7 +29,7 @@ fn members_manifests_should_work() {
 			("subrpcer", "/substrate-minimal/subrpcer/Cargo.toml".into()),
 			("subrpcer-impl", "/substrate-minimal/subrpcer/impl/Cargo.toml".into()),
 			("substorager", "/substrate-minimal/substorager/Cargo.toml".into()),
-			("subversion", "/substrate-minimal/subversion/Cargo.toml".into()),
+			("subversioner", "/substrate-minimal/subversioner/Cargo.toml".into()),
 			("subalfred", "/Cargo.toml".into()),
 		]
 	);

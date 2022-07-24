@@ -1,20 +1,9 @@
-// crates.io
-use clap::Args;
-// hack-ink
-use crate::prelude::*;
+mod runtime_upgrade_block;
+use runtime_upgrade_block::RuntimeUpgradeBlockCmd;
 
-/// TODO.
-#[derive(Debug, Args)]
-pub(crate) struct GetCmd {
-	/// Live chain's RPC HTTP endpoint.
-	#[clap(required = true, value_name = "URI")]
-	live: String,
-}
-impl GetCmd {
-	#[tokio::main]
-	pub(crate) async fn run(&self) -> Result<()> {
-		let Self { live } = self;
-
-		Ok(())
+crate::impl_cmd! {
+	#[doc="Get something from the node."]
+	GetCmd {
+		RuntimeUpgradeBlock,
 	}
 }
