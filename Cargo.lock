@@ -1541,8 +1541,9 @@ dependencies = [
  "subhasher",
  "submetadatan",
  "subrpcer",
+ "subruntimer",
  "substorager",
- "subversion",
+ "subversioner",
  "thiserror",
  "tokio",
  "tokio-stream",
@@ -1614,6 +1615,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "subruntimer"
+version = "0.9.0"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "substorager"
 version = "0.9.0"
 dependencies = [
@@ -1623,7 +1631,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "subversion"
+name = "subversioner"
 version = "0.9.0"
 dependencies = [
  "serde",

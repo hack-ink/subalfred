@@ -8,13 +8,15 @@ use std::{
 	process::{Child, Command, Stdio},
 };
 // crates.io
+use array_bytes::TryFromHex;
 use parity_scale_codec::Decode;
 // hack-ink
 use crate::core::{jsonrpc::http, prelude::*};
 use submetadatan::{LatestRuntimeMetadata, RuntimeMetadataPrefixed};
 use subrpcer::state;
-use subversion::RuntimeVersion;
+use subversioner::RuntimeVersion;
 
+const E_BLOCK_NUMBER_IS_NON_HEX: &str = "[core::node] block number is non-hex";
 const E_CODEC_METADATA_IS_NON_HEX: &str = "[core::node] `codec_metadata` is non-hex";
 const E_STDERR_IS_EMPTY: &str = "[core::node] `stderr` is empty";
 
@@ -46,7 +48,9 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 
 /// Get runtime version from node.
 pub async fn runtime_version(uri: &str) -> Result<RuntimeVersion> {
-	Ok(http::send::<_, RuntimeVersion>(uri, &state::get_runtime_version_once()).await?.result)
+	Ok(http::send::<_, RuntimeVersion>(uri, &state::get_runtime_version_once(None::<()>))
+		.await?
+		.result)
 }
 
 /// Fetch runtime metadata from node.
@@ -64,4 +68,54 @@ fn parse_raw_runtime_metadata(raw_runtime_metadata: &str) -> Result<LatestRuntim
 		submetadatan::metadata(metadata_prefixed).map_err(error::Node::ParseMetadataFailed)?;
 
 	Ok(metadata)
+}
+
+// TODO: move to somewhere
+/// Find the runtime upgrade that happened at which block with the dichotomy algorithm.
+pub async fn find_runtime_upgrade_block(
+	runtime_version: u32,
+	uri: &str,
+) -> Result<Option<(u32, String)>> {
+	// subalfred
+	use crate::core::{
+		jsonrpc::ws::Initializer,
+		substrate_client::{BasicApi, Client},
+	};
+
+	let client = Client::initialize(Initializer::new(), uri).await?;
+	let best_finalized_hash = client.get_finalized_head().await?;
+	let mut left = 0;
+	let mut right =
+		u32::try_from_hex(&client.get_header::<String, _>(Some(best_finalized_hash)).await?.number)
+			.map_err(|_| error::almost_impossible(E_BLOCK_NUMBER_IS_NON_HEX))?;
+	let mut mid = right / 2;
+
+	loop {
+		let block_hash = client.get_block_hash(Some(mid)).await?;
+		let fetched_runtime_version =
+			client.get_runtime_version(Some(&block_hash)).await?.spec_version;
+
+		tracing::trace!("({left}, {right}) -> {fetched_runtime_version}");
+
+		if left == mid || right == mid {
+			let block_number = mid + 1;
+			let block_hash = client.get_block_hash(Some(block_number)).await?;
+			let fetched_runtime_version =
+				client.get_runtime_version(Some(&block_hash)).await?.spec_version;
+
+			if fetched_runtime_version == runtime_version {
+				return Ok(Some((block_number, block_hash)));
+			} else {
+				return Ok(None);
+			}
+		}
+
+		if fetched_runtime_version >= runtime_version {
+			right = mid;
+			mid -= (mid - left) / 2;
+		} else {
+			left = mid;
+			mid += (right - mid) / 2;
+		}
+	}
 }

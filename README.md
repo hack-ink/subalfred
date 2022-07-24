@@ -80,4 +80,4 @@ SUBCOMMANDS:
 - [subrpcer](substrate-minimal/subrpcer)
   - [impl](substrate-minimal/subrpcer/impl)
 - [substorager](substrate-minimal/substorager)
-- [subversion](substrate-minimal/subversion)
+- [subversioner](substrate-minimal/subversioner)

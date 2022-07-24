@@ -13,7 +13,7 @@ use serde_json::Value;
 use crate::core::{
 	jsonrpc::ws::Initializer,
 	prelude::*,
-	substrate_client::{Api, Client},
+	substrate_client::{BasicApi, Client},
 	system,
 };
 use substorager::StorageKey;

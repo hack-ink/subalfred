@@ -21,17 +21,21 @@ fn members_manifests_should_work() {
 			.iter()
 			.map(|pkg| { (pkg.name.as_str(), remove_prefix(&pkg.manifest_path.as_str())) })
 			.collect::<Vec<_>>(),
-		vec![
-			("subcryptor", "/substrate-minimal/subcryptor/Cargo.toml".into()),
-			("subgrandpa", "/substrate-minimal/subgrandpa/Cargo.toml".into()),
-			("subhasher", "/substrate-minimal/subhasher/Cargo.toml".into()),
-			("submetadatan", "/substrate-minimal/submetadatan/Cargo.toml".into()),
-			("subrpcer", "/substrate-minimal/subrpcer/Cargo.toml".into()),
-			("subrpcer-impl", "/substrate-minimal/subrpcer/impl/Cargo.toml".into()),
-			("substorager", "/substrate-minimal/substorager/Cargo.toml".into()),
-			("subversion", "/substrate-minimal/subversion/Cargo.toml".into()),
-			("subalfred", "/Cargo.toml".into()),
+		[
+			("subcryptor", "/substrate-minimal/subcryptor/Cargo.toml"),
+			("subgrandpa", "/substrate-minimal/subgrandpa/Cargo.toml"),
+			("subhasher", "/substrate-minimal/subhasher/Cargo.toml"),
+			("submetadatan", "/substrate-minimal/submetadatan/Cargo.toml"),
+			("subrpcer", "/substrate-minimal/subrpcer/Cargo.toml"),
+			("subrpcer-impl", "/substrate-minimal/subrpcer/impl/Cargo.toml"),
+			("subruntimer", "/substrate-minimal/subruntimer/Cargo.toml"),
+			("substorager", "/substrate-minimal/substorager/Cargo.toml"),
+			("subversioner", "/substrate-minimal/subversioner/Cargo.toml"),
+			("subalfred", "/Cargo.toml")
 		]
+		.iter()
+		.map(|&(name, path)| (name, path.into()))
+		.collect::<Vec<_>>()
 	);
 }
 
