@@ -14,7 +14,6 @@ pub(crate) struct StdFeatureCmd {
 impl StdFeatureCmd {
 	pub(crate) fn run(&self) -> Result<()> {
 		let Self { manifest_path } = self;
-		// TODO: check cargo metadata
 		let disabled_std_deps = std_feature::check(manifest_path)?;
 
 		disabled_std_deps

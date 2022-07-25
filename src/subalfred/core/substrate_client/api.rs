@@ -3,7 +3,7 @@
 // subalfred
 use crate::core::prelude::*;
 
-/// TODO: doc
+///  Substrate-Like basic API collections.
 #[async_trait::async_trait]
 pub trait BasicApi {
 	/// TODO: doc
