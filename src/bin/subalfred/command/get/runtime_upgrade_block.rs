@@ -22,12 +22,13 @@ impl RuntimeUpgradeBlockCmd {
 	pub(crate) async fn run(&self) -> Result<()> {
 		let Self { runtime_version, uri } = self;
 
-		if let Some((number, hash)) = node::find_runtime_upgrade_block(*runtime_version, uri).await? {
+		if let Some((number, hash)) =
+			node::find_runtime_upgrade_block(*runtime_version, uri).await?
+		{
 			println!("{number} {hash}");
 		} else {
 			println!("target runtime version not found");
 		}
-
 
 		Ok(())
 	}
