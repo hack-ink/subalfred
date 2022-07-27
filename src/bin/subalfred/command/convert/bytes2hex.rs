@@ -17,7 +17,6 @@ impl Bytes2HexCmd {
 	pub(crate) async fn run(&self) -> Result<()> {
 		let Self { bytes } = self;
 
-
 		// TODO: `clap::value_parser!`
 		if !(bytes.starts_with('[') && bytes.ends_with(']')) {
 			Err(quick_err("Invalid bytes input."))?;
