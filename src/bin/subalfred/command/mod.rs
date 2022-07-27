@@ -1,6 +1,9 @@
 mod check;
 use check::CheckCmd;
 
+mod convert;
+use convert::ConvertCmd;
+
 mod export_state;
 use export_state::ExportStateCmd;
 
@@ -25,19 +28,19 @@ use workspace::WorkspaceCmd;
 #[macro_export]
 macro_rules! impl_cmd {
 	(
-		$(#[doc=$doc:expr])?
+		$(#[$outer:meta])*
 		$cmd:ident {
 			$(
-				$(#[clap($clap_attr:ident)])?
+				$(#[$inner:meta])*
 				$subcmd:ident
 			),*,
 		}
 	) => {
-		$(#[doc=$doc])?
+		$(#[$outer])*
 		#[derive(Debug, clap::Subcommand)]
 		pub(crate) enum $cmd {
 			$(
-				$(#[clap($clap_attr)])?
+				$(#[$inner])*
 				$subcmd(concat_idents!($subcmd, Cmd))
 			),*
 		}
@@ -58,6 +61,8 @@ impl_cmd! {
 	Cmd {
 		#[clap(subcommand)]
 		Check,
+		#[clap(subcommand)]
+		Convert,
 		ExportState,
 		#[clap(subcommand)]
 		Get,
