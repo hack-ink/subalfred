@@ -1535,7 +1535,7 @@ dependencies = [
  "futures",
  "fxhash",
  "once_cell",
- "parity-scale-codec 2.3.1",
+ "parity-scale-codec 3.1.5",
  "regex",
  "reqwest",
  "serde",
