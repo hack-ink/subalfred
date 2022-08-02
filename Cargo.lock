@@ -445,7 +445,7 @@ checksum = "37ed5e5c346de62ca5c184b4325a6600d1eaca210666e4606fe4e449574978d0"
 dependencies = [
  "cfg-if",
  "parity-scale-codec 2.3.1",
- "scale-info",
+ "scale-info 1.0.0",
  "serde",
 ]
 
@@ -1328,6 +1328,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "scale-info"
+version = "2.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c46be926081c9f4dd5dd9b6f1d3e3229f2360bc6502dd8836f84a93b7c75e99a"
+dependencies = [
+ "bitvec 1.0.1",
+ "cfg-if",
+ "derive_more",
+ "parity-scale-codec 3.1.5",
+]
+
+[[package]]
 name = "scale-info-derive"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1591,7 +1603,7 @@ name = "submetadatan"
 version = "0.9.0"
 dependencies = [
  "frame-metadata",
- "scale-info",
+ "scale-info 2.1.2",
  "thiserror",
 ]
 

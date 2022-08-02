@@ -16,5 +16,5 @@ maintenance = { status = "actively-developed" }
 # crates.io
 # TODO: update to v15
 frame-metadata = { version = "14.2", features = ["v14"] }
-scale-info     = { version = "1.0" }
+scale-info     = { version = "2.1" }
 thiserror      = { version = "1.0" }
