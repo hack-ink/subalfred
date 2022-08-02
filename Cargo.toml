@@ -33,7 +33,7 @@ clap               = { version = "3.2", features = ["cargo", "derive", "wrap_hel
 futures            = { version = "0.3" }
 fxhash             = { version = "0.2" }
 once_cell          = { version = "1.13" }
-parity-scale-codec = { version = "2.3" }
+parity-scale-codec = { version = "3.1" }
 regex              = { version = "1.6" }
 reqwest            = { version = "0.11", features = ["json"] }
 serde              = { version = "1.0" }
@@ -49,9 +49,9 @@ subcryptor   = { version = "0.9", path = "substrate-minimal/subcryptor" }
 subhasher    = { version = "0.9", path = "substrate-minimal/subhasher" }
 submetadatan = { version = "0.9", path = "substrate-minimal/submetadatan" }
 subrpcer     = { version = "0.9", path = "substrate-minimal/subrpcer" }
-subruntimer   = { version = "0.9", path = "substrate-minimal/subruntimer", features = ["serde"] }
+subruntimer  = { version = "0.9", path = "substrate-minimal/subruntimer", features = ["serde"] }
 substorager  = { version = "0.9", path = "substrate-minimal/substorager" }
-subversioner   = { version = "0.9", path = "substrate-minimal/subversioner", features = ["serde"] }
+subversioner = { version = "0.9", path = "substrate-minimal/subversioner", features = ["serde"] }
 
 [features]
 default = [
