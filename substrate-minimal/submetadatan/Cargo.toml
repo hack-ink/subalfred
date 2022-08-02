@@ -15,6 +15,6 @@ maintenance = { status = "actively-developed" }
 [dependencies]
 # crates.io
 # TODO: update to v15
-frame-metadata = { version = "14.2", features = ["v14"] }
+frame-metadata = { version = "15.0", features = ["v14"] }
 scale-info     = { version = "1.0" }
 thiserror      = { version = "1.0" }
