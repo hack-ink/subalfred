@@ -38,7 +38,7 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 
 		tracing::trace!("node({rpc_port}) output: {line}");
 
-		if line.contains("Idle") {
+		if ["Idle", "Imported", "Syncing"].iter().any(|s| line.contains(s)) {
 			break;
 		}
 	}
