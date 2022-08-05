@@ -1,22 +1,14 @@
 //! Full functionality JSONRPC websocket client implementation.
 //! Follow <https://www.jsonrpc.org/specification> specification.
 
-#[cfg(any(
-	all(feature = "futures-selector", feature = "tokio-selector"),
-	not(any(feature = "futures-selector", feature = "tokio-selector"))
-))]
-compile_error!(
-	"`futures-selector` conflicts with `tokio-selector`. But at least one of them must be enabled."
-);
-
 // std
 use std::{str, sync::Arc, time::Duration};
 // crates.io
 use futures::{future::Fuse, FutureExt, SinkExt, StreamExt};
-#[cfg(feature = "futures-selector")] use futures::{
-	future::{self, Either::*},
-	stream,
-};
+// #[cfg(feature = "futures-selector")] use futures::{
+// 	future::{self, Either::*},
+// 	stream,
+// };
 use fxhash::FxHashMap;
 use serde::de::DeserializeOwned;
 use serde_json::Value;
@@ -87,7 +79,6 @@ impl Initializer {
 			.split();
 		let (tx, rx) = mpsc::channel(self.concurrency_limit);
 
-		#[cfg(feature = "tokio-selector")]
 		tokio::spawn(async move {
 			let system_health_request = serde_json::to_string(&system::health_once()).unwrap();
 			let mut rx = rx;
@@ -144,74 +135,75 @@ impl Initializer {
 			}
 		});
 
-		#[cfg(feature = "futures-selector")]
-		tokio::spawn(async move {
-			let system_health_request = serde_json::to_string(&system::health_once()).unwrap();
-			let rx = stream::unfold(rx, |mut r| async { r.recv().await.map(|c| (c, r)) });
+		// TODO: move to another function
+		// #[cfg(feature = "futures-selector")]
+		// tokio::spawn(async move {
+		// 	let system_health_request = serde_json::to_string(&system::health_once()).unwrap();
+		// 	let rx = stream::unfold(rx, |mut r| async { r.recv().await.map(|c| (c, r)) });
 
-			futures::pin_mut!(rx);
+		// 	futures::pin_mut!(rx);
 
-			let mut rxs_fut = future::select(rx.next(), ws_rx.next());
+		// 	let mut rxs_fut = future::select(rx.next(), ws_rx.next());
 
-			// TODO: clean dead items?
-			let mut pool = Pool::new();
-			// Minimum interval is 1ms.
-			let interval = self.interval.max(Duration::from_millis(1));
-			let mut interval = IntervalStream::new(time::interval(interval));
-			// Disable the tick, if the interval is zero.
-			let mut interval_fut =
-				if self.interval.is_zero() { Fuse::terminated() } else { interval.next().fuse() };
+		// 	// TODO: clean dead items?
+		// 	let mut pool = Pool::new();
+		// 	// Minimum interval is 1ms.
+		// 	let interval = self.interval.max(Duration::from_millis(1));
+		// 	let mut interval = IntervalStream::new(time::interval(interval));
+		// 	// Disable the tick, if the interval is zero.
+		// 	let mut interval_fut =
+		// 		if self.interval.is_zero() { Fuse::terminated() } else { interval.next().fuse() };
 
-			loop {
-				match future::select(rxs_fut, interval_fut).await {
-					Left((Left((maybe_call, maybe_response_fut)), interval_fut_)) => {
-						if let Some(call) = maybe_call {
-							match call {
-								// Debug.
-								// Call::Debug(_) => {
-								// 	tracing::debug!("{call:?}");
-								// },
-								Call::Single(RawCall { id, request, notifier }) => {
-									tracing::trace!("SingleRequest({request})");
+		// 	loop {
+		// 		match future::select(rxs_fut, interval_fut).await {
+		// 			Left((Left((maybe_call, maybe_response_fut)), interval_fut_)) => {
+		// 				if let Some(call) = maybe_call {
+		// 					match call {
+		// 						// Debug.
+		// 						// Call::Debug(_) => {
+		// 						// 	tracing::debug!("{call:?}");
+		// 						// },
+		// 						Call::Single(RawCall { id, request, notifier }) => {
+		// 							tracing::trace!("SingleRequest({request})");
 
-									ws_tx.send(Message::Text(request)).await.unwrap();
-									pool.requests.insert(id, notifier);
-								},
-								Call::Batch(RawCall { id, request, notifier }) => {
-									tracing::trace!("BatchRequests({request})");
+		// 							ws_tx.send(Message::Text(request)).await.unwrap();
+		// 							pool.requests.insert(id, notifier);
+		// 						},
+		// 						Call::Batch(RawCall { id, request, notifier }) => {
+		// 							tracing::trace!("BatchRequests({request})");
 
-									ws_tx.send(Message::Text(request)).await.unwrap();
-									pool.batches.insert(id, notifier);
-								},
-							}
-						} else {
-							//
-						}
+		// 							ws_tx.send(Message::Text(request)).await.unwrap();
+		// 							pool.batches.insert(id, notifier);
+		// 						},
+		// 					}
+		// 				} else {
+		// 					//
+		// 				}
 
-						rxs_fut = future::select(rx.next(), maybe_response_fut);
-						interval_fut = interval_fut_;
-					},
-					Left((Right((maybe_response, maybe_call_fut)), interval_fut_)) => {
-						if let Some(response) = maybe_response {
-							pool.on_ws_recv(response).await.unwrap()
-						} else {
-							//
-						}
+		// 				rxs_fut = future::select(rx.next(), maybe_response_fut);
+		// 				interval_fut = interval_fut_;
+		// 			},
+		// 			Left((Right((maybe_response, maybe_call_fut)), interval_fut_)) => {
+		// 				if let Some(response) = maybe_response {
+		// 					pool.on_ws_recv(response).await.unwrap()
+		// 				} else {
+		// 					//
+		// 				}
 
-						rxs_fut = future::select(maybe_call_fut, ws_rx.next());
-						interval_fut = interval_fut_;
-					},
-					Right((_, rxs_fut_)) => {
-						tracing::trace!("TickRequest({system_health_request})");
+		// 				rxs_fut = future::select(maybe_call_fut, ws_rx.next());
+		// 				interval_fut = interval_fut_;
+		// 			},
+		// 			Right((_, rxs_fut_)) => {
+		// 				tracing::trace!("TickRequest({system_health_request})");
 
-						ws_tx.send(Message::Text(system_health_request.clone())).await.unwrap();
+		// 				ws_tx.send(Message::Text(system_health_request.clone())).await.unwrap();
 
-						rxs_fut = rxs_fut_;
-						interval_fut = interval.next().fuse();
-					},
-				}
-			}
-		});
+		// 				rxs_fut = rxs_fut_;
+		// 				interval_fut = interval.next().fuse();
+		// 			},
+		// 		}
+		// 	}
+		// });
 
 		Ok(Ws {
 			messenger: tx,

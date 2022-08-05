@@ -20,8 +20,11 @@ env:
 
 jobs:
   cargo_test:
-    name: Cargo test
+    name: Task cargo ${{ matrix.action }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        action: [clippy, test]
     steps:
       - name: Fetch latest code
         uses: actions/checkout@v3
@@ -43,21 +46,23 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             target
-          key: cargo-${{ env.GITHUB_CACHE_VERSION }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: cargo-${{ env.GITHUB_CACHE_VERSION }}-
+          key: cargo-${{ env.GITHUB_CACHE_VERSION }}-${{ matrix.action }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: cargo-${{ env.GITHUB_CACHE_VERSION }}-${{ matrix.action }}-
       - name: Cache sccache
         uses: actions/cache@v3
         with:
           path: ${{ env.SCCACHE_DIR}}
-          key: sccache-${{ env.GITHUB_CACHE_VERSION }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: sccache-${{ env.GITHUB_CACHE_VERSION }}-
-      - name: Cargo test
+          key: sccache-${{ env.GITHUB_CACHE_VERSION }}-${{ matrix.action }}--${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: sccache-${{ env.GITHUB_CACHE_VERSION }}-${{ matrix.action }}-
+      - name: Cargo ${{ matrix.action }}
+        if: matrix.action == 'clippy'
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all --all-features
+      - name: Cargo ${{ matrix.action.name }}
+        if: matrix.action == 'test'
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --all --release
-      - name: Cargo test feature futures-selector
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --all --release --no-default-features --features futures-selector
+          args: --all --all-features --release
