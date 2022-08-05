@@ -8,6 +8,8 @@ mod prelude {
 
 	pub use anyhow::Result;
 
+	pub(crate) use crate::util;
+
 	// std
 	use std::fmt::Debug;
 	// crates.io
@@ -23,6 +25,7 @@ mod prelude {
 
 mod cli;
 mod command;
+mod util;
 
 // #[tokio::main]
 fn main() -> prelude::Result<()> {
