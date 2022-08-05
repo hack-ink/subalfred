@@ -13,19 +13,11 @@ pub(crate) struct Bytes2HexCmd {
 	bytes: String,
 }
 impl Bytes2HexCmd {
-	#[tokio::main]
-	pub(crate) async fn run(&self) -> Result<()> {
+	pub(crate) fn run(&self) -> Result<()> {
 		let Self { bytes } = self;
 
-		// TODO: `clap::value_parser!`
-		if !(bytes.starts_with('[') && bytes.ends_with(']')) {
-			Err(quick_err("Invalid bytes input."))?;
-		}
-
-		let bytes = bytes[1..bytes.len() - 1]
-			.split(',')
-			.map(|s| s.trim_matches(' ').parse::<u8>())
-			.collect::<StdResult<Vec<_>, _>>()?;
+		// May use `clap::value_parser!` here.
+		let bytes = util::vec_literal_string_try_as_vec(bytes)?;
 
 		println!("{}", array_bytes::bytes2hex("0x", bytes.as_slice()));
 

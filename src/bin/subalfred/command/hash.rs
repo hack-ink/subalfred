@@ -1,5 +1,3 @@
-// std
-use std::borrow::Cow;
 // crates.io
 use clap::{ArgEnum, Args};
 // hack-ink
@@ -8,24 +6,17 @@ use crate::prelude::*;
 /// Hash the hex with the specific hasher.
 #[derive(Debug, Args)]
 pub(crate) struct HashCmd {
-	/// Value to be hashed.
-	#[clap(required = true, value_name = "HEX/BINARY STRING")]
-	value: String,
+	/// Hex to be hashed.
+	#[clap(required = true, value_name = "HEX")]
+	hex: String,
 	/// Hash algorithm.
 	#[clap(arg_enum, long, value_name = "HASHER", default_value = "blake2-128-concat")]
 	hasher: Hasher,
-	/// Read value into binary string format.
-	#[clap(long, takes_value = false)]
-	bstring: bool,
 }
 impl HashCmd {
 	pub(crate) fn run(&self) -> Result<()> {
-		let Self { value, hasher, bstring } = self;
-		let data = if *bstring {
-			Cow::Borrowed(value.as_bytes())
-		} else {
-			Cow::Owned(array_bytes::hex2bytes(value).map_err(quick_err)?)
-		};
+		let Self { hex, hasher } = self;
+		let data = array_bytes::hex2bytes(hex).map_err(quick_err)?;
 		let bytes = match hasher {
 			Hasher::blake2_128 => subhasher::blake2_128(&data).to_vec(),
 			Hasher::blake2_128_concat => subhasher::blake2_128_concat(&data),
