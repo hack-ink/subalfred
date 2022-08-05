@@ -10,7 +10,6 @@ readme      = "README.md"
 repository  = "https://github.com/hack-ink/subalfred"
 version     = "0.9.0"
 
-
 [lib]
 name = "subalfred"
 path = "src/subalfred/lib.rs"
@@ -52,15 +51,6 @@ subrpcer     = { version = "0.9", path = "substrate-minimal/subrpcer" }
 subruntimer  = { version = "0.9", path = "substrate-minimal/subruntimer", features = ["serde"] }
 substorager  = { version = "0.9", path = "substrate-minimal/substorager" }
 subversioner = { version = "0.9", path = "substrate-minimal/subversioner", features = ["serde"] }
-
-[features]
-default = [
-	"tokio-selector",
-]
-
-# At least one selected feature must be enabled.
-futures-selector = []
-tokio-selector   = []
 
 # [profile.release]
 # lto = true
