@@ -14,9 +14,6 @@ use regex::Captures;
 // hack-ink
 use crate::core::{prelude::*, system};
 
-const E_PKG_NOT_FOUND: &str = "[core::cargo] package not found";
-const E_BUILD_REGEX_FAILED: &str = "[core::cargo] failed to build the `Regex`";
-
 /// Get the `cargo metadata` result.
 pub fn metadata(manifest_path: &str) -> Result<Metadata> {
 	Ok(MetadataCommand::new()
@@ -26,15 +23,8 @@ pub fn metadata(manifest_path: &str) -> Result<Metadata> {
 }
 
 /// Get all the workspace members from the workspace metadata.
-pub fn members(metadata: &Metadata) -> Result<Vec<&Package>> {
-	metadata
-		.workspace_members
-		.iter()
-		.map(|id| {
-			Ok(util::find_package(metadata, id)
-				.ok_or_else(|| error::almost_impossible(E_PKG_NOT_FOUND))?)
-		})
-		.collect::<Result<_>>()
+pub fn members(metadata: &Metadata) -> Option<Vec<&Package>> {
+	metadata.workspace_members.iter().map(|id| util::find_package(metadata, id)).collect()
 }
 
 /// Read the [`Manifest`] from the given path.
@@ -51,7 +41,11 @@ where
 /// If a workspace member depends on another one, the dependency will also be updated.
 pub async fn update_member_versions(manifest_path: &str, to: &str) -> Result<()> {
 	let metadata = metadata(manifest_path)?;
-	let members = members(&metadata)?;
+	let members = if let Some(members) = members(&metadata) {
+		members
+	} else {
+		return Ok(());
+	};
 	let mut tasks = stream::iter(&members)
 		.map(|pkg| async {
 			let members_deps = pkg
@@ -64,7 +58,7 @@ pub async fn update_member_versions(manifest_path: &str, to: &str) -> Result<()>
 			let content = if members_deps.is_empty() {
 				Cow::Owned(content)
 			} else {
-				util::find_member_dep_regex(&members_deps)?.replace_all(
+				util::find_member_dep_regex(&members_deps).replace_all(
 					&content,
 					|caps: &Captures| {
 						format!("{}\"{}\"", &caps[1], util::align_version(&caps[3], to))

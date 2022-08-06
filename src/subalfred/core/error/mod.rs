@@ -22,6 +22,8 @@ pub enum Error {
 	#[error(transparent)]
 	Ss58(#[from] Ss58),
 	#[error(transparent)]
+	System(#[from] System),
+	#[error(transparent)]
 	Tokio(#[from] Tokio),
 }
 
@@ -129,6 +131,16 @@ pub enum Ss58InvalidAddressSource {
 	ArrayBytes(array_bytes::Error),
 	#[error(transparent)]
 	Subcryptor(subcryptor::Error),
+}
+
+/// System error.
+#[allow(missing_docs)]
+#[derive(Debug, ThisError)]
+pub enum System {
+	#[error("[core::system] failed to find an available port")]
+	NoAvailablePortFound,
+	#[error("[core::system] failed to get the file name from path, {0:?}")]
+	NoFileNameInPath(std::path::PathBuf),
 }
 
 /// Tokio error.

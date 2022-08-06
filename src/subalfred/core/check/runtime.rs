@@ -10,11 +10,11 @@ use submetadatan::{
 	StorageEntryMetadata,
 };
 
-const E_WRITE_TO_STRING_FAILED: &str = "[core::check] write to a `String` will never failed";
-
 /// Compare the nodes' runtime versions.
 /// If there is no difference, return `None`.
 pub async fn check_version(a_uri: &str, b_uri: &str) -> Result<Option<String>> {
+	const E_WRITE_TO_STRING_NEVER_FAILS: &str = "[core::check] write to string never fails; qed";
+
 	let (a, b) = {
 		let (a, b) = futures::join!(node::runtime_version(a_uri), node::runtime_version(b_uri));
 
@@ -25,15 +25,14 @@ pub async fn check_version(a_uri: &str, b_uri: &str) -> Result<Option<String>> {
 		return Ok(None);
 	}
 	let mut result = String::new();
-	let to_e = |_| error::almost_impossible(E_WRITE_TO_STRING_FAILED);
 
 	for (a, b) in format!("{a:#?}").lines().zip(format!("{b:#?}").lines()) {
 		if a == b {
-			writeln!(result, "{a}").map_err(to_e)?;
+			writeln!(result, "{a}").expect(E_WRITE_TO_STRING_NEVER_FAILS);
 		} else {
 			// Skip the first space to suit the format.
-			writeln!(result, "-{}", &b[1..]).map_err(to_e)?;
-			writeln!(result, "+{}", &a[1..]).map_err(to_e)?;
+			writeln!(result, "-{}", &b[1..]).expect(E_WRITE_TO_STRING_NEVER_FAILS);
+			writeln!(result, "+{}", &a[1..]).expect(E_WRITE_TO_STRING_NEVER_FAILS);
 		}
 	}
 
