@@ -20,7 +20,7 @@
 ## Philosophies
 - **Lighting Fast**
 - **Less Dependencies**
-- **No `.unwrap()`**
+- **No `unsafe {}`/`.unwrap()`**
 - **Easy to Use**
 - **Strive for Excellence**
 

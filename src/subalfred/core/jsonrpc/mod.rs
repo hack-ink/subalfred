@@ -16,8 +16,6 @@ use crate::core::prelude::*;
 /// JSONRPC Id.
 pub type Id = usize;
 
-const E_REQUEST_QUEUE_GUARD_BROKE: &str = "[core::jsonrpc] request queue guard broke";
-
 /// Generic JSONRPC request.
 #[allow(missing_docs)]
 #[derive(Debug, Serialize)]

@@ -15,9 +15,6 @@ use crate::core::prelude::*;
 /// System port.
 pub type Port = u16;
 
-const E_CALC_SWAP_PATH_FAILED: &str = "[core::system] failed to calculate the swap file path";
-const E_NO_AVAILABLE_PORT_FOUND: &str = "[core::system] failed to find an available port";
-
 /// Read the file's content to [`String`].
 pub fn read_file_to_string<P>(path: P) -> Result<String>
 where
@@ -62,8 +59,8 @@ where
 	P: AsRef<Path>,
 {
 	let path = path.as_ref();
-	let swapped_path =
-		swapped_file_path(path).ok_or_else(|| error::almost_impossible(E_CALC_SWAP_PATH_FAILED))?;
+	let swapped_path = swapped_file_path(path)
+		.ok_or_else(|| error::System::NoFileNameInPath(path.to_path_buf()))?;
 
 	write_data_to_file(&swapped_path, data)?;
 	fs::rename(swapped_path, path).map_err(error::Generic::Io)?;
@@ -90,5 +87,5 @@ pub fn random_available_port() -> Result<Port> {
 		}
 	}
 
-	Err(error::almost_impossible(E_NO_AVAILABLE_PORT_FOUND))?
+	Err(error::System::NoAvailablePortFound)?
 }
