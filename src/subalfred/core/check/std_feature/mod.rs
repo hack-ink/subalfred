@@ -6,7 +6,11 @@ use crate::core::{cargo, prelude::*};
 /// Check if the crates' `std` features are enabled correctly.
 pub fn check(manifest_path: &str) -> Result<Vec<(String, String)>> {
 	let metadata = cargo::metadata(manifest_path)?;
-	let members = cargo::members(&metadata)?;
+	let members = if let Some(members) = cargo::members(&metadata) {
+		members
+	} else {
+		return Ok(Vec::new());
+	};
 	let mut disabled_std_deps = Vec::new();
 
 	for pkg in members {

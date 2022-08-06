@@ -289,10 +289,7 @@ impl Ws {
 		}
 
 		let RequestQueueGuard { lock: ids, .. } = self.request_queue.take(raw_requests.len())?;
-		let id = ids
-			.first()
-			.ok_or_else(|| error::almost_impossible(E_REQUEST_QUEUE_GUARD_BROKE))?
-			.to_owned();
+		let id = ids.first().expect("[core::jsonrpc] `raw_requests` never empty; qed").to_owned();
 		let requests = ids
 			.into_iter()
 			.zip(raw_requests.into_iter())
