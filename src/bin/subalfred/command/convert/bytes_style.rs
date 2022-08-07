@@ -27,7 +27,7 @@ impl BytesStyleCmd {
 			},
 			(ByteStringLiteral, VecString) => {
 				let byte_string_literal =
-					unescape::unescape(bytes).ok_or(quick_err("invalid bytes input"))?;
+					unescape::unescape(bytes).ok_or_else(|| quick_err("invalid bytes input"))?;
 				let vec = byte_string_literal.as_bytes();
 
 				println!("{vec:?}");
