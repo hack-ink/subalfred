@@ -126,14 +126,15 @@ pub fn cmp_type_def(
 			TypeDef::Composite(b) => cmp_fields(a_types, b_types, a.fields(), b.fields()),
 			_ => false,
 		},
-		TypeDef::Variant(_a) => match b {
-			TypeDef::Variant(_b) => {
-				// TODO: check variants
-				// cmp_variants(a_types, b_types, a.variants(), b.variants())
-				true
-			},
-			_ => false,
-		},
+		TypeDef::Variant(_a) => matches!(b, TypeDef::Variant(_b)),
+		// match b {
+		// 	TypeDef::Variant(_b) => {
+		// 		// TODO: check variants
+		// 		// cmp_variants(a_types, b_types, a.variants(), b.variants())
+		// 		true
+		// 	},
+		// 	_ => false,
+		// },
 		TypeDef::Sequence(a) => match b {
 			TypeDef::Sequence(b) =>
 				cmp_untracked_symbol(a_types, b_types, a.type_param(), b.type_param()),
