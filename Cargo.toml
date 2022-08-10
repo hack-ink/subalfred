@@ -43,7 +43,7 @@ tokio-stream       = { version = "0.1" }
 tokio-tungstenite  = { version = "0.17", features = ["rustls-tls-native-roots"] }
 tracing            = { version = "0.1" }
 tracing-subscriber = { version = "0.3" }
-unescape           = { version = "0.1" }
+unescaper          = { version = "0.1" }
 # hack-ink
 subcryptor   = { version = "0.9", path = "substrate-minimal/subcryptor" }
 subhasher    = { version = "0.9", path = "substrate-minimal/subhasher" }
