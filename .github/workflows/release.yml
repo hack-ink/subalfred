@@ -21,7 +21,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release
+          args: --release --locked
       - name: Compress
         run: |
           mv target/release/subalfred .

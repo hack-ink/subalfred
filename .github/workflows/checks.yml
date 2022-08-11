@@ -59,10 +59,10 @@ jobs:
         uses: actions-rs/clippy-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all --all-features
-      - name: Cargo ${{ matrix.action.name }}
+          args: --all --all-features --locked
+      - name: Cargo ${{ matrix.action }}
         if: matrix.action == 'test'
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --all --all-features --release
+          args: --all --all-features --release --locked
