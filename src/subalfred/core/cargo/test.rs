@@ -19,7 +19,7 @@ fn members_manifests_should_work() {
 		members(&metadata)
 			.unwrap()
 			.iter()
-			.map(|pkg| { (pkg.name.as_str(), remove_prefix(&pkg.manifest_path.as_str())) })
+			.map(|pkg| { (pkg.name.as_str(), remove_prefix(pkg.manifest_path.as_str())) })
 			.collect::<Vec<_>>(),
 		[
 			("subcryptor", "/substrate-minimal/subcryptor/Cargo.toml"),
