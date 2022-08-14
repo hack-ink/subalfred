@@ -8,3 +8,6 @@
 # Package Manager
 ## Cargo
 target
+
+# Test data
+test-data

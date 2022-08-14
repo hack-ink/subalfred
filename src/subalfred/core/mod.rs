@@ -1,17 +1,16 @@
 //! Subalfred core libraries.
 
-pub mod error;
-
 pub mod cargo;
+pub mod check;
+pub mod error;
 pub mod http;
 pub mod jsonrpc;
+pub mod key;
 pub mod node;
+pub mod ss58;
+pub mod state;
 pub mod substrate_client;
 pub mod system;
-
-pub mod check;
-pub mod key;
-pub mod ss58;
 
 pub mod prelude {
 	//! Subalfred core libraries prelude.
