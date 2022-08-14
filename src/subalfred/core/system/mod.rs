@@ -9,6 +9,9 @@ use std::{
 	net::TcpListener,
 	path::{Path, PathBuf},
 };
+// crates.io
+use serde::de::DeserializeOwned;
+use tokio::{fs::File as FileAsync, io::AsyncReadExt};
 // hack-ink
 use crate::core::prelude::*;
 
@@ -27,6 +30,18 @@ where
 
 	Ok(content)
 }
+/// Async version of [`read_file_to_string`].
+pub async fn read_file_to_string_async<P>(path: P) -> Result<String>
+where
+	P: AsRef<Path>,
+{
+	let mut file = FileAsync::open(path).await.map_err(error::Generic::Io)?;
+	let mut content = String::new();
+
+	file.read_to_string(&mut content).await.map_err(error::Generic::Io)?;
+
+	Ok(content)
+}
 
 /// Read the file's content to [`Vec<u8>`].
 pub fn read_file_to_vec<P>(path: P) -> Result<Vec<u8>>
@@ -39,6 +54,61 @@ where
 	file.read_to_end(&mut content).map_err(error::Generic::Io)?;
 
 	Ok(content)
+}
+/// Async version of [`read_file_to_vec`].
+pub async fn read_file_to_vec_async<P>(path: P) -> Result<Vec<u8>>
+where
+	P: AsRef<Path>,
+{
+	let mut file = FileAsync::open(path).await.map_err(error::Generic::Io)?;
+	let mut content = Vec::new();
+
+	file.read_to_end(&mut content).await.map_err(error::Generic::Io)?;
+
+	Ok(content)
+}
+
+/// Read the file's content to a struct, which implemented [`DeserializeOwned`].
+pub fn read_file_to_struct<P, T>(path: P) -> Result<T>
+where
+	P: AsRef<Path>,
+	T: DeserializeOwned,
+{
+	crate::execution_timer!("read file to struct");
+
+	let content = {
+		crate::execution_timer!("read json");
+
+		read_file_to_vec(path)?
+	};
+	let result = {
+		crate::execution_timer!("parse json");
+
+		serde_json::from_slice(&content).map_err(error::Generic::Serde)?
+	};
+
+	Ok(result)
+}
+/// Async version of [`read_file_to_struct`].
+pub async fn read_file_to_struct_async<P, T>(path: P) -> Result<T>
+where
+	P: AsRef<Path>,
+	T: DeserializeOwned,
+{
+	crate::execution_timer!("read file to struct async");
+
+	let content = {
+		crate::execution_timer!("read json async");
+
+		read_file_to_vec(path)?
+	};
+	let result = {
+		crate::execution_timer!("parse json async");
+
+		serde_json::from_slice(&content).map_err(error::Generic::Serde)?
+	};
+
+	Ok(result)
 }
 
 /// Write the data to the given path file.

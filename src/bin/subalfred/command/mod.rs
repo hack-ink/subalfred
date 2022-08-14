@@ -16,6 +16,9 @@ use hash::HashCmd;
 mod key;
 use key::KeyCmd;
 
+mod state;
+use state::StateCmd;
+
 mod storage_key;
 use storage_key::StorageKeyCmd;
 
@@ -68,6 +71,8 @@ impl_cmd! {
 		Get,
 		Hash,
 		Key,
+		#[clap(subcommand)]
+		State,
 		StorageKey,
 		#[clap(subcommand)]
 		Workspace,

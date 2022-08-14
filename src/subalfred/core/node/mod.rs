@@ -20,7 +20,8 @@ const E_BLOCK_NUMBER_IS_NON_HEX: &str =
 	"[core::node] block number is non-hex, maybe the Substrate RPC SPEC changed";
 const E_CODEC_METADATA_IS_NON_HEX: &str =
 	"[core::node] `codec_metadata` is non-hex, maybe the Substrate RPC SPEC changed";
-const E_STDERR_IS_EMPTY: &str = "[core::node] `stderr` is empty, , maybe the substrate node behavior changed";
+const E_STDERR_IS_EMPTY: &str =
+	"[core::node] `stderr` is empty, , maybe the substrate node behavior changed";
 
 /// Spawn a Substrate-Base standard node.
 pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {

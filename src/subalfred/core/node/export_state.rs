@@ -37,7 +37,7 @@ pub struct Config {
 	/// The default behaviour (without this option) is fetching according to metadata's pallet
 	/// storage records, which means if there is any old storage prefix that can not be found in
 	/// the current runtime's pallet storage names will be ignored.
-	#[clap(long, takes_value = false, conflicts_with_all = &["skip-pallets", "fork-off"], verbatim_doc_comment)]
+	#[clap(verbatim_doc_comment, long, takes_value = false, conflicts_with_all = &["skip-pallets", "fork-off"])]
 	pub all: bool,
 	/// Skip these pallets, while fetching.
 	///

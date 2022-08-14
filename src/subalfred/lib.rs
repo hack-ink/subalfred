@@ -3,3 +3,4 @@
 //! Libraries of Subalfred.
 
 pub mod core;
+pub mod util;
