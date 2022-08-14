@@ -19,11 +19,14 @@ macro_rules! execution_timer {
 /// While it get dropped, it will log the elapsed time.
 /// # Examples
 /// ```
-/// use subalfred::util::Timer;
+/// use subalfred::util::ExecutionTimer;
 ///
 /// // Must give a name to the timer, otherwise it will be dropped immediately.
-/// let _t = Timer::init("example");
+/// let _t = ExecutionTimer::init(|start| {
+/// 	tracing::trace!("`example` takes `{}` secs", start.elapsed().as_secs_f64())
+/// });
 /// ```
+#[allow(clippy::tabs_in_doc_comments)]
 pub struct ExecutionTimer<T>
 where
 	T: FnOnce(Instant),
