@@ -1,9 +1,9 @@
-//! Substrate-Like API collections.
+//! Substrate-like API collections.
 
 // subalfred
 use crate::core::prelude::*;
 
-///  Substrate-Like basic API collections.
+///  Substrate-like basic API collections.
 #[async_trait::async_trait]
 pub trait BasicApi {
 	/// TODO: doc
