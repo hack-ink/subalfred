@@ -22,14 +22,14 @@ fn of_should_work() {
 	let (_, hex_public_key, address) = &data;
 	let expect_result = Ok(data.clone());
 
-	assert_eq!(of(&hex_public_key, &address.network).map_err(|_| ()), expect_result);
-	assert_eq!(of(&address.value, &address.network).map_err(|_| ()), expect_result);
+	assert_eq!(of(hex_public_key, address.network).map_err(|_| ()), expect_result);
+	assert_eq!(of(&address.value, address.network).map_err(|_| ()), expect_result);
 }
 #[test]
 fn of_should_fail() {
 	let (_, hex_public_key, address) = test_data();
 	let network = "UnsupportedNetwork";
-	let expect_result = Err(format!("[core::ss58] failed to calculate SS58 address"));
+	let expect_result = Err("[core::ss58] failed to calculate SS58 address".to_string());
 
 	assert_eq!(of(&hex_public_key, network).map_err(|e| e.to_string()), expect_result);
 	assert_eq!(of(&address.value, network).map_err(|e| e.to_string()), expect_result);
@@ -52,5 +52,5 @@ fn recover_public_key_should_fail() {
 	let address = "";
 	let expect_result = Err(format!("[core::ss58] invalid address, {:?}", address));
 
-	assert_eq!(recover_public_key(&address).map_err(|e| e.to_string()), expect_result);
+	assert_eq!(recover_public_key(address).map_err(|e| e.to_string()), expect_result);
 }

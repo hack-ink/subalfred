@@ -7,7 +7,7 @@ use crate::core::prelude::*;
 use subcryptor::{ss58_registry::ALL_SS58_ADDRESS_FORMAT_NAMES, Sr25519};
 
 /// Network address.
-#[cfg_attr(test, derive(Clone, PartialEq))]
+#[cfg_attr(test, derive(Clone, PartialEq, Eq))]
 #[derive(Debug)]
 pub struct Address<'a> {
 	/// Network name.
