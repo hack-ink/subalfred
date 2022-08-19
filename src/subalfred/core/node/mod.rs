@@ -1,7 +1,5 @@
 //! The core library about how Subalfred interacts with Substrate-based node.
 
-pub mod export_state;
-
 // std
 use std::{
 	io::{BufRead, BufReader},
@@ -62,7 +60,8 @@ pub async fn runtime_metadata(uri: &str) -> Result<LatestRuntimeMetadata> {
 
 	parse_raw_runtime_metadata(&response.result)
 }
-fn parse_raw_runtime_metadata(raw_runtime_metadata: &str) -> Result<LatestRuntimeMetadata> {
+/// Parse the raw metadata.
+pub fn parse_raw_runtime_metadata(raw_runtime_metadata: &str) -> Result<LatestRuntimeMetadata> {
 	let codec_metadata = array_bytes::hex2bytes(raw_runtime_metadata)
 		.map_err(|_| error::almost_impossible(E_CODEC_METADATA_IS_NON_HEX))?;
 	let metadata_prefixed =

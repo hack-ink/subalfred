@@ -4,9 +4,6 @@ use check::CheckCmd;
 mod convert;
 use convert::ConvertCmd;
 
-mod export_state;
-use export_state::ExportStateCmd;
-
 mod get;
 use get::GetCmd;
 
@@ -66,7 +63,6 @@ impl_cmd! {
 		Check,
 		#[clap(subcommand)]
 		Convert,
-		ExportState,
 		#[clap(subcommand)]
 		Get,
 		Hash,
