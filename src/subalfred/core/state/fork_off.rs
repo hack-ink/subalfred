@@ -28,7 +28,7 @@ pub struct ForkOffConfig {
 	/// Usually use this as below to get a runnable fork-off chain, and you can do whatever you
 	/// want on it. Test new features, runtime upgrade, etc.
 	///
-	/// ```
+	/// ```sh
 	/// xxx-node --export-state > xxx-export.json
 	/// xxx-node --build-spec xxx-dev > xxx-dev.json
 	/// subalfred state fork-off xxx-export.json --renew-consensus-with xxx.dev.json --simple-governance --disable-default-bootnodes
