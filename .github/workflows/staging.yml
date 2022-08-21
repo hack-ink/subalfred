@@ -4,11 +4,15 @@ on:
 
 jobs:
   build:
-    name: Build ${{ matrix.system }} package
-    runs-on: ${{ matrix.system }}
+    name: Build ${{ matrix.system.name }} package
+    runs-on: ${{ matrix.system.name }}
     strategy:
       matrix:
-        system: [ubuntu-latest, macos-latest]
+        system:
+          - name: ubuntu-latest
+            compressor: tar
+          - name: macos-latest
+            compressor: gtar
     steps:
       - name: Fetch latest code
         uses: actions/checkout@v3
@@ -25,18 +29,18 @@ jobs:
       - name: Compress
         run: |
           mv target/release/subalfred .
-          tar cf subalfred-${{ matrix.system }}.tar.zst subalfred -I pzstd
+          ${{ matrix.system.compressor }} cf subalfred-${{ matrix.system.name }}.tar.zst subalfred -I pzstd
       - name: Collect artifact
         run: |
           mkdir -p artifacts
-          mv subalfred-${{ matrix.system }}.tar.zst artifacts
+          mv subalfred-${{ matrix.system.name }}.tar.zst artifacts
       - name: Upload artifact
         uses: actions/upload-artifact@v2.2.4
         with:
           name: artifacts
           path: artifacts
 
-  release:
+  staging:
     name: Staging
     runs-on: ubuntu-latest
     needs: [build]
@@ -53,3 +57,14 @@ jobs:
           md5sum * | tee ../MD5
           mv ../SHA256 artifacts
           mv ../MD5 artifacts
+
+  clean-artifacts:
+    name: Clean artifacts
+    if: always()
+    needs: [staging]
+    steps:
+      - name: Clean artifacts
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: artifacts
+    runs-on: ubuntu-latest
