@@ -73,7 +73,7 @@ jobs:
   clean-artifacts:
     name: Clean artifacts
     if: always()
-    needs: [staging]
+    needs: [release]
     steps:
       - name: Clean artifacts
         uses: geekyeggo/delete-artifact@v1
