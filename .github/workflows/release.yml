@@ -24,9 +24,6 @@ jobs:
         with:
           toolchain: nightly
           default: true
-      - name: Install dependencies
-        if: matrix.system.name == 'macos-latest'
-        run: brew install gnu-tar zstd
       - name: Build
         uses: actions-rs/cargo@v1
         with:
