@@ -17,10 +17,13 @@ jobs:
         exclude:
           - system:
             - name: ubuntu-latest
-            targets: [aarch64-apple-darwin, x86_64-apple-darwin]
+            targets: aarch64-apple-darwin
+          - system:
+            - name: ubuntu-latest
+            targets: x86_64-apple-darwin
           - system:
             - name: macos-latest
-            targets: [x86_64-unknown-linux-gnu]
+            targets: x86_64-unknown-linux-gnu
 
     steps:
       - name: Fetch latest code
