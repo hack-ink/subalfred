@@ -22,7 +22,6 @@ jobs:
             env: { os: ubuntu-latest }
           - target: x86_64-unknown-linux-gnu
             env: { os: macos-latest }
-
     steps:
       - name: Fetch latest code
         uses: actions/checkout@v3
