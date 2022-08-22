@@ -7,15 +7,24 @@ on:
 
 jobs:
   build:
-    name: Build ${{ matrix.system.name }} package
-    runs-on: ${{ matrix.system.name }}
+    name: Build ${{ matrix.target }} package
+    runs-on: ${{ matrix.env.os }}
     strategy:
       matrix:
-        system:
-          - name: ubuntu-latest
-            compressor: tar
-          - name: macos-latest
-            compressor: gtar
+        target:
+          [x86_64-unknown-linux-gnu, aarch64-apple-darwin, x86_64-apple-darwin]
+        env:
+          [
+            { os: ubuntu-latest, compressor: tar },
+            { os: macos-latest, compressor: gtar },
+          ]
+        exclude:
+          - target: aarch64-apple-darwin
+            env: { os: ubuntu-latest }
+          - target: x86_64-apple-darwin
+            env: { os: ubuntu-latest }
+          - target: x86_64-unknown-linux-gnu
+            env: { os: macos-latest }
     steps:
       - name: Fetch latest code
         uses: actions/checkout@v3
@@ -23,20 +32,20 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
-          default: true
+          target: ${{ matrix.target }}
       - name: Build
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release --locked
+          args: --release --locked --target ${{ matrix.target }}
       - name: Compress
         run: |
-          mv target/release/subalfred .
-          ${{ matrix.system.compressor }} cf subalfred-${{ matrix.system.name }}.tar.zst subalfred -I pzstd
+          mv target/${{ matrix.target }}/release/subalfred .
+          ${{ matrix.env.compressor }} cf subalfred-${{ matrix.target }}.tar.zst subalfred -I pzstd
       - name: Collect artifact
         run: |
           mkdir -p artifacts
-          mv subalfred-${{ matrix.system.name }}.tar.zst artifacts
+          mv subalfred-${{ matrix.target }}.tar.zst artifacts
       - name: Upload artifact
         uses: actions/upload-artifact@v2.2.4
         with:
