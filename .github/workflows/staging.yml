@@ -64,8 +64,8 @@ jobs:
           cd artifacts
           sha256sum * | tee ../SHA256
           md5sum * | tee ../MD5
-          mv ../SHA256 artifacts
-          mv ../MD5 artifacts
+          mv ../SHA256 .
+          mv ../MD5 .
 
   clean-artifacts:
     name: Clean artifacts
