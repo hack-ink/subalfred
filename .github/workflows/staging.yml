@@ -10,11 +10,18 @@ jobs:
       matrix:
         system:
           - name: ubuntu-latest
-            targets: [x86_64-unknown-linux-gnu]
             compressor: tar
           - name: macos-latest
-            targets: [aarch64-apple-darwin, x86_64-apple-darwin]
             compressor: gtar
+        targets: [x86_64-unknown-linux-gnu, aarch64-apple-darwin, x86_64-apple-darwin]
+        exclude:
+          - system:
+            - name: ubuntu-latest
+            targets: [aarch64-apple-darwin, x86_64-apple-darwin]
+          - system:
+            - name: macos-latest
+            targets: [x86_64-unknown-linux-gnu]
+
     steps:
       - name: Fetch latest code
         uses: actions/checkout@v3
