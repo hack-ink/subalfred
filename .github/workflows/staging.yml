@@ -8,22 +8,20 @@ jobs:
     runs-on: ${{ matrix.targets }}
     strategy:
       matrix:
-        system:
-          - name: ubuntu-latest
-            compressor: tar
-          - name: macos-latest
-            compressor: gtar
-        targets: [x86_64-unknown-linux-gnu, aarch64-apple-darwin, x86_64-apple-darwin]
+        target:
+          [x86_64-unknown-linux-gnu, aarch64-apple-darwin, x86_64-apple-darwin]
+        env:
+          [
+            { os: ubuntu-latest, compressor: tar },
+            { os: macos-latest, compressor: gtar },
+          ]
         exclude:
-          - system:
-            - name: ubuntu-latest
-            targets: aarch64-apple-darwin
-          - system:
-            - name: ubuntu-latest
-            targets: x86_64-apple-darwin
-          - system:
-            - name: macos-latest
-            targets: x86_64-unknown-linux-gnu
+          - target: aarch64-apple-darwin
+            env: { os: ubuntu-latest }
+          - target: x86_64-apple-darwin
+            env: { os: ubuntu-latest }
+          - target: x86_64-unknown-linux-gnu
+            env: { os: macos-latest }
 
     steps:
       - name: Fetch latest code
