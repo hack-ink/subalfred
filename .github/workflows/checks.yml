@@ -19,7 +19,7 @@ env:
   SCCACHE_DIR: /home/runner/.cache/sccache
 
 jobs:
-  cargo_test:
+  cargo_checks:
     name: Task cargo ${{ matrix.action }}
     runs-on: ubuntu-latest
     strategy:
