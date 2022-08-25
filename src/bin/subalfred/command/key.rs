@@ -19,7 +19,7 @@ pub(crate) struct KeyCmd {
 	key: String,
 	/// The key type.
 	#[clap(arg_enum, long, value_name = "KEY TYPE")]
-	key_type: Option<KeyType>,
+	r#type: Option<KeyType>,
 	/// Network address format.
 	#[clap(long, value_name = "NAME", default_value = "Substrate", conflicts_with = "list-all")]
 	network: String,
@@ -32,9 +32,9 @@ pub(crate) struct KeyCmd {
 }
 impl KeyCmd {
 	pub(crate) fn run(&self) -> Result<()> {
-		let Self { key, key_type, network, list_all, show_prefix } = self;
-		let key = if let Some(key_type) = key_type {
-			Cow::Owned(array_bytes::bytes2hex("0x", &key_type.to_key::<32>(key)?))
+		let Self { key, r#type, network, list_all, show_prefix } = self;
+		let key = if let Some(r#type) = r#type {
+			Cow::Owned(array_bytes::bytes2hex("0x", &r#type.to_key::<32>(key)?))
 		} else {
 			Cow::Borrowed(key)
 		};
