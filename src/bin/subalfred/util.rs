@@ -4,6 +4,12 @@ use std::fmt::Write;
 use crate::prelude::*;
 
 pub(crate) fn vec_literal_string_try_as_vec(s: &str) -> Result<Vec<u8>> {
+	fn trim(s: &str) -> String {
+		s.chars().filter(|c| !matches!(c, ' ' | '\n' | '\t')).collect()
+	}
+
+	let s = trim(s);
+
 	if !(s.starts_with('[') && s.ends_with(']')) {
 		Err(quick_err("vec literal string must be start with '[' and end with ']'"))?;
 	}
@@ -13,7 +19,7 @@ pub(crate) fn vec_literal_string_try_as_vec(s: &str) -> Result<Vec<u8>> {
 
 	Ok(s[1..s.len() - 1]
 		.split(',')
-		.map(|s| s.trim_matches(' ').parse::<u8>())
+		.filter_map(|s| if s.is_empty() { None } else { Some(s.parse::<u8>()) })
 		.collect::<StdResult<Vec<_>, _>>()?)
 }
 
