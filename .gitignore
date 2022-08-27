@@ -8,6 +8,8 @@
 # Package Manager
 ## Cargo
 target
+## mdBook
+book
 
 # Test data
 test-data
