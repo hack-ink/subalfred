@@ -13,9 +13,9 @@ And for the macOS users, you need to install gnu-tar and replace the `tar` comma
 
 Example:
 ```sh
-# One line command:
+# One line command
 curl -L https://github.com/hack-ink/subalfred/releases/download/v0.9.0-rc6/subalfred-x86_64-unknown-linux-gnu.tar.zst | tar x -I pzstd
-# Or:
+# Or
 curl -LO https://github.com/hack-ink/subalfred/releases/download/v0.9.0-rc6/subalfred-x86_64-unknown-linux-gnu.tar.zst
 tar xf subalfred-x86_64-unknown-linux-gnu.tar.zst -I pzstd
 ```
