@@ -12,13 +12,11 @@ There are three shared options:
 And there are two properties to check, `storage` and `version`.
 
 ### Examples
-For convenience, I use the [Pangolin Network][pangolin-network] to demonstrate.
+For convenience, I use the [Pangolin Network](https://github.com/darwinia-network/darwinia-common) to demonstrate.
 - `pangolin-dev` is the dev chain spec, which means its genesis is built from the latest code.
 If you are on Polkadot, then use `polkadot-dev`.
 - `./drml` is the path to my local pangolin node executable.
 - `https://pangolin-rpc.darwinia.network` is the Pangoro live chain's RPC HTTP endpoint. Note, I use the Pangoro here. Just because I'm doing a demonstration. Compare with two different chains' runtime storage/version will get a lot of output.
-
-[pangolin-network]: https://github.com/darwinia-network/darwinia-common
 
 #### Check Runtime Storage
 ```sh
@@ -107,10 +105,8 @@ xxx = { version = "0.1.0", default-features = false }
 ```
 
 Sometimes, we might forget to write add the `xxx/std`.
-Recently, I found someone have the same [requirement][issue].
+Recently, I found someone have the same [requirement](https://github.com/paritytech/substrate/pull/11715).
 So, I decide to make this public.
-
-[issue]: https://github.com/paritytech/substrate/pull/11715
 
 ### Example
 ```sh
@@ -131,8 +127,5 @@ subalfred check std-feature --manifest-path /tmp/paritytech/frontier/Cargo.toml
 ## CI
 Moreover, we can add the checks into your project CI.
 
-I've already add these to the [Darwinia CI][checks-ci].
-And here is a real world [example][checks-ci-example].
-
-[checks-ci]: https://github.com/darwinia-network/darwinia/blob/v0.12.3/.github/workflows/ci.yml
-[checks-ci-example]: https://github.com/darwinia-network/darwinia/pull/940#issuecomment-1226917895
+I've already add these to the [Darwinia CI](https://github.com/darwinia-network/darwinia/blob/v0.12.3/.github/workflows/ci.yml).
+And here is a real world [example](https://github.com/darwinia-network/darwinia/pull/940#issuecomment-1226917895).

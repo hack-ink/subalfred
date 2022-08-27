@@ -2,14 +2,12 @@
 Currently, there only one subcommand available.
 
 ## Runtime Upgrade Block
-The origin question is from [stackexchange][question].
+The origin question is from [stackexchange](https://substrate.stackexchange.com/questions/3861/how-do-you-tell-which-block-number-the-last-runtime-upgrade-happened-on-a-chain).
 
 Yep, I think that is an interesting question.
 So, I implemented this method.
 
 It uses dichotomy algorithm, the whole process takes <img src="https://latex.codecogs.com/svg.image?log_2&space;BlockHeight" title="log_2 BlockHeight"/> times requests.
-
-[question]: https://substrate.stackexchange.com/questions/3861/how-do-you-tell-which-block-number-the-last-runtime-upgrade-happened-on-a-chain
 
 ### Example
 ```sh
