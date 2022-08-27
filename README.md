@@ -18,8 +18,12 @@
 </div>
 
 ## Philosophies
-- **Lighting Fast**
-- **Less Dependencies**
-- **No `unsafe {}`/`.unwrap()`**
-- **Easy to Use**
-- **Strive for Excellence**
+- ***Lighting fast***
+- ***Less dependencies***
+- ***No `unsafe {}`, `.unwrap()`***
+- ***Easy to use***
+- ***Strive for excellence***
+
+## Documentations
+- [`subalfred.hack.ink`](https://subalfred.hack.ink)
+- [`hack-ink.github.io (backup)`](https://hack-ink.github.io)
