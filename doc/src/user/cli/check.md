@@ -13,10 +13,13 @@ And there are two properties to check, `storage` and `version`.
 
 ### Examples
 For convenience, I use the [Pangolin Network](https://github.com/darwinia-network/darwinia-common) to demonstrate.
+
 - `pangolin-dev` is the dev chain spec, which means its genesis is built from the latest code.
-If you are on Polkadot, then use `polkadot-dev`.
+  If you are on Polkadot, then use `polkadot-dev`.
 - `./drml` is the path to my local pangolin node executable.
-- `https://pangolin-rpc.darwinia.network` is the Pangoro live chain's RPC HTTP endpoint. Note, I use the Pangoro here. Just because I'm doing a demonstration. Compare with two different chains' runtime storage/version will get a lot of output.
+- `https://pangolin-rpc.darwinia.network` is the Pangoro live chain's RPC HTTP endpoint.
+  Note that, I use the Pangoro here. Just because I'm doing a demonstration.
+  Compare with two different chains' runtime storage/version will get a lot of output.
 
 #### Check Runtime Storage
 ```sh

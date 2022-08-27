@@ -5,6 +5,8 @@ use crate::prelude::*;
 use subalfred::core::state::{self, ForkOffConfig};
 
 /// Export the chain state.
+///
+/// The result will be store at `<a>.export`.
 #[derive(Debug, Args)]
 pub(crate) struct ExportCmd {
 	/// Live chain's RPC HTTP endpoint.

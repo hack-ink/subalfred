@@ -6,7 +6,7 @@ use subalfred::core::state::{self, TwoStateConfig};
 
 /// Override state a with b.
 ///
-/// The result will be store at `<a-file-name>.override`.
+/// The result will be store at `<a>.override`.
 #[derive(Debug, Args)]
 #[clap(verbatim_doc_comment, usage = "subalfred state merge [OPTIONS] <PATH> <PATH>")]
 pub(crate) struct OverrideCmd {
