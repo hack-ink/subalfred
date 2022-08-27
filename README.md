@@ -35,3 +35,8 @@ subalfred check runtime --help
 
 - [`subalfred.hack.ink`](https://subalfred.hack.ink)
 - [`hack-ink.github.io (backup)`](https://hack-ink.github.io)
+
+## Contribution
+- If you have a question or request a new feature, [start a discussion](https://github.com/hack-ink/subalfred/discussions/new).
+- If you encounter any bugs, [report an issue](https://github.com/hack-ink/subalfred/issues/new).
+- Otherwise, PRs are always welcome!
