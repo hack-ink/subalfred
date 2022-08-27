@@ -1,6 +1,14 @@
 [book]
-authors = ["Xavier Lau"]
-language = "en"
+authors      = ["Xavier Lau"]
+language     = "en"
 multilingual = false
-src = "src"
-title = "Subalfred Documentation"
+src          = "src"
+title        = "Subalfred Documentation"
+
+[output.html]
+cname                = "subalfred.hack.ink"
+default-theme        = "ayu"
+edit-url-template    = "https://github.com/hack-ink/subalfred/edit/main/doc/{path}"
+git-repository-url   = "https://github.com/hack-ink/subalfred/tree/main/doc"
+preferred-dark-theme = "ayu"
+site-url             = "/subalfred/"
