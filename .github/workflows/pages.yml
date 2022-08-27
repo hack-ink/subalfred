@@ -10,6 +10,7 @@ on:
 
 jobs:
   deploy:
+    name: Deploy pages
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
