@@ -11,7 +11,7 @@ It uses dichotomy algorithm, the whole process takes <img src="https://latex.cod
 
 ### Example
 ```sh
-subalfred get runtime-upgrade-block 9100 --uri wss://polkadot.api.onfinality.io/public-ws -lsubalfred::core::node
+subalfred get runtime-upgrade-block 9100 --uri wss://rpc.polkadot.io -lsubalfred::core::node
 ```
 ```log
 2022-08-27T13:58:07.684200Z TRACE subalfred::core::node: (0, 11788056) -> 9050

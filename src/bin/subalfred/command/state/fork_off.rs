@@ -6,7 +6,7 @@ use subalfred::core::state::{self, ForkOffConfig};
 
 /// Fork-off the state.
 ///
-/// The result will be store at `<a-file-name>.fork-off`.
+/// The result will be store at `<a>.fork-off`.
 #[derive(Debug, Args)]
 pub(crate) struct ForkOffCmd {
 	path: String,
