@@ -25,5 +25,13 @@
 - ***Strive for excellence***
 
 ## Documentations
+```sh
+# Use the `--help` flag to get more information.
+subalfred --help
+# Each subcommand also provides its own `--help`.
+subalfred check --help
+subalfred check runtime --help
+```
+
 - [`subalfred.hack.ink`](https://subalfred.hack.ink)
 - [`hack-ink.github.io (backup)`](https://hack-ink.github.io)
