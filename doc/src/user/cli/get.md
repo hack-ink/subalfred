@@ -5,7 +5,7 @@ Currently, there only one subcommand available.
 The origin question is from [stackexchange][question].
 
 Yep, I think that is an interesting question.
-SO, I implemented this method.
+So, I implemented this method.
 
 It uses dichotomy algorithm, the whole process takes <img src="https://latex.codecogs.com/svg.image?log_2&space;BlockHeight" title="log_2 BlockHeight"/> times requests.
 
