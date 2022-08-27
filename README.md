@@ -18,66 +18,25 @@
 </div>
 
 ## Philosophies
-- **Lighting Fast**
-- **Less Dependencies**
-- **No `unsafe {}`/`.unwrap()`**
-- **Easy to Use**
-- **Strive for Excellence**
+- ***Lighting fast***
+- ***Less dependencies***
+- ***No `unsafe {}`, `.unwrap()`***
+- ***Easy to use***
+- ***Strive for excellence***
 
-## Usage
-```
-subalfred 0.9.0-1bc3414-x86_64-unknown-linux-gnu
-Xavier Lau <xavier@inv.cafe>
-Your Substrate Alfred
-
-USAGE:
-    subalfred [OPTIONS] <SUBCOMMAND>
-
-OPTIONS:
-    -h, --help                    Print help information
-        --log <TARGET=LEVEL,*>    Set a custom logging filter. Also, work with the `RUST_LOG` environment variable [default: info]
-    -V, --version                 Print version information
-
-SUBCOMMANDS:
-    check           Some checking tools are pretty useful for runtime development
-    export-state    Export the chain state
-    hash            Hash the hex with the specific hasher
-    help            Print this message or the help of the given subcommand(s)
-    key             Convert the public key/SS58 address from SS58 address/public key
-    storage-key     Calculate the storage key for the storage prefix/item
-    workspace       Workspace manager
+## Documentations
+```sh
+# Use the `--help` flag to get more information.
+subalfred --help
+# Each subcommand also provides its own `--help`.
+subalfred check --help
+subalfred check runtime --help
 ```
 
-## Components
-### CLI
-- [check](src/bin/subalfred/command/check)
-  - [runtime](src/bin/subalfred/command/check/runtime)
-  - [std-feature](src/bin/subalfred/command/check/std-feature)
-- [workspace](src/bin/subalfred/command/workspace)
-  - [update](src/bin/subalfred/command/update)
-- [export-state](src/bin/subalfred/command/export-state.rs)
-- [hash](src/bin/subalfred/command/hash.rs)
-- [key](src/bin/subalfred/command/key.rs)
-- [storage-key](src/bin/subalfred/command/storage-key.rs)
+- [`subalfred.hack.ink`](https://subalfred.hack.ink)
+- [`hack-ink.github.io (backup)`](https://hack-ink.github.io)
 
-### Subalfred Core Libraries
-- [cargo](src/subalfred/core/cargo)
-- [check](src/subalfred/core/check)
-- [error](src/subalfred/core/error)
-- [http](src/subalfred/core/http)
-- [jsonrpc](src/subalfred/core/jsonrpc)
-- [key](src/subalfred/core/key)
-- [node](src/subalfred/core/node)
-- [ss58](src/subalfred/core/ss58)
-- [substrate-client](src/subalfred/core/substrate-client)
-- [system](src/subalfred/core/system)
-
-### Substrate Minimal Libraries
-- [subcryptor](substrate-minimal/subcryptor)
-- [subgrandpa](substrate-minimal/subgrandpa)
-- [subhasher](substrate-minimal/subhasher)
-- [submetadatan](substrate-minimal/submetadatan)
-- [subrpcer](substrate-minimal/subrpcer)
-  - [impl](substrate-minimal/subrpcer/impl)
-- [substorager](substrate-minimal/substorager)
-- [subversioner](substrate-minimal/subversioner)
+## Contribution
+- If you have a question or request a new feature, [start a discussion](https://github.com/hack-ink/subalfred/discussions/new).
+- If you encounter any bugs, [report an issue](https://github.com/hack-ink/subalfred/issues/new).
+- Otherwise, PRs are always welcome!
