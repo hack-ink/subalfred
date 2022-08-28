@@ -30,7 +30,7 @@ jobs:
           args: --release --locked --target ${{ matrix.target.name }}
       - name: Compress
         run: |
-          tree target || mv target\\${{ matrix.target.name }}\\release\\subalfred .
+          tree target || mv target/${{ matrix.target.name }}/release/subalfred .
           zstd --ultra -22 -o subalfred-${{ matrix.target.name }}.zst subalfred
       - name: Collect artifact
         run: |
