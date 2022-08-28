@@ -3,21 +3,23 @@ There are multiple ways to install the `subalfred` CLI tool.
 Choose any one of the methods below that best suit your needs.
 
 ## Pre-compiled Binaries
-Executable binaries are available for download on the [GitHub Releases page].
-Download the binary for your platform (Windows, macOS, or Linux) and extract the archive.
-The archive contains an `subalfred` executable which you can run to build your books.
+1. Download it from the [GitHub Releases page].
+2. Uncompress the downloaded file.
+3. Rename it to whatever you like. (optional)
+4. Give the execution privilege to it.
 
 The compressing algorithm is zstd.
-For some old systems, you might need to install zstd lib first.
-And for the macOS users, you need to install gnu-tar and replace the `tar` command with `gtar`.
+For some systems, you might need to install zstd first.
+For *Windows* users, you would like to rename the extracted content name to `subalfred.exe`.
 
 Example:
 ```sh
 # One line command
-curl -L https://github.com/hack-ink/subalfred/releases/download/v0.9.0-rc6/subalfred-x86_64-unknown-linux-gnu.tar.zst | tar x -I pzstd
+curl -L https://github.com/hack-ink/subalfred/releases/download/v0.9.0-rc8/subalfred-aarch64-apple-darwin.zst | zstd -o subalfred -d && chmod u+x subalfred
 # Or
 curl -LO https://github.com/hack-ink/subalfred/releases/download/v0.9.0-rc6/subalfred-x86_64-unknown-linux-gnu.tar.zst
-tar xf subalfred-x86_64-unknown-linux-gnu.tar.zst -I pzstd
+zstd -o subalfred -d
+chmod u+x subalfred
 ```
 
 [GitHub Releases page]: https://github.com/hack-ink/subalfred/releases
