@@ -29,9 +29,14 @@ jobs:
           command: build
           args: --release --locked --target ${{ matrix.target.name }}
       - name: Compress
+        if: matrix.target.name != 'x86_64-pc-windows-msvc'
         run: |
-          tree target
           mv target/${{ matrix.target.name }}/release/subalfred .
+          zstd --ultra -22 -o subalfred-${{ matrix.target.name }}.zst subalfred
+      - name: Compress
+        if: matrix.target.name == 'x86_64-pc-windows-msvc'
+        run: |
+          mv target\\${{ matrix.target.name }}\\release\\subalfred .
           zstd --ultra -22 -o subalfred-${{ matrix.target.name }}.zst subalfred
       - name: Collect artifact
         run: |
