@@ -3,7 +3,7 @@
 <!-- Logo -->
 <!-- ![Subalfred]() -->
 
-# Subalfred
+# [Subalfred](https://github.com/hack-ink/subalfred)
 ### An All-In-One [Substrate](https://github.com/paritytech/substrate) Development Toolbox.
 
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
