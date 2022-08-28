@@ -26,8 +26,8 @@ chmod u+x subalfred
 [zstd]: https://github.com/facebook/zstd/releases
 
 ## Build from Source
-To build the `subalfred` executable from source, you will first need to install Rust and Cargo.
-Once you have installed Rust, the following command can be used to build and install `subalfred`:
+To build the `subalfred` executable from source, you will first need to install [Rust].
+Once you have installed [Rust], the following command can be used to build and install `subalfred`:
 ```sh
 # Build from crates.io:
 cargo install subalfred
@@ -37,11 +37,12 @@ cargo install subalfred --git https://github.com/hack-ink/subalfred
 
 This will automatically download `subalfred` from [crates.io]/[github.com], build it, and install it in Cargo's global binary directory (`~/.cargo/bin/` by default).
 
-The version published to [crates.io] will ever so slightly be behind the version hosted on GitHub.
+The version published to [crates.io] will ever so slightly be behind the version hosted on [github.com].
 If you need the latest version you can build the git version of `subalfred` yourself.
 Cargo makes this ***super easy***!
 
 To uninstall, run the command `cargo uninstall subalfred`.
 
+[Rust]: https://rustup.rs
 [crates.io]: https://crates.io
 [github.com]: https://github.com/hack-ink/subalfred
