@@ -111,7 +111,7 @@ Sometimes, we might forget to write add the `xxx/std`.
 Recently, I found someone have the same [requirement](https://github.com/paritytech/substrate/pull/11715).
 So, I decide to make this public.
 
-### Example
+### Examples
 ```sh
 git clone https://github.com/paritytech/frontier /tmp/paritytech
 subalfred check std-feature --manifest-path /tmp/paritytech/frontier/Cargo.toml

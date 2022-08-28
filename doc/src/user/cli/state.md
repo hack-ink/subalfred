@@ -9,7 +9,7 @@ In fact, it accepts two chain spec files. So, make sure JSON file contains the `
 Note that, this is not a symmetric diff.
 `a.diff(b)` may equals to `b.diff(a)`, but not always.
 
-### Example
+### Examples
 ```sh
 subalfred state diff a.json b.json
 ```
@@ -39,7 +39,7 @@ Export the chain state from a live chain.
 
 The result will be store at `<a>.export`.
 
-### Example
+### Examples
 For convenience, I use the [Darwinia Network] to demonstrate.
 
 Here is a most common way to use this command.
@@ -125,7 +125,7 @@ Sometimes, you have already running a node yourself.
 So, you don't want to fetch the state from a live chain, which is slow.
 Then you could use this command.
 
-### Example
+### Examples
 For convenience, I use the [Darwinia Network] to demonstrate.
 
 Here is a most common way to use this command.
@@ -154,7 +154,7 @@ In fact, it accepts two chain spec files. So, make sure JSON file contains the `
 
 The result will be store at `<a>.override`.
 
-### Example
+### Examples
 ```sh
 subalfred state override a.json b.json
 # You could check this command's output. It should be empty.
