@@ -9,7 +9,7 @@ So, I implemented this method.
 
 It uses dichotomy algorithm, the whole process takes <img src="https://latex.codecogs.com/svg.image?log_2&space;BlockHeight" title="log_2 BlockHeight"/> times requests.
 
-### Example
+### Examples
 ```sh
 subalfred get runtime-upgrade-block 9100 --uri wss://rpc.polkadot.io -lsubalfred::core::node
 ```
