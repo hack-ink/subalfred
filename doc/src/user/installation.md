@@ -8,8 +8,8 @@ Choose any one of the methods below that best suit your needs.
 3. Rename it to whatever you like. (optional)
 4. Give the execution privilege to it.
 
-The compressing algorithm is zstd.
-For some systems, you might need to install zstd first.
+The compressing algorithm is [zstd].
+For some systems, you might need to install [zstd] first.
 For *Windows* users, you would like to rename the extracted content name to `subalfred.exe`.
 
 Example:
@@ -23,6 +23,7 @@ chmod u+x subalfred
 ```
 
 [GitHub Releases page]: https://github.com/hack-ink/subalfred/releases
+[zstd]: https://github.com/facebook/zstd/releases
 
 ## Build from Source
 To build the `subalfred` executable from source, you will first need to install Rust and Cargo.
