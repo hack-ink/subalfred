@@ -8,20 +8,16 @@ jobs:
     runs-on: ${{ matrix.env.os }}
     strategy:
       matrix:
-        target:
-          [x86_64-unknown-linux-gnu, aarch64-apple-darwin, x86_64-apple-darwin]
-        env:
-          [
-            { os: ubuntu-latest, compressor: tar },
-            { os: macos-latest, compressor: gtar },
-          ]
-        exclude:
-          - target: aarch64-apple-darwin
-            env: { os: ubuntu-latest }
-          - target: x86_64-apple-darwin
-            env: { os: ubuntu-latest }
-          - target: x86_64-unknown-linux-gnu
-            env: { os: macos-latest }
+        env: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - env: { os: ubuntu-latest }
+            target: x86_64-unknown-linux-gnu
+          - env: { os: macos-latest }
+            target: aarch64-apple-darwin
+          - env: { os: macos-latest }
+            target: x86_64-apple-darwin
+          - env: { os: windows-latest }
+            target: x86_64-pc-windows-msvc
     steps:
       - name: Fetch latest code
         uses: actions/checkout@v3
@@ -38,11 +34,11 @@ jobs:
       - name: Compress
         run: |
           mv target/${{ matrix.target }}/release/subalfred .
-          ${{ matrix.env.compressor }} cf subalfred-${{ matrix.target }}.tar.zst subalfred -I pzstd
+          zstd --ultra -22 -o subalfred-${{ matrix.target }}.zst subalfred
       - name: Collect artifact
         run: |
           mkdir -p artifacts
-          mv subalfred-${{ matrix.target }}.tar.zst artifacts
+          mv subalfred-${{ matrix.target }}.zst artifacts
       - name: Upload artifact
         uses: actions/upload-artifact@v3.1.0
         with:
