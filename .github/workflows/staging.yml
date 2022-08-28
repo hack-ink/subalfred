@@ -27,7 +27,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release --locked --target ${{ matrix.target.name }}
+          args: --bin subalfred --release --locked --target ${{ matrix.target.name }}
       - name: Compress
         if: matrix.target.name != 'x86_64-pc-windows-msvc'
         run: |
