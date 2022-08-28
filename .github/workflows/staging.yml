@@ -4,20 +4,17 @@ on:
 
 jobs:
   build:
-    name: Build ${{ matrix.target }} package
-    runs-on: ${{ matrix.os }}
+    name: Build ${{ matrix.target.name }} package
+    runs-on: ${{ matrix.target.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        include:
-          - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
-          - os: macos-latest
-            target: aarch64-apple-darwin
-          - os: macos-latest
-            target: x86_64-apple-darwin
-          - os: windows-latest
-            target: x86_64-pc-windows-msvc
+        target:
+          [
+            { name: x86_64-unknown-linux-gnu, os: ubuntu-latest },
+            { name: aarch64-apple-darwin, os: macos-latest },
+            { name: x86_64-apple-darwin, os: macos-latest },
+            { name: x86_64-pc-windows-msvc, os: windows-latest },
+          ]
     steps:
       - name: Fetch latest code
         uses: actions/checkout@v3
@@ -25,20 +22,20 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
-          target: ${{ matrix.target }}
+          target: ${{ matrix.target.name }}
       - name: Build
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release --locked --target ${{ matrix.target }}
+          args: --release --locked --target ${{ matrix.target.name }}
       - name: Compress
         run: |
-          mv target/${{ matrix.target }}/release/subalfred .
-          zstd --ultra -22 -o subalfred-${{ matrix.target }}.zst subalfred
+          mv target/${{ matrix.target.name }}/release/subalfred .
+          zstd --ultra -22 -o subalfred-${{ matrix.target.name }}.zst subalfred
       - name: Collect artifact
         run: |
           mkdir -p artifacts
-          mv subalfred-${{ matrix.target }}.zst artifacts
+          mv subalfred-${{ matrix.target.name }}.zst artifacts
       - name: Upload artifact
         uses: actions/upload-artifact@v3.1.0
         with:
