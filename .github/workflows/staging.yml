@@ -8,6 +8,7 @@ jobs:
     runs-on: ${{ matrix.target.os }}
     strategy:
       matrix:
+        executable: [subalfred]
         target:
           [
             { name: x86_64-unknown-linux-gnu, os: ubuntu-latest },
@@ -15,6 +16,9 @@ jobs:
             { name: x86_64-apple-darwin, os: macos-latest },
             { name: x86_64-pc-windows-msvc, os: windows-latest },
           ]
+        include:
+          - target: { os: windows-latest }
+            executable: subalfred.exe
     steps:
       - name: Fetch latest code
         uses: actions/checkout@v3
@@ -27,18 +31,11 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --bin subalfred --release --locked --target ${{ matrix.target.name }}
+          args: --release --locked --target ${{ matrix.target.name }}
       - name: Compress
-        if: matrix.target.name != 'x86_64-pc-windows-msvc'
         run: |
-          mv target/${{ matrix.target.name }}/release/subalfred .
-          zstd --ultra -22 -o subalfred-${{ matrix.target.name }}.zst subalfred
-      - name: Compress
-        if: matrix.target.name == 'x86_64-pc-windows-msvc'
-        run: |
-          tree target
-          mv target/${{ matrix.target.name }}/release/subalfred .
-          zstd --ultra -22 -o subalfred-${{ matrix.target.name }}.zst subalfred
+          mv target/${{ matrix.target.name }}/release/${{ matrix.executable }} .
+          zstd --ultra -22 -o subalfred-${{ matrix.target.name }}.zst ${{ matrix.executable }}
       - name: Collect artifact
         run: |
           mkdir -p artifacts
