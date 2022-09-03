@@ -158,5 +158,5 @@ The result will be store at `<a>.override`.
 ```sh
 subalfred state override a.json b.json
 # You could check this command's output. It should be empty.
-subalfred state diff a.json b.json
+subalfred state diff a.json.override b.json
 ```
