@@ -113,7 +113,7 @@ So, I decide to make this public.
 
 ### Examples
 ```sh
-git clone https://github.com/paritytech/frontier /tmp/paritytech
+git clone https://github.com/paritytech/frontier /tmp/paritytech/frontier
 subalfred check std-feature --manifest-path /tmp/paritytech/frontier/Cargo.toml
 ```
 ```
