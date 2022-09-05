@@ -40,9 +40,9 @@ checksum = "a26fa4d7e3f2eebadf743988fc8aec9fa9a9e82611acafd77c1462ed6262440a"
 
 [[package]]
 name = "array-bytes"
-version = "3.0.0"
+version = "4.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dccd7875577d357e3ae0b9bf92f22cac78d2e79a85df99c85883f0248cd41e95"
+checksum = "2b416dab85bd135a72cafdda91c8d930f02ae1d9c59349e9f184a8789e86824e"
 
 [[package]]
 name = "arrayvec"
