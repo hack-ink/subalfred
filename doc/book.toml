@@ -3,7 +3,7 @@ authors      = ["Xavier Lau"]
 language     = "en"
 multilingual = false
 src          = "src"
-title        = "Subalfred Documentation"
+title        = "Subalfred Book"
 
 [output.html]
 cname                = "subalfred.hack.ink"
