@@ -1,3 +1,4 @@
+// crates.io
 use vergen::{Config, ShaKind};
 
 fn main() {
