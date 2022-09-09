@@ -1444,7 +1444,7 @@ checksum = "6e63cff320ae2c57904679ba7cb63280a3dc4613885beafb148ee7bf9aa9042d"
 [[package]]
 name = "ss58-registry"
 version = "1.26.0"
-source = "git+https://github.com/hack-ink/ss58-registry?branch=xavier-noncasesensitive#5dc8359620edfa7e535a11a87c1a8797b9135485"
+source = "git+https://github.com/hack-ink/ss58-registry?branch=xavier-noncasesensitive#07b0defb1aaa9f72cf310cec5b2ac768ffa772da"
 dependencies = [
  "Inflector",
  "num-format",
