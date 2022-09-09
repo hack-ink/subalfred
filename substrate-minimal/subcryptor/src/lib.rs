@@ -29,7 +29,7 @@ impl Key for Sr25519 {
 	const LEN: usize = 32;
 }
 
-/// Ref: [to_ss58check_with_version](https://github.com/paritytech/substrate/blob/0ba251c9388452c879bfcca425ada66f1f9bc802/primitives/core/src/crypto.rs#L319).
+/// Ref: [`to_ss58check_with_version`](https://github.com/paritytech/substrate/blob/0ba251c9388452c879bfcca425ada66f1f9bc802/primitives/core/src/crypto.rs#L319).
 pub fn ss58_address_of(public_key: &[u8], network: &str) -> Result<(u16, String)> {
 	let network = Ss58AddressFormat::try_from(network)
 		.map_err(|_| Error::UnsupportedNetwork(network.into()))?;
@@ -60,7 +60,7 @@ pub fn ss58_address_of(public_key: &[u8], network: &str) -> Result<(u16, String)
 	Ok((prefix, bytes.to_base58()))
 }
 
-/// Ref: [from_ss58check_with_version](https://github.com/paritytech/substrate/blob/0ba251c9388452c879bfcca425ada66f1f9bc802/primitives/core/src/crypto.rs#L264).
+/// Ref: [`from_ss58check_with_version`](https://github.com/paritytech/substrate/blob/0ba251c9388452c879bfcca425ada66f1f9bc802/primitives/core/src/crypto.rs#L264).
 pub fn public_key_of<K>(ss58_address: &str) -> Result<Vec<u8>>
 where
 	K: Key,

@@ -4,7 +4,7 @@
 
 // hack-ink
 use crate::core::prelude::*;
-use subcryptor::{ss58_registry::ALL_SS58_ADDRESS_FORMAT_NAMES, Sr25519};
+use subcryptor::{ss58_registry::Ss58AddressFormat, Sr25519};
 
 /// Network address.
 #[cfg_attr(test, derive(Clone, PartialEq, Eq))]
@@ -39,7 +39,7 @@ pub fn all(address: &str) -> Result<(Vec<u8>, String, Vec<Address>)> {
 	let hex_public_key = array_bytes::bytes2hex("0x", &public_key);
 	let mut addresses = Vec::new();
 
-	for network in ALL_SS58_ADDRESS_FORMAT_NAMES {
+	for network in Ss58AddressFormat::all_names() {
 		let (prefix, address) = subcryptor::ss58_address_of(&public_key, network)
 			.map_err(error::Ss58::CalculateSs58AddressFailed)?;
 
