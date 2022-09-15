@@ -15,5 +15,5 @@ maintenance = { status = "actively-developed" }
 [dependencies]
 # crates.io
 frame-metadata = { version = "15.0" }
-scale-info     = { version = "2.1" }
+scale-info     = { version = "2.2" }
 thiserror      = { version = "1.0" }
