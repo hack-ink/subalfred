@@ -31,7 +31,7 @@ cargo_toml         = { version = "0.11" }
 clap               = { version = "3.2", features = ["cargo", "derive", "wrap_help"] }
 futures            = { version = "0.3" }
 fxhash             = { version = "0.2" }
-once_cell          = { version = "1.14" }
+once_cell          = { version = "1.15" }
 parity-scale-codec = { version = "3.2" }
 regex              = { version = "1.6" }
 reqwest            = { version = "0.11", features = ["json"] }
