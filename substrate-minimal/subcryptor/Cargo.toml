@@ -17,9 +17,8 @@ maintenance = { status = "actively-developed" }
 base58             = { version = "0.2" }
 blake2-rfc         = { version = "0.2" }
 parity-scale-codec = { version = "3.2", optional = true, features = ["derive"] }
+ss58-registry      = { version = "1.29" }
 thiserror          = { version = "1.0" }
-# TODO: use crates.io version
-ss58-registry = { version = "1.26", git = "https://github.com/hack-ink/ss58-registry", branch = "xavier-noncasesensitive" }
 
 [features]
 codec = [
