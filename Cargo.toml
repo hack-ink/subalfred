@@ -28,7 +28,7 @@ array-bytes        = { version = "4.1" }
 async-trait        = { version = "0.1" }
 cargo_metadata     = { version = "0.15" }
 cargo_toml         = { version = "0.11" }
-clap               = { version = "3.2", features = ["cargo", "derive", "wrap_help"] }
+clap               = { version = "4.0", features = ["cargo", "derive", "wrap_help"] }
 futures            = { version = "0.3" }
 fxhash             = { version = "0.2" }
 once_cell          = { version = "1.15" }
