@@ -10,10 +10,10 @@ use subalfred::core::cargo;
 #[derive(Debug, Args)]
 pub(crate) struct UpdateCmd {
 	/// Path to the root `Cargo.toml`.
-	#[clap(long, value_name = "PATH", default_value = "./Cargo.toml")]
+	#[arg(long, value_name = "PATH", default_value = "./Cargo.toml")]
 	manifest_path: String,
 	/// Release version to update to.
-	#[clap(required = true, value_name = "VERSION")]
+	#[arg(required = true, value_name = "VERSION")]
 	version: String,
 }
 impl UpdateCmd {

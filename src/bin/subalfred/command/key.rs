@@ -1,7 +1,7 @@
 // std
 use std::{borrow::Cow, fmt::Write};
 // crates.io
-use clap::{ArgEnum, Args};
+use clap::{Args, ValueEnum};
 // hack-ink
 use crate::prelude::*;
 use subalfred::core::{
@@ -15,19 +15,19 @@ type ChainId = u32;
 #[derive(Debug, Args)]
 pub(crate) struct KeyCmd {
 	/// Public key or SS58 address.
-	#[clap(required = true, value_name = "PUBLIC KEY/SS58 ADDRESS")]
+	#[arg(required = true, value_name = "PUBLIC KEY/SS58 ADDRESS")]
 	key: String,
 	/// The key type.
-	#[clap(arg_enum, long, value_name = "KEY TYPE")]
+	#[arg(value_enum, long, value_name = "KEY TYPE")]
 	r#type: Option<KeyType>,
 	/// Network address format.
-	#[clap(long, value_name = "NAME", default_value = "Substrate", conflicts_with = "list-all")]
+	#[arg(long, value_name = "NAME", default_value = "Substrate", conflicts_with = "list-all")]
 	network: String,
 	/// List all the networks' addresses.
-	#[clap(long, takes_value = false, conflicts_with = "network")]
+	#[arg(long, num_args = 0, conflicts_with = "network")]
 	list_all: bool,
 	/// Show the network(s)' prefix(es).
-	#[clap(long, takes_value = false)]
+	#[arg(long, num_args = 0)]
 	show_prefix: bool,
 }
 impl KeyCmd {
@@ -79,7 +79,7 @@ impl KeyCmd {
 	}
 }
 
-#[derive(Clone, Debug, ArgEnum)]
+#[derive(Clone, Debug, ValueEnum)]
 enum KeyType {
 	Pallet,
 	Parachain,

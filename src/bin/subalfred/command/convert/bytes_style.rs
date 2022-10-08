@@ -1,5 +1,5 @@
 // crates.io
-use clap::{ArgEnum, Args};
+use clap::{Args, ValueEnum};
 // hack-ink
 use crate::prelude::*;
 use BytesStringKind::*;
@@ -8,13 +8,13 @@ use BytesStringKind::*;
 #[derive(Debug, Args)]
 pub(crate) struct BytesStyleCmd {
 	/// Bytes input.
-	#[clap(required = true, value_name = "BYTES")]
+	#[arg(required = true, value_name = "BYTES")]
 	bytes: String,
 	/// The origin style.
-	#[clap(arg_enum, long, required = true, value_name = "BYTES STYLE")]
+	#[arg(value_enum, long, required = true, value_name = "BYTES STYLE")]
 	from: BytesStringKind,
 	/// The target style.
-	#[clap(arg_enum, long, required = true, value_name = "BYTES STYLE")]
+	#[arg(value_enum, long, required = true, value_name = "BYTES STYLE")]
 	to: BytesStringKind,
 }
 impl BytesStyleCmd {
@@ -43,7 +43,7 @@ impl BytesStyleCmd {
 	}
 }
 
-#[derive(Clone, Debug, ArgEnum)]
+#[derive(Clone, Debug, ValueEnum)]
 enum BytesStringKind {
 	ByteStringLiteral,
 	VecString,

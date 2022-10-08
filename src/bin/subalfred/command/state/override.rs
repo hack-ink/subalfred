@@ -8,9 +8,9 @@ use subalfred::core::state::{self, TwoStateConfig};
 ///
 /// The result will be store at `<a>.override`.
 #[derive(Debug, Args)]
-#[clap(verbatim_doc_comment, usage = "subalfred state merge [OPTIONS] <PATH> <PATH>")]
+#[command(verbatim_doc_comment, override_usage = "subalfred state merge [OPTIONS] <PATH> <PATH>")]
 pub(crate) struct OverrideCmd {
-	#[clap(flatten)]
+	#[command(flatten)]
 	two_state_config: TwoStateConfig,
 }
 impl OverrideCmd {

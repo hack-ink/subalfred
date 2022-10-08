@@ -1,5 +1,5 @@
 // crates.io
-use clap::{ArgEnum, Args};
+use clap::{Args, ValueEnum};
 // hack-ink
 use crate::prelude::*;
 
@@ -7,10 +7,10 @@ use crate::prelude::*;
 #[derive(Debug, Args)]
 pub(crate) struct HashCmd {
 	/// Hex to be hashed.
-	#[clap(required = true, value_name = "HEX")]
+	#[arg(required = true, value_name = "HEX")]
 	hex: String,
 	/// Hash algorithm.
-	#[clap(arg_enum, long, value_name = "HASHER", default_value = "blake2-128-concat")]
+	#[arg(value_enum, long, value_name = "HASHER", default_value = "blake2-128-concat")]
 	hasher: Hasher,
 }
 impl HashCmd {
@@ -38,7 +38,7 @@ impl HashCmd {
 }
 
 #[allow(non_camel_case_types)]
-#[derive(Clone, Debug, ArgEnum)]
+#[derive(Clone, Debug, ValueEnum)]
 enum Hasher {
 	blake2_128,
 	blake2_128_concat,

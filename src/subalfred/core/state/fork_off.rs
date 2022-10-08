@@ -41,7 +41,7 @@ pub struct ForkOffConfig {
 	/// running with `--bob`. But if your dev chain's genesis validator isn't any one of the
 	/// well-known keys, then you should start the node with `--validator` and insert the key
 	/// manually.
-	#[clap(verbatim_doc_comment, long, value_name = "PATH", conflicts_with = "all")]
+	#[arg(verbatim_doc_comment, long, value_name = "PATH", conflicts_with = "all")]
 	pub renew_consensus_with: Option<String>,
 	/// Use `//Alice` to control the governance.
 	///
@@ -52,10 +52,10 @@ pub struct ForkOffConfig {
 	/// - Replace the phragmen election and council members with `//Alice`, if the pallet existed.
 	/// - Replace the technical membership and tech.comm members with `//Alice`, if the pallet
 	///   existed.
-	#[clap(verbatim_doc_comment, long, takes_value = false, conflicts_with = "all")]
+	#[arg(verbatim_doc_comment, long, num_args = 0, conflicts_with = "all")]
 	pub simple_governance: bool,
 	/// Disable adding the default bootnodes to the specification.
-	#[clap(verbatim_doc_comment, long, takes_value = false)]
+	#[arg(verbatim_doc_comment, long, num_args = 0)]
 	pub disable_default_bootnodes: bool,
 }
 

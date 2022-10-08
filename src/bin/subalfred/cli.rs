@@ -6,7 +6,7 @@ use clap::{Args, Parser};
 use crate::{command::Cmd, prelude::*};
 
 #[derive(Debug, Parser)]
-#[clap(
+#[command(
 	version = concat!(
 		env!("VERGEN_BUILD_SEMVER"),
 		"-",
@@ -47,6 +47,6 @@ impl Cli {
 #[derive(Debug, Args)]
 struct GlobalArgs {
 	/// Set a custom logging filter. Also, work with the `RUST_LOG` environment variable.
-	#[clap(global = true, long, short, value_name = "TARGET=LEVEL,*", default_value = "info")]
+	#[arg(global = true, long, short, value_name = "TARGET=LEVEL,*", default_value = "info")]
 	log: String,
 }

@@ -13,12 +13,12 @@ use hex2bytes::Hex2BytesCmd;
 crate::impl_cmd! {
 	#[doc="Converter."]
 	ConvertCmd {
-		#[clap(name = "ascii2hex")]
+		#[command(name = "ascii2hex")]
 		Ascii2Hex,
 		BytesStyle,
-		#[clap(name = "bytes2hex")]
+		#[command(name = "bytes2hex")]
 		Bytes2Hex,
-		#[clap(name = "hex2bytes")]
+		#[command(name = "hex2bytes")]
 		Hex2Bytes,
 	}
 }

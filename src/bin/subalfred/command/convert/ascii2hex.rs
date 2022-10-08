@@ -7,7 +7,7 @@ use crate::prelude::*;
 #[derive(Debug, Args)]
 pub(crate) struct Ascii2HexCmd {
 	/// Ascii data input.
-	#[clap(required = true, value_name = "ASCII DATA")]
+	#[arg(required = true, value_name = "ASCII DATA")]
 	data: String,
 }
 impl Ascii2HexCmd {
