@@ -8,10 +8,10 @@ use crate::prelude::*;
 #[derive(Debug, Args)]
 pub(crate) struct StorageKeyCmd {
 	/// Prefix of the storage.
-	#[clap(long, required = true, value_name = "PREFIX")]
+	#[arg(long, required = true, value_name = "PREFIX")]
 	prefix: String,
 	/// Name of the storage item.
-	#[clap(long, required = true, value_name = "ITEM")]
+	#[arg(long, required = true, value_name = "ITEM")]
 	item: String,
 }
 impl StorageKeyCmd {

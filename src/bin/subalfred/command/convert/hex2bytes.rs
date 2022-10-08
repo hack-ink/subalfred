@@ -9,7 +9,7 @@ pub(crate) struct Hex2BytesCmd {
 	/// Hex input.
 	///
 	/// Example: `0x00000000`.
-	#[clap(required = true, value_name = "HEX")]
+	#[arg(required = true, value_name = "HEX")]
 	hex: String,
 }
 impl Hex2BytesCmd {

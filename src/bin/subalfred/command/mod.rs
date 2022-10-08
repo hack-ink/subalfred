@@ -59,18 +59,18 @@ macro_rules! impl_cmd {
 impl_cmd! {
 	#[doc="The main CMD of Subalfred."]
 	Cmd {
-		#[clap(subcommand)]
+		#[command(subcommand)]
 		Check,
-		#[clap(subcommand)]
+		#[command(subcommand)]
 		Convert,
-		#[clap(subcommand)]
+		#[command(subcommand)]
 		Get,
 		Hash,
 		Key,
-		#[clap(subcommand)]
+		#[command(subcommand)]
 		State,
 		StorageKey,
-		#[clap(subcommand)]
+		#[command(subcommand)]
 		Workspace,
 	}
 }

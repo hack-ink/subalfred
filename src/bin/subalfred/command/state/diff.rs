@@ -10,7 +10,7 @@ use subalfred::core::state::{self, TwoStateConfig};
 /// This is not a symmetric diff.
 /// `a.diff(b)` may equals to `b.diff(a)`, but not always.
 #[derive(Debug, Args)]
-#[clap(verbatim_doc_comment, usage = "subalfred state diff [OPTIONS] <PATH> <PATH>")]
+#[command(verbatim_doc_comment, override_usage = "subalfred state diff [OPTIONS] <PATH> <PATH>")]
 pub(crate) struct DiffCmd {
 	#[clap(flatten)]
 	two_state_config: TwoStateConfig,

@@ -11,10 +11,10 @@ use subalfred::core::node;
 #[derive(Debug, Args)]
 pub(crate) struct RuntimeUpgradeBlockCmd {
 	/// At this runtime version.
-	#[clap(required = true, value_name = "VERSION")]
+	#[arg(required = true, value_name = "VERSION")]
 	runtime_version: u32,
 	/// Node's RPC WS endpoint.
-	#[clap(long, required = true, value_name = "URI", default_value = "ws://localhost:9944")]
+	#[arg(long, required = true, value_name = "URI", default_value = "ws://localhost:9944")]
 	uri: String,
 }
 impl RuntimeUpgradeBlockCmd {

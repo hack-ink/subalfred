@@ -9,7 +9,7 @@ pub(crate) struct Bytes2HexCmd {
 	/// Bytes input.
 	///
 	/// Example: `[0, 0, 0, 0]`.
-	#[clap(required = true, value_name = "BYTES")]
+	#[arg(required = true, value_name = "BYTES")]
 	bytes: String,
 }
 impl Bytes2HexCmd {

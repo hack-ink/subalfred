@@ -29,10 +29,10 @@ use crate::core::{prelude::*, system};
 #[derive(Debug, Args)]
 pub struct TwoStateConfig {
 	/// The path to the state a.
-	#[clap(required = true, value_name = "PATH")]
+	#[arg(required = true, value_name = "PATH")]
 	pub a: PathBuf,
 	/// The path to the second state b.
-	#[clap(required = true, value_name = "PATH")]
+	#[arg(required = true, value_name = "PATH")]
 	pub b: PathBuf,
 }
 

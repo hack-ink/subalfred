@@ -1,7 +1,7 @@
 // std
 use std::{error::Error, process::Child};
 // crates.io
-use clap::{ArgEnum, Args};
+use clap::{Args, ValueEnum};
 // hack-ink
 use crate::prelude::*;
 use subalfred::core::{check::runtime, node, system};
@@ -10,16 +10,16 @@ use subalfred::core::{check::runtime, node, system};
 #[derive(Debug, Args)]
 pub(crate) struct RuntimeCmd {
 	/// Path to the executable.
-	#[clap(long, required = true, value_name = "PATH")]
+	#[arg(long, required = true, value_name = "PATH")]
 	executable: String,
 	/// Chain name.
-	#[clap(long, required = true, value_name = "NAME")]
+	#[arg(long, required = true, value_name = "NAME")]
 	chain: String,
 	/// Live chain's RPC HTTP endpoint.
-	#[clap(long, required = true, value_name = "URI")]
+	#[arg(long, required = true, value_name = "URI")]
 	live: String,
 	/// The property to check.
-	#[clap(arg_enum, long, required = true, value_name = "PROPERTY")]
+	#[arg(value_enum, long, required = true, value_name = "PROPERTY")]
 	property: Property,
 }
 impl RuntimeCmd {
@@ -79,7 +79,7 @@ impl RuntimeCmd {
 	}
 }
 
-#[derive(Clone, Debug, ArgEnum)]
+#[derive(Clone, Debug, ValueEnum)]
 enum Property {
 	Storage,
 	Version,

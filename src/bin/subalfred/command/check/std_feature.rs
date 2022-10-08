@@ -8,7 +8,7 @@ use subalfred::core::check::std_feature;
 #[derive(Debug, Args)]
 pub(crate) struct StdFeatureCmd {
 	/// Path to the root `Cargo.toml`.
-	#[clap(long, value_name = "PATH", default_value = "./Cargo.toml")]
+	#[arg(long, value_name = "PATH", default_value = "./Cargo.toml")]
 	manifest_path: String,
 }
 impl StdFeatureCmd {
