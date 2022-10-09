@@ -112,7 +112,7 @@ pub enum Node {
 	StartNodeFailed(#[source] std::io::Error),
 }
 
-/// SS58 error..
+/// SS58 error.
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Ss58 {
