@@ -70,7 +70,7 @@ jobs:
     needs: [staging]
     steps:
       - name: Clean artifacts
-        uses: geekyeggo/delete-artifact@v1
+        uses: geekyeggo/delete-artifact@v2
         with:
           name: artifacts
     runs-on: ubuntu-latest
