@@ -10,12 +10,11 @@ use fork_off::ForkOffCmd;
 mod r#override;
 use r#override::OverrideCmd;
 
-crate::impl_cmd! {
-	#[doc="A set of tools to process Substrate-like node state."]
-	StateCmd {
-		Diff,
-		Export,
-		ForkOff,
-		Override,
-	}
+/// A set of tools to process Substrate-like node state.
+#[cmd_impl::cmd]
+pub(crate) enum StateCmd {
+	Diff,
+	Export,
+	ForkOff,
+	Override,
 }

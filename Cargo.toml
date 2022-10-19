@@ -45,6 +45,7 @@ tracing            = { version = "0.1" }
 tracing-subscriber = { version = "0.3" }
 unescaper          = { version = "0.1" }
 # hack-ink
+cmd-impl     = { version = "0.9", path = "src/bin/subalfred/command/impl" }
 subcryptor   = { version = "0.9", path = "substrate-minimal/subcryptor" }
 subhasher    = { version = "0.9", path = "substrate-minimal/subhasher" }
 submetadatan = { version = "0.9", path = "substrate-minimal/submetadatan" }
@@ -58,6 +59,7 @@ subversioner = { version = "0.9", path = "substrate-minimal/subversioner", featu
 
 [workspace]
 members = [
+	"src/bin/subalfred/command/impl",
 	"substrate-minimal/*",
 	"substrate-minimal/*/impl",
 ]
