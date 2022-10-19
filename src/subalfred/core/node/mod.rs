@@ -26,7 +26,7 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 	let mut node = Command::new(executable)
 		.stdout(Stdio::null())
 		.stderr(Stdio::piped())
-		.args(&[&format!("--rpc-port={rpc_port}"), "--chain", chain, "--tmp"])
+		.args([&format!("--rpc-port={rpc_port}"), "--chain", chain, "--tmp"])
 		.spawn()
 		.map_err(error::Node::StartNodeFailed)?;
 	let output = BufReader::new(
