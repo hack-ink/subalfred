@@ -1,4 +1,3 @@
-#![feature(concat_idents)]
 #![warn(missing_docs)]
 
 //! Subalfred CLI start entry point.

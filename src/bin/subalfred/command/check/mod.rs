@@ -4,10 +4,9 @@ use std_feature::StdFeatureCmd;
 mod runtime;
 use runtime::RuntimeCmd;
 
-crate::impl_cmd! {
-	#[doc="Some checking tools are pretty useful for runtime development."]
-	CheckCmd {
-		Runtime,
-		StdFeature,
-	}
+/// Some checking tools are pretty useful for runtime development.
+#[cmd_impl::cmd]
+pub(crate) enum CheckCmd {
+	Runtime,
+	StdFeature,
 }
