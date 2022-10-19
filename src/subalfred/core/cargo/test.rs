@@ -22,6 +22,7 @@ fn members_manifests_should_work() {
 			.map(|pkg| { (pkg.name.as_str(), remove_prefix(pkg.manifest_path.as_str())) })
 			.collect::<Vec<_>>(),
 		[
+			("cmd-impl", "/command/impl/Cargo.toml"),
 			("subcryptor", "/substrate-minimal/subcryptor/Cargo.toml"),
 			("subgrandpa", "/substrate-minimal/subgrandpa/Cargo.toml"),
 			("subhasher", "/substrate-minimal/subhasher/Cargo.toml"),
