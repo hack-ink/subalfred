@@ -8,6 +8,8 @@ on:
       - main
 
 env:
+  CARGO_TERM_COLOR: always
+
   GITHUB_CACHE_VERSION: 1
 
   RUST_TOOLCHAIN: stable
@@ -62,10 +64,10 @@ jobs:
           args: --all --all-features --locked
       - name: Install cargo-nextest
         if: matrix.action == 'nextest'
-        run: curl -LsSf https://get.nexte.st/latest/linux | tar zxf - -C ${CARGO_HOME:-~/.cargo}/bin
+        uses: taiki-e/install-action@nextest
       - name: Cargo ${{ matrix.action }}
         if: matrix.action == 'nextest'
         uses: actions-rs/cargo@v1
         with:
           command: nextest
-          args: run --all --all-features --release --locked
+          args: run --all --all-features --locked
