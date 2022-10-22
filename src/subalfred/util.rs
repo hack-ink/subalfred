@@ -8,7 +8,7 @@ use std::time::Instant;
 macro_rules! execution_timer {
 	($meta:expr) => {
 		let _execution_timer = $crate::util::ExecutionTimer::init(|start| {
-			tracing::trace!("`{}` takes `{}` secs", $meta, start.elapsed().as_secs_f64())
+			tracing::trace!("{} takes {} secs", $meta, start.elapsed().as_secs_f64())
 		});
 	};
 }

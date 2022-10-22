@@ -1,5 +1,5 @@
-mod std_feature;
-use std_feature::StdFeatureCmd;
+mod features;
+use features::FeaturesCmd;
 
 mod runtime;
 use runtime::RuntimeCmd;
@@ -8,5 +8,5 @@ use runtime::RuntimeCmd;
 #[cmd_impl::cmd]
 pub(crate) enum CheckCmd {
 	Runtime,
-	StdFeature,
+	Features,
 }

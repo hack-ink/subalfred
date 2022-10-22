@@ -37,7 +37,7 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 	for line in output.lines() {
 		let line = line.map_err(error::Generic::Io)?;
 
-		tracing::trace!("node({rpc_port}) output: {line}");
+		tracing::trace!("node({rpc_port}) {line}");
 
 		if ["Idle", "Imported", "Syncing"].iter().any(|s| line.contains(s)) {
 			break;
