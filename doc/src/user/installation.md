@@ -15,11 +15,11 @@ For *Windows* users, you would like to rename the extracted content name to `sub
 Use `subalfred-aarch64-apple-darwin.zst` as an example.
 - One line command:
 	```sh
-	curl -L https://github.com/hack-ink/subalfred/releases/download/v0.9.0-rc8/subalfred-aarch64-apple-darwin.zst | zstd -o subalfred -d && chmod u+x subalfred
+	curl -L https://github.com/hack-ink/subalfred/releases/latest/download/subalfred-aarch64-apple-darwin.zst | zstd -o subalfred -d && chmod u+x subalfred
 	```
 - Multi-lines command:
 	```sh
-	curl -LO https://github.com/hack-ink/subalfred/releases/download/v0.9.0-rc8/subalfred-aarch64-apple-darwin.zst
+	curl -LO https://github.com/hack-ink/subalfred/releases/latest/download/subalfred-aarch64-apple-darwin.zst
 	zstd -o subalfred -d
 	chmod u+x subalfred
 	```
