@@ -95,8 +95,11 @@ RuntimeVersion {
 }
 ```
 
-## STD Feature
-As we know Substrate have two runtime ENVs, native and WASM.
+## Features
+You could check if all your runtime features' were enabled correctly in one command.
+
+### Episode 1
+As we know Substrate has two runtime ENVs, native and WASM.
 
 If a runtime dependency is not pure no-std, we need to write:
 ```toml
@@ -108,24 +111,53 @@ xxx = { version = "0.1.0", default-features = false }
 ```
 
 Sometimes, we might forget to write add the `xxx/std`.
+
 Recently, I found someone have the same [requirement](https://github.com/paritytech/substrate/pull/11715).
+
 So, I decide to make this public.
 
-### Examples
-```sh
-git clone https://github.com/paritytech/frontier /tmp/paritytech/frontier
-subalfred check std-feature --manifest-path /tmp/paritytech/frontier/Cargo.toml
-```
-```
-`fp-evm`'s std feature was disabled in `/tmp/paritytech/frontier/primitives/ethereum/Cargo.toml`
-`ed25519-dalek`'s std feature was disabled in `/tmp/paritytech/frontier/frame/evm/precompile/ed25519/Cargo.toml`
-`bn`'s std feature was disabled in `/tmp/paritytech/frontier/frame/evm/precompile/bn128/Cargo.toml`
-`curve25519-dalek`'s std feature was disabled in `/tmp/paritytech/frontier/frame/evm/precompile/curve25519/Cargo.toml`
-`frame-benchmarking`'s std feature was disabled in `/tmp/paritytech/frontier/template/runtime/Cargo.toml`
-`frame-system-benchmarking`'s std feature was disabled in `/tmp/paritytech/frontier/template/runtime/Cargo.toml`
-```
+### Episode 2
+As time passed, more and more features were added to Substrate.
 
----
+We have `std`, `runtime-benchmarks` and `try-runtime` now.
+
+It's hard to check if all features are enabled correctly.
+
+### Examples
+> Testing commit [paritytech/polkadot@`0fd106c`](https://github.com/paritytech/polkadot/commit/0fd106c04e5f57f6342f8e000d471d0f819f7b61)
+```sh
+git clone https://github.com/paritytech/polkadot /tmp/paritytech/polkadot
+subalfred check features --manifest-path /tmp/paritytech/polkadot/runtime/polkadot -ltrace
+```
+```
+checking: /tmp/paritytech/polkadot/runtime/polkadot/Cargo.toml
+2022-10-22T06:10:58.626261Z TRACE subalfred::core::check::features: check std takes 0.000408458 secs
+2022-10-22T06:10:58.626636Z TRACE subalfred::core::check::features: check runtime-benchmarks takes 0.000177708 secs
+2022-10-22T06:10:58.626764Z TRACE subalfred::core::check::features: check try-runtime takes 0.0001255 secs
+`std` of `frame-benchmarking` was omitted
+`std` of `pallet-election-provider-support-benchmarking` was omitted
+`std` of `polkadot-primitives` was omitted
+`std` of `polkadot-runtime-common` was omitted
+`std` of `polkadot-runtime-parachains` was omitted
+`std` of `serde_json` was omitted
+`std` of `sp-authority-discovery` was omitted
+`std` of `sp-block-builder` was omitted
+`std` of `sp-consensus-babe` was omitted
+`std` of `sp-inherents` was omitted
+`std` of `sp-io` was omitted
+`std` of `sp-offchain` was omitted
+`std` of `sp-tracing` was omitted
+`std` of `sp-transaction-pool` was omitted
+`std` of `sp-trie` was omitted
+`runtime-benchmarks` of `polkadot-primitives` was omitted
+`runtime-benchmarks` of `polkadot-runtime-common` was omitted
+`runtime-benchmarks` of `polkadot-runtime-parachains` was omitted
+`runtime-benchmarks` of `sp-staking` was omitted
+`runtime-benchmarks` of `xcm-executor` was omitted
+`try-runtime` of `frame-support` was omitted
+`try-runtime` of `polkadot-runtime-common` was omitted
+`try-runtime` of `polkadot-runtime-parachains` was omitted
+```
 
 ## CI
 Moreover, we can add the checks into your project CI.
