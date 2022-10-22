@@ -4,5 +4,5 @@
 
 /// Runtime checkers.
 pub mod runtime;
-/// STD features checker.
-pub mod std_feature;
+/// Features checker.
+pub mod features;

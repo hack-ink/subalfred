@@ -52,6 +52,12 @@ where
 pub enum Cargo {
 	#[error("[core::cargo] failed to exec `cargo metadata`")]
 	ExecMetadataFailed(#[source] cargo_metadata::Error),
+	#[error("[core::cargo] failed to get the node")]
+	GetNodeFailed,
+	#[error("[core::cargo] failed to get the resolve")]
+	GetResolveFailed,
+	#[error("[core::cargo] failed to get the root package")]
+	GetRootPackageFailed,
 	#[error("[core::cargo] failed to open the manifest file")]
 	OpenManifestFailed(#[source] cargo_toml::Error),
 }
