@@ -25,10 +25,10 @@ jobs:
     steps:
       - name: Fetch latest code
         uses: actions/checkout@v3
-      - name: Install Rust nightly toolchain
+      - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: nightly
+          toolchain: stable
           target: ${{ matrix.target.name }}
       - name: Build
         uses: actions-rs/cargo@v1

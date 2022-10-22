@@ -8,9 +8,11 @@ on:
       - main
 
 env:
+  CARGO_TERM_COLOR: always
+
   GITHUB_CACHE_VERSION: 1
 
-  RUST_TOOLCHAIN: nightly
+  RUST_TOOLCHAIN: stable
   RUST_BACKTRACE: full
   RUSTC_WRAPPER: sccache
 
@@ -24,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        action: [clippy, test]
+        action: [clippy, nextest]
     steps:
       - name: Fetch latest code
         uses: actions/checkout@v3
@@ -60,9 +62,12 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --all --all-features --locked
+      - name: Install cargo-nextest
+        if: matrix.action == 'nextest'
+        uses: taiki-e/install-action@nextest
       - name: Cargo ${{ matrix.action }}
-        if: matrix.action == 'test'
+        if: matrix.action == 'nextest'
         uses: actions-rs/cargo@v1
         with:
-          command: test
-          args: --all --all-features --release --locked
+          command: nextest
+          args: run --all --all-features --locked
