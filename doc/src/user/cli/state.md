@@ -21,7 +21,6 @@ subalfred state diff a.json b.json
 -0x4a0fb74e77bb0a3a5a6c24785f9805fe878d434d6125b40443fe11fd292d13a4:0x02000500
 -0x2aa79c02f5980c623c5a8c28e06320c4878d434d6125b40443fe11fd292d13a4:0x02000200
 ```
----
 ```sh
 subalfred state diff b.json a.json
 ```

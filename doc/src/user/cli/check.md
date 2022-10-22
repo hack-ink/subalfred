@@ -159,8 +159,6 @@ checking: /tmp/paritytech/polkadot/runtime/polkadot/Cargo.toml
 `try-runtime` of `polkadot-runtime-parachains` was omitted
 ```
 
----
-
 ## CI
 Moreover, we can add the checks into your project CI.
 
