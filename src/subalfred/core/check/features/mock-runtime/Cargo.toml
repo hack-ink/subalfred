@@ -1,0 +1,59 @@
+[package]
+authors     = ["Xavier Lau <xavier@inv.cafe>"]
+description = "mock-runtime"
+edition     = "2021"
+homepage    = "https://subalfred.hack.ink"
+license     = "GPL-3.0"
+name        = "mock-runtime"
+readme      = "README.md"
+repository  = "https://github.com/hack-ink/subalfred"
+version     = "0.0.0"
+
+[dependencies]
+# crates.io
+array-bytes = { version = "4.1" }
+log         = { version = "0.4" }
+serde       = { version = "1.0", optional = true }
+# hack-ink
+pallet-a    = { default-features = false, path = "pallets/a" }
+pallet-b    = { default-features = false, path = "pallets/b" }
+pallet-c    = { default-features = false, path = "pallets/c" }
+primitive-a = { default-features = false, path = "primitives/a" }
+primitive-b = { default-features = false, path = "primitives/b" }
+primitive-c = { default-features = false, path = "primitives/c" }
+
+[features]
+default = ["std"]
+std = [
+	# crates.io
+	"serde",
+	# hack-ink
+	# "pallet-a/std",
+	"pallet-b/std",
+	"pallet-c/std",
+	# "primitive-a/std",
+	"primitive-b/std",
+	"primitive-c/std",
+]
+
+
+runtime-benchmarks = [
+	# hack-ink
+	"pallet-a/runtime-benchmarks",
+	# "pallet-b/runtime-benchmarks",
+	"pallet-c/runtime-benchmarks",
+]
+try-runtime = [
+	# hack-ink
+	"pallet-a/try-runtime",
+	"pallet-b/try-runtime",
+	# "pallet-c/try-runtime",
+]
+
+
+[workspace]
+exclude = []
+members = [
+	"pallets/*",
+	"primitives/*",
+]
