@@ -26,7 +26,10 @@ pub fn check(manifest_path: &str) -> Result<Vec<(String, Vec<String>)>> {
 			// I think there is a Rust bug here, it should be the `&'static str` actually.
 			// Return the `String` to bypass this question temporarily.
 			feature @ "std" | feature @ "runtime-benchmarks" | feature @ "try-runtime" => omitteds
-				.push((feature.to_owned(), check_feature(feature, enabled_features, nodes, root_node)?)),
+				.push((
+					feature.to_owned(),
+					check_feature(feature, enabled_features, nodes, root_node)?,
+				)),
 			_ => continue,
 		}
 	}

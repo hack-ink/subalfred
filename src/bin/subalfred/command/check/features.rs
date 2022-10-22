@@ -34,15 +34,13 @@ impl FeaturesCmd {
 
 		let mut check_passed = true;
 
-		features::check(&manifest_path)?.into_iter().for_each(
-			|(feature, omitteds)| {
-				omitteds.into_iter().for_each(|omitted| {
-					check_passed = false;
+		features::check(&manifest_path)?.into_iter().for_each(|(feature, omitteds)| {
+			omitteds.into_iter().for_each(|omitted| {
+				check_passed = false;
 
-					println!("`{feature}` of `{omitted}` was omitted")
-				});
-			},
-		);
+				println!("`{feature}` of `{omitted}` was omitted")
+			});
+		});
 
 		if check_passed {
 			Ok(())
