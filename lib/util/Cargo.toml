@@ -1,0 +1,14 @@
+[package]
+authors     = ["Xavier Lau <xavier@inv.cafe>"]
+description = "Subalfred utilities."
+edition     = "2021"
+homepage    = "https://subalfred.hack.ink"
+license     = "GPL-3.0"
+name        = "subalfred-util"
+readme      = "README.md"
+repository  = "https://github.com/hack-ink/subalfred"
+version     = "0.9.0"
+
+[dev-dependencies]
+tracing            = { version = "0.1" }
+tracing-subscriber = { version = "0.3" }

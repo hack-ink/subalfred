@@ -49,11 +49,11 @@ To build a fork-off chain:
 darwinia build-spec --raw > darwinia-dev.json
 # `--simple-governance` will simplify the the governance state for more detail check the `--help`.
 # If some pallets state are too large, you could skip them with this flag: `--skip-pallets System,Staking,Scheduler`.
-subalfred state export wss://rpc.darwinia.network --renew-consensus-with darwinia-dev.json --simple-governance --disable-default-bootnodes -lsubalfred::core::node,subalfred::core::substrate_client
+subalfred state export wss://rpc.darwinia.network --renew-consensus-with darwinia-dev.json --simple-governance --disable-default-bootnodes -lsubalfred_core::node,subalfred_core::substrate_client
 ```
 ```log
-2022-08-27T17:30:15.077768Z TRACE subalfred::core::substrate_client: fetched 512 keys
-2022-08-27T17:30:15.103602Z TRACE subalfred::core::substrate_client: fetched 1024 keys
+2022-08-27T17:30:15.077768Z TRACE subalfred_core::substrate_client: fetched 512 keys
+2022-08-27T17:30:15.103602Z TRACE subalfred_core::substrate_client: fetched 1024 keys
 ...
 ✓ fully exported 152674 pairs, takes 7s
 ```

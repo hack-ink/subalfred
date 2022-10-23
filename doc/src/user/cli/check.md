@@ -131,9 +131,9 @@ subalfred check features --manifest-path /tmp/paritytech/polkadot/runtime/polkad
 ```
 ```
 checking: /tmp/paritytech/polkadot/runtime/polkadot/Cargo.toml
-2022-10-22T06:10:58.626261Z TRACE subalfred::core::check::features: check std takes 0.000408458 secs
-2022-10-22T06:10:58.626636Z TRACE subalfred::core::check::features: check runtime-benchmarks takes 0.000177708 secs
-2022-10-22T06:10:58.626764Z TRACE subalfred::core::check::features: check try-runtime takes 0.0001255 secs
+2022-10-22T06:10:58.626261Z TRACE subalfred_core::check::features: check std takes 0.000408458 secs
+2022-10-22T06:10:58.626636Z TRACE subalfred_core::check::features: check runtime-benchmarks takes 0.000177708 secs
+2022-10-22T06:10:58.626764Z TRACE subalfred_core::check::features: check try-runtime takes 0.0001255 secs
 `std` of `frame-benchmarking` was omitted
 `std` of `pallet-election-provider-support-benchmarking` was omitted
 `std` of `polkadot-primitives` was omitted
