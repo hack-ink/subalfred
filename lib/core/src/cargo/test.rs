@@ -20,7 +20,6 @@ fn members_manifests_should_work() {
 		.map(|pkg| (pkg.name.as_str(), remove_prefix(pkg.manifest_path.as_str())))
 		.collect::<Vec<_>>();
 	let expected = [
-		("subalfred-state-example", "/examples/state/Cargo.toml"),
 		("subalfred", "/Cargo.toml"),
 		("cmd-impl", "/src/command/impl/Cargo.toml"),
 		("subalfred-core", "/lib/core/Cargo.toml"),
