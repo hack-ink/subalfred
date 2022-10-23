@@ -2,6 +2,9 @@ name: Staging
 on:
   workflow_dispatch:
 
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
   build:
     name: Build ${{ matrix.target.name }} package
