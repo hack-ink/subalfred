@@ -1,0 +1,35 @@
+[package]
+authors     = ["Xavier Lau <xavier@inv.cafe>"]
+build       = "build.rs"
+description = "Your Substrate Alfred."
+edition     = "2021"
+homepage    = "https://subalfred.hack.ink"
+license     = "GPL-3.0"
+name        = "subalfred"
+readme      = "README.md"
+repository  = "https://github.com/hack-ink/subalfred"
+version     = "0.9.0"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[[bin]]
+name = "subalfred"
+
+[build-dependencies]
+# crates.io
+vergen = { version = "7.4" }
+
+[dependencies]
+# crates.io
+anyhow             = { version = "1.0" }
+array-bytes        = { version = "4.1" }
+clap               = { version = "4.0", features = ["cargo", "derive", "wrap_help"] }
+tokio              = { version = "1.21", features = ["fs", "macros", "rt-multi-thread", "sync", "time"] }
+tracing-subscriber = { version = "0.3" }
+unescaper          = { version = "0.1" }
+# hack-ink
+cmd-impl       = { version = "0.9", path = "src/command/impl" }
+subalfred-core = { version = "0.9", path = "../../lib/core", features = ["clap"]}
+subhasher      = { version = "0.9", path = "../../substrate-minimal/subhasher" }
+substorager    = { version = "0.9", path = "../../substrate-minimal/substorager" }
