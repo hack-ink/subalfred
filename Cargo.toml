@@ -1,6 +1,5 @@
 [workspace]
 members = [
-	"examples/*",
 	"bin/*",
 	"bin/subalfred/src/command/impl",
 	"lib/*",
