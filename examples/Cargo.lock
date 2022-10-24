@@ -1755,6 +1755,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "sce-check"
+version = "0.0.0"
+
+[[package]]
+name = "sce-state"
+version = "0.0.0"
+dependencies = [
+ "parity-scale-codec",
+ "se-util",
+ "sp-keyring",
+ "subxt",
+ "tokio",
+]
+
+[[package]]
 name = "schannel"
 version = "0.1.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1803,6 +1818,10 @@ dependencies = [
  "ring",
  "untrusted",
 ]
+
+[[package]]
+name = "se-util"
+version = "0.0.0"
 
 [[package]]
 name = "secp256k1"
@@ -2351,21 +2370,6 @@ dependencies = [
  "quote",
  "rustversion",
  "syn",
-]
-
-[[package]]
-name = "subalfred-example-util"
-version = "0.0.0"
-
-[[package]]
-name = "subalfred-state-example"
-version = "0.0.0"
-dependencies = [
- "parity-scale-codec",
- "sp-keyring",
- "subalfred-example-util",
- "subxt",
- "tokio",
 ]
 
 [[package]]

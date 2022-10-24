@@ -1,0 +1,17 @@
+[package]
+authors     = ["Xavier Lau <xavier@inv.cafe>"]
+description = "Subalfred CMD example - state"
+edition     = "2021"
+homepage    = "https://subalfred.hack.ink"
+license     = "GPL-3.0"
+name        = "sce-state"
+readme      = "README.md"
+repository  = "https://github.com/hack-ink/subalfred"
+version     = "0.0.0"
+
+[dependencies]
+parity-scale-codec = { version = "3.2" }
+se-util            = { version = "0.0.0", path = "../../util" }
+sp-keyring         = { version = "6.0" }
+subxt              = { version = "0.24" }
+tokio              = { version = "1.21", features = ["rt-multi-thread"] }
