@@ -34,6 +34,8 @@ subalfred convert bytes-style --from vec-string --to byte-string-literal "[1, 1,
 #### From Byte String Literal to Vec String
 ```sh
 subalfred convert bytes-style --from byte-string-literal --to vec-string "AurevoirXavier"
+```
+```
 [65, 117, 114, 101, 118, 111, 105, 114, 88, 97, 118, 105, 101, 114]
 ```
 ```sh
@@ -55,7 +57,6 @@ subalfred convert bytes2hex "[65, 117, 114, 101, 118, 111, 105, 114, 88, 97, 118
 ```
 0x41757265766f6972586176696572
 ```
-
 
 ## Hex to Bytes
 Convert the hex to bytes.
