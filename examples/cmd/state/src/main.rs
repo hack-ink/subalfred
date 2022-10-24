@@ -5,7 +5,6 @@ use sp_keyring::AccountKeyring;
 use subxt::{tx::PairSigner, OnlineClient, PolkadotConfig};
 use tokio::runtime::Runtime;
 
-
 // ```sh
 // /tmp/subalfred-example/substrate-node-template/target/debug/node-template --dev
 // cargo install subxt-cli
@@ -23,7 +22,7 @@ fn main() {
 
 	if !Path::new(&repository_dir).exists() {
 		// Clone the repository.
-		subalfred_example_util::run(
+		se_util::run(
 			"git",
 			&[
 				"clone",
@@ -36,18 +35,14 @@ fn main() {
 	env::set_current_dir(repository_dir).unwrap();
 	// Build the node template.
 	//
-	// Make sure you meet the compiling requirement.
+	// Make sure you have met the compiling requirement.
 	// Such as, `gcc`, `llvm`, `wasm32-unknown-unknown`, `protobuf` and etc.
-	subalfred_example_util::run("cargo", &["build"]);
+	se_util::run("cargo", &["build"]);
 
-	let node = subalfred_example_util::run_bg(
-		&executable_path,
-		&["-d", &data_dir, "--dev"],
-		Some(&log_path),
-	);
+	let node = se_util::run_bg(&executable_path, &["-d", &data_dir, "--dev"], Some(&log_path));
 
 	// Give some time for the node to boot up.
-	subalfred_example_util::sleep(6000);
+	se_util::sleep(6000);
 	Runtime::new().unwrap().block_on(async {
 		let api = OnlineClient::<PolkadotConfig>::new().await.unwrap();
 		let signer = PairSigner::new(AccountKeyring::Alice.pair());
@@ -57,9 +52,9 @@ fn main() {
 		api.tx().sign_and_submit_default(&tx, &signer).await.unwrap();
 	});
 	// Make sure the extrinsic has been finished.
-	subalfred_example_util::sleep(6000);
+	se_util::sleep(6000);
 	// Export the chain state with Subalfred.
-	subalfred_example_util::run(
+	se_util::run(
 		"subalfred",
 		&[
 			"state",
