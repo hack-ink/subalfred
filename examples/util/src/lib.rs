@@ -7,6 +7,48 @@ use std::{
 	time::Duration,
 };
 
+pub struct ExampleNodeEnv {
+	pub base_dir: String,
+	pub repository_dir: String,
+	pub executable_path: String,
+	pub log_path: String,
+	pub data_dir: String,
+}
+impl ExampleNodeEnv {
+	pub fn setup(with_compiling: bool) -> Self {
+		let current_dir = env::current_dir().unwrap();
+		let base_dir = "/tmp/subalfred-example".into();
+		let repository_dir = format!("{base_dir}/substrate-node-template");
+		let executable_path = format!("{repository_dir}/target/debug/node-template");
+		let log_path = format!("{base_dir}/log");
+		let data_dir = format!("{base_dir}/data");
+
+		if !Path::new(&repository_dir).exists() {
+			// Clone the repository.
+			run(
+				"git",
+				&[
+					"clone",
+					"https://github.com/substrate-developer-hub/substrate-node-template.git",
+					&repository_dir,
+				],
+			);
+		}
+
+		env::set_current_dir(&repository_dir).unwrap();
+		// Build the node template.
+		//
+		// Make sure you have met the compiling requirement.
+		// Such as, `gcc`, `llvm`, `wasm32-unknown-unknown`, `protobuf` and etc.
+		if with_compiling {
+			run("cargo", &["build"]);
+		}
+		env::set_current_dir(current_dir).unwrap();
+
+		Self { base_dir, repository_dir, executable_path, log_path, data_dir }
+	}
+}
+
 pub struct Process {
 	pub child: Option<Child>,
 	pub output: Option<JoinHandle<()>>,
@@ -15,6 +57,15 @@ impl Process {
 	pub fn wait(mut self) {
 		if let Some(mut child) = self.child.take() {
 			child.wait().unwrap();
+		}
+		if let Some(output) = self.output.take() {
+			output.join().unwrap();
+		}
+	}
+
+	pub fn kill(mut self) {
+		if let Some(mut child) = self.child.take() {
+			child.kill().unwrap();
 		}
 		if let Some(output) = self.output.take() {
 			output.join().unwrap();
