@@ -56,10 +56,13 @@ pub enum Cargo {
 	GetNodeFailed,
 	#[error("[core::cargo] failed to get the resolve")]
 	GetResolveFailed,
+	#[error("[core::cargo] failed to get the package with the given id")]
+	GetPackageFailed,
 	#[error("[core::cargo] failed to get the root package")]
 	GetRootPackageFailed,
-	#[error("[core::cargo] failed to open the manifest file")]
-	OpenManifestFailed(#[source] cargo_toml::Error),
+	// TODO: might be useless
+	// #[error("[core::cargo] failed to open the manifest file")]
+	// OpenManifestFailed(#[source] cargo_toml::Error),
 }
 
 /// Generic error.
