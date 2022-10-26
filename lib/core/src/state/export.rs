@@ -122,8 +122,7 @@ pub async fn export(
 		pairs.into_iter().collect()
 	};
 	let pairs_count = pairs.len();
-	let path =
-		renew_consensus_with.to_owned().unwrap_or_else(|| "default-chain-spec.json.export".into());
+	let path = renew_consensus_with.to_owned().unwrap_or_else(|| "default-chain-spec.json".into());
 	let path = Path::new(&path);
 	let mut chain_spec = if path.is_file() {
 		system::read_file_to_struct::<_, ChainSpec>(path)?

@@ -25,6 +25,17 @@ pub trait GetById<'a> {
 	where
 		'a: 'b;
 }
+impl<'a> GetById<'a> for &'a Metadata {
+	type Id = PackageId;
+	type Item = Package;
+
+	fn get_by_id<'b>(self, id: &'b Self::Id) -> Result<&'a Self::Item>
+	where
+		'a: 'b,
+	{
+		Ok(self.packages.iter().find(|pkg| &pkg.id == id).ok_or(error::Cargo::GetPackageFailed)?)
+	}
+}
 impl<'a> GetById<'a> for &'a [Node] {
 	type Id = PackageId;
 	type Item = Node;

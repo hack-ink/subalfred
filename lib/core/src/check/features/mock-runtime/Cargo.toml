@@ -10,24 +10,24 @@ repository  = "https://github.com/hack-ink/subalfred"
 version     = "0.0.0"
 
 [dependencies]
-# crates.io
-array-bytes = { version = "4.1" }
-log         = { version = "0.4" }
-serde       = { version = "1.0", optional = true }
 # hack-ink
-pallet-a    = { default-features = false, path = "pallets/a" }
-pallet-b    = { default-features = false, path = "pallets/b" }
-pallet-c    = { default-features = false, path = "pallets/c" }
-primitive-a = { default-features = false, path = "primitives/a" }
-primitive-b = { default-features = false, path = "primitives/b" }
-primitive-c = { default-features = false, path = "primitives/c" }
+a           = { package = "general-a", default-features = false, path = "general/a" }
+general-b   = { default-features = false, path = "general/b" }
+general-c   = { default-features = false, path = "general/c" }
+pallet-a    = { default-features = false, path = "pallet/a" }
+pallet-b    = { default-features = false, path = "pallet/b" }
+pallet-c    = { default-features = false, path = "pallet/c" }
+primitive-a = { default-features = false, path = "primitive/a" }
+primitive-b = { default-features = false, path = "primitive/b" }
+primitive-c = { default-features = false, path = "primitive/c" }
 
 [features]
 default = ["std"]
 std = [
-	# crates.io
-	"serde",
 	# hack-ink
+	"a/std",
+	"general-b/std",
+	"general-c/std",
 	# "pallet-a/std",
 	"pallet-b/std",
 	"pallet-c/std",
@@ -54,6 +54,7 @@ try-runtime = [
 [workspace]
 exclude = []
 members = [
-	"pallets/*",
-	"primitives/*",
+	"general/*",
+	"pallet/*",
+	"primitive/*",
 ]

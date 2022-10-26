@@ -1,6 +1,7 @@
 // std
-use std::{env, path::Path};
+use std::fs;
 // crates.io
+use se_util::ExampleNodeEnv;
 use sp_keyring::AccountKeyring;
 use subxt::{tx::PairSigner, OnlineClient, PolkadotConfig};
 use tokio::runtime::Runtime;
@@ -14,35 +15,25 @@ use tokio::runtime::Runtime;
 pub mod runtime {}
 
 fn main() {
-	let base_dir = "/tmp/subalfred-example";
-	let repository_dir = format!("{base_dir}/substrate-node-template");
-	let executable_path = format!("{repository_dir}/target/debug/node-template");
-	let log_path = format!("{base_dir}/log");
-	let data_dir = format!("{base_dir}/data");
+	export();
+	// Build the node-template genesis first.
+	// Then we could compare it with the exported one.
+	// /tmp/subalfred-example/substrate-node-template/target/debug/node-template build-spec --dev
+	// --raw > /tmp/subalfred-example/genesis.json
+	diff();
+	fork_off();
+}
 
-	if !Path::new(&repository_dir).exists() {
-		// Clone the repository.
-		se_util::run(
-			"git",
-			&[
-				"clone",
-				"https://github.com/substrate-developer-hub/substrate-node-template.git",
-				&repository_dir,
-			],
-		);
-	}
-
-	env::set_current_dir(repository_dir).unwrap();
-	// Build the node template.
-	//
-	// Make sure you have met the compiling requirement.
-	// Such as, `gcc`, `llvm`, `wasm32-unknown-unknown`, `protobuf` and etc.
-	se_util::run("cargo", &["build"]);
-
+fn export() {
+	let ExampleNodeEnv { base_dir, executable_path, log_path, data_dir, .. } =
+		ExampleNodeEnv::setup(false);
 	let node = se_util::run_bg(&executable_path, &["-d", &data_dir, "--dev"], Some(&log_path));
 
-	// Give some time for the node to boot up.
+	// Make sure the node was fully boot up.
 	se_util::sleep(6000);
+	// Make some changes to the storage.
+	//
+	// Transfer one coin from Alice to Dave.
 	Runtime::new().unwrap().block_on(async {
 		let api = OnlineClient::<PolkadotConfig>::new().await.unwrap();
 		let signer = PairSigner::new(AccountKeyring::Alice.pair());
@@ -52,7 +43,7 @@ fn main() {
 		api.tx().sign_and_submit_default(&tx, &signer).await.unwrap();
 	});
 	// Make sure the extrinsic has been finished.
-	se_util::sleep(6000);
+	se_util::sleep(12000);
 	// Export the chain state with Subalfred.
 	se_util::run(
 		"subalfred",
@@ -68,8 +59,36 @@ fn main() {
 		],
 	);
 
-	// Let node keeps running on the background.
-	//
-	// Use ctrl-c to exit.
-	node.wait();
+	// Default name.
+	let export_file = "default-chain-spec.json.export";
+
+	fs::rename(export_file, format!("{base_dir}/{export_file}")).unwrap();
+
+	node.kill();
+}
+
+fn diff() {
+	se_util::run(
+		"subalfred",
+		&[
+			"state",
+			"diff",
+			"/tmp/subalfred-example/genesis.json",
+			"/tmp/subalfred-example/default-chain-spec.json.export",
+		],
+	);
+}
+
+fn fork_off() {
+	se_util::run(
+		"subalfred",
+		&[
+			"state",
+			"fork-off",
+			"/tmp/subalfred-example/default-chain-spec.json.export",
+			"--renew-consensus-with",
+			"/tmp/subalfred-example/genesis.json",
+			"--disable-default-bootnodes",
+		],
+	);
 }
