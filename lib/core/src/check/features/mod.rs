@@ -38,7 +38,7 @@ pub fn check(manifest_path: &str) -> Result<Vec<(String, Vec<String>)>> {
 		}
 	}
 
-	Ok(omitteds)
+	Ok(problem_pkgs)
 }
 
 fn check_feature(
@@ -46,10 +46,11 @@ fn check_feature(
 	enabled_features: &[String],
 	metadata: &Metadata,
 	root_node: &Node,
+	renamed_pkgs: &[(&str, &str)],
 ) -> Result<Vec<String>> {
 	subalfred_util::execution_timer!(format!("check {feature}"));
 
-	let mut omitteds = Vec::new();
+	let mut problem_pkgs = Vec::new();
 
 	for dep in &root_node.deps {
 		let pkg_id = &dep.pkg;
@@ -68,21 +69,21 @@ fn check_feature(
 
 		// If the dependency has the feature.
 		if pkg.features.iter().any(|(feature_, _)| feature_ == feature) {
-			let mut omitted = true;
+			let mut problem = true;
 
 			for enabled_feature in enabled_features {
 				if enabled_feature.contains(pkg_name) {
-					omitted = false;
+					problem = false;
 
 					break;
 				}
 			}
 
-			if omitted {
-				omitteds.push(pkg_name.to_owned());
+			if problem {
+				problem_pkgs.push(pkg_name.to_owned());
 			}
 		}
 	}
 
-	Ok(omitteds)
+	Ok(problem_pkgs)
 }

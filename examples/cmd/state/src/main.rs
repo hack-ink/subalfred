@@ -1,6 +1,7 @@
 // std
 use std::fs;
 // crates.io
+use se_util::ExampleNodeEnv;
 use sp_keyring::AccountKeyring;
 use subxt::{tx::PairSigner, OnlineClient, PolkadotConfig};
 use tokio::runtime::Runtime;
@@ -17,15 +18,15 @@ fn main() {
 	export();
 	// Build the node-template genesis first.
 	// Then we could compare it with the exported one.
-	// /tmp/subalfred-example/substrate-node-template/target/debug/node-template build-spec --dev --raw >
-	// /tmp/subalfred-example/genesis.json
+	// /tmp/subalfred-example/substrate-node-template/target/debug/node-template build-spec --dev
+	// --raw > /tmp/subalfred-example/genesis.json
 	diff();
 	fork_off();
 }
 
 fn export() {
 	let ExampleNodeEnv { base_dir, executable_path, log_path, data_dir, .. } =
-		ExampleNodeEnv::setup(true);
+		ExampleNodeEnv::setup(false);
 	let node = se_util::run_bg(&executable_path, &["-d", &data_dir, "--dev"], Some(&log_path));
 
 	// Make sure the node was fully boot up.

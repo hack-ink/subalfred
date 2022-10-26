@@ -1757,6 +1757,9 @@ dependencies = [
 [[package]]
 name = "sce-check"
 version = "0.0.0"
+dependencies = [
+ "se-util",
+]
 
 [[package]]
 name = "sce-state"

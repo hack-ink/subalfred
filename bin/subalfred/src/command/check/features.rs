@@ -34,11 +34,11 @@ impl FeaturesCmd {
 
 		let mut check_passed = true;
 
-		features::check(&manifest_path)?.into_iter().for_each(|(feature, omitteds)| {
-			omitteds.into_iter().for_each(|omitted| {
+		features::check(&manifest_path)?.into_iter().for_each(|(feature, problem_pkgs)| {
+			problem_pkgs.into_iter().for_each(|problem_pkg| {
 				check_passed = false;
 
-				println!("`{feature}` of `{omitted}` was omitted")
+				println!("incomplete `{feature}` of `{problem_pkg}`")
 			});
 		});
 
