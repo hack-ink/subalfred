@@ -1,7 +1,7 @@
 #[cfg(test)] mod test;
 
 // crates.io
-use cargo_metadata::{Metadata, Node};
+use cargo_metadata::{DependencyKind, Metadata, Node};
 // hack-ink
 use crate::{
 	cargo::{self, GetById},
@@ -53,6 +53,11 @@ fn check_feature(
 	let mut problem_pkgs = Vec::new();
 
 	for dep in &root_node.deps {
+		// Skip the `[dep-dependencies]`
+		if dep.dep_kinds.iter().any(|kind| matches!(kind.kind, DependencyKind::Development)) {
+			continue;
+		}
+
 		let pkg_id = &dep.pkg;
 		let pkg_name = pkg_id
 			.repr

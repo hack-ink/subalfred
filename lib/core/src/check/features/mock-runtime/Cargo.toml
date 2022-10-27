@@ -13,7 +13,6 @@ version     = "0.0.0"
 # hack-ink
 a           = { package = "general-a", default-features = false, path = "general/a" }
 general-b   = { default-features = false, path = "general/b" }
-general-c   = { default-features = false, path = "general/c" }
 pallet-a    = { default-features = false, path = "pallet/a" }
 pallet-b    = { default-features = false, path = "pallet/b" }
 pallet-c    = { default-features = false, path = "pallet/c" }
@@ -21,13 +20,15 @@ primitive-a = { default-features = false, path = "primitive/a" }
 primitive-b = { default-features = false, path = "primitive/b" }
 primitive-c = { default-features = false, path = "primitive/c" }
 
+[dev-dependencies]
+general-c = { path = "general/c" }
+
 [features]
 default = ["std"]
 std = [
 	# hack-ink
 	"a/std",
 	"general-b/std",
-	"general-c/std",
 	# "pallet-a/std",
 	"pallet-b/std",
 	"pallet-c/std",
