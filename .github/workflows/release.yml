@@ -28,13 +28,8 @@ jobs:
     steps:
       - name: Fetch latest code
         uses: actions/checkout@v3
-      - name: Set Rust toolchain version
-        run: echo "RUST_TOOLCHAIN=$(sed -n '2s/.*"\(.*\)."*$/\1/p' rust-toolchain.toml)" >> $GITHUB_ENV
-      - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: ${{ env.RUST_TOOLCHAIN }}
-          target: ${{ matrix.target.name }}
+      - name: Setup Rust toolchain
+        run: rustup target add ${{ matrix.target.name }}
       - name: Build
         uses: actions-rs/cargo@v1
         with:
