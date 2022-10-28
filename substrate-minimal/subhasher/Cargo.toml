@@ -1,6 +1,6 @@
 [package]
 authors     = ["Xavier Lau <xavier@inv.cafe>"]
-description = "subhasher"
+description = "Minimal implementation of Substrate hasher."
 edition     = "2021"
 homepage    = "https://subalfred.hack.ink"
 license     = "GPL-3.0"
