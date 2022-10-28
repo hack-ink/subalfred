@@ -17,6 +17,7 @@ use std::{
 #[derive(Debug, Default)]
 pub struct StorageKey(pub Vec<u8>);
 impl StorageKey {
+	/// Create an empty [`StorageKey`].
 	pub fn new() -> Self {
 		Default::default()
 	}
@@ -56,14 +57,21 @@ impl From<&[u8]> for StorageKey {
 #[derive(Debug)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub enum StorageHasher {
+	#[allow(missing_docs)]
 	Blake2_128,
+	#[allow(missing_docs)]
 	Blake2_256,
+	#[allow(missing_docs)]
 	Blake2_128Concat,
+	#[allow(missing_docs)]
 	Twox128,
+	#[allow(missing_docs)]
 	Twox256,
+	#[allow(missing_docs)]
 	Twox64Concat,
 }
 impl StorageHasher {
+	/// Hash the data and make it into a [`StorageKey`].
 	pub fn hash(&self, data: &[u8]) -> StorageKey {
 		match self {
 			StorageHasher::Blake2_128 => subhasher::blake2_128(data).into(),
