@@ -9,7 +9,7 @@ use subalfred_core::{check::runtime, node, system};
 /// Compare the local node runtime version with live's.
 #[derive(Debug, Args)]
 pub(crate) struct RuntimeCmd {
-	/// Path to the executable.
+	/// Path to the node executable.
 	#[arg(long, required = true, value_name = "PATH")]
 	executable: String,
 	/// Chain name.
@@ -18,7 +18,7 @@ pub(crate) struct RuntimeCmd {
 	/// Live chain's RPC HTTP endpoint.
 	#[arg(long, required = true, value_name = "URI")]
 	live: String,
-	/// The property to check.
+	/// Property to check.
 	#[arg(value_enum, long, required = true, value_name = "PROPERTY")]
 	property: Property,
 }

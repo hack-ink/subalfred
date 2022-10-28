@@ -52,9 +52,9 @@ pub struct ForkOffConfig {
 	/// It's useful when you want to test the runtime upgrade.
 	///
 	/// It will:
-	/// - Replace the sudo key with `//Alice`, if the pallet existed.
-	/// - Replace the phragmen election and council members with `//Alice`, if the pallet existed.
-	/// - Replace the technical membership and tech.comm members with `//Alice`, if the pallet
+	/// - Replace sudo key with `//Alice`, if the sudo pallet existed.
+	/// - Replace phragmen election and council members with `//Alice`, if the collective pallet existed.
+	/// - Replace technical membership and tech.comm members with `//Alice`, if the membership pallet
 	///   existed.
 	#[cfg_attr(
 		feature = "clap",

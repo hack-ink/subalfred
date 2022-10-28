@@ -1,6 +1,6 @@
 [package]
 authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
-description = "subcryptor"
+description = "Minimal implementation of Substrate crypto."
 edition     = "2021"
 homepage    = "https://subcryptor.hack.ink"
 license     = "GPL-3.0"

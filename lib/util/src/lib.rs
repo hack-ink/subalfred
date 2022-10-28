@@ -33,7 +33,7 @@ pub struct ExecutionTimer<T>
 where
 	T: FnOnce(Instant),
 {
-	/// The start time.
+	/// Start time.
 	pub start: Instant,
 	_tracing: Option<T>,
 }

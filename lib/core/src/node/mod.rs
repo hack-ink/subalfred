@@ -1,4 +1,4 @@
-//! The core library about how Subalfred interacts with Substrate-based node.
+//! Core library about how Subalfred interacts with Substrate-based node.
 
 // std
 use std::{

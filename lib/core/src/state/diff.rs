@@ -33,12 +33,12 @@ where
 
 		// Completely same.
 		}
-		// The keys only appear in a.
+		// Keys only appear in a.
 		else {
 			diff.push(format!("-{a_k}:{a_v}"));
 		}
 	}
-	// The keys only appear in b.
+	// Keys only appear in b.
 	for (k, v) in b {
 		diff.push(format!("+{k}:{v}"));
 	}

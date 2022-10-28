@@ -4,7 +4,7 @@ use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
 use syn::*;
 
-/// The once_call name must end with `_once`.
+/// `once_call`'s name must end with `_once`.
 #[proc_macro_attribute]
 pub fn rpc(_: TokenStream, input: TokenStream) -> TokenStream {
 	let once_call = syn::parse_macro_input!(input as ItemFn);

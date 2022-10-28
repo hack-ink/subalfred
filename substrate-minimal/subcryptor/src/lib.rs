@@ -1,4 +1,4 @@
-//! Minimal implementation of the Substrate crypto.
+//! Minimal implementation of Substrate crypto.
 
 #![warn(missing_docs)]
 
@@ -19,7 +19,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 /// Key trait.
 ///
-/// Currently, it is only used for indicating the key's bytes length.
+/// The only usage of this trait is to indicate the key's bytes length.
 pub trait Key {
 	/// Key's bytes length.
 	const LEN: usize;
@@ -43,7 +43,8 @@ impl Key for Sr25519 {
 
 /// Get the specific network SS58 address of the public key.
 ///
-/// Ref: [`to_ss58check_with_version`](https://github.com/paritytech/substrate/blob/0ba251c9388452c879bfcca425ada66f1f9bc802/primitives/core/src/crypto.rs#L319).
+/// Substrate reference(s):
+/// - [`to_ss58check_with_version`](https://github.com/paritytech/substrate/blob/0ba251c9388452c879bfcca425ada66f1f9bc802/primitives/core/src/crypto.rs#L319)
 pub fn ss58_address_of(public_key: &[u8], network: &str) -> Result<(u16, String)> {
 	let network = Ss58AddressFormat::try_from(network)
 		.map_err(|_| Error::UnsupportedNetwork(network.into()))?;
@@ -76,7 +77,8 @@ pub fn ss58_address_of(public_key: &[u8], network: &str) -> Result<(u16, String)
 
 /// Get the public key of the SS58 address.
 ///
-/// Ref: [`from_ss58check_with_version`](https://github.com/paritytech/substrate/blob/0ba251c9388452c879bfcca425ada66f1f9bc802/primitives/core/src/crypto.rs#L264).
+/// Substrate reference(s):
+/// - [`from_ss58check_with_version`](https://github.com/paritytech/substrate/blob/0ba251c9388452c879bfcca425ada66f1f9bc802/primitives/core/src/crypto.rs#L264)
 pub fn public_key_of<K>(ss58_address: &str) -> Result<Vec<u8>>
 where
 	K: Key,
