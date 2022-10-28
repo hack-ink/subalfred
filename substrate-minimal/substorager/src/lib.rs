@@ -1,3 +1,7 @@
+//! Minimal implementation of Substrate storage.
+
+#![deny(missing_docs)]
+
 // std
 use std::{
 	fmt::{Display, Formatter, Result as FmtResult},
@@ -6,6 +10,10 @@ use std::{
 // crates.io
 #[cfg(feature = "codec")] use parity_scale_codec::{Decode, Encode};
 
+/// Storage key.
+///
+/// Substrate reference(s):
+/// - https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/primitives/storage/src/lib.rs#L35-L43
 #[derive(Debug, Default)]
 pub struct StorageKey(pub Vec<u8>);
 impl StorageKey {
@@ -40,17 +48,11 @@ impl From<&[u8]> for StorageKey {
 		Self(a.to_vec())
 	}
 }
-// impl<S> TryFrom<S> for StorageKey
-// where
-// 	S: AsRef<str>,
-// {
-// 	type Error;
-//
-// 	fn try_from(value: S) -> Result<Self, Self::Error> {
-// 		todo!()
-// 	}
-// }
 
+/// Storage hasher.
+///
+/// Substrate reference(s):
+/// - https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/frame/support/src/hash.rs#L25-L34
 #[derive(Debug)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub enum StorageHasher {
@@ -74,30 +76,33 @@ impl StorageHasher {
 	}
 }
 
-pub fn storage_key(prefix: &[u8], item: &[u8]) -> StorageKey {
+/// Calculate the storage key of a pallet `StorageValue` item.
+pub fn storage_key(pallet: &[u8], item: &[u8]) -> StorageKey {
 	let mut storage_key = Vec::new();
 
-	storage_key.extend_from_slice(&subhasher::twox128(prefix));
+	storage_key.extend_from_slice(&subhasher::twox128(pallet));
 	storage_key.extend_from_slice(&subhasher::twox128(item));
 
 	storage_key.into()
 }
 
-pub fn storage_map_key(prefix: &[u8], item: &[u8], key: (&StorageHasher, &[u8])) -> StorageKey {
-	let mut storage_map_key = storage_key(prefix, item);
+/// Calculate the storage key of a pallet `StorageMap` item.
+pub fn storage_map_key(pallet: &[u8], item: &[u8], key: (&StorageHasher, &[u8])) -> StorageKey {
+	let mut storage_map_key = storage_key(pallet, item);
 
 	storage_map_key.0.extend_from_slice(&key.0.hash(key.1));
 
 	storage_map_key
 }
 
+/// Calculate the storage key of a pallet `StorageDoubleMap` item.
 pub fn storage_double_map_key(
-	prefix: &[u8],
+	pallet: &[u8],
 	item: &[u8],
 	key1: (StorageHasher, &[u8]),
 	key2: (StorageHasher, &[u8]),
 ) -> StorageKey {
-	let mut storage_double_map_key = storage_key(prefix, item);
+	let mut storage_double_map_key = storage_key(pallet, item);
 
 	storage_double_map_key.0.extend_from_slice(&key1.0.hash(key1.1));
 	storage_double_map_key.0.extend_from_slice(&key2.0.hash(key2.1));

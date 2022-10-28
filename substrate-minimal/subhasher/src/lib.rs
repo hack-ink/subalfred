@@ -1,4 +1,4 @@
-//! Minimal implementation of Substrate hasher.
+//! Minimal implementation of Substrate hash.
 
 #![cfg_attr(not(feature = "std"), no_std)]
 #![deny(missing_docs)]
