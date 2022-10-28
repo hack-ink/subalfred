@@ -12,9 +12,6 @@ version     = "0.9.0"
 [lib]
 proc-macro = true
 
-[badges]
-maintenance = { status = "actively-developed" }
-
 [dependencies]
 proc-macro2 = { version = "1.0" }
 quote       = { version = "1.0" }
