@@ -1,6 +1,6 @@
 //! Collections of Subalfred utilities.
 
-#![warn(missing_docs)]
+#![deny(missing_docs)]
 
 // std
 use std::time::Instant;

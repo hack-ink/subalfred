@@ -1,6 +1,6 @@
 //! Minimal implementation of Substrate crypto.
 
-#![warn(missing_docs)]
+#![deny(missing_docs)]
 
 #[cfg(test)] mod test;
 

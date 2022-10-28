@@ -1,3 +1,5 @@
+#![deny(missing_docs)]
+
 // crates.io
 #[cfg(feature = "serde")] use serde::Deserialize;
 
