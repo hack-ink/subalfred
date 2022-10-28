@@ -60,7 +60,6 @@ pub enum StorageHasher {
 	Twox128,
 	Twox256,
 	Twox64Concat,
-	Identity,
 }
 impl StorageHasher {
 	pub fn hash(&self, data: &[u8]) -> StorageKey {
@@ -71,7 +70,6 @@ impl StorageHasher {
 			StorageHasher::Twox128 => subhasher::twox128(data).into(),
 			StorageHasher::Twox256 => subhasher::twox256(data).into(),
 			StorageHasher::Twox64Concat => subhasher::twox64_concat(data).into(),
-			StorageHasher::Identity => subhasher::identity(data).into(),
 		}
 	}
 }
