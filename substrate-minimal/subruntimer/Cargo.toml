@@ -1,6 +1,6 @@
 [package]
 authors     = ["Xavier Lau <xavier@inv.cafe>"]
-description = "subruntimer"
+description = "Minimal implementation of Substrate runtime."
 edition     = "2021"
 homepage    = "https://subalfred.hack.ink"
 license     = "GPL-3.0"

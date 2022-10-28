@@ -1,3 +1,7 @@
+//!
+
+#![deny(missing_docs)]
+
 pub mod author;
 pub mod babe;
 pub mod chain;
@@ -9,7 +13,7 @@ pub mod rpc;
 pub mod state;
 pub mod system;
 
-#[cfg(any(feature = "isahc-client", feature = "reqwest-client"))] pub mod client;
+#[cfg(any(feature = "reqwest-client", feature = "ureq-client"))] pub mod client;
 
 mod prelude {
 	pub use serde::Serialize;

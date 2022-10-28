@@ -20,6 +20,7 @@ pub struct Header<Number, Hash> {
 	pub state_root: Hash,
 	/// Merkle root of the extrinsics.
 	pub extrinsics_root: Hash,
+	// TODO: if we need digest?
 	// /// A chain-specific digest of data useful for light clients or referencing auxiliary data.
 	// pub digest: Digest<Hash>,
 }

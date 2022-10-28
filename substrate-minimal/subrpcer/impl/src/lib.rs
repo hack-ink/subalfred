@@ -1,3 +1,7 @@
+//! subrpcer-impl
+
+#![deny(missing_docs)]
+
 // proc-macro
 use proc_macro::TokenStream;
 // crates.io
