@@ -56,7 +56,18 @@ where
 }
 
 #[test]
+#[tracing_test::traced_test]
 fn execution_timer_should_work() {
-	tracing_subscriber::fmt::init();
-	execution_timer!("execution_timer_should_work");
+	{
+		execution_timer!("test");
+	}
+
+	logs_assert(|log: &[&str]| {
+		let log = &log[0];
+
+		assert!(log.contains("test takes"));
+		assert!(log.contains("secs"));
+
+		Ok(())
+	});
 }
