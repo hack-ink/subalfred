@@ -6,9 +6,9 @@ edition     = "2021"
 homepage    = "https://subalfred.hack.ink"
 license     = "GPL-3.0"
 name        = "subalfred"
-readme      = "README.md"
+readme      = "../../README.md"
 repository  = "https://github.com/hack-ink/subalfred"
-version     = "0.9.0"
+version     = "0.9.0-rc13"
 
 [[bin]]
 name = "subalfred"
@@ -26,7 +26,7 @@ tokio              = { version = "1.21", features = ["macros", "rt-multi-thread"
 tracing-subscriber = { version = "0.3" }
 unescaper          = { version = "0.1" }
 # hack-ink
-cmd-impl       = { version = "0.9", path = "src/command/impl" }
-subalfred-core = { version = "0.9", path = "../../lib/core", features = ["clap"] }
-subhasher      = { version = "0.9", path = "../../substrate-minimal/subhasher" }
-substorager    = { version = "0.9", path = "../../substrate-minimal/substorager" }
+cmd-impl       = { version = "0.9.0-rc13", path = "src/command/impl" }
+subalfred-core = { version = "0.9.0-rc13", path = "../../lib/core", features = ["clap"] }
+subhasher      = { version = "0.9.0-rc13", path = "../../substrate-minimal/subhasher" }
+substorager    = { version = "0.9.0-rc13", path = "../../substrate-minimal/substorager" }
