@@ -8,6 +8,7 @@ Yep, I think that is an interesting question.
 So, I implemented this method.
 
 It uses dichotomy algorithm, the whole process takes:
+
 $$\log_{2} BlockHeight\times Requests$$
 
 ### Examples
