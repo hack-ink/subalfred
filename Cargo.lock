@@ -1550,7 +1550,7 @@ checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
 
 [[package]]
 name = "subalfred"
-version = "0.9.0"
+version = "0.9.0-rc13"
 dependencies = [
  "anyhow",
  "array-bytes",
