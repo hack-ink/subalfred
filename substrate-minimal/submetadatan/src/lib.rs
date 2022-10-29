@@ -1,3 +1,7 @@
+//! Minimal implementation of Substrate metadata.
+
+#![deny(missing_docs)]
+
 mod error;
 pub use error::Error;
 
@@ -11,8 +15,10 @@ use scale_info::{
 	form::PortableForm, interner::UntrackedSymbol, Field, Type, TypeDef, TypeParameter, Variant,
 };
 
+/// Main result.
 pub type Result<T> = std::result::Result<T, Error>;
 
+/// Try extracting [`LatestRuntimeMetadata`] from [`RuntimeMetadataPrefixed`].
 pub fn metadata(metadata: RuntimeMetadataPrefixed) -> Result<LatestRuntimeMetadata> {
 	match metadata.1 {
 		RuntimeMetadata::V14(metadata) => Ok(metadata),
@@ -20,6 +26,7 @@ pub fn metadata(metadata: RuntimeMetadataPrefixed) -> Result<LatestRuntimeMetada
 	}
 }
 
+/// Compare two [`StorageEntryMetadata`] and return the [`bool`] result.
 pub fn cmp_storage_entry(
 	a_types: &PortableRegistry,
 	b_types: &PortableRegistry,
@@ -33,6 +40,7 @@ pub fn cmp_storage_entry(
 		&& cmp_storage_entry_type(a_types, b_types, &a.ty, &b.ty)
 }
 
+/// Compare two [`StorageEntryType`] and return the [`bool`] result.
 pub fn cmp_storage_entry_type(
 	a_types: &PortableRegistry,
 	b_types: &PortableRegistry,
@@ -54,6 +62,7 @@ pub fn cmp_storage_entry_type(
 	}
 }
 
+/// Compare two [`UntrackedSymbol`] and return the [`bool`] result.
 pub fn cmp_untracked_symbol(
 	a_types: &PortableRegistry,
 	b_types: &PortableRegistry,
@@ -63,6 +72,7 @@ pub fn cmp_untracked_symbol(
 	cmp_type(a_types, b_types, a_types.resolve(a.id()), b_types.resolve(b.id()))
 }
 
+/// Compare two [`Type`] and return the [`bool`] result.
 pub fn cmp_type(
 	a_types: &PortableRegistry,
 	b_types: &PortableRegistry,
@@ -83,6 +93,7 @@ pub fn cmp_type(
 	}
 }
 
+/// Compare two [`TypeParameter`] and return the [`bool`] result.
 pub fn cmp_type_params(
 	a_types: &PortableRegistry,
 	b_types: &PortableRegistry,
@@ -115,6 +126,7 @@ pub fn cmp_type_params(
 	true
 }
 
+/// Compare two [`TypeDef`] and return the [`bool`] result.
 pub fn cmp_type_def(
 	a_types: &PortableRegistry,
 	b_types: &PortableRegistry,
@@ -192,6 +204,7 @@ pub fn cmp_type_def(
 	}
 }
 
+/// Compare two [`Field`] and return the [`bool`] result.
 pub fn cmp_fields(
 	a_types: &PortableRegistry,
 	b_types: &PortableRegistry,
@@ -218,6 +231,7 @@ pub fn cmp_fields(
 	true
 }
 
+/// Compare two [`Variant`] and return the [`bool`] result.
 pub fn cmp_variants(
 	a_types: &PortableRegistry,
 	b_types: &PortableRegistry,

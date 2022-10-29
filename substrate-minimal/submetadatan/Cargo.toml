@@ -1,6 +1,6 @@
 [package]
 authors     = ["Xavier Lau <xavier@inv.cafe>"]
-description = "submetadatan"
+description = "Minimal implementation of Substrate metadata."
 edition     = "2021"
 homepage    = "https://subalfred.hack.ink"
 license     = "GPL-3.0"
