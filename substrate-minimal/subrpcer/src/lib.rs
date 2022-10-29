@@ -101,7 +101,7 @@ pub mod rpc;
 pub mod state;
 pub mod system;
 
-#[cfg(any(feature = "reqwest-client", feature = "ureq-client"))] pub mod client;
+#[cfg(any(feature = "reqwest-client", feature = "ureq-client"))] mod client;
 
 // TODO: optimize the option param
 
