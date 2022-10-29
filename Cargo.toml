@@ -4,5 +4,4 @@ members = [
 	"bin/subalfred/src/command/impl",
 	"lib/*",
 	"substrate-minimal/*",
-	"substrate-minimal/*/impl",
 ]

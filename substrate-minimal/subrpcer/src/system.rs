@@ -1,92 +1,35 @@
-// hack-ink
-use crate::prelude::*;
+//! System related methods.
+//!
+//! Substrate reference(s):
+//! - [System API(s)](https://github.com/paritytech/substrate/blob/be259234bfee056bef970ac372e04a74411c5224/client/rpc-api/src/system/mod.rs#L31-L123)
 
-#[subrpcer_impl::rpc]
-pub fn account_next_index_once(account_id: impl Serialize) -> Value {
-	crate::rpc_once("system_accountNextIndex", serde_json::json!([account_id]))
+impl_apis! {
+	system {
+		add_log_filter { params: [directives], opt_params: [] }
+		add_reserved_peer { params: [], opt_params: [] }
+		chain { params: [], opt_params: [] }
+		health { params: [], opt_params: [] }
+		local_listen_addresses { params: [], opt_params: [] }
+		local_peer_id { params: [], opt_params: [] }
+		name { params: [], opt_params: [] }
+		network_state { params: [], opt_params: [] }
+		node_roles { params: [], opt_params: [] }
+		peers { params: [], opt_params: [] }
+		properties { params: [], opt_params: [] }
+		remove_reserved_peer { params: [], opt_params: [] }
+		reserved_peers { params: [], opt_params: [] }
+		reset_log_filter { params: [], opt_params: [] }
+		sync_state { params: [], opt_params: [] }
+		version { params: [], opt_params: [] }
+	}
 }
 
-#[subrpcer_impl::rpc]
-pub fn add_log_filter_once(directives: impl Serialize) -> Value {
-	crate::rpc_once("system_addLogFilter", serde_json::json!([directives]))
+// TODO: because stringify!(r#type) -> "r#type", this will break the macro rules.
+/// Check module's Substrate reference(s) for the detail.
+pub fn r#type(id: usize) -> serde_json::Value {
+	crate::rpc(id, "system_type", serde_json::json!({}))
 }
-
-#[subrpcer_impl::rpc]
-pub fn add_reserved_peer_once(peer: impl Serialize) -> Value {
-	crate::rpc_once("system_addReservedPeer", serde_json::json!([peer]))
-}
-
-#[subrpcer_impl::rpc]
-pub fn chain_once() -> Value {
-	crate::rpc_once("system_chain", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn chain_type_once() -> Value {
-	crate::rpc_once("system_chainType", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn dry_run_once(extrinsic: impl Serialize, at: Option<impl Serialize>) -> Value {
-	crate::rpc_once("system_dryRun", serde_json::json!([extrinsic, at]))
-}
-
-#[subrpcer_impl::rpc]
-pub fn health_once() -> Value {
-	crate::rpc_once("system_health", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn local_listen_addresses_once() -> Value {
-	crate::rpc_once("system_localListenAddresses", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn local_peer_id_once() -> Value {
-	crate::rpc_once("system_localPeerId", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn name_once() -> Value {
-	crate::rpc_once("system_name", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn node_roles_once() -> Value {
-	crate::rpc_once("system_nodeRoles", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn peers_once() -> Value {
-	crate::rpc_once("system_peers", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn properties_once() -> Value {
-	crate::rpc_once("system_properties", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn remove_reserved_peer_once(peer_id: impl Serialize) -> Value {
-	crate::rpc_once("system_removeReservedPeer", serde_json::json!([peer_id]))
-}
-
-#[subrpcer_impl::rpc]
-pub fn reserved_peers_once() -> Value {
-	crate::rpc_once("system_reservedPeers", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn reset_log_filter_once() -> Value {
-	crate::rpc_once("system_resetLogFilter", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn sync_state_once() -> Value {
-	crate::rpc_once("system_syncState", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn version_once() -> Value {
-	crate::rpc_once("system_version", Value::Null)
+/// Similar to [type()], but return the method name and parameters directly.
+pub fn type_raw() -> (&'static str, serde_json::Value) {
+	("system_type", serde_json::json!({}))
 }

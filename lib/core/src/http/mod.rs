@@ -1,4 +1,4 @@
-//! The core library about how Subalfred interacts with HTTP.
+//! Core library about how Subalfred interacts with HTTP.
 
 // std
 use std::sync::Arc;

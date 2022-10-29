@@ -3,7 +3,7 @@ use clap::Args;
 // hack-ink
 use crate::prelude::*;
 
-/// Convert the ascii to hex.
+/// Convert ascii to hex.
 #[derive(Debug, Args)]
 pub(crate) struct Ascii2HexCmd {
 	/// Ascii data input.

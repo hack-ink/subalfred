@@ -1,6 +1,6 @@
 //! Collections of Subalfred utilities.
 
-#![warn(missing_docs)]
+#![deny(missing_docs)]
 
 // std
 use std::time::Instant;
@@ -33,7 +33,7 @@ pub struct ExecutionTimer<T>
 where
 	T: FnOnce(Instant),
 {
-	/// The start time.
+	/// Start time.
 	pub start: Instant,
 	_tracing: Option<T>,
 }

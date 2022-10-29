@@ -3,7 +3,7 @@ use clap::Args;
 // hack-ink
 use crate::prelude::*;
 
-/// Convert the hex to bytes.
+/// Convert hex to bytes.
 #[derive(Debug, Args)]
 pub(crate) struct Hex2BytesCmd {
 	/// Hex input.

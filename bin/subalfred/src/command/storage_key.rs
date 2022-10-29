@@ -4,21 +4,21 @@ use clap::Args;
 use crate::prelude::*;
 
 // TODO: support `StorageNMap`
-/// Calculate the storage key for the storage prefix/item.
+/// Calculate the storage key of storage item.
 #[derive(Debug, Args)]
 pub(crate) struct StorageKeyCmd {
 	/// Prefix of the storage.
 	#[arg(long, required = true, value_name = "PREFIX")]
-	prefix: String,
+	pallet: String,
 	/// Name of the storage item.
 	#[arg(long, required = true, value_name = "ITEM")]
 	item: String,
 }
 impl StorageKeyCmd {
 	pub(crate) fn run(&self) -> Result<()> {
-		let Self { prefix, item } = self;
+		let Self { pallet, item } = self;
 
-		println!("{}", substorager::storage_key(prefix.as_bytes(), item.as_bytes()));
+		println!("{}", substorager::storage_key(pallet.as_bytes(), item.as_bytes()));
 
 		Ok(())
 	}

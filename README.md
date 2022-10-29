@@ -26,7 +26,7 @@
 
 ## Documentations
 ```sh
-# Use the `--help` flag to get more information.
+# Use `--help` flag to get more information.
 subalfred --help
 # Each subcommand also provides its own `--help`.
 subalfred check --help

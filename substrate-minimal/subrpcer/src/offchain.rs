@@ -1,16 +1,11 @@
-// hack-ink
-use crate::prelude::*;
+//! Offchain related methods.
+//!
+//! Substrate reference(s):
+//! - [Offchain API(s)](https://github.com/paritytech/substrate/blob/be259234bfee056bef970ac372e04a74411c5224/client/rpc-api/src/offchain/mod.rs#L26-L36)
 
-#[subrpcer_impl::rpc]
-pub fn local_storage_get_once(kind: impl Serialize, key: impl Serialize) -> Value {
-	crate::rpc_once("offchain_localStorageGet", serde_json::json!([kind, key]))
-}
-
-#[subrpcer_impl::rpc]
-pub fn local_storage_set_once(
-	kind: impl Serialize,
-	key: impl Serialize,
-	value: impl Serialize,
-) -> Value {
-	crate::rpc_once("offchain_localStorageSet", serde_json::json!([kind, key, value]))
+impl_apis! {
+	offchain {
+		local_storage_get { params: [kind, key], opt_params: [] }
+		local_storage_set { params: [kind, key, value], opt_params: [] }
+	}
 }

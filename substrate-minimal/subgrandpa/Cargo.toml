@@ -9,9 +9,6 @@ readme      = "README.md"
 repository  = "https://github.com/hack-ink/subalfred"
 version     = "0.9.0"
 
-[badges]
-maintenance = { status = "actively-developed" }
-
 [dependencies]
 # crates.io
 parity-scale-codec = { version = "3.2", optional = true, features = ["derive"] }

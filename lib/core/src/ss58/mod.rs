@@ -18,7 +18,7 @@ pub struct Address<'a> {
 	pub value: String,
 }
 
-/// Generate the public key and the specific network address for address.
+/// Generate the public key and the specific network address of address.
 ///
 /// `address` could be public key or SS58 address.
 /// `network` is case insensitive.
@@ -31,7 +31,7 @@ pub fn of<'a>(address: &str, network: &'a str) -> Result<(Vec<u8>, String, Addre
 	Ok((public_key, hex_public_key, Address { network, prefix, value: address }))
 }
 
-/// Generate the public key and all the network addresses for the address.
+/// Generate the public key and all the network addresses of the address.
 ///
 /// `address` could be public key or SS58 address.
 pub fn all(address: &str) -> Result<(Vec<u8>, String, Vec<Address>)> {
@@ -49,10 +49,10 @@ pub fn all(address: &str) -> Result<(Vec<u8>, String, Vec<Address>)> {
 	Ok((public_key, hex_public_key, addresses))
 }
 
-/// Recover the public key from the given address.
-///
-/// `address` could be public key or SS58 address.
-/// NO-OP, If the `address` is already a public key.
+// Recover the public key from the given address.
+//
+// `address` could be public key or SS58 address.
+// NO-OP, If the `address` is already a public key.
 fn recover_public_key(address: &str) -> Result<Vec<u8>> {
 	match address.len() {
 		// TODO: support more key types

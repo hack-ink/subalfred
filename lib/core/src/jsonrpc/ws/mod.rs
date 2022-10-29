@@ -80,7 +80,7 @@ impl Initializer {
 		let (tx, rx) = mpsc::channel(self.concurrency_limit);
 
 		tokio::spawn(async move {
-			let system_health_request = serde_json::to_string(&system::health_once()).unwrap();
+			let system_health_request = serde_json::to_string(&system::health(0)).unwrap();
 			let mut rx = rx;
 			// TODO: clean dead items?
 			let mut pool = Pool::new();

@@ -4,16 +4,16 @@ use clap::{Args, ValueEnum};
 use crate::prelude::*;
 use BytesStringKind::*;
 
-/// Convert the bytes between several different styles.
+/// Convert bytes between several different styles.
 #[derive(Debug, Args)]
 pub(crate) struct BytesStyleCmd {
 	/// Bytes input.
 	#[arg(required = true, value_name = "BYTES")]
 	bytes: String,
-	/// The origin style.
+	/// Origin style.
 	#[arg(value_enum, long, required = true, value_name = "BYTES STYLE")]
 	from: BytesStringKind,
-	/// The target style.
+	/// Target style.
 	#[arg(value_enum, long, required = true, value_name = "BYTES STYLE")]
 	to: BytesStringKind,
 }

@@ -1,4 +1,4 @@
-//! The core library about how Subalfred interacts with Substrate-based node.
+//! Core library about how Subalfred interacts with Substrate-based node.
 
 // std
 use std::{
@@ -49,14 +49,14 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 
 /// Get runtime version from node.
 pub async fn runtime_version(uri: &str) -> Result<RuntimeVersion> {
-	Ok(http::send::<_, RuntimeVersion>(uri, &state::get_runtime_version_once(None::<()>))
+	Ok(http::send::<_, RuntimeVersion>(uri, &state::get_runtime_version(0, None::<()>))
 		.await?
 		.result)
 }
 
 /// Fetch runtime metadata from node.
 pub async fn runtime_metadata(uri: &str) -> Result<LatestRuntimeMetadata> {
-	let response = http::send::<_, String>(uri, &state::get_metadata_once()).await?;
+	let response = http::send::<_, String>(uri, &state::get_metadata(0, None::<()>)).await?;
 
 	parse_raw_runtime_metadata(&response.result)
 }

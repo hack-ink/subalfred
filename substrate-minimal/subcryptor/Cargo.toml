@@ -1,6 +1,6 @@
 [package]
 authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
-description = "subcryptor"
+description = "Minimal implementation of Substrate crypto."
 edition     = "2021"
 homepage    = "https://subcryptor.hack.ink"
 license     = "GPL-3.0"
@@ -8,9 +8,6 @@ name        = "subcryptor"
 readme      = "README.md"
 repository  = "https://github.com/hack-ink/subalfred"
 version     = "0.9.0"
-
-[badges]
-maintenance = { status = "actively-developed" }
 
 [dependencies]
 # crates.io

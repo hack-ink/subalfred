@@ -1,4 +1,4 @@
-//! The core library about how Subalfred interacts with OS/System.
+//! Core library about how Subalfred interacts with OS/System.
 
 #[cfg(test)] mod test;
 

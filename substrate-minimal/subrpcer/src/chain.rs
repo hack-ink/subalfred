@@ -1,22 +1,17 @@
-// hack-ink
-use crate::prelude::*;
+//! Chain related methods.
+//!
+//! Substrate reference(s):
+//! - [Chain API(s)](https://github.com/paritytech/substrate/blob/be259234bfee056bef970ac372e04a74411c5224/client/rpc-api/src/chain/mod.rs#L26-L76)
 
-#[subrpcer_impl::rpc]
-pub fn get_block_once(hash: impl Serialize) -> Value {
-	crate::rpc_once("chain_getBlock", serde_json::json!([hash]))
-}
-
-#[subrpcer_impl::rpc]
-pub fn get_block_hash_once(block_number: impl Serialize) -> Value {
-	crate::rpc_once("chain_getBlockHash", serde_json::json!([block_number]))
-}
-
-#[subrpcer_impl::rpc]
-pub fn get_finalized_head_once() -> Value {
-	crate::rpc_once("chain_getFinalizedHead", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn get_header_once(hash: impl Serialize) -> Value {
-	crate::rpc_once("chain_getHeader", serde_json::json!([hash]))
+impl_apis! {
+	chain {
+		get_block { params: [], opt_params: [hash] }
+		get_block_hash { params: [], opt_params: [list_or_value] }
+		get_finalized_head { params: [], opt_params: [] }
+		get_header { params: [], opt_params: [hash] }
+		subscribe_new_heads { params: [], opt_params: [] }
+		unsubscribe_new_heads { params: [subscription_id], opt_params: [] }
+		subscribe_finalized_heads { params: [], opt_params: [] }
+		unsubscribe_finalized_heads { params: [subscription_id], opt_params: [] }
+	}
 }
