@@ -28,7 +28,6 @@ fn members_manifests_should_work() {
 		("subhasher", "/substrate-minimal/subhasher/Cargo.toml"),
 		("submetadatan", "/substrate-minimal/submetadatan/Cargo.toml"),
 		("subrpcer", "/substrate-minimal/subrpcer/Cargo.toml"),
-		("subrpcer-impl", "/substrate-minimal/subrpcer/impl/Cargo.toml"),
 		("subruntimer", "/substrate-minimal/subruntimer/Cargo.toml"),
 		("substorager", "/substrate-minimal/substorager/Cargo.toml"),
 		("subversioner", "/substrate-minimal/subversioner/Cargo.toml"),

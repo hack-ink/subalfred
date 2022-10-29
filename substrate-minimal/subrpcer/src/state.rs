@@ -1,37 +1,26 @@
-// hack-ink
-use crate::prelude::*;
+//! State related methods.
+//!
+//! Substrate reference(s):
+//! - [State API(s)](https://github.com/paritytech/substrate/blob/be259234bfee056bef970ac372e04a74411c5224/client/rpc-api/src/state/mod.rs#L33-L288)
 
-#[subrpcer_impl::rpc]
-pub fn get_keys_paged_once(
-	key: impl Serialize,
-	count: impl Serialize,
-	start_key: Option<impl Serialize>,
-	at: Option<impl Serialize>,
-) -> Value {
-	crate::rpc_once("state_getKeysPaged", serde_json::json!([key, count, start_key, at]))
-}
-
-#[subrpcer_impl::rpc]
-pub fn get_metadata_once() -> Value {
-	crate::rpc_once("state_getMetadata", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn get_runtime_version_once(at: Option<impl Serialize>) -> Value {
-	crate::rpc_once("state_getRuntimeVersion", serde_json::json!([at]))
-}
-
-#[subrpcer_impl::rpc]
-pub fn get_storage_once(key: impl Serialize, at: Option<impl Serialize>) -> Value {
-	crate::rpc_once("state_getStorage", serde_json::json!([key, at]))
-}
-
-#[subrpcer_impl::rpc]
-pub fn subscribe_storage_once(storage_keys: impl Serialize) -> Value {
-	crate::rpc_once("state_subscribeStorage", serde_json::json!([storage_keys]))
-}
-
-#[subrpcer_impl::rpc]
-pub fn unsubscribe_storage_once(subscription_id: impl Serialize) -> Value {
-	crate::rpc_once("state_unsubscribeStorage", serde_json::json!([subscription_id]))
+impl_apis! {
+	state {
+		call { params: [name, bytes], opt_params: [hash] }
+		get_keys { params: [prefix], opt_params: [hash] }
+		get_keys_paged { params: [count], opt_params: [prefix, start_key, hash] }
+		get_metadata { params: [], opt_params: [hash] }
+		get_pairs { params: [prefix], opt_params: [hash] }
+		get_read_proof { params: [keys], opt_params: [hash] }
+		get_runtime_version { params: [], opt_params: [hash] }
+		get_storage { params: [key], opt_params: [hash] }
+		get_storage_hash { params: [key], opt_params: [hash] }
+		get_storage_size { params: [key], opt_params: [hash] }
+		query_storage { params: [keys, block], opt_params: [hash] }
+		query_storage_at { params: [keys], opt_params: [at] }
+		subscribe_runtime_version { params: [], opt_params: [] }
+		subscribe_storage { params: [], opt_params: [keys] }
+		trace_block { params: [block], opt_params: [targets, storage_keys, methods] }
+		unsubscribe_runtime_version { params: [subscription_id], opt_params: [] }
+		unsubscribe_storage { params: [subscription_id], opt_params: [] }
+	}
 }

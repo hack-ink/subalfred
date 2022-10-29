@@ -1,17 +1,13 @@
-// hack-ink
-use crate::prelude::*;
+//! GRANDPA related methods.
+//!
+//! Substrate reference(s):
+//! TODO: find the reference(s)
+//! - [Net API(s)](#)
 
-#[subrpcer_impl::rpc]
-pub fn listening_once() -> Value {
-	crate::rpc_once("net_listening", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn peer_count_once() -> Value {
-	crate::rpc_once("net_peerCount", Value::Null)
-}
-
-#[subrpcer_impl::rpc]
-pub fn version_once() -> Value {
-	crate::rpc_once("net_version", Value::Null)
+impl_apis! {
+	net {
+		listening { params: [], opt_params: [] }
+		peer_count { params: [], opt_params: [] }
+		version { params: [], opt_params: [] }
+	}
 }

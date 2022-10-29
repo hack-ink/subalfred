@@ -52,8 +52,8 @@ impl Client {
 			let response = self
 				.ws
 				.request::<Vec<String>, _>(state::get_keys_paged_raw(
-					&prefix,
 					PAGE_SIZE,
+					Some(&prefix),
 					start_key.as_ref(),
 					at.as_ref(),
 				))
@@ -105,7 +105,7 @@ impl BasicApi for Client {
 	}
 
 	async fn get_runtime_metadata(&self) -> Result<String> {
-		Ok(self.ws.request(state::get_metadata_raw()).await?.result)
+		Ok(self.ws.request(state::get_metadata_raw(None::<()>)).await?.result)
 	}
 
 	async fn get_header<BlockNumber, Hash>(

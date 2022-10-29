@@ -1,12 +1,11 @@
-// hack-ink
-use crate::prelude::*;
+//! Payment related methods.
+//!
+//! Substrate reference(s):
+//! - [Payment API(s)](https://github.com/paritytech/substrate/blob/be259234bfee056bef970ac372e04a74411c5224/frame/transaction-payment/rpc/src/lib.rs#L40-L51)
 
-#[subrpcer_impl::rpc]
-pub fn query_fee_details_once(extrinsic: impl Serialize, at: Option<impl Serialize>) -> Value {
-	crate::rpc_once("payment_queryFeeDetails", serde_json::json!([extrinsic, at]))
-}
-
-#[subrpcer_impl::rpc]
-pub fn query_info_once(extrinsic: impl Serialize, at: Option<impl Serialize>) -> Value {
-	crate::rpc_once("payment_queryInfo", serde_json::json!([extrinsic, at]))
+impl_apis! {
+	payment {
+		query_info { params: [encoded_tx], opt_params: [at] }
+		query_fee_details { params: [encoded_tx], opt_params: [at] }
+	}
 }
