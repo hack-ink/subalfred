@@ -6,19 +6,19 @@ use clap::{Args, ValueEnum};
 use crate::prelude::*;
 use subalfred_core::{check::runtime, node, system};
 
-/// Compare the local node runtime version with live's.
+/// Compare the local node's runtime version with the live's one.
 #[derive(Debug, Args)]
 pub(crate) struct RuntimeCmd {
 	/// Path to the node executable.
 	#[arg(long, required = true, value_name = "PATH")]
 	executable: String,
-	/// Chain name.
+	/// Pass this name to `--chain` to launch the local chain.
 	#[arg(long, required = true, value_name = "NAME")]
 	chain: String,
-	/// Live chain's RPC HTTP endpoint.
+	/// Live chain's HTTP RPC endpoint.
 	#[arg(long, required = true, value_name = "URI")]
 	live: String,
-	/// Property to check.
+	/// Target property.
 	#[arg(value_enum, long, required = true, value_name = "PROPERTY")]
 	property: Property,
 }

@@ -7,7 +7,7 @@ use BytesStringKind::*;
 /// Convert bytes between several different styles.
 #[derive(Debug, Args)]
 pub(crate) struct BytesStyleCmd {
-	/// Bytes input.
+	/// Bytes data input.
 	#[arg(required = true, value_name = "BYTES")]
 	bytes: String,
 	/// Origin style.

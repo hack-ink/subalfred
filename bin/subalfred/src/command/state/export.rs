@@ -4,12 +4,12 @@ use clap::Args;
 use crate::prelude::*;
 use subalfred_core::state::{self, ForkOffConfig};
 
-/// Export the chain state.
+/// Export the chain state from the Substrate-like node through the WS RPC endpoint.
 ///
-/// The result will be store at `<a>.export`.
+/// The result will be stored at `<a>.export`.
 #[derive(Debug, Args)]
 pub(crate) struct ExportCmd {
-	/// Live chain's RPC HTTP endpoint.
+	/// Live chain's HTTP RPC endpoint.
 	#[arg(required = true, value_name = "URI")]
 	live: String,
 	/// Export the data starting from this block.

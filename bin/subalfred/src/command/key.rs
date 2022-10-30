@@ -11,22 +11,22 @@ use subalfred_core::{
 
 type ChainId = u32;
 
-/// Convert the public key/SS58 address from SS58 address/public key.
+/// Calculate the public key/SS58 address of the SS58 address/public key.
 #[derive(Debug, Args)]
 pub(crate) struct KeyCmd {
-	/// Public key or SS58 address.
+	/// Public key/SS58 address.
 	#[arg(required = true, value_name = "PUBLIC KEY/SS58 ADDRESS")]
 	key: String,
-	/// The key type.
+	/// Key type.
 	#[arg(value_enum, long, value_name = "KEY TYPE")]
 	r#type: Option<KeyType>,
-	/// Network address format.
+	/// Network name.
 	#[arg(long, value_name = "NAME", default_value = "Substrate", conflicts_with = "list_all")]
 	network: String,
 	/// List all the networks' addresses.
 	#[arg(long, num_args = 0, conflicts_with = "network")]
 	list_all: bool,
-	/// Show the network(s)' prefix(es).
+	/// Show network(s) prefix(es).
 	#[arg(long, num_args = 0)]
 	show_prefix: bool,
 }

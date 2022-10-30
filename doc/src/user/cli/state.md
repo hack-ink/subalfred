@@ -36,7 +36,7 @@ subalfred state diff b.json a.json
 ## Export
 Export the chain state from a live chain.
 
-The result will be store at `<a>.export`.
+The result will be stored at `<a>.export`.
 
 ### Examples
 For convenience, I use the [Darwinia Network] to demonstrate.
@@ -118,7 +118,7 @@ It's a really useful testing tool.
 ## Fork-Off
 This is very similar to the `export` command. But this command can build a fork-off chain even offline.
 
-The result will be store at `<a>.fork-off`.
+The result will be stored at `<a>.fork-off`.
 
 Sometimes, you have already running a node yourself.
 So, you don't want to fetch the state from a live chain, which is slow.
@@ -151,7 +151,7 @@ Override state a with b.
 
 In fact, it accepts two chain spec files. So, make sure JSON file contains the `object["genesis"]["raw"]["top]` field.
 
-The result will be store at `<a>.override`.
+The result will be stored at `<a>.override`.
 
 ### Examples
 ```sh

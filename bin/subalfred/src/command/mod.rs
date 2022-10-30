@@ -19,7 +19,6 @@ use state::StateCmd;
 mod storage_key;
 use storage_key::StorageKeyCmd;
 
-// TODO: move to a single crate
 mod workspace;
 use workspace::WorkspaceCmd;
 

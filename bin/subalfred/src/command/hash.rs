@@ -3,10 +3,10 @@ use clap::{Args, ValueEnum};
 // hack-ink
 use crate::prelude::*;
 
-/// Hash the hex with the specific hasher.
+/// Hash the hex with the specific hasher(hash algorithm).
 #[derive(Debug, Args)]
 pub(crate) struct HashCmd {
-	/// Hex to be hashed.
+	/// Hex data input.
 	#[arg(required = true, value_name = "HEX")]
 	hex: String,
 	/// Hash algorithm.
