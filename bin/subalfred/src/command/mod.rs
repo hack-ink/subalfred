@@ -13,6 +13,9 @@ use hash::HashCmd;
 mod key;
 use key::KeyCmd;
 
+mod rpc;
+use rpc::RpcCmd;
+
 mod state;
 use state::StateCmd;
 
@@ -33,6 +36,7 @@ pub(crate) enum Cmd {
 	Get,
 	Hash,
 	Key,
+	Rpc,
 	#[command(subcommand)]
 	State,
 	StorageKey,
