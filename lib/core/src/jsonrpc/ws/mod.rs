@@ -227,7 +227,7 @@ impl Default for Initializer {
 	}
 }
 
-/// Ws instance.
+/// A Ws instance.
 ///
 /// Use this to interact with the server.
 pub struct Ws {
@@ -395,13 +395,13 @@ enum Call {
 	Batch(RawCall<BatchNotifier>),
 }
 
-/// A single request object.
-/// `id`: Request Id.
+// A single request object.
+// `id`: Request Id.
 //
-/// Or
-///
-/// A batch requests object to send several request objects simultaneously.
-/// `id`: The first request's id.
+// Or
+//
+// A batch requests object to send several request objects simultaneously.
+// `id`: The first request's id.
 #[derive(Debug)]
 struct RawCall<N> {
 	id: Id,
