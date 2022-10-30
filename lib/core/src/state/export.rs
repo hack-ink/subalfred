@@ -1,10 +1,7 @@
 //! Export core library.
 
 // std
-use std::{
-	path::Path,
-	time::{Duration, Instant},
-};
+use std::{path::Path, time::Duration};
 // crates.io
 use fxhash::FxHashSet;
 // hack-ink
@@ -31,15 +28,24 @@ pub async fn export(
 	skip_pallets: &[String],
 	fork_off_config: &ForkOffConfig,
 ) -> Result<()> {
-	let ForkOffConfig { renew_consensus_with, simple_governance, disable_default_bootnodes } =
-		fork_off_config;
-	let start_time = Instant::now();
+	subalfred_util::execution_timer!("state::export");
+
 	let client = Client::initialize(
 		Initializer::new().request_timeout(Duration::from_secs(timeout as _)),
 		uri,
 	)
 	.await?;
-	let at = if at.is_some() { at } else { Some(client.get_finalized_head().await?) };
+	let at = if at.is_some() {
+		if let Ok(at) = at.as_ref().unwrap().parse::<u32>() {
+			Some(client.get_block_hash(Some(at)).await?)
+		} else {
+			at
+		}
+	} else {
+		Some(client.get_finalized_head().await?)
+	};
+	let ForkOffConfig { renew_consensus_with, simple_governance, disable_default_bootnodes } =
+		fork_off_config;
 	let pairs = if all {
 		client.get_pairs_paged(StorageKey::new(), at).await?
 	} else {
@@ -159,7 +165,7 @@ pub async fn export(
 
 	super::write_to_custom_extension_file(path, "export", chain_spec)?;
 
-	println!("✓ fully exported {pairs_count} pairs, takes {}s", start_time.elapsed().as_secs());
+	println!("✓ fully exported {pairs_count} pairs");
 
 	Ok(())
 }

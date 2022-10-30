@@ -26,7 +26,7 @@ pub(crate) struct ExportCmd {
 	/// The default behaviour (without this option) is fetching according to metadata's pallet
 	/// storage records, which means if there is any old storage prefix that can not be found in
 	/// the current runtime's pallet storage names will be ignored.
-	#[arg(verbatim_doc_comment, long, num_args = 0, conflicts_with_all = &["skip-pallets", "renew-consensus-with", "simple-governance"])]
+	#[arg(verbatim_doc_comment, long, num_args = 0, conflicts_with_all = &["skip_pallets", "renew_consensus_with", "simple_governance"])]
 	all: bool,
 	/// Skip these pallets, while fetching.
 	///
