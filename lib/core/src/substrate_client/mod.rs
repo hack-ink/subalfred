@@ -1,4 +1,4 @@
-//! Substrate-Base API client implementation.
+//! //! Subalfred core Substrate client library.
 
 // TODO: maybe HTTP
 

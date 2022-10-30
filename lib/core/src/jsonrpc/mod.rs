@@ -1,4 +1,4 @@
-//! Core library about how Subalfred interacts with JSONRPC.
+//! Subalfred core JSONRPC library.
 
 pub mod http;
 pub mod ws;

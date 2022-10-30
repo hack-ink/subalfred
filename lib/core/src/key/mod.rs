@@ -1,4 +1,4 @@
-//! Substrate keys implementations.
+//! Subalfred core key library.
 
 // std
 use std::{

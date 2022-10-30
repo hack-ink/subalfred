@@ -3,7 +3,7 @@
 //! Subalfred CLI start entry point.
 
 mod prelude {
-	pub use ::std::result::Result as StdResult;
+	pub use std::result::Result as StdResult;
 
 	pub use anyhow::Result;
 

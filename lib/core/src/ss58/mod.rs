@@ -1,4 +1,4 @@
-//! SS58-prefix address algorithm implementation.
+//! Subalfred core SS58 library.
 
 #[cfg(test)] mod test;
 

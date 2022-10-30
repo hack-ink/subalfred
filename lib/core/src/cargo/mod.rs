@@ -1,4 +1,4 @@
-//! Core library about how Subalfred interacts with Cargo.
+//! Subalfred core Cargo library.
 
 #[cfg(test)] mod test;
 

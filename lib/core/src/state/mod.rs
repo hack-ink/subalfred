@@ -1,4 +1,4 @@
-//! State core library.
+//! Subalfred core runtime state library.
 
 pub mod diff;
 pub use diff::*;
