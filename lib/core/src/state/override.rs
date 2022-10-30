@@ -5,7 +5,7 @@ use std::path::Path;
 // hack-ink
 use crate::prelude::*;
 
-/// Override state a with b.
+/// Override the state a with b.
 pub fn r#override<P>(a: P, b: P) -> Result<()>
 where
 	P: Send + AsRef<Path>,

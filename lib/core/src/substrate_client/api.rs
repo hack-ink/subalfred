@@ -3,9 +3,9 @@
 // subalfred
 use crate::prelude::*;
 
-///  Substrate-like basic API collections.
+/// Substrate-like basic API collections.
 #[async_trait::async_trait]
-pub trait BasicApi {
+pub trait Apis {
 	/// TODO: doc
 	async fn get_block_hash<BlockNumber>(
 		&self,
@@ -43,7 +43,4 @@ pub trait BasicApi {
 		prefix: substorager::StorageKey,
 		at: Option<String>,
 	) -> Result<Vec<(String, String)>>;
-
-	// async fn get_keys_paged(&self, prefix: substorager::StorageKey, at: Option<String>) ->
-	// Result<Vec<String>>;
 }

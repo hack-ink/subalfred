@@ -1,4 +1,4 @@
-//! Minimal JSONRPC HTTP client implementation.
+//! Minimal HTTP JSONRPC client implementation.
 
 #[cfg(test)] mod test;
 
