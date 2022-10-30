@@ -41,7 +41,7 @@ impl Key for Sr25519 {
 	const LEN: usize = 32;
 }
 
-/// Try to get the specific network SS58 address of the public key.
+/// Get the specific network SS58 address of the public key.
 ///
 /// Substrate reference(s):
 /// - https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/primitives/core/src/crypto.rs#L315-L336
@@ -75,7 +75,7 @@ pub fn ss58_address_of(public_key: &[u8], network: &str) -> Result<(u16, String)
 	Ok((prefix, bytes.to_base58()))
 }
 
-/// Try to get the public key of the SS58 address.
+/// Get the public key of the SS58 address.
 ///
 /// Substrate reference(s):
 /// - https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/primitives/core/src/crypto.rs#L260-L302

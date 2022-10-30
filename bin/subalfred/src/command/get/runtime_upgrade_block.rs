@@ -4,7 +4,7 @@ use clap::Args;
 use crate::prelude::*;
 use subalfred_core::node;
 
-/// Try to get the runtime upgrade block.
+/// Get the runtime upgrade block.
 ///
 /// Using the dichotomy algorithm to find it out.
 /// This operation will fail if the runtime version does not existed.

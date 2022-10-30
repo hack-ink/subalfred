@@ -15,10 +15,12 @@ use tokio::{fs::File as FileAsync, io::AsyncReadExt};
 // hack-ink
 use crate::prelude::*;
 
-/// System port.
+/// System port type.
+///
+/// Basically, it is a [`u16`].
 pub type Port = u16;
 
-/// Read the file's content to [`String`].
+/// Read the file's content into a [`String`].
 pub fn read_file_to_string<P>(path: P) -> Result<String>
 where
 	P: AsRef<Path>,
@@ -43,7 +45,7 @@ where
 	Ok(content)
 }
 
-/// Read the file's content to [`Vec<u8>`].
+/// Read the file's content into a [`Vec<u8>`].
 pub fn read_file_to_vec<P>(path: P) -> Result<Vec<u8>>
 where
 	P: AsRef<Path>,
@@ -68,7 +70,7 @@ where
 	Ok(content)
 }
 
-/// Read the file's content to a struct, which implemented [`DeserializeOwned`].
+/// Read the file's content into a struct implemented [`DeserializeOwned`].
 pub fn read_file_to_struct<P, T>(path: P) -> Result<T>
 where
 	P: AsRef<Path>,
@@ -111,7 +113,10 @@ where
 	Ok(result)
 }
 
-/// Write the data to the given path file.
+/// Write the data to file at the given path.
+///
+/// If the file has already existed, then it will be overwritten.
+/// Otherwise, this will create a file at the given path.
 pub fn write_data_to_file<P>(path: P, data: &[u8]) -> Result<()>
 where
 	P: AsRef<Path>,
@@ -123,7 +128,7 @@ where
 
 /// Swap the file's data with the given one.
 ///
-/// This function will create a temporary file first. Then perform the file-swapping.
+/// This will create a temporary file first, then perform the file-swapping.
 pub fn swap_file_data<P>(path: P, data: &[u8]) -> Result<()>
 where
 	P: AsRef<Path>,
@@ -147,9 +152,9 @@ where
 	Some(path.with_file_name(format!(".{file_name}.swp")))
 }
 
-/// Search a available port.
+/// Search an available port.
 ///
-/// Skip the system ports, starting from 1001.
+/// Skip the system used ports, starting from 1001.
 pub fn random_available_port() -> Result<Port> {
 	for port in 1025..Port::MAX {
 		if TcpListener::bind(("127.0.0.1", port)).is_ok() {

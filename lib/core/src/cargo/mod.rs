@@ -57,17 +57,17 @@ pub fn metadata(manifest_path: &str) -> Result<Metadata> {
 		.map_err(error::Cargo::ExecMetadataFailed)?)
 }
 
-/// Try to get the metadata's root package.
+/// Get the metadata's root package.
 pub fn root_package(metadata: &Metadata) -> Result<&Package> {
 	Ok(metadata.root_package().ok_or(error::Cargo::GetRootPackageFailed)?)
 }
 
-/// Try to get the metadata's resolve.
+/// Get the metadata's resolve.
 pub fn resolve(metadata: &Metadata) -> Result<&Resolve> {
 	Ok(metadata.resolve.as_ref().ok_or(error::Cargo::GetResolveFailed)?)
 }
 
-/// Try to get all the workspace members from the workspace metadata.
+/// Get all the workspace members from the workspace metadata.
 pub fn members(metadata: &Metadata) -> Option<Vec<&Package>> {
 	metadata.workspace_members.iter().map(|id| util::find_package(metadata, id)).collect()
 }
