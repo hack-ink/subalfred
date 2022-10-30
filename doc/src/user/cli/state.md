@@ -111,7 +111,7 @@ darwinia --chain darwinia-dev.json.export --alice --tmp
 2022-08-25 15:32:41 💤 Idle (0 peers), best: #4 (0xfd60…b2f2), finalized #2 (0x6027…c86e), ⬇ 14 B/s ⬆ 0
 ```
 
-With the `--simple-governance` flag, you could perform a runtime upgrade test though sudo or council locally.
+With the `--simple-governance` flag, you could perform a runtime upgrade test through sudo or council locally.
 
 It's a really useful testing tool.
 

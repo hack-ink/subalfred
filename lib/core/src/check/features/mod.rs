@@ -1,3 +1,5 @@
+//! Cargo features checker.
+
 #[cfg(test)] mod test;
 
 // crates.io
