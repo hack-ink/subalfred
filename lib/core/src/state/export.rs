@@ -44,7 +44,7 @@ pub async fn export(
 		client.get_pairs_paged(StorageKey::new(), at).await?
 	} else {
 		let runtime_metadata =
-			node::parse_raw_runtime_metadata(&client.get_runtime_metadata().await?)?;
+			node::parse_raw_runtime_metadata(&client.get_metadata(at.clone()).await?)?;
 		let mut pallets = runtime_metadata
 			.pallets
 			.iter()

@@ -27,7 +27,9 @@ pub trait Apis {
 		Hash: Send + serde::Serialize + serde::de::DeserializeOwned;
 
 	/// TODO: doc
-	async fn get_runtime_metadata(&self) -> Result<String>;
+	async fn get_metadata<Hash>(&self, at: Option<Hash>) -> Result<String>
+	where
+		Hash: Send + serde::Serialize;
 
 	/// TODO: doc
 	async fn get_runtime_version<Hash>(

@@ -90,6 +90,7 @@ impl Client {
 		}
 	}
 }
+// TODO: if we could use ref params here
 #[async_trait::async_trait]
 impl Apis for Client {
 	async fn get_block_hash<BlockNumber>(&self, block_number: Option<BlockNumber>) -> Result<String>
@@ -103,8 +104,11 @@ impl Apis for Client {
 		Ok(self.ws.request(chain::get_finalized_head_raw()).await?.result)
 	}
 
-	async fn get_runtime_metadata(&self) -> Result<String> {
-		Ok(self.ws.request(state::get_metadata_raw(None::<()>)).await?.result)
+	async fn get_metadata<Hash>(&self, at: Option<Hash>) -> Result<String>
+	where
+		Hash: Send + serde::Serialize,
+	{
+		Ok(self.ws.request(state::get_metadata_raw(at)).await?.result)
 	}
 
 	async fn get_header<BlockNumber, Hash>(
