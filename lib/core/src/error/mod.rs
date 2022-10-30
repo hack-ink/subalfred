@@ -60,9 +60,6 @@ pub enum Cargo {
 	GetPackageFailed,
 	#[error("[core::cargo] failed to get the root package")]
 	GetRootPackageFailed,
-	// TODO: might be useless
-	// #[error("[core::cargo] failed to open the manifest file")]
-	// OpenManifestFailed(#[source] cargo_toml::Error),
 }
 
 /// Generic error.
