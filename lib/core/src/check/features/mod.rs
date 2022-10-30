@@ -50,7 +50,7 @@ fn check_feature(
 	root_node: &Node,
 	renamed_pkgs: &[(&str, &str)],
 ) -> Result<Vec<String>> {
-	subalfred_util::execution_timer!(format!("check {feature}"));
+	subalfred_util::execution_timer!(format!("check::features::{feature}"));
 
 	let mut problem_pkgs = Vec::new();
 
