@@ -13,12 +13,16 @@ use crate::{
 	jsonrpc::ws::Initializer,
 	node,
 	prelude::*,
-	substrate_client::{BasicApi, Client},
+	substrate_client::{Apis, Client},
 	system,
 };
 use substorager::StorageKey;
 
-/// Export the chain state..
+/// Export the chain state from a node's WS RPC endpoint at a specific block height.
+///
+/// If `at` is `None`, this will start from the latest block.
+/// Use `skip_pallets` to skip the exporting of some pallets, we usually use this when the pallet's
+/// data is too large.
 pub async fn export(
 	uri: &str,
 	at: Option<String>,

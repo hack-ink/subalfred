@@ -1,4 +1,4 @@
-//! SS58-prefix address algorithm implementation.
+//! Subalfred core SS58 library.
 
 #[cfg(test)] mod test;
 
@@ -18,9 +18,9 @@ pub struct Address<'a> {
 	pub value: String,
 }
 
-/// Generate the public key and the specific network address of address.
+/// calculate the public key of the address and the network's corresponding address.
 ///
-/// `address` could be public key or SS58 address.
+/// `address` could be a public key or SS58 address.
 /// `network` is case insensitive.
 pub fn of<'a>(address: &str, network: &'a str) -> Result<(Vec<u8>, String, Address<'a>)> {
 	let public_key = recover_public_key(address)?;
@@ -31,9 +31,9 @@ pub fn of<'a>(address: &str, network: &'a str) -> Result<(Vec<u8>, String, Addre
 	Ok((public_key, hex_public_key, Address { network, prefix, value: address }))
 }
 
-/// Generate the public key and all the network addresses of the address.
+/// calculate the public key and all the specific network addresses of the network.
 ///
-/// `address` could be public key or SS58 address.
+/// `address` could be a public key or SS58 address.
 pub fn all(address: &str) -> Result<(Vec<u8>, String, Vec<Address>)> {
 	let public_key = recover_public_key(address)?;
 	let hex_public_key = array_bytes::bytes2hex("0x", &public_key);
@@ -51,7 +51,7 @@ pub fn all(address: &str) -> Result<(Vec<u8>, String, Vec<Address>)> {
 
 // Recover the public key from the given address.
 //
-// `address` could be public key or SS58 address.
+// `address` could be a public key or SS58 address.
 // NO-OP, If the `address` is already a public key.
 fn recover_public_key(address: &str) -> Result<Vec<u8>> {
 	match address.len() {

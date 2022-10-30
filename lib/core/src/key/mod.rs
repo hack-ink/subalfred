@@ -1,4 +1,4 @@
-//! Substrate keys implementations.
+//! Subalfred core key library.
 
 // std
 use std::{
@@ -10,7 +10,7 @@ use parity_scale_codec::{Decode, Encode};
 // hack-ink
 use crate::prelude::*;
 
-/// Substrate/Polkadot keys like.
+/// Substrate-like key trait.
 pub trait Key
 where
 	Self: Sized,
@@ -24,7 +24,7 @@ where
 	/// Sub-seed, used to derive the key.
 	fn sub_seed(self) -> Self::SubSeed;
 
-	/// Convert the [`KeyTypeId`] to `[u8; N]`
+	/// Convert the [`KeyTypeId`] into `[u8; N]`.
 	fn to_key<const N: usize>(self) -> Result<[u8; N]> {
 		let mut result = [0; N];
 		let sub_seed = self.sub_seed();
@@ -92,13 +92,13 @@ macro_rules! impl_keys {
 	};
 }
 impl_keys! {
-	#[doc="Unique identifier of a pallet, aka `ModuleId`."]
+	#[doc="Identifier of a pallet, aka `ModuleId`."]
 	#[id=*b"modl"]
 	PalletId([u8; 8]),
-	#[doc="Unique identifier of a parachain."]
+	#[doc="Identifier of a parachain."]
 	#[id=*b"para"]
 	ParaId(u32),
-	#[doc="Unique identifier of a sibling chain."]
+	#[doc="Identifier of a sibling chain."]
 	#[id=*b"sibl"]
 	SiblId(u32),
 }

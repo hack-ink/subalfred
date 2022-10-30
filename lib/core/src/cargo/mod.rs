@@ -1,4 +1,4 @@
-//! Core library about how Subalfred interacts with Cargo.
+//! Subalfred core Cargo library.
 
 #[cfg(test)] mod test;
 
@@ -13,7 +13,7 @@ use regex::Captures;
 // hack-ink
 use crate::{prelude::*, system};
 
-/// Get the item from the given source by id.
+/// Provide a method to get the item by id from specific source.
 pub trait GetById<'a> {
 	/// Id type.
 	type Id;
@@ -72,19 +72,10 @@ pub fn members(metadata: &Metadata) -> Option<Vec<&Package>> {
 	metadata.workspace_members.iter().map(|id| util::find_package(metadata, id)).collect()
 }
 
-// TODO: might be useless
-// /// Read the [`Manifest`] from the given path.
-// pub fn manifest<P>(path: P) -> Result<Manifest>
-// where
-// 	P: AsRef<Path>,
-// {
-// 	Ok(Manifest::from_path(path).map_err(error::Cargo::OpenManifestFailed)?)
-// }
-
 // TODO: optimize the algorithm
 /// Update all the workspace members' versions with the given one.
 ///
-/// If a workspace member depends on another one, the dependency will also be updated.
+/// If a workspace member depends on other members, this will also update the dependencies.
 pub async fn update_member_versions(manifest_path: &str, to: &str) -> Result<()> {
 	let metadata = metadata(manifest_path)?;
 	let members = if let Some(members) = members(&metadata) {

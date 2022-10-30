@@ -1,4 +1,4 @@
-//! Core library about how Subalfred interacts with Substrate-based node.
+//! Subalfred core node library.
 
 // std
 use std::{
@@ -21,7 +21,7 @@ const E_CODEC_METADATA_IS_NON_HEX: &str =
 const E_STDERR_IS_EMPTY: &str =
 	"[core::node] `stderr` is empty, , maybe the substrate node behavior changed";
 
-/// Spawn a Substrate-Base standard node.
+/// Spawn a Substrate-like standard node.
 pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 	let mut node = Command::new(executable)
 		.stdout(Stdio::null())
@@ -47,14 +47,14 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 	Ok(node)
 }
 
-/// Get runtime version from node.
+/// Get runtime version from a nodes's HTTP RPC endpoint.
 pub async fn runtime_version(uri: &str) -> Result<RuntimeVersion> {
 	Ok(http::send::<_, RuntimeVersion>(uri, &state::get_runtime_version(0, None::<()>))
 		.await?
 		.result)
 }
 
-/// Fetch runtime metadata from node.
+/// Fetch runtime metadata from a nodes's HTTP RPC endpoint.
 pub async fn runtime_metadata(uri: &str) -> Result<LatestRuntimeMetadata> {
 	let response = http::send::<_, String>(uri, &state::get_metadata(0, None::<()>)).await?;
 
@@ -81,7 +81,7 @@ pub async fn find_runtime_upgrade_block(
 	// subalfred
 	use crate::{
 		jsonrpc::ws::Initializer,
-		substrate_client::{BasicApi, Client},
+		substrate_client::{Apis, Client},
 	};
 
 	let client = Client::initialize(Initializer::new(), uri).await?;

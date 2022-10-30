@@ -66,7 +66,7 @@ pub struct ForkOffConfig {
 	pub disable_default_bootnodes: bool,
 }
 
-/// Fork-off the state.
+/// Fork-off the state with the specific configurations.
 pub fn fork_off<P>(target_chain_spec_path: P, config: &ForkOffConfig) -> Result<()>
 where
 	P: AsRef<Path>,

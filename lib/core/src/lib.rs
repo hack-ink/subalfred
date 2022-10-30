@@ -13,12 +13,12 @@ pub mod substrate_client;
 pub mod system;
 
 pub mod prelude {
-	//! Subalfred core libraries prelude.
+	//! Subalfred core prelude.
 
-	pub use ::std::result::Result as StdResult;
+	pub use std::result::Result as StdResult;
 
 	pub use super::error::{self, Error};
 
-	/// Subalfred core lib's `Result` type.
-	pub type Result<T> = ::std::result::Result<T, Error>;
+	/// Subalfred core libraries' `Result` type.
+	pub type Result<T> = StdResult<T, Error>;
 }

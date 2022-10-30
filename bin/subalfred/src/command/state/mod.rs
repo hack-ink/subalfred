@@ -10,7 +10,7 @@ use fork_off::ForkOffCmd;
 mod r#override;
 use r#override::OverrideCmd;
 
-/// A set of tools to process Substrate-like node state.
+/// A set of tools to process Substrate-like chain state.
 #[cmd_impl::cmd]
 pub(crate) enum StateCmd {
 	Diff,

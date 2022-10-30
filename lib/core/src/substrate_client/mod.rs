@@ -1,9 +1,9 @@
-//! Substrate-Base API client implementation.
+//! //! Subalfred core Substrate client library.
 
 // TODO: maybe HTTP
 
 mod api;
-pub use api::BasicApi;
+pub use api::Apis;
 
 // std
 use std::sync::Arc;
@@ -22,14 +22,13 @@ use subversioner::RuntimeVersion;
 
 const PAGE_SIZE: usize = 512;
 
-/// Substrate-Base API websocket client.
+/// A WS client for Substrate-like chain.
 #[derive(Clone)]
 pub struct Client {
-	/// Websocket connection.
 	ws: Arc<Ws>,
 }
 impl Client {
-	/// Initialize the client with the given initializer.
+	/// Initialize the WS client with the given initializer.
 	pub async fn initialize(initializer: Initializer, uri: &str) -> Result<Self> {
 		Ok(Self { ws: Arc::new(initializer.connect(uri).await?) })
 	}
@@ -92,7 +91,7 @@ impl Client {
 	}
 }
 #[async_trait::async_trait]
-impl BasicApi for Client {
+impl Apis for Client {
 	async fn get_block_hash<BlockNumber>(&self, block_number: Option<BlockNumber>) -> Result<String>
 	where
 		BlockNumber: Send + Serialize,

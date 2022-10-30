@@ -5,11 +5,10 @@ use std::path::Path;
 // hack-ink
 use crate::prelude::*;
 
-/// Check the diff between two states.
-///
+/// Check the differences between the two states.
 /// Note:
-/// This is not a symmetric diff.
-/// `a.diff(b)` may equals to `b.diff(a)`, but not always.
+/// This is not a symmetric difference operation.
+/// `a.diff(b)` might equal `b.diff(a)`, but not always.
 pub fn diff<P>(a: P, b: P) -> Result<Vec<String>>
 where
 	P: Send + AsRef<Path>,
@@ -31,7 +30,7 @@ where
 				diff.push(format!("-{a_k}:{a_v}\n+{a_k}:{b_v}"));
 			}
 
-		// Completely same.
+		// Completely the same.
 		}
 		// Keys only appear in a.
 		else {

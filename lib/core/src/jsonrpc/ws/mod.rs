@@ -1,4 +1,4 @@
-//! Full functionality JSONRPC websocket client implementation.
+//! Full functionality WS JSONRPC client implementation.
 //! Follow <https://www.jsonrpc.org/specification> specification.
 
 // std
@@ -33,7 +33,7 @@ type BatchResponse = Vec<RequestResponse>;
 type BatchNotifier = oneshot::Sender<BatchResponse>;
 type BatchPool = FxHashMap<Id, BatchNotifier>;
 
-/// The websocket initializer.
+/// The WS initializer.
 #[derive(Debug)]
 pub struct Initializer {
 	/// Concurrent tasks count limit.
@@ -70,7 +70,7 @@ impl Initializer {
 		self
 	}
 
-	/// Initialize the websocket stream.
+	/// Initialize the WS stream.
 	pub async fn connect(self, uri: &str) -> Result<Ws> {
 		let (mut ws_tx, mut ws_rx) = tokio_tungstenite::connect_async(uri)
 			.await
