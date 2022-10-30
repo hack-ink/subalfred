@@ -1,3 +1,5 @@
+//! Substrate-like runtime checker.
+
 // std
 use std::{
 	fmt::{Debug, Write},
@@ -10,8 +12,8 @@ use submetadatan::{
 	StorageEntryMetadata,
 };
 
-/// Compare the nodes' runtime versions.
-/// If there is no difference, return `None`.
+/// Fetch two nodes' runtime versions through their HTTP RPC endpoints.
+/// Compare the versions, then return the differences in markdown diff style.
 pub async fn check_version(a_uri: &str, b_uri: &str) -> Result<Option<String>> {
 	const E_WRITE_TO_STRING_NEVER_FAILS: &str = "[core::check] write to string never fails; qed";
 
@@ -39,7 +41,8 @@ pub async fn check_version(a_uri: &str, b_uri: &str) -> Result<Option<String>> {
 	Ok(Some(result))
 }
 
-/// Compare the nodes' runtime storages.
+/// Fetch two nodes' runtime storage through their HTTP RPC endpoints.
+/// Compare the storage, then return the differences in markdown diff style.
 pub async fn check_storage(
 	a_uri: &str,
 	b_uri: &str,

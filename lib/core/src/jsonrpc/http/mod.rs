@@ -8,7 +8,7 @@ use serde::{de::DeserializeOwned, Serialize};
 use super::*;
 use crate::{http::CLIENT, prelude::*};
 
-/// Send the JSONRPC through the [`CLIENT`] with the given JSON.
+/// Send a JSONRPC request through the [`CLIENT`].
 pub async fn send<S, D>(uri: &str, s: &S) -> Result<Response<D>>
 where
 	S: Serialize,
