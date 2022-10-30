@@ -76,7 +76,7 @@ pub fn members(metadata: &Metadata) -> Option<Vec<&Package>> {
 /// Update all the workspace members' versions with the given one.
 ///
 /// If a workspace member depends on other members, this will also update the dependencies.
-pub async fn update_member_versions(manifest_path: &str, to: &str) -> Result<()> {
+pub async fn update_member_versions(to: &str, manifest_path: &str) -> Result<()> {
 	let metadata = metadata(manifest_path)?;
 	let members = if let Some(members) = members(&metadata) {
 		members

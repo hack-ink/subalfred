@@ -13,7 +13,7 @@ pub(crate) struct FeaturesCmd {
 	/// The target could be a pallet or runtime.
 	///
 	/// If `Cargo.toml` wasn't given, Subalfred will search it under the given path.
-	#[arg(long, value_name = "PATH", default_value = "./Cargo.toml")]
+	#[arg(value_name = "PATH", default_value = "./Cargo.toml")]
 	manifest_path: PathBuf,
 }
 impl FeaturesCmd {
