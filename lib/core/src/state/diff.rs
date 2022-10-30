@@ -13,7 +13,7 @@ pub fn diff<P>(a: P, b: P) -> Result<Vec<String>>
 where
 	P: Send + AsRef<Path>,
 {
-	subalfred_util::execution_timer!("diff state");
+	subalfred_util::execution_timer!("state::diff");
 
 	if a.as_ref() == b.as_ref() {
 		return Ok(Vec::new());

@@ -71,7 +71,7 @@ pub fn fork_off<P>(target_chain_spec_path: P, config: &ForkOffConfig) -> Result<
 where
 	P: AsRef<Path>,
 {
-	subalfred_util::execution_timer!("fork-off state");
+	subalfred_util::execution_timer!("state::fork-off");
 
 	let target_chain_spec_path = target_chain_spec_path.as_ref();
 	let ForkOffConfig { renew_consensus_with, simple_governance, disable_default_bootnodes } =

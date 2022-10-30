@@ -76,15 +76,15 @@ where
 	P: AsRef<Path>,
 	T: DeserializeOwned,
 {
-	subalfred_util::execution_timer!("read file to struct");
+	subalfred_util::execution_timer!("system::read_file_to_struct");
 
 	let content = {
-		subalfred_util::execution_timer!("read json");
+		subalfred_util::execution_timer!("system::read_json");
 
 		read_file_to_vec(path)?
 	};
 	let result = {
-		subalfred_util::execution_timer!("parse json");
+		subalfred_util::execution_timer!("system::parse_json");
 
 		serde_json::from_slice(&content).map_err(error::Generic::Serde)?
 	};
@@ -97,15 +97,15 @@ where
 	P: AsRef<Path>,
 	T: DeserializeOwned,
 {
-	subalfred_util::execution_timer!("read file to struct async");
+	subalfred_util::execution_timer!("system::read_file_to_struct_async");
 
 	let content = {
-		subalfred_util::execution_timer!("read json async");
+		subalfred_util::execution_timer!("system::read_json_async");
 
 		read_file_to_vec(path)?
 	};
 	let result = {
-		subalfred_util::execution_timer!("parse json async");
+		subalfred_util::execution_timer!("system::parse_json_async");
 
 		serde_json::from_slice(&content).map_err(error::Generic::Serde)?
 	};

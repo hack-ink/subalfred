@@ -10,7 +10,7 @@ pub fn r#override<P>(a: P, b: P) -> Result<()>
 where
 	P: Send + AsRef<Path>,
 {
-	subalfred_util::execution_timer!("override state");
+	subalfred_util::execution_timer!("state::override");
 
 	let (a, b) = (a.as_ref(), b.as_ref());
 
