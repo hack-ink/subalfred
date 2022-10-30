@@ -10,7 +10,7 @@ use bytes2hex::Bytes2HexCmd;
 mod hex2bytes;
 use hex2bytes::Hex2BytesCmd;
 
-/// Converter.
+/// Data style converters.
 #[cmd_impl::cmd]
 pub(crate) enum ConvertCmd {
 	#[command(name = "ascii2hex")]

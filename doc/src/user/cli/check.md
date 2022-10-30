@@ -7,7 +7,7 @@ As the name says, the checks are on the runtime level.
 There are three shared options:
 - `--chain <NAME>`The chain name, which will supply to the executable.
 - `--executable <PATH>` The executable path.
-- `--live <URI>` The live chain's RPC HTTP endpoint.
+- `--live <URI>` The live chain's HTTP RPC endpoint.
 
 And there are two properties to check, `storage` and `version`.
 
@@ -17,7 +17,7 @@ For convenience, I use the [Pangolin Network](https://github.com/darwinia-networ
 - `pangolin-dev` is the dev chain spec, which means its genesis is built from the latest code.
   If you are on Polkadot, then use `polkadot-dev`.
 - `./drml` is the path to my local pangolin node executable.
-- `https://pangolin-rpc.darwinia.network` is the Pangoro live chain's RPC HTTP endpoint.
+- `https://pangolin-rpc.darwinia.network` is the Pangoro live chain's HTTP RPC endpoint.
   Note that, I use the Pangoro here. Just because I'm doing a demonstration.
   Compare with two different chains' runtime storage/version will get a lot of output.
 

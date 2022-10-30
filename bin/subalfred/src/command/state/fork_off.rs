@@ -4,9 +4,9 @@ use clap::Args;
 use crate::prelude::*;
 use subalfred_core::state::{self, ForkOffConfig};
 
-/// Fork-off the state.
+/// Fork-off the Substrate-like chain state.
 ///
-/// The result will be store at `<a>.fork-off`.
+/// The result will be stored at `<a>.fork-off`.
 #[derive(Debug, Args)]
 pub(crate) struct ForkOffCmd {
 	path: String,

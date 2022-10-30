@@ -4,9 +4,9 @@ use clap::Args;
 use crate::prelude::*;
 use subalfred_core::state::{self, TwoStateConfig};
 
-/// Override state a with b.
+/// Override the state a with b.
 ///
-/// The result will be store at `<a>.override`.
+/// The result will be stored at `<a>.override`.
 #[derive(Debug, Args)]
 #[command(verbatim_doc_comment, override_usage = "subalfred state override [OPTIONS] <PATH> <PATH>")]
 pub(crate) struct OverrideCmd {

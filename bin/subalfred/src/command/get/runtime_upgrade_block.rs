@@ -13,7 +13,7 @@ pub(crate) struct RuntimeUpgradeBlockCmd {
 	/// At this runtime version.
 	#[arg(required = true, value_name = "VERSION")]
 	runtime_version: u32,
-	/// Node's RPC WS endpoint.
+	/// Node's WS RPC endpoint.
 	#[arg(long, required = true, value_name = "URI", default_value = "ws://localhost:9944")]
 	uri: String,
 }

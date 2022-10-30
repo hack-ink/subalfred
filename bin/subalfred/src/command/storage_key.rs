@@ -4,7 +4,7 @@ use clap::Args;
 use crate::prelude::*;
 
 // TODO: support `StorageNMap`
-/// Calculate the storage key of storage item.
+/// Calculate the storage key of the storage item.
 #[derive(Debug, Args)]
 pub(crate) struct StorageKeyCmd {
 	/// Prefix of the storage.

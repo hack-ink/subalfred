@@ -4,7 +4,7 @@ use features::FeaturesCmd;
 mod runtime;
 use runtime::RuntimeCmd;
 
-/// Some checking tools are pretty useful for runtime development.
+/// Substrate development checkers.
 #[cmd_impl::cmd]
 pub(crate) enum CheckCmd {
 	Runtime,

@@ -4,11 +4,10 @@ use clap::Args;
 use crate::prelude::*;
 use subalfred_core::state::{self, TwoStateConfig};
 
-/// Check the diff between two states.
-///
+/// Check the differences between the two states.
 /// Note:
-/// This is not a symmetric diff.
-/// `a.diff(b)` may equals to `b.diff(a)`, but not always.
+/// This is not a symmetric difference operation.
+/// `a.diff(b)` might equal `b.diff(a)`, but not always.
 #[derive(Debug, Args)]
 #[command(verbatim_doc_comment, override_usage = "subalfred state diff [OPTIONS] <PATH> <PATH>")]
 pub(crate) struct DiffCmd {

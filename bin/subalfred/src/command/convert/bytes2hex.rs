@@ -6,7 +6,7 @@ use crate::prelude::*;
 /// Convert bytes to hex.
 #[derive(Debug, Args)]
 pub(crate) struct Bytes2HexCmd {
-	/// Bytes input.
+	/// Bytes data input.
 	///
 	/// Example: `[0, 0, 0, 0]`.
 	#[arg(required = true, value_name = "BYTES")]
