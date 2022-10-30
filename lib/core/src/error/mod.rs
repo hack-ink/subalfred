@@ -27,7 +27,7 @@ pub enum Error {
 	Tokio(#[from] Tokio),
 }
 
-/// Print the error directly.
+/// An error helper/wrapper to debug/print the error quickly.
 #[derive(Debug)]
 pub struct Quick(String);
 impl std::fmt::Display for Quick {
@@ -36,9 +36,7 @@ impl std::fmt::Display for Quick {
 	}
 }
 impl std::error::Error for Quick {}
-/// Quick debug helper.
-///
-/// Convert the error to [`Quick`].
+/// Wrap the error with [`Quick`].
 pub fn quick_err<E>(e: E) -> Quick
 where
 	E: std::fmt::Debug,
@@ -81,7 +79,7 @@ pub enum Generic {
 	#[error(transparent)]
 	Tungstenite(#[from] tokio_tungstenite::tungstenite::Error),
 }
-/// [`Generic::AlmostImpossible`] error helper.
+/// Wrap the error with [`Generic::AlmostImpossible`].
 pub fn almost_impossible(e_msg: &'static str) -> Generic {
 	Generic::AlmostImpossible(e_msg)
 }
