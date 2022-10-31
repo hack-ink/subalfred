@@ -1,9 +1,9 @@
 // std
-use std::{borrow::Cow, fmt::Write};
+use std::borrow::Cow;
 // crates.io
 use clap::{Args, ValueEnum};
 // hack-ink
-use crate::prelude::*;
+use crate::{command::shared::JsonOutput, prelude::*};
 use subalfred_core::{
 	key::{Key, PalletId, ParaId, SiblId},
 	ss58::{self, Address},
@@ -29,10 +29,19 @@ pub(crate) struct KeyCmd {
 	/// Show network(s) prefix(es).
 	#[arg(long, num_args = 0)]
 	show_prefix: bool,
+	#[command(flatten)]
+	json_output: JsonOutput,
 }
 impl KeyCmd {
 	pub(crate) fn run(&self) -> Result<()> {
-		let Self { key, r#type, network, list_all, show_prefix } = self;
+		let Self {
+			key,
+			r#type,
+			network,
+			list_all,
+			show_prefix,
+			json_output: JsonOutput { json_output },
+		} = self;
 		let key = if let Some(r#type) = r#type {
 			Cow::Owned(array_bytes::bytes2hex("0x", &r#type.to_key::<32>(key)?))
 		} else {
@@ -40,38 +49,34 @@ impl KeyCmd {
 		};
 
 		if *list_all {
-			let (public_key, mut hex_public_key, addresses) = ss58::all(&key)?;
-			let max_length = addresses.iter().map(|addr| addr.network.len()).max().unwrap_or(0);
+			let (public_key, hex_public_key, addresses) = ss58::all(&key)?;
+			let sub_seed = sub_seed_from_public_key(public_key).unwrap_or_default();
 
-			if let Ok(special_key) = try_get_key_type_from_public_key(public_key) {
-				write!(hex_public_key, " {special_key}")?;
-			}
+			if *json_output {
+				let json_output =
+					build_json_output(&sub_seed, &hex_public_key, *show_prefix, &addresses);
 
-			println!("public-key {hex_public_key}");
-
-			if *show_prefix {
-				addresses.into_iter().for_each(|Address { network, prefix, value }| {
-					println!("{network:width$} {prefix:5} {value}", width = max_length)
-				});
+				println!("{json_output}");
 			} else {
-				addresses.into_iter().for_each(|Address { network, value, .. }| {
-					println!("{network:width$} {value}", width = max_length)
-				});
+				let plain_output =
+					build_plain_output(&sub_seed, &hex_public_key, *show_prefix, &addresses);
+
+				println!("{plain_output}");
 			}
 		} else {
-			let (public_key, mut hex_public_key, Address { network, prefix, value }) =
-				ss58::of(&key, network)?;
+			let (public_key, hex_public_key, address) = ss58::of(&key, network)?;
+			let sub_seed = sub_seed_from_public_key(public_key).unwrap_or_default();
 
-			if let Ok(special_key) = try_get_key_type_from_public_key(public_key) {
-				write!(hex_public_key, " {special_key}")?;
-			}
+			if *json_output {
+				let json_output =
+					build_json_output(&sub_seed, &hex_public_key, *show_prefix, &[address]);
 
-			println!("public-key {hex_public_key}",);
-
-			if *show_prefix {
-				println!("{network} {prefix} {value}");
+				println!("{json_output}");
 			} else {
-				println!("{network} {value}");
+				let plain_output =
+					build_plain_output(&sub_seed, &hex_public_key, *show_prefix, &[address]);
+
+				println!("{plain_output}");
 			}
 		}
 
@@ -96,11 +101,70 @@ impl KeyType {
 	}
 }
 
-fn try_get_key_type_from_public_key(public_key: impl AsRef<[u8]>) -> Result<String> {
+// TODO: change result to `Result<Option<String>>`
+// TODO: if the key is not a specific key then return `Ok(None)`
+fn sub_seed_from_public_key(public_key: impl AsRef<[u8]>) -> Result<String> {
 	let public_key = public_key.as_ref();
 
 	Ok(PalletId::try_from(public_key)
 		.map(|k| ToString::to_string(&k))
 		.or_else(|_| ParaId::try_from(public_key).map(|k| ToString::to_string(&k)))
 		.or_else(|_| SiblId::try_from(public_key).map(|k| ToString::to_string(&k)))?)
+}
+
+fn build_plain_output(
+	sub_seed: &str,
+	public_key: &str,
+	show_prefix: bool,
+	addresses: &[Address],
+) -> String {
+	format!(
+		"\
+		sub-seed {sub_seed}\n\
+		public-key {public_key}\n\
+		{}\
+		",
+		if show_prefix {
+			addresses
+				.iter()
+				.map(|Address { network, prefix, value }| format!("{network} {prefix:5} {value}"))
+				.collect::<Vec<_>>()
+				.join("\n")
+		} else {
+			addresses
+				.iter()
+				.map(|Address { network, value, .. }| format!("{network} {value}"))
+				.collect::<Vec<_>>()
+				.join("\n")
+		}
+	)
+}
+
+fn build_json_output(
+	sub_seed: &str,
+	public_key: &str,
+	show_prefix: bool,
+	addresses: &[Address],
+) -> String {
+	serde_json::json!({
+		"sub-seed": sub_seed,
+		"public-key": public_key,
+		"addresses":  if show_prefix {
+			addresses.iter().map(|Address { network, prefix, value }| {
+				serde_json::json!({
+					"network": network,
+					"prefix": prefix,
+					"address": value
+				})
+			}).collect::<Vec<_>>()
+		} else {
+			addresses.iter().map(|Address { network, value, .. }| {
+				serde_json::json!({
+					"network": network,
+					"address": value
+				})
+			}).collect::<Vec<_>>()
+		}
+	})
+	.to_string()
 }

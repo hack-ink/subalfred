@@ -19,9 +19,9 @@ use crate::{command::Cmd, prelude::*};
 	rename_all = "kebab",
 )]
 pub(crate) struct Cli {
-	#[clap(subcommand)]
+	#[command(subcommand)]
 	subcmd: Cmd,
-	#[clap(flatten)]
+	#[command(flatten)]
 	global_args: GlobalArgs,
 }
 impl Cli {

@@ -13,29 +13,13 @@ pub mod r#override;
 pub use r#override::*;
 
 // std
-use std::{
-	path::{Path, PathBuf},
-	thread,
-};
+use std::{path::Path, thread};
 // crates.io
-#[cfg(feature = "clap")] use clap::Args;
 use fxhash::FxHashMap;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 // hack-ink
 use crate::{prelude::*, system};
-
-/// Two state configurations.
-#[cfg_attr(feature = "clap", derive(Args))]
-#[derive(Debug)]
-pub struct TwoStateConfig {
-	/// Path to the state a.
-	#[cfg_attr(feature = "clap", arg(required = true, value_name = "PATH"))]
-	pub a: PathBuf,
-	/// Path to the second state b.
-	#[cfg_attr(feature = "clap", arg(required = true, value_name = "PATH"))]
-	pub b: PathBuf,
-}
 
 // TODO: doc & move this to substrate-minimal
 #[allow(missing_docs)]

@@ -1,3 +1,5 @@
+mod shared;
+
 mod check;
 use check::CheckCmd;
 
