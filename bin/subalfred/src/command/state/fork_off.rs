@@ -9,7 +9,7 @@ use subalfred_core::state::{self, ForkOffConfig};
 /// The result will be stored at `<a>.fork-off`.
 #[derive(Debug, Args)]
 pub(crate) struct ForkOffCmd {
-	/// Target state file's path.
+	/// Target chain spec file's path.
 	#[arg(required = true, value_name = "PATH")]
 	path: String,
 	#[command(flatten)]
