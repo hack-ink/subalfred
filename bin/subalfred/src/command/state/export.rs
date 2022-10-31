@@ -13,7 +13,7 @@ pub(crate) struct ExportCmd {
 	#[arg(required = true, value_name = "URI")]
 	live: String,
 	/// Export the data starting from this block.
-	#[arg(long, value_name = "HASH")]
+	#[arg(long, value_name = "HASH/NUM")]
 	at: Option<String>,
 	/// Timeout for the fetching.
 	#[arg(long, value_name = "SECS", default_value = "10")]
@@ -26,12 +26,12 @@ pub(crate) struct ExportCmd {
 	/// The default behaviour (without this option) is fetching according to metadata's pallet
 	/// storage records, which means if there is any old storage prefix that can not be found in
 	/// the current runtime's pallet storage names will be ignored.
-	#[arg(verbatim_doc_comment, long, num_args = 0, conflicts_with_all = &["skip_pallets", "renew_consensus_with", "simple_governance"])]
+	#[arg(verbatim_doc_comment, long, conflicts_with_all = &["skip_pallets", "renew_consensus_with", "simple_governance"])]
 	all: bool,
 	/// Skip these pallets, while fetching.
 	///
 	/// It's useful when you want to skip the 'large' pallets.
-	#[arg(long, value_delimiter = ',', value_name = "[PALLET_NAME]", conflicts_with = "all")]
+	#[arg(long, value_delimiter = ',', value_name = "[PALLET]", conflicts_with = "all")]
 	skip_pallets: Vec<String>,
 	#[command(flatten)]
 	fork_off_config: ForkOffConfig,

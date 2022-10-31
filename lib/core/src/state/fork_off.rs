@@ -58,11 +58,11 @@ pub struct ForkOffConfig {
 	///   existed.
 	#[cfg_attr(
 		feature = "clap",
-		arg(verbatim_doc_comment, long, num_args = 0, conflicts_with = "all")
+		arg(verbatim_doc_comment, long, conflicts_with = "all")
 	)]
 	pub simple_governance: bool,
 	/// Disable adding the default bootnodes to the specification.
-	#[cfg_attr(feature = "clap", arg(verbatim_doc_comment, long, num_args = 0))]
+	#[cfg_attr(feature = "clap", arg(verbatim_doc_comment, long))]
 	pub disable_default_bootnodes: bool,
 }
 

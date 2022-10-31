@@ -18,16 +18,16 @@ pub(crate) struct KeyCmd {
 	#[arg(required = true, value_name = "PUBLIC KEY/SS58 ADDRESS")]
 	key: String,
 	/// Key type.
-	#[arg(value_enum, long, value_name = "KEY TYPE")]
+	#[arg(value_enum, long, value_name = "TYPE")]
 	r#type: Option<KeyType>,
 	/// Network name.
 	#[arg(long, value_name = "NAME", default_value = "Substrate", conflicts_with = "list_all")]
 	network: String,
 	/// List all the networks' addresses.
-	#[arg(long, num_args = 0, conflicts_with = "network")]
+	#[arg(long, conflicts_with = "network")]
 	list_all: bool,
 	/// Show network(s) prefix(es).
-	#[arg(long, num_args = 0)]
+	#[arg(long)]
 	show_prefix: bool,
 	#[command(flatten)]
 	json_output: JsonOutput,
