@@ -9,7 +9,7 @@ use crate::{prelude::*, system};
 /// If the key already exists, it will be overwritten.
 ///
 /// # Examples
-/// ```
+/// ```sh
 /// # Calculate the WASM code key.
 /// subalfred convert ascii2hex ':code'
 /// # "0x3a636f6465"

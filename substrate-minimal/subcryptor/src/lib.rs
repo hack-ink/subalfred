@@ -44,7 +44,7 @@ impl Key for Sr25519 {
 /// Get the specific network SS58 address of the public key.
 ///
 /// Substrate reference(s):
-/// - https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/primitives/core/src/crypto.rs#L315-L336
+/// - <https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/primitives/core/src/crypto.rs#L315-L336>
 pub fn ss58_address_of(public_key: &[u8], network: &str) -> Result<(u16, String)> {
 	let network = Ss58AddressFormat::try_from(network)
 		.map_err(|_| Error::UnsupportedNetwork(network.into()))?;
@@ -78,7 +78,7 @@ pub fn ss58_address_of(public_key: &[u8], network: &str) -> Result<(u16, String)
 /// Get the public key of the SS58 address.
 ///
 /// Substrate reference(s):
-/// - https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/primitives/core/src/crypto.rs#L260-L302
+/// - <https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/primitives/core/src/crypto.rs#L260-L302>
 pub fn public_key_of<K>(ss58_address: &str) -> Result<Vec<u8>>
 where
 	K: Key,
