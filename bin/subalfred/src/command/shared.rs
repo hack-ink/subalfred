@@ -11,11 +11,11 @@ pub(crate) struct JsonOutput {
 }
 
 #[derive(Debug, Args)]
-pub(crate) struct TwoState {
-	/// State a's path.
+pub(crate) struct TwoChainSpec {
+	/// Chain spec a's path.
 	#[arg(required = true, value_name = "PATH")]
 	pub(crate) a: PathBuf,
-	/// State b's path.
+	/// Chain spec b's path.
 	#[arg(required = true, value_name = "PATH")]
 	pub(crate) b: PathBuf,
 }
