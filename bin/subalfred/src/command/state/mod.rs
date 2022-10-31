@@ -7,6 +7,9 @@ use export::ExportCmd;
 mod fork_off;
 use fork_off::ForkOffCmd;
 
+mod insert;
+use insert::InsertCmd;
+
 mod r#override;
 use r#override::OverrideCmd;
 
@@ -16,5 +19,6 @@ pub(crate) enum StateCmd {
 	Diff,
 	Export,
 	ForkOff,
+	Insert,
 	Override,
 }

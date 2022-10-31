@@ -9,7 +9,7 @@ use subalfred_core::{check::runtime, node, system};
 /// Compare the local node's runtime version with the live's one.
 #[derive(Debug, Args)]
 pub(crate) struct RuntimeCmd {
-	/// Path to the node executable.
+	/// Node executable's path.
 	#[arg(long, required = true, value_name = "PATH")]
 	executable: String,
 	/// Pass this name to `--chain` to launch the local chain.

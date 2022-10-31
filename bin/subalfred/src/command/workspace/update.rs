@@ -10,7 +10,7 @@ pub(crate) struct UpdateCmd {
 	/// Target version.
 	#[arg(required = true, value_name = "VERSION")]
 	version: String,
-	/// Path to the root `Cargo.toml`.
+	/// Root `Cargo.toml`'s path.
 	///
 	/// If `Cargo.toml` wasn't given, Subalfred will search it under the given path.
 	#[arg(long, value_name = "PATH", default_value = "./Cargo.toml")]

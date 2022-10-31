@@ -15,7 +15,6 @@
 /// 	state {
 /// 		call { params: [name, bytes], opt_params: [hash] }
 /// 		get_keys { params: [prefix], opt_params: [hash] }
-/// 		get_keys_paged { params: [count], opt_params: [prefix, start_key, hash] }
 /// 		get_metadata { params: [], opt_params: [hash] }
 /// 		get_pairs { params: [prefix], opt_params: [hash] }
 /// 		get_read_proof { params: [keys], opt_params: [hash] }
@@ -72,7 +71,7 @@ macro_rules! impl_apis {
 					)
 				}
 
-				#[doc = concat!("Similar to [", stringify!($method), "()], but return the method name and parameters directly.")]
+				#[doc = concat!("Similar to [`", stringify!($method), "`], but return the method name and parameters directly.")]
 				pub fn [<$method _raw>](
 					$($param: impl serde::Serialize,)*
 					$($opt_param: Option<impl serde::Serialize>,)*

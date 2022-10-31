@@ -1,10 +1,10 @@
 // crates.io
 use clap::Args;
 // hack-ink
-use crate::{command::shared::TwoState, prelude::*};
+use crate::{command::shared::TwoChainSpec, prelude::*};
 use subalfred_core::state;
 
-/// Override the state a with b.
+/// Override the chain spec a with b.
 ///
 /// The result will be stored at `<a>.override`.
 #[derive(Debug, Args)]
@@ -14,11 +14,11 @@ use subalfred_core::state;
 )]
 pub(crate) struct OverrideCmd {
 	#[command(flatten)]
-	two_state_config: TwoState,
+	two_state_config: TwoChainSpec,
 }
 impl OverrideCmd {
 	pub(crate) fn run(&self) -> Result<()> {
-		let Self { two_state_config: TwoState { a, b } } = self;
+		let Self { two_state_config: TwoChainSpec { a, b } } = self;
 
 		Ok(state::r#override(a, b)?)
 	}

@@ -1,7 +1,7 @@
 // crates.io
 use clap::Args;
 // hack-ink
-use crate::{command::shared::TwoState, prelude::*};
+use crate::{command::shared::TwoChainSpec, prelude::*};
 use subalfred_core::state;
 
 /// Check the differences between the two states.
@@ -12,11 +12,11 @@ use subalfred_core::state;
 #[command(verbatim_doc_comment, override_usage = "subalfred state diff [OPTIONS] <PATH> <PATH>")]
 pub(crate) struct DiffCmd {
 	#[command(flatten)]
-	two_state_config: TwoState,
+	two_state_config: TwoChainSpec,
 }
 impl DiffCmd {
 	pub(crate) fn run(&self) -> Result<()> {
-		let Self { two_state_config: TwoState { a, b } } = self;
+		let Self { two_state_config: TwoChainSpec { a, b } } = self;
 		let diff = state::diff(a, b)?;
 
 		if !diff.is_empty() {

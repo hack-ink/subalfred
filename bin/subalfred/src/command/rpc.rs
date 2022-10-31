@@ -24,7 +24,7 @@ pub(crate) struct RpcCmd {
 	#[arg(long, required = true, value_name = "METHOD")]
 	method: String,
 	/// JSONRPC parameters.
-	#[arg(long, value_name = "PARAMETERS")]
+	#[arg(long, value_name = "[PARAMETER]")]
 	params: Option<String>,
 }
 impl RpcCmd {
