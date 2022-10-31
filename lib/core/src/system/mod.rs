@@ -117,6 +117,8 @@ where
 ///
 /// If the file has already existed, then it will be overwritten.
 /// Otherwise, this will create a file at the given path.
+///
+/// Prefer to use the [`swap_file_data`] if the target path already exists.
 pub fn write_data_to_file<P>(path: P, data: &[u8]) -> Result<()>
 where
 	P: AsRef<Path>,
