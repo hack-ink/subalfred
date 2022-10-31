@@ -51,8 +51,8 @@ impl Client {
 			let response = self
 				.ws
 				.request::<Vec<String>, _>(state::get_keys_paged_raw(
-					PAGE_SIZE,
 					Some(&prefix),
+					PAGE_SIZE,
 					start_key.as_ref(),
 					at.as_ref(),
 				))

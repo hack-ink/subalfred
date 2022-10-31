@@ -7,7 +7,6 @@ impl_apis! {
 	state {
 		call { params: [name, bytes], opt_params: [hash] }
 		get_keys { params: [prefix], opt_params: [hash] }
-		get_keys_paged { params: [count], opt_params: [prefix, start_key, hash] }
 		get_metadata { params: [], opt_params: [hash] }
 		get_pairs { params: [prefix], opt_params: [hash] }
 		get_read_proof { params: [keys], opt_params: [hash] }
@@ -23,4 +22,25 @@ impl_apis! {
 		unsubscribe_runtime_version { params: [subscription_id], opt_params: [] }
 		unsubscribe_storage { params: [subscription_id], opt_params: [] }
 	}
+}
+
+// TODO: because weird `Option` type order, this will break the macro rules.
+/// Check module's Substrate reference(s) for the detail.
+pub fn get_keys_paged(
+	id: usize,
+	prefix: Option<impl serde::Serialize>,
+	count: impl serde::Serialize,
+	start_key: Option<impl serde::Serialize>,
+	hash: Option<impl serde::Serialize>,
+) -> serde_json::Value {
+	crate::rpc(id, "state_getKeysPaged", serde_json::json!([prefix, count, start_key, hash]))
+}
+/// Similar to [`get_keys_paged`], but return the method name and parameters directly.
+pub fn get_keys_paged_raw(
+	prefix: Option<impl serde::Serialize>,
+	count: impl serde::Serialize,
+	start_key: Option<impl serde::Serialize>,
+	hash: Option<impl serde::Serialize>,
+) -> (&'static str, serde_json::Value) {
+	("state_getKeysPaged", serde_json::json!([prefix, count, start_key, hash]))
 }
