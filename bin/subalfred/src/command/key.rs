@@ -33,7 +33,7 @@ pub(crate) struct KeyCmd {
 	json_output: JsonOutput,
 }
 impl KeyCmd {
-	pub(crate) fn run(&self) -> Result<()> {
+	fn run_(&self) -> Result<String> {
 		let Self {
 			key,
 			r#type,
@@ -48,37 +48,31 @@ impl KeyCmd {
 			Cow::Borrowed(key)
 		};
 
-		if *list_all {
+		Ok(if *list_all {
 			let (public_key, hex_public_key, addresses) = ss58::all(&key)?;
 			let sub_seed = sub_seed_from_public_key(public_key).unwrap_or_default();
 
 			if *json_output {
-				let json_output =
-					build_json_output(&sub_seed, &hex_public_key, *show_prefix, &addresses);
-
-				println!("{json_output}");
+				build_json_output(&sub_seed, &hex_public_key, *show_prefix, &addresses)
 			} else {
-				let plain_output =
-					build_plain_output(&sub_seed, &hex_public_key, *show_prefix, &addresses);
-
-				println!("{plain_output}");
+				build_plain_output(&sub_seed, &hex_public_key, *show_prefix, &addresses)
 			}
 		} else {
 			let (public_key, hex_public_key, address) = ss58::of(&key, network)?;
 			let sub_seed = sub_seed_from_public_key(public_key).unwrap_or_default();
 
 			if *json_output {
-				let json_output =
-					build_json_output(&sub_seed, &hex_public_key, *show_prefix, &[address]);
-
-				println!("{json_output}");
+				build_json_output(&sub_seed, &hex_public_key, *show_prefix, &[address])
 			} else {
-				let plain_output =
-					build_plain_output(&sub_seed, &hex_public_key, *show_prefix, &[address]);
-
-				println!("{plain_output}");
+				build_plain_output(&sub_seed, &hex_public_key, *show_prefix, &[address])
 			}
-		}
+		})
+	}
+
+	pub(crate) fn run(&self) -> Result<()> {
+		let result = self.run_()?;
+
+		println!("{result}");
 
 		Ok(())
 	}
@@ -167,4 +161,32 @@ fn build_json_output(
 		}
 	})
 	.to_string()
+}
+
+#[test]
+fn key_cmd_should_work() {
+	let cmd = KeyCmd {
+		key: "py/trsry".into(),
+		r#type: Some(KeyType::Pallet),
+		network: "Polkadot".into(),
+		list_all: false,
+		show_prefix: true,
+		json_output: JsonOutput { json_output: true },
+	};
+
+	assert_eq!(
+		cmd.run_().unwrap(),
+		"{\
+			\"addresses\":[\
+				{\
+					\"address\":\"13UVJyLnbVp9RBZYFwFGyDvVd1y27Tt8tkntv6Q7JVPhFsTB\",\
+					\"network\":\"Polkadot\",\
+					\"prefix\":0\
+				}\
+			],\
+			\"public-key\":\
+			\"0x6d6f646c70792f74727372790000000000000000000000000000000000000000\",\
+			\"sub-seed\":\"PalletId(py/trsry)\
+		\"}"
+	);
 }
