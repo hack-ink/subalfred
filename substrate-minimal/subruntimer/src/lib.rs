@@ -8,7 +8,7 @@
 /// Block header.
 ///
 /// Substrate reference(s):
-/// - https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/primitives/runtime/src/generic/header.rs#L34-L55
+/// - <https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/primitives/runtime/src/generic/header.rs#L34-L55>
 #[derive(Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Deserialize), serde(rename_all = "camelCase"))]
 pub struct Header<Number, Hash> {

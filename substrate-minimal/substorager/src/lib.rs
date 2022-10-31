@@ -13,7 +13,7 @@ use std::{
 /// Storage key.
 ///
 /// Substrate reference(s):
-/// - https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/primitives/storage/src/lib.rs#L35-L43
+/// - <https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/primitives/storage/src/lib.rs#L35-L43>
 #[derive(Debug, Default)]
 pub struct StorageKey(pub Vec<u8>);
 impl StorageKey {
@@ -53,7 +53,7 @@ impl From<&[u8]> for StorageKey {
 /// Storage hasher.
 ///
 /// Substrate reference(s):
-/// - https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/frame/support/src/hash.rs#L25-L34
+/// - <https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/frame/support/src/hash.rs#L25-L34>
 #[derive(Debug)]
 #[cfg_attr(feature = "codec", derive(Encode, Decode))]
 pub enum StorageHasher {

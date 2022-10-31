@@ -8,7 +8,7 @@
 /// Runtime version.
 ///
 /// Substrate reference(s):
-/// - https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/primitives/version/src/lib.rs#L152-L215
+/// - <https://github.com/paritytech/substrate/blob/c4d36065764ee23aeb3ccd181c4b6ecea8d2447a/primitives/version/src/lib.rs#L152-L215>
 #[derive(Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Deserialize), serde(rename_all = "camelCase"))]
 pub struct RuntimeVersion {

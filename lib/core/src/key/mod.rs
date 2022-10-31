@@ -24,7 +24,7 @@ where
 	/// Sub-seed, used to derive the key.
 	fn sub_seed(self) -> Self::SubSeed;
 
-	/// Convert the [`KeyTypeId`] into `[u8; N]`.
+	/// Convert the [`Self::ID`] into `[u8; N]`.
 	fn to_key<const N: usize>(self) -> Result<[u8; N]> {
 		let mut result = [0; N];
 		let sub_seed = self.sub_seed();
