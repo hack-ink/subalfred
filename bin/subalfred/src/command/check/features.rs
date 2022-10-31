@@ -9,7 +9,7 @@ use subalfred_core::check::features;
 /// Check if the crates' features are enabled correctly.
 #[derive(Debug, Args)]
 pub(crate) struct FeaturesCmd {
-	/// Path to the target's `Cargo.toml`
+	/// Target `Cargo.toml`'s path.
 	/// The target could be a pallet or runtime.
 	///
 	/// If `Cargo.toml` wasn't given, Subalfred will search it under the given path.

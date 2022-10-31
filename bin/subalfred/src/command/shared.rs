@@ -12,10 +12,10 @@ pub(crate) struct JsonOutput {
 
 #[derive(Debug, Args)]
 pub(crate) struct TwoState {
-	/// Path to the state a.
+	/// State a's path.
 	#[arg(required = true, value_name = "PATH")]
 	pub(crate) a: PathBuf,
-	/// Path to the second state b.
+	/// State b's path.
 	#[arg(required = true, value_name = "PATH")]
 	pub(crate) b: PathBuf,
 }
