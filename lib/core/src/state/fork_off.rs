@@ -53,13 +53,11 @@ pub struct ForkOffConfig {
 	///
 	/// It will:
 	/// - Replace sudo key with `//Alice`, if the sudo pallet existed.
-	/// - Replace phragmen election and council members with `//Alice`, if the collective pallet existed.
-	/// - Replace technical membership and tech.comm members with `//Alice`, if the membership pallet
+	/// - Replace phragmen election and council members with `//Alice`, if the collective pallet
 	///   existed.
-	#[cfg_attr(
-		feature = "clap",
-		arg(verbatim_doc_comment, long, conflicts_with = "all")
-	)]
+	/// - Replace technical membership and tech.comm members with `//Alice`, if the membership
+	///   pallet existed.
+	#[cfg_attr(feature = "clap", arg(verbatim_doc_comment, long, conflicts_with = "all"))]
 	pub simple_governance: bool,
 	/// Disable adding the default bootnodes to the specification.
 	#[cfg_attr(feature = "clap", arg(verbatim_doc_comment, long))]

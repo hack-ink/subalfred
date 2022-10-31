@@ -28,8 +28,7 @@ pub(crate) struct RpcCmd {
 	params: Option<String>,
 }
 impl RpcCmd {
-	#[tokio::main]
-	pub(crate) async fn run(&self) -> Result<()> {
+	async fn run_(&self) -> Result<String> {
 		let Self { method, params, uri } = self;
 		let params = if let Some(params) = params.as_ref() {
 			serde_json::from_str(params)?
@@ -43,10 +42,38 @@ impl RpcCmd {
 			.await?
 			.json::<Value>()
 			.await?;
-		let result = serde_json::to_string(&result)?;
+
+		Ok(serde_json::to_string(&result)?)
+	}
+
+	#[tokio::main]
+	pub(crate) async fn run(&self) -> Result<()> {
+		let result = self.run_().await?;
 
 		println!("{result}");
 
 		Ok(())
 	}
+}
+
+#[tokio::test]
+async fn rpc_cmd_should_work() {
+	let cmd = RpcCmd {
+		uri: "https://rpc.polkadot.io".into(),
+		method: "chain_getBlockHash".into(),
+		params: Some("[[0, 1, 2]]".into()),
+	};
+
+	assert_eq!(
+		cmd.run_().await.unwrap(),
+		"{\
+			\"id\":0,\
+			\"jsonrpc\":\"2.0\",\
+			\"result\":[\
+				\"0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3\",\
+				\"0xc0096358534ec8d21d01d34b836eed476a1c343f8724fa2153dc0725ad797a90\",\
+				\"0x409d0bfe677594d7558101d574633d5808a6fc373cbd964ef236f00941f290ee\"\
+			]\
+		}"
+	);
 }

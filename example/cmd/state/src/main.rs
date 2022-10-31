@@ -19,7 +19,7 @@ fn main() {
 	// Build the node-template genesis first.
 	// Then we could compare it with the exported one.
 	// /tmp/subalfred-example/substrate-node-template/target/debug/node-template build-spec --dev
-	// --raw > /tmp/subalfred-example/genesis.json
+	// --raw > /tmp/subalfred-example/chain_spec.json
 	diff();
 	fork_off();
 }
@@ -73,7 +73,7 @@ fn diff() {
 		&[
 			"state",
 			"diff",
-			"/tmp/subalfred-example/genesis.json",
+			"/tmp/subalfred-example/chain_spec.json",
 			"/tmp/subalfred-example/default-chain-spec.json.export",
 		],
 	);
@@ -87,7 +87,7 @@ fn fork_off() {
 			"fork-off",
 			"/tmp/subalfred-example/default-chain-spec.json.export",
 			"--renew-consensus-with",
-			"/tmp/subalfred-example/genesis.json",
+			"/tmp/subalfred-example/chain_spec.json",
 			"--disable-default-bootnodes",
 		],
 	);

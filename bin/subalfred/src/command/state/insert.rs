@@ -4,7 +4,18 @@ use clap::{ArgGroup, Args};
 use crate::prelude::*;
 use subalfred_core::{state, system};
 
-/// Insert the storage value under the given key.
+/// Insert the key/value pair into the specific file.
+///
+/// If the key already exists, it will be overwritten.
+///
+/// # Examples
+/// ```sh
+/// # Calculate the WASM code key.
+/// subalfred convert ascii2hex ':code'
+/// # "0x3a636f6465"
+/// # Override the WASM code.
+/// subalfred state insert chain_spec.json --key 0x3a636f6465 --with-file runtime.compact.compressed.wasm
+/// ```
 #[derive(Debug, Args)]
 #[command(group(
 	ArgGroup::new("vers")
@@ -38,7 +49,7 @@ impl InsertCmd {
 			Default::default()
 		};
 
-		state::insert_paris_to_chain_spec(path, key.to_owned(), value)?;
+		state::insert_pair_to_chain_spec(path, key.to_owned(), value)?;
 
 		Ok(())
 	}
