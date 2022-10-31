@@ -1,6 +1,6 @@
 //! Insert core library.
 
-// hack for
+// hack-ink
 use super::ChainSpec;
 use crate::{prelude::*, system};
 
