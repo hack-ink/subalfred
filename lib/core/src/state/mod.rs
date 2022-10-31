@@ -1,5 +1,7 @@
 //! Subalfred core runtime state library.
 
+#[cfg(test)] mod test;
+
 pub mod diff;
 pub use diff::*;
 
