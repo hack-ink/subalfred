@@ -5,6 +5,8 @@
 
 #[cfg(not(feature = "std"))] extern crate alloc;
 
+#[cfg(test)] mod test;
+
 // core
 use core::hash::Hasher as _;
 // alloc

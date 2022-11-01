@@ -1611,7 +1611,6 @@ dependencies = [
 name = "subcryptor"
 version = "0.9.0-rc13"
 dependencies = [
- "array-bytes",
  "base58",
  "blake2-rfc",
  "parity-scale-codec",
