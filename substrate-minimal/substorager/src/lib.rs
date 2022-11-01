@@ -2,6 +2,8 @@
 
 #![deny(missing_docs)]
 
+#[cfg(test)] mod test;
+
 // std
 use std::{
 	fmt::{Display, Formatter, Result as FmtResult},

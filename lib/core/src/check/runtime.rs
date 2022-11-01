@@ -18,7 +18,10 @@ pub async fn check_version(a_uri: &str, b_uri: &str) -> Result<Option<String>> {
 	const E_WRITE_TO_STRING_NEVER_FAILS: &str = "[core::check] write to string never fails; qed";
 
 	let (a, b) = {
-		let (a, b) = futures::join!(node::runtime_version(a_uri), node::runtime_version(b_uri));
+		let (a, b) = futures::join!(
+			node::runtime_version(a_uri, None::<()>),
+			node::runtime_version(b_uri, None::<()>)
+		);
 
 		(a?, b?)
 	};
@@ -128,7 +131,10 @@ pub async fn check_storage(
 			)
 		}
 
-		let (a, b) = futures::join!(node::runtime_metadata(a_uri), node::runtime_metadata(b_uri));
+		let (a, b) = futures::join!(
+			node::runtime_metadata(a_uri, None::<()>),
+			node::runtime_metadata(b_uri, None::<()>)
+		);
 		let (a, b) = (a?, b?);
 
 		(parse_metadata(a), parse_metadata(b))
