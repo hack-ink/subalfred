@@ -1,5 +1,7 @@
 //! Subalfred core node library.
 
+#[cfg(test)] mod test;
+
 // std
 use std::{
 	io::{BufRead, BufReader},
@@ -8,6 +10,7 @@ use std::{
 // crates.io
 use array_bytes::TryFromHex;
 use parity_scale_codec::Decode;
+use serde::Serialize;
 // hack-ink
 use crate::{jsonrpc::http, prelude::*};
 use submetadatan::{LatestRuntimeMetadata, RuntimeMetadataPrefixed};
@@ -48,15 +51,19 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 }
 
 /// Get runtime version from a nodes's HTTP RPC endpoint.
-pub async fn runtime_version(uri: &str) -> Result<RuntimeVersion> {
-	Ok(http::send::<_, RuntimeVersion>(uri, &state::get_runtime_version(0, None::<()>))
-		.await?
-		.result)
+pub async fn runtime_version<Hash>(uri: &str, at: Option<Hash>) -> Result<RuntimeVersion>
+where
+	Hash: Serialize,
+{
+	Ok(http::send::<_, RuntimeVersion>(uri, &state::get_runtime_version(0, at)).await?.result)
 }
 
 /// Fetch runtime metadata from a nodes's HTTP RPC endpoint.
-pub async fn runtime_metadata(uri: &str) -> Result<LatestRuntimeMetadata> {
-	let response = http::send::<_, String>(uri, &state::get_metadata(0, None::<()>)).await?;
+pub async fn runtime_metadata<Hash>(uri: &str, at: Option<Hash>) -> Result<LatestRuntimeMetadata>
+where
+	Hash: Serialize,
+{
+	let response = http::send::<_, String>(uri, &state::get_metadata(0, at)).await?;
 
 	parse_raw_runtime_metadata(&response.result)
 }
