@@ -1,17 +1,66 @@
-# The Get Command
-Currently, there's only one subcommand available.
+# Command `get`
+```
+Substrate-link node getter
 
-## Runtime Upgrade Block
+Usage: subalfred get [OPTIONS] <COMMAND>
+
+Commands:
+  runtime-upgrade-block
+          Get the runtime upgrade block
+  help
+          Print this message or the help of the given subcommand(s)
+
+Options:
+  -l, --log <TARGET=LEVEL,*>
+          Set a custom log filter.
+
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+
+          [default: info]
+
+  -h, --help
+          Print help information (use `-h` for a summary)
+```
+
+## Command `get runtime-upgrade-block`
+```
+Get the runtime upgrade block.
+
+Using the dichotomy algorithm to find it out. This operation will fail if the runtime version does not existed.
+
+Usage: subalfred get runtime-upgrade-block [OPTIONS] --uri <URI> <VERSION>
+
+Arguments:
+  <VERSION>
+          At this runtime version
+
+Options:
+      --uri <URI>
+          Node's WS RPC endpoint
+
+          [default: ws://localhost:9944]
+
+  -l, --log <TARGET=LEVEL,*>
+          Set a custom log filter.
+
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+
+          [default: info]
+
+  -h, --help
+          Print help information (use `-h` for a summary)
+```
+
+### Episode 1
 The original question was from [stackexchange](https://substrate.stackexchange.com/questions/3861/how-do-you-tell-which-block-number-the-last-runtime-upgrade-happened-on-a-chain).
 
 Yep, I think that is an interesting question.
 So, I implemented this method.
-
 It uses dichotomy algorithm, the whole process takes:
 
 $$\log_{2} BlockHeight\times Requests$$
 
-### Examples
+### Example
 ```sh
 subalfred get runtime-upgrade-block 9100 --uri wss://rpc.polkadot.io -lsubalfred_core::node
 ```

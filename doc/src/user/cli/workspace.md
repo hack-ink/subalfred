@@ -1,13 +1,57 @@
-# The Workspace Command
-This is a release helper.
+# Command `workspace`
+```
+Workspace manager
 
-Currently, there is only one command.
+Usage: subalfred workspace [OPTIONS] <COMMAND>
 
-## Update
-Update the workspace members version to the given one.
-If `--manifest-path` is missing, it will read the current folder's `Cargo.toml` as the root manifest.
+Commands:
+  update
+          Update the workspace members' crate version
+  help
+          Print this message or the help of the given subcommand(s)
 
-### Examples
+Options:
+  -l, --log <TARGET=LEVEL,*>
+          Set a custom log filter.
+
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+
+          [default: info]
+
+  -h, --help
+          Print help information (use `-h` for a summary)
+```
+
+## Command `workspace update`
+```
+Update the workspace members' crate version
+
+Usage: subalfred workspace update [OPTIONS] <VERSION>
+
+Arguments:
+  <VERSION>
+          Target version
+
+Options:
+      --manifest-path <PATH>
+          Root `Cargo.toml`'s path.
+
+          If `Cargo.toml` wasn't given, Subalfred will search it under the given path.
+
+          [default: ./Cargo.toml]
+
+  -l, --log <TARGET=LEVEL,*>
+          Set a custom log filter.
+
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+
+          [default: info]
+
+  -h, --help
+          Print help information (use `-h` for a summary)
+```
+
+### Example
 ```sh
-subalfred workspace update v0.9.1
+subalfred workspace update 1.0.0
 ```

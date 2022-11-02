@@ -9,7 +9,7 @@
 ///
 /// Require [serde](https://crates.io/crates/serde) and [serde_json](https://crates.io/crates/serde_json) as the dependencies.
 ///
-/// # Examples
+/// # Example
 /// ```
 /// impl_apis! {
 /// 	state {

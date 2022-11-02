@@ -1,9 +1,46 @@
-# The Key Command
-Convert the public key/SS58 address from SS58 address/public key.
+# Command `key`
+```
+Calculate the public key/SS58 address of the SS58 address/public key
 
-## Examples
+Usage: subalfred key [OPTIONS] <PUBLIC KEY/SS58 ADDRESS>
 
-### Get the Public Key
+Arguments:
+  <PUBLIC KEY/SS58 ADDRESS>
+          Public key/SS58 address
+
+Options:
+      --type <TYPE>
+          Key type
+
+          [possible values: pallet, parachain, sibling]
+
+      --network <NAME>
+          Network name
+
+          [default: Substrate]
+
+      --list-all
+          List all the networks' addresses
+
+      --show-prefix
+          Show network(s) prefix(es)
+
+      --json-output
+          Enable JSON output
+
+  -l, --log <TARGET=LEVEL,*>
+          Set a custom log filter.
+
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+
+          [default: info]
+
+  -h, --help
+          Print help information (use `-h` for a summary)
+```
+
+## Example
+### Calculate the public key
 ```sh
 subalfred key 0xb4f7f03bebc56ebe96bc52ea5ed3159d45a0ce3a8d7f082983c33ef133274747
 ```
@@ -12,7 +49,7 @@ public-key 0xb4f7f03bebc56ebe96bc52ea5ed3159d45a0ce3a8d7f082983c33ef133274747
 Substrate 5G9z8Ttoo7892VqBHiSWCbnd2aEdH8noJLqZ4HFMzMVNhvgP
 ```
 
-### Get the SS58 Address
+### Calculate the SS58 address
 ```sh
 subalfred key 5G9z8Ttoo7892VqBHiSWCbnd2aEdH8noJLqZ4HFMzMVNhvgP
 ```
@@ -21,7 +58,7 @@ public-key 0xb4f7f03bebc56ebe96bc52ea5ed3159d45a0ce3a8d7f082983c33ef133274747
 Substrate 5G9z8Ttoo7892VqBHiSWCbnd2aEdH8noJLqZ4HFMzMVNhvgP
 ```
 
-### Get the Pallet Address
+### Calculate the pallet address
 ```sh
 subalfred key --type pallet "py/trsry"
 ```
@@ -39,7 +76,7 @@ public-key 0x6d6f646c70792f74727372790000000000000000000000000000000000000000 Pa
 Substrate 5EYCAe5ijiYfyeZ2JJCGq56LmPyNRAKzpG4QkoQkkQNB5e6Z
 ```
 
-### Get the Sovereign Address
+### Calculate the sovereign address
 Sovereign address on relaychain.
 ```sh
 subalfred key --type parachain 2000
@@ -58,7 +95,7 @@ public-key 0x7369626cd0070000000000000000000000000000000000000000000000000000 Si
 Substrate 5Eg2fntJ27qsari4FGrGhrMqKFDRnkNSR6UshkZYBGXmSuC8
 ```
 
-Note that, if you are on Moonbeam-link chain, remove 24 trailing zeros from the public-key.
+Note that, if you are on Moonbeam-link chain, remove last 24 zeros from the public-key.
 ```sh
 public-key 0x7369626cd0070000000000000000000000000000000000000000000000000000 SiblId(2000)
 public-key 0x7369626cd0070000000000000000000000000000 SiblId(2000)
@@ -75,12 +112,7 @@ Substrate 5Eg2fntJ27qsari4FGrGhrMqKFDRnkNSR6UshkZYBGXmSuC8
 
 [Subalfred]: https://github.com/hack-ink/subalfred
 
-## Options
-These flags can be applied to any key command.
-Also, they could be used with any other flags.
-
-
-### List All
+### Option `list-all`
 ```sh
 subalfred key --list-all 5G9z8Ttoo7892VqBHiSWCbnd2aEdH8noJLqZ4HFMzMVNhvgP
 ```
@@ -202,7 +234,7 @@ zero                  3Tz7Uc9YssP4DSYpz8c5QNzyPqfLHqTRuQsByyfwexnbeM1M
 zero-alphaville       3ZmmjbgxGAFnNVxHtfV6nHGQ3KodM25x6MRKbfKF7pP5vUpv
 ```
 
-### Network
+### Option `--network`
 The network parameter is case [insensitive](https://github.com/paritytech/ss58-registry/pull/106).
 ```sh
 subalfred key --network polkadot 5G9z8Ttoo7892VqBHiSWCbnd2aEdH8noJLqZ4HFMzMVNhvgP
@@ -212,7 +244,7 @@ public-key 0xb4f7f03bebc56ebe96bc52ea5ed3159d45a0ce3a8d7f082983c33ef133274747
 polkadot 156HGo9setPcU2qhFMVWLkcmtCEGySLwNqa3DaEiYSWtte4Y
 ```
 
-### Show Prefix
+### Option `--show-prefix`
 ```sh
 subalfred key --show-prefix 5G9z8Ttoo7892VqBHiSWCbnd2aEdH8noJLqZ4HFMzMVNhvgP
 ```
@@ -221,5 +253,24 @@ public-key 0xb4f7f03bebc56ebe96bc52ea5ed3159d45a0ce3a8d7f082983c33ef133274747
 Substrate 42 5G9z8Ttoo7892VqBHiSWCbnd2aEdH8noJLqZ4HFMzMVNhvgP
 ```
 
-### Type
-See [Get the Pallet Address](#get-the-pallet-address) and [Get the Sovereign Address](#get-the-sovereign-address) sections.
+### Option `--show-prefix`
+If you don't have the `jq` command, then just ignore that.
+I only use it to beautify the output here.
+```sh
+subalfred key --json-output 5G9z8Ttoo7892VqBHiSWCbnd2aEdH8noJLqZ4HFMzMVNhvgP | jq
+```
+```json
+{
+  "addresses": [
+    {
+      "address": "5G9z8Ttoo7892VqBHiSWCbnd2aEdH8noJLqZ4HFMzMVNhvgP",
+      "network": "Substrate"
+    }
+  ],
+  "public-key": "0xb4f7f03bebc56ebe96bc52ea5ed3159d45a0ce3a8d7f082983c33ef133274747",
+  "sub-seed": ""
+}
+```
+
+### Option `--type`
+See [Calculate the pallet address](#calculate-the-pallet-address) and [Calculate the sovereign address](#calculate-the-sovereign-address) sections.

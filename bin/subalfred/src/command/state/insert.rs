@@ -8,13 +8,13 @@ use subalfred_core::{state, system};
 ///
 /// If the key already exists, it will be overwritten.
 ///
-/// # Examples
+/// # Example
 /// ```sh
 /// # Calculate the WASM code key.
 /// subalfred convert ascii2hex ':code'
 /// # "0x3a636f6465"
 /// # Override the WASM code.
-/// subalfred state insert chain_spec.json --key 0x3a636f6465 --with-file runtime.compact.compressed.wasm
+/// subalfred state insert chain-spec.json --key 0x3a636f6465 --with-file runtime.compact.compressed.wasm
 /// ```
 #[derive(Debug, Args)]
 #[command(group(

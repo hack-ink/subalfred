@@ -1,14 +1,42 @@
-# Command Line Tool
-The `subalfred` command-line tool is used to create and build books.
-After you have [installed](../installation.md) `subalfred`, you can run the `subalfred help` command in your terminal to view the available commands.
+# Command `subalfred`
+```
+Your Substrate Alfred.
 
-This following sections provide in-depth information on the different commands available.
+Usage: subalfred [OPTIONS] <COMMAND>
 
-* [`subalfred check`](check.md)
-* [`subalfred convert`](convert.md)
-* [`subalfred get`](get.md)
-* [`subalfred hash`](hash.md)
-* [`subalfred key`](key.md)
-* [`subalfred state`](state.md)
-* [`subalfred storage-key`](storage-key.md)
-* [`subalfred workspace`](workspace.md)
+Commands:
+  check
+          Substrate development checkers
+  convert
+          Data style converters
+  get
+          Substrate-link node getter
+  hash
+          Hash the hex with the specific hasher(hash algorithm)
+  key
+          Calculate the public key/SS58 address of the SS58 address/public key
+  rpc
+          Send a RPC request to the node's HTTP RPC endpoint
+  state
+          A set of tools to process Substrate-like chain state
+  storage-key
+          Calculate the storage key of the storage item
+  workspace
+          Workspace manager
+  help
+          Print this message or the help of the given subcommand(s)
+
+Options:
+  -l, --log <TARGET=LEVEL,*>
+          Set a custom log filter.
+
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+
+          [default: info]
+
+  -h, --help
+          Print help information (use `-h` for a summary)
+
+  -V, --version
+          Print version information
+```
