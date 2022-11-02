@@ -51,7 +51,7 @@ Options:
 
 ```
 
-### Examples
+### Example
 ```sh
 subalfred convert ascii2hex AurevoirXavier
 ```
@@ -92,7 +92,7 @@ Options:
 ```
 
 
-### Examples
+### Example
 #### From Vec String to Byte String Literal
 ```sh
 subalfred convert bytes-style --from vec-string --to byte-string-literal "[65, 117, 114, 101, 118, 111, 105, 114, 88, 97, 118, 105, 101, 114]"
@@ -145,7 +145,7 @@ Options:
           Print help information (use `-h` for a summary)
 ```
 
-### Examples
+### Example
 ```sh
 subalfred convert bytes2hex "[65, 117, 114, 101, 118, 111, 105, 114, 88, 97, 118, 105, 101, 114]"
 ```
@@ -177,7 +177,7 @@ Options:
           Print help information (use `-h` for a summary)
 ```
 
-### Examples
+### Example
 ```sh
 subalfred convert hex2bytes 0x41757265766f6972586176696572
 ```

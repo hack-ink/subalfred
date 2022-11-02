@@ -9,6 +9,7 @@
     - [get](user/cli/get.md)
     - [hash](user/cli/hash.md)
     - [key](user/cli/key.md)
+    - [rpc](user/cli/rpc.md)
     - [state](user/cli/state.md)
     - [storage-key](user/cli/storage-key.md)
     - [workspace](user/cli/workspace.md)

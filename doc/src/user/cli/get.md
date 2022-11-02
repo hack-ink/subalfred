@@ -60,7 +60,7 @@ It uses dichotomy algorithm, the whole process takes:
 
 $$\log_{2} BlockHeight\times Requests$$
 
-### Examples
+### Example
 ```sh
 subalfred get runtime-upgrade-block 9100 --uri wss://rpc.polkadot.io -lsubalfred_core::node
 ```

@@ -39,7 +39,7 @@ Options:
           Print help information (use `-h` for a summary)
 ```
 
-## Examples
+## Example
 ### Calculate the public key
 ```sh
 subalfred key 0xb4f7f03bebc56ebe96bc52ea5ed3159d45a0ce3a8d7f082983c33ef133274747

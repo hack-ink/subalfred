@@ -19,7 +19,7 @@ macro_rules! execution_timer {
 ///
 /// This struct holding a start time.
 /// While it get dropped, it will log the elapsed time.
-/// # Examples
+/// # Example
 /// ```
 /// use subalfred_util::ExecutionTimer;
 ///

@@ -56,10 +56,10 @@ Options:
           Print help information (use `-h` for a summary)
 ```
 
-### Examples
+### Example
 We assume node-template's live chain is Polkadot here.
 
-#### ENV Preparation
+#### ENV preparation
 ```sh
 git clone https://github.com/substrate-developer-hub/substrate-node-template.git /tmp/subalfred-example/substrate-node-template
 cd /tmp/subalfred-example/substrate-node-template
@@ -205,7 +205,7 @@ As time passed, more and more features were added to Substrate.
 We have `std`, `runtime-benchmarks` and `try-runtime` now.
 It's hard to check if all features are enabled correctly.
 
-### Examples
+### Example
 ```sh
 git clone https://github.com/paritytech/polkadot /tmp/subalfred-example/polkadot
 cd /tmp/subalfred-example/polkadot

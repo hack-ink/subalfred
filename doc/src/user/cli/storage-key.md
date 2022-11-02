@@ -1,12 +1,33 @@
-# The Storage Key Command
-Calculate the storage key for the storage prefix/item quickly.
+# Command `storage-key`
+```
+Calculate the storage key of the storage item
 
-## Examples
+Usage: subalfred storage-key [OPTIONS] --pallet <PREFIX> --item <ITEM>
+
+Options:
+      --pallet <PREFIX>
+          Prefix of the storage
+
+      --item <ITEM>
+          Name of the storage item
+
+  -l, --log <TARGET=LEVEL,*>
+          Set a custom log filter.
+
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+
+          [default: info]
+
+  -h, --help
+          Print help information (use `-h` for a summary)
+```
+
+## Example
 ```sh
-subalfred storage-key --prefix System --item Number
+subalfred storage-key --pallet System --item Account
 ```
 ```
-0x26aa394eea5630e07c48ae0c9558cef702a5c1b19ab7a04f536c519aca4983ac
+0x26aa394eea5630e07c48ae0c9558cef7b99d880ec681799c0cf30e8886371da9
 ```
 
 Actually, it equals to `twox128(prefix) + twox128(item)`.
