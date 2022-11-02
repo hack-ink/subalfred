@@ -7,7 +7,7 @@ license     = "GPL-3.0"
 name        = "cmd-impl"
 readme      = "README.md"
 repository  = "https://github.com/hack-ink/subalfred"
-version     = "0.9.0-rc13"
+version     = "0.9.0-rc14"
 
 [lib]
 proc-macro = true
