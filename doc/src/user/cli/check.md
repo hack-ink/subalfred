@@ -1,166 +1,239 @@
-# The Check Command
-Currently, there are two subcommands available.
+# Command `check`
+```
+Substrate development checkers
 
-## Runtime
-As the name says, the checks are on the runtime level.
+Usage: subalfred check [OPTIONS] <COMMAND>
 
-There are three shared options:
-- `--chain <NAME>`The chain name, which will supply to the executable.
-- `--executable <PATH>` The executable path.
-- `--live <URI>` The live chain's HTTP RPC endpoint.
+Commands:
+  runtime
+          Compare the local node's runtime version with the live's one
+  features
+          Check if the crates' features are enabled correctly
+  help
+          Print this message or the help of the given subcommand(s)
 
-And there are two properties to check, `storage` and `version`.
+Options:
+  -l, --log <TARGET=LEVEL,*>
+          Set a custom log filter.
+
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+
+          [default: info]
+
+  -h, --help
+          Print help information (use `-h` for a summary)
+```
+
+## Command `check runtime`
+```
+Compare the local node's runtime version with the live's one
+
+Usage: subalfred check runtime [OPTIONS] --executable <PATH> --chain <NAME> --live <URI> --property <PROPERTY>
+
+Options:
+      --executable <PATH>
+          Node executable's path
+
+      --chain <NAME>
+          Pass this name to `--chain` to launch the local chain
+
+      --live <URI>
+          Live chain's HTTP RPC endpoint
+
+      --property <PROPERTY>
+          Target property
+
+          [possible values: storage, version]
+
+  -l, --log <TARGET=LEVEL,*>
+          Set a custom log filter.
+
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+
+          [default: info]
+
+  -h, --help
+          Print help information (use `-h` for a summary)
+```
 
 ### Examples
-For convenience, I use the [Pangolin Network](https://github.com/darwinia-network/darwinia-common) to demonstrate.
+We assume node-template's live chain is Polkadot here.
 
-- `pangolin-dev` is the dev chain spec, which means its genesis is built from the latest code.
-  If you are on Polkadot, then use `polkadot-dev`.
-- `./drml` is the path to my local pangolin node executable.
-- `https://pangolin-rpc.darwinia.network` is the Pangoro live chain's HTTP RPC endpoint.
-  Note that, I use the Pangoro here. Just because I'm doing a demonstration.
-  Compare with two different chains' runtime storage/version will get a lot of output.
-
-#### Check Runtime Storage
+#### ENV Preparation
 ```sh
-subalfred check runtime --chain pangolin-dev --executable ./drml --live https://pangoro-rpc.darwinia.network --property storage
+git clone https://github.com/substrate-developer-hub/substrate-node-template.git /tmp/subalfred-example/substrate-node-template
+cd /tmp/subalfred-example/substrate-node-template
+cargo build
+```
+
+#### Command `check runtime --property storage`
+```sh
+subalfred check runtime --chain dev --executable target/debug/node-template --live https://rpc.polkadot.io --property storage
 ```
 ```diff
-+ Pallet: "Bounties"
-- Pallet: "BridgePangolinGrandpa"
-- Pallet: "BridgePangolinMessages"
-+ Pallet: "BridgePangolinParachainMessages"
-+ Pallet: "BridgePangoroGrandpa"
-+ Pallet: "BridgePangoroMessages"
-+ Pallet: "BridgeRococoGrandpa"
-+ Pallet: "BridgeRococoParachains"
-+ Pallet: "Council"
-+ Pallet: "DarwiniaEthereumRelay"
-+ Pallet: "Democracy"
-+ Pallet: "EcdsaRelayAuthority"
-+ Pallet: "EthereumBacking"
-+ Pallet: "HeaderMmr"
-+ Pallet: "Identity"
-+ Pallet: "Instance1DarwiniaRelayerGame"
-+ Pallet: "KtonTreasury"
-+ Pallet: "Multisig"
-- Pallet: "PangolinFeeMarket"
-+ Pallet: "PangolinParachainFeeMarket"
-+ Pallet: "PangoroFeeMarket"
-+ Pallet: "PhragmenElection"
-+ Pallet: "Proxy"
-+ Pallet: "Recovery"
-+ Pallet: "Society"
-- Pallet: "Substrate2SubstrateBacking"
-+ Pallet: "Substrate2SubstrateIssuing"
-+ Pallet: "TechnicalCommittee"
-+ Pallet: "TechnicalMembership"
-+ Pallet: "Tips"
-+ Pallet: "ToPangolinParachainBacking"
-+ Pallet: "Vesting"
+- Pallet: "Auctions"
++ Pallet: "Aura"
+- Pallet: "Authorship"
+- Pallet: "Babe"
+- Pallet: "Bounties"
+- Pallet: "ChildBounties"
+- Pallet: "Claims"
+- Pallet: "Configuration"
+- Pallet: "Council"
+- Pallet: "Crowdloan"
+- Pallet: "Democracy"
+- Pallet: "Dmp"
+- Pallet: "ElectionProviderMultiPhase"
+- Pallet: "Hrmp"
+- Pallet: "Identity"
+- Pallet: "ImOnline"
+- Pallet: "Indices"
+- Pallet: "Initializer"
+- Pallet: "Multisig"
+- Pallet: "NominationPools"
+- Pallet: "Offences"
+- Pallet: "ParaInclusion"
+- Pallet: "ParaInherent"
+- Pallet: "ParaScheduler"
+- Pallet: "ParaSessionInfo"
+- Pallet: "Paras"
+- Pallet: "ParasDisputes"
+- Pallet: "ParasShared"
+- Pallet: "PhragmenElection"
+- Pallet: "Preimage"
+- Pallet: "Proxy"
++ Pallet: "RandomnessCollectiveFlip"
+- Pallet: "Registrar"
+- Pallet: "Scheduler"
+- Pallet: "Session"
+- Pallet: "Slots"
+- Pallet: "Staking"
++ Pallet: "Sudo"
+- Pallet: "TechnicalCommittee"
+- Pallet: "TechnicalMembership"
++ Pallet: "TemplateModule"
+- Pallet: "Tips"
+- Pallet: "Treasury"
+- Pallet: "Ump"
+- Pallet: "Vesting"
+- Pallet: "VoterList"
+- Pallet: "XcmPallet"
 
-Pallet ElectionProviderMultiPhase
-+ Entry: StorageEntryMetadata { name: "SignedSubmissionsMap", modifier: Default, ty: Map { hashers: [Twox64Concat], key: UntrackedSymbol { id: 4, marker: PhantomData }, value: UntrackedSymbol { id: 227, marker: PhantomData } }, default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], docs: [" Unchecked, signed solutions.", "", " Together with `SubmissionIndices`, this stores a bounded set of `SignedSubmissions` while", " allowing us to keep only a single one in memory at a time.", "", " Twox note: the key of the map is an auto-incrementing index which users cannot inspect or", " affect; we shouldn't need a cryptographically secure hasher."] }
-- Entry: StorageEntryMetadata { name: "SignedSubmissionsMap", modifier: Default, ty: Map { hashers: [Twox64Concat], key: UntrackedSymbol { id: 4, marker: PhantomData }, value: UntrackedSymbol { id: 186, marker: PhantomData } }, default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], docs: [" Unchecked, signed solutions.", "", " Together with `SubmissionIndices`, this stores a bounded set of `SignedSubmissions` while", " allowing us to keep only a single one in memory at a time.", "", " Twox note: the key of the map is an auto-incrementing index which users cannot inspect or", " affect; we shouldn't need a cryptographically secure hasher."] }
+Pallet Balances
++ Entry: StorageEntryMetadata { name: "Locks", modifier: Default, ty: Map { hashers: [Blake2_128Concat], key: UntrackedSymbol { id: 0, marker: PhantomData }, value: UntrackedSymbol { id: 94, marker: PhantomData } }, default: [0], docs: [" Any liquidity locks on some account balances.", " NOTE: Should only be accessed when setting, changing and freeing a lock."] }
+- Entry: StorageEntryMetadata { name: "Locks", modifier: Default, ty: Map { hashers: [Blake2_128Concat], key: UntrackedSymbol { id: 0, marker: PhantomData }, value: UntrackedSymbol { id: 467, marker: PhantomData } }, default: [0], docs: [" Any liquidity locks on some account balances.", " NOTE: Should only be accessed when setting, changing and freeing a lock."] }
++ Entry: StorageEntryMetadata { name: "Reserves", modifier: Default, ty: Map { hashers: [Blake2_128Concat], key: UntrackedSymbol { id: 0, marker: PhantomData }, value: UntrackedSymbol { id: 98, marker: PhantomData } }, default: [0], docs: [" Named reserves on some account balances."] }
+- Entry: StorageEntryMetadata { name: "Reserves", modifier: Default, ty: Map { hashers: [Blake2_128Concat], key: UntrackedSymbol { id: 0, marker: PhantomData }, value: UntrackedSymbol { id: 471, marker: PhantomData } }, default: [0], docs: [" Named reserves on some account balances."] }
 
-Pallet Scheduler
-+ Entry: StorageEntryMetadata { name: "Agenda", modifier: Default, ty: Map { hashers: [Twox64Concat], key: UntrackedSymbol { id: 4, marker: PhantomData }, value: UntrackedSymbol { id: 609, marker: PhantomData } }, default: [0], docs: [" Items to be executed, indexed by the block number that they should be executed on."] }
-- Entry: StorageEntryMetadata { name: "Agenda", modifier: Default, ty: Map { hashers: [Twox64Concat], key: UntrackedSymbol { id: 4, marker: PhantomData }, value: UntrackedSymbol { id: 378, marker: PhantomData } }, default: [0], docs: [" Items to be executed, indexed by the block number that they should be executed on."] }
-
-Pallet Session
-+ Entry: StorageEntryMetadata { name: "NextKeys", modifier: Optional, ty: Map { hashers: [Twox64Concat], key: UntrackedSymbol { id: 0, marker: PhantomData }, value: UntrackedSymbol { id: 347, marker: PhantomData } }, default: [0], docs: [" The next session keys for a validator."] }
-- Entry: StorageEntryMetadata { name: "NextKeys", modifier: Optional, ty: Map { hashers: [Twox64Concat], key: UntrackedSymbol { id: 0, marker: PhantomData }, value: UntrackedSymbol { id: 282, marker: PhantomData } }, default: [0], docs: [" The next session keys for a validator."] }
-+ Entry: StorageEntryMetadata { name: "QueuedKeys", modifier: Default, ty: Plain(UntrackedSymbol { id: 345, marker: PhantomData }), default: [0], docs: [" The queued keys for the next session. When the next session begins, these keys", " will be used to determine the validator's session keys."] }
-- Entry: StorageEntryMetadata { name: "QueuedKeys", modifier: Default, ty: Plain(UntrackedSymbol { id: 280, marker: PhantomData }), default: [0], docs: [" The queued keys for the next session. When the next session begins, these keys", " will be used to determine the validator's session keys."] }
+Pallet Grandpa
++ Entry: StorageEntryMetadata { name: "PendingChange", modifier: Optional, ty: Plain(UntrackedSymbol { id: 77, marker: PhantomData }), default: [0], docs: [" Pending change: (signaled at, scheduled change)."] }
+- Entry: StorageEntryMetadata { name: "PendingChange", modifier: Optional, ty: Plain(UntrackedSymbol { id: 513, marker: PhantomData }), default: [0], docs: [" Pending change: (signaled at, scheduled change)."] }
 
 Pallet System
-+ Entry: StorageEntryMetadata { name: "Events", modifier: Default, ty: Plain(UntrackedSymbol { id: 15, marker: PhantomData }), default: [0], docs: [" Events deposited for the current block.", "", " NOTE: This storage item is explicitly unbounded since it is never intended to be read", " from within the runtime."] }
-- Entry: StorageEntryMetadata { name: "Events", modifier: Default, ty: Plain(UntrackedSymbol { id: 15, marker: PhantomData }), default: [0], docs: [" Events deposited for the current block.", "", " NOTE: This storage item is explicitly unbounded since it is never intended to be read", " from within the runtime."] }
++ Entry: StorageEntryMetadata { name: "BlockWeight", modifier: Default, ty: Plain(UntrackedSymbol { id: 7, marker: PhantomData }), default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], docs: [" The current weight for the block."] }
+- Entry: StorageEntryMetadata { name: "BlockWeight", modifier: Default, ty: Plain(UntrackedSymbol { id: 7, marker: PhantomData }), default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], docs: [" The current weight for the block."] }
++ Entry: StorageEntryMetadata { name: "Events", modifier: Default, ty: Plain(UntrackedSymbol { id: 16, marker: PhantomData }), default: [0], docs: [" Events deposited for the current block.", "", " NOTE: The item is unbound and should therefore never be read on chain.", " It could otherwise inflate the PoV size of a block.", "", " Events have a large in-memory size. Box the events to not go out-of-memory", " just in case someone still reads them from within the runtime."] }
+- Entry: StorageEntryMetadata { name: "Events", modifier: Default, ty: Plain(UntrackedSymbol { id: 16, marker: PhantomData }), default: [0], docs: [" Events deposited for the current block.", "", " NOTE: The item is unbound and should therefore never be read on chain.", " It could otherwise inflate the PoV size of a block.", "", " Events have a large in-memory size. Box the events to not go out-of-memory", " just in case someone still reads them from within the runtime."] }
 ```
 
-#### Check Runtime Version
+#### Command `check runtime --property version`
 ```sh
-subalfred check runtime --chain pangolin-dev --executable ./drml --live https://pangoro-rpc.darwinia.network --property version
+subalfred check runtime --chain dev --executable target/debug/substrate-node-template --live https://rpc.polkadot.io --property version
 ```
 ```diff
 RuntimeVersion {
--   spec_name: "Pangoro",
-+   spec_name: "Pangolin",
--   impl_name: "Pangoro",
-+   impl_name: "Pangolin",
-    authoring_version: 0,
-    spec_version: 29020,
-    impl_version: 0,
-    transaction_version: 0,
+-   spec_name: "polkadot",
++   spec_name: "node-template",
+-   impl_name: "parity-polkadot",
++   impl_name: "node-template",
+-   authoring_version: 0,
++   authoring_version: 1,
+-   spec_version: 9291,
++   spec_version: 100,
+-   impl_version: 0,
++   impl_version: 1,
+-   transaction_version: 14,
++   transaction_version: 1,
+-   state_version: 0,
++   state_version: 1,
 }
 ```
 
 ## Features
-You could check if all your runtime features' were enabled correctly in one command.
+```
+Check if the crates' features are enabled correctly
+
+Usage: subalfred check features [OPTIONS] [PATH]
+
+Arguments:
+  [PATH]
+          Target `Cargo.toml`'s path. The target could be a pallet or runtime.
+
+          If `Cargo.toml` wasn't given, Subalfred will search it under the given path.
+
+          [default: ./Cargo.toml]
+
+Options:
+  -l, --log <TARGET=LEVEL,*>
+          Set a custom log filter.
+
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+
+          [default: info]
+
+  -h, --help
+          Print help information (use `-h` for a summary)
+```
 
 ### Episode 1
 As we know Substrate has two runtime ENVs, native and WASM.
-
 If a runtime dependency is not pure no-std, we need to write:
 ```toml
 [features]
-std = ["xxx/std"]
+std = ["pallet/std"]
 
 [dependencies]
-xxx = { version = "0.1.0", default-features = false }
+pallet = { version = "0.1.0", default-features = false }
 ```
 
-Sometimes, we might forget to write add the `xxx/std`.
-
+Sometimes, we might forget to write add the `pallet/std`.
 Recently, I found someone have the same [requirement](https://github.com/paritytech/substrate/pull/11715).
-
-So, I decide to make this public.
+So, I decide to make this tool.
 
 ### Episode 2
 As time passed, more and more features were added to Substrate.
-
 We have `std`, `runtime-benchmarks` and `try-runtime` now.
-
 It's hard to check if all features are enabled correctly.
 
 ### Examples
-> Testing commit [paritytech/polkadot@`0fd106c`](https://github.com/paritytech/polkadot/commit/0fd106c04e5f57f6342f8e000d471d0f819f7b61)
 ```sh
-git clone https://github.com/paritytech/polkadot /tmp/paritytech/polkadot
-subalfred check features --manifest-path /tmp/paritytech/polkadot/runtime/polkadot -ltrace
+git clone https://github.com/paritytech/polkadot /tmp/subalfred-example/polkadot
+cd /tmp/subalfred-example/polkadot
+git checkout 0fd106c04e5f57f6342f8e000d471d0f819f7b61
+subalfred check features runtime/polkadot -lsubalfred
 ```
 ```
-checking: /tmp/paritytech/polkadot/runtime/polkadot/Cargo.toml
-2022-10-22T06:10:58.626261Z TRACE subalfred_core::check::features: check std takes 0.000408458 secs
-2022-10-22T06:10:58.626636Z TRACE subalfred_core::check::features: check runtime-benchmarks takes 0.000177708 secs
-2022-10-22T06:10:58.626764Z TRACE subalfred_core::check::features: check try-runtime takes 0.0001255 secs
-`std` of `frame-benchmarking` was omitted
-`std` of `pallet-election-provider-support-benchmarking` was omitted
-`std` of `polkadot-primitives` was omitted
-`std` of `polkadot-runtime-common` was omitted
-`std` of `polkadot-runtime-parachains` was omitted
-`std` of `serde_json` was omitted
-`std` of `sp-authority-discovery` was omitted
-`std` of `sp-block-builder` was omitted
-`std` of `sp-consensus-babe` was omitted
-`std` of `sp-inherents` was omitted
-`std` of `sp-io` was omitted
-`std` of `sp-offchain` was omitted
-`std` of `sp-tracing` was omitted
-`std` of `sp-transaction-pool` was omitted
-`std` of `sp-trie` was omitted
-`runtime-benchmarks` of `polkadot-primitives` was omitted
-`runtime-benchmarks` of `polkadot-runtime-common` was omitted
-`runtime-benchmarks` of `polkadot-runtime-parachains` was omitted
-`runtime-benchmarks` of `sp-staking` was omitted
-`runtime-benchmarks` of `xcm-executor` was omitted
-`try-runtime` of `frame-support` was omitted
-`try-runtime` of `polkadot-runtime-common` was omitted
-`try-runtime` of `polkadot-runtime-parachains` was omitted
+checking: runtime/polkadot/Cargo.toml
+2022-11-02T17:50:17.766228Z TRACE subalfred_core::check::features: check::features::try-runtime takes 0.000155583 secs
+2022-11-02T17:50:17.766669Z TRACE subalfred_core::check::features: check::features::std takes 0.000417541 secs
+2022-11-02T17:50:17.766846Z TRACE subalfred_core::check::features: check::features::runtime-benchmarks takes 0.000169125 secs
+incomplete `try-runtime` of `frame-support`
+incomplete `try-runtime` of `runtime-parachains`
+incomplete `std` of `frame-benchmarking`
+incomplete `std` of `frame-system-benchmarking`
+incomplete `std` of `pallet-election-provider-support-benchmarking`
+incomplete `std` of `pallet-nomination-pools-benchmarking`
+incomplete `std` of `pallet-offences-benchmarking`
+incomplete `std` of `pallet-session-benchmarking`
+incomplete `std` of `runtime-parachains`
+incomplete `std` of `sp-io`
+incomplete `runtime-benchmarks` of `primitives`
+incomplete `runtime-benchmarks` of `sp-staking`
+incomplete `runtime-benchmarks` of `xcm-executor`
 ```
 
 ## CI
 Moreover, we can add the checks into your project CI.
 
 I've already add these to the [Darwinia CI](https://github.com/darwinia-network/darwinia/blob/v0.12.3/.github/workflows/ci.yml).
-And here is a real world [example](https://github.com/darwinia-network/darwinia/pull/940#issuecomment-1226917895).
+And here is the result [example](https://github.com/darwinia-network/darwinia/pull/940#issuecomment-1226917895).
