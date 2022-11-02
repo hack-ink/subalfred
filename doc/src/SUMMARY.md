@@ -3,7 +3,7 @@
 
 # User Guide
 - [Installation](user/installation.md)
-- [Command Line Tool](user/cli/README.md)
+- [Command](user/cli/README.md)
     - [check](user/cli/check.md)
     - [convert](user/cli/convert.md)
     - [get](user/cli/get.md)

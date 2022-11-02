@@ -1,21 +1,32 @@
-# The Hash Command
-Hash the data with the specify algorithm.
+# Command `hash`
+```
+Hash the hex with the specific hasher(hash algorithm)
 
-Available algorithms:
-- blake2-128
-- blake2-128-concat (default)
-- blake2-256
-- blake2-512
-- twox64
-- twox64-concat
-- twox128
-- twox256
-- keccak256
-- keccak512
-- sha2-256
+Usage: subalfred hash [OPTIONS] <HEX>
+
+Arguments:
+  <HEX>
+          Hex data input
+
+Options:
+      --hasher <HASHER>
+          Hash algorithm
+
+          [default: blake2-128-concat]
+          [possible values: blake2-128, blake2-128-concat, blake2-256, blake2-512, twox64, twox64-concat, twox128, twox256, keccak256, keccak512, sha2-256]
+
+  -l, --log <TARGET=LEVEL,*>
+          Set a custom log filter.
+
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+
+          [default: info]
+
+  -h, --help
+          Print help information (use `-h` for a summary)
+```
 
 ## Examples
-
 ### blake2-128-concat (Default)
 ```sh
 subalfred hash 0xb4f7f03bebc56ebe96bc52ea5ed3159d45a0ce3a8d7f082983c33ef133274747
@@ -103,4 +114,3 @@ subalfred hash --hasher sha2-256 0xb4f7f03bebc56ebe96bc52ea5ed3159d45a0ce3a8d7f0
 ```
 0x5d0ae9ab625ce7c50e5ced079f414f28161b1b645df49679ebd794fc43c239bc
 ```
-
