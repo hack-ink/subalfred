@@ -5,12 +5,14 @@
 
 #![deny(missing_docs)]
 
+// TODO: https://github.com/rust-lang/rust/issues/82715
+// This should be `no_run` eventually
 /// Define a group of APIs.
 ///
 /// Require [serde](https://crates.io/crates/serde) and [serde_json](https://crates.io/crates/serde_json) as the dependencies.
 ///
 /// # Example
-/// ```
+/// ```ignore
 /// impl_apis! {
 /// 	state {
 /// 		call { params: [name, bytes], opt_params: [hash] }
