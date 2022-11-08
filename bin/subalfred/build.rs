@@ -1,3 +1,5 @@
+// std
+use std::io::{self, Write};
 // crates.io
 use vergen::{Config, ShaKind};
 
@@ -6,13 +8,12 @@ fn main() {
 
 	*config.git_mut().sha_kind_mut() = ShaKind::Short;
 
-	match vergen(config) {
-		Ok(_) => (),
-		// Disable the git version if installed from <crates.io>.
-		Err(e) => {
-			*config.git_mut().enabled_mut() = false;
+	// Disable the git version if installed from <crates.io>.
+	if vergen::vergen(config.clone()).is_err() {
+		*config.git_mut().enabled_mut() = false;
 
-			vergen(config).unwrap();
-		},
+		writeln!(io::stdout(), "cargo:rustc-env=VERGEN_GIT_SHA_SHORT=crates.io").unwrap();
+
+		vergen::vergen(config).unwrap();
 	}
 }
