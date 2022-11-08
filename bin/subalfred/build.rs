@@ -1,5 +1,3 @@
-// std
-use std::io::{self, Write};
 // crates.io
 use vergen::{Config, ShaKind};
 
@@ -12,7 +10,7 @@ fn main() {
 	if vergen::vergen(config.clone()).is_err() {
 		*config.git_mut().enabled_mut() = false;
 
-		writeln!(io::stdout(), "cargo:rustc-env=VERGEN_GIT_SHA_SHORT=crates.io").unwrap();
+		println!("cargo:rustc-env=VERGEN_GIT_SHA_SHORT=crates.io");
 
 		vergen::vergen(config).unwrap();
 	}
