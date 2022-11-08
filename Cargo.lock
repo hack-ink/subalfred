@@ -263,7 +263,7 @@ dependencies = [
 
 [[package]]
 name = "cmd-impl"
-version = "0.9.0-rc15"
+version = "0.9.0-rc16"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1550,7 +1550,7 @@ checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
 
 [[package]]
 name = "subalfred"
-version = "0.9.0-rc15"
+version = "0.9.0-rc16"
 dependencies = [
  "anyhow",
  "array-bytes",
@@ -1569,7 +1569,7 @@ dependencies = [
 
 [[package]]
 name = "subalfred-core"
-version = "0.9.0-rc15"
+version = "0.9.0-rc16"
 dependencies = [
  "array-bytes",
  "async-trait",
@@ -1601,7 +1601,7 @@ dependencies = [
 
 [[package]]
 name = "subalfred-util"
-version = "0.9.0-rc15"
+version = "0.9.0-rc16"
 dependencies = [
  "tracing",
  "tracing-test",
@@ -1609,7 +1609,7 @@ dependencies = [
 
 [[package]]
 name = "subcryptor"
-version = "0.9.0-rc15"
+version = "0.9.0-rc16"
 dependencies = [
  "base58",
  "blake2-rfc",
@@ -1620,7 +1620,7 @@ dependencies = [
 
 [[package]]
 name = "subgrandpa"
-version = "0.9.0-rc15"
+version = "0.9.0-rc16"
 dependencies = [
  "parity-scale-codec",
  "serde",
@@ -1628,7 +1628,7 @@ dependencies = [
 
 [[package]]
 name = "subhasher"
-version = "0.9.0-rc15"
+version = "0.9.0-rc16"
 dependencies = [
  "blake2-rfc",
  "byteorder",
@@ -1639,7 +1639,7 @@ dependencies = [
 
 [[package]]
 name = "submetadatan"
-version = "0.9.0-rc15"
+version = "0.9.0-rc16"
 dependencies = [
  "frame-metadata",
  "scale-info",
@@ -1648,7 +1648,7 @@ dependencies = [
 
 [[package]]
 name = "subrpcer"
-version = "0.9.0-rc15"
+version = "0.9.0-rc16"
 dependencies = [
  "affix",
  "once_cell",
@@ -1661,14 +1661,14 @@ dependencies = [
 
 [[package]]
 name = "subruntimer"
-version = "0.9.0-rc15"
+version = "0.9.0-rc16"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "substorager"
-version = "0.9.0-rc15"
+version = "0.9.0-rc16"
 dependencies = [
  "array-bytes",
  "parity-scale-codec",
@@ -1677,7 +1677,7 @@ dependencies = [
 
 [[package]]
 name = "subversioner"
-version = "0.9.0-rc15"
+version = "0.9.0-rc16"
 dependencies = [
  "serde",
 ]
