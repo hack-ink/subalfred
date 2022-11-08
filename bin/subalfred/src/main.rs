@@ -28,5 +28,8 @@ mod util;
 
 // #[tokio::main]
 fn main() -> prelude::Result<()> {
-	cli::Cli::new().run()
+	color_eyre::install().map_err(|e| anyhow::anyhow!(e))?;
+	cli::Cli::new().run()?;
+
+	Ok(())
 }
