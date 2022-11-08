@@ -7,7 +7,7 @@ license     = "GPL-3.0"
 name        = "submetadatan"
 readme      = "README.md"
 repository  = "https://github.com/hack-ink/subalfred"
-version     = "0.9.0-rc14"
+version     = "0.9.0-rc15"
 
 [dependencies]
 # crates.io
