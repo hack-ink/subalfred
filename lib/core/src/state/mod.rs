@@ -26,7 +26,7 @@ use serde_json::Value;
 // hack-ink
 use crate::{prelude::*, system};
 
-// TODO: doc & move this to substrate-minimal
+// TODO: doc & move this to substrate-minimal in the future version
 #[allow(missing_docs)]
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -54,7 +54,7 @@ pub struct ChainSpec {
 	#[serde(default)]
 	pub code_substitutes: Value,
 }
-// TODO: doc & move this to substrate-minimal
+// TODO: doc & move this to substrate-minimal in the future version
 #[allow(missing_docs)]
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -62,7 +62,7 @@ pub struct Genesis {
 	#[serde(default)]
 	pub raw: Raw,
 }
-// TODO: doc & move this to substrate-minimal
+// TODO: doc & move this to substrate-minimal in the future version
 #[allow(missing_docs)]
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
