@@ -1,8 +1,7 @@
-//! GRANDPA related methods.
+//! Net related methods.
 //!
-//! Substrate reference(s):
-//! TODO: find the reference(s)
-//! - [Net API(s)](#)
+//! Frontier reference(s):
+//! - [Net API(s)](https://github.com/paritytech/frontier/blob/eef5723675850166da904b295b7dfa90894b1270/client/rpc-core/src/net.rs#L25-L40)
 
 impl_apis! {
 	net {
