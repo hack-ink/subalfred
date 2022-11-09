@@ -1,4 +1,7 @@
 //! Substrate-like API collections.
+//!
+//! Substrate reference(s):
+//! - [RPC APIs](https://github.com/paritytech/substrate/tree/be259234bfee056bef970ac372e04a74411c5224/client/rpc-api)
 
 // subalfred
 use crate::prelude::*;
@@ -6,7 +9,7 @@ use crate::prelude::*;
 /// Substrate-like basic API collections.
 #[async_trait::async_trait]
 pub trait Apis {
-	/// TODO: doc
+	/// Check module's Substrate reference(s) for the detail.
 	async fn get_block_hash<BlockNumber>(
 		&self,
 		block_number: Option<BlockNumber>,
@@ -14,10 +17,10 @@ pub trait Apis {
 	where
 		BlockNumber: Send + serde::Serialize;
 
-	/// TODO: doc
+	/// Check module's Substrate reference(s) for the detail.
 	async fn get_finalized_head(&self) -> Result<String>;
 
-	/// TODO: doc
+	/// Check module's Substrate reference(s) for the detail.
 	async fn get_header<BlockNumber, Hash>(
 		&self,
 		hash: Option<Hash>,
@@ -26,12 +29,12 @@ pub trait Apis {
 		BlockNumber: Send + serde::de::DeserializeOwned,
 		Hash: Send + serde::Serialize + serde::de::DeserializeOwned;
 
-	/// TODO: doc
+	/// Check module's Substrate reference(s) for the detail.
 	async fn get_metadata<Hash>(&self, at: Option<Hash>) -> Result<String>
 	where
 		Hash: Send + serde::Serialize;
 
-	/// TODO: doc
+	/// Check module's Substrate reference(s) for the detail.
 	async fn get_runtime_version<Hash>(
 		&self,
 		at: Option<Hash>,
@@ -39,7 +42,7 @@ pub trait Apis {
 	where
 		Hash: Send + serde::Serialize;
 
-	/// TODO: doc
+	/// Check module's Substrate reference(s) for the detail.
 	async fn get_pairs_paged(
 		&self,
 		prefix: substorager::StorageKey,
