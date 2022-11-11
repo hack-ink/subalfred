@@ -6,6 +6,8 @@
 # [Subalfred](https://github.com/hack-ink/subalfred)
 ### An All-In-One [Substrate](https://github.com/paritytech/substrate) Development Toolbox.
 
+<img width="400" src="https://raw.githubusercontent.com/w3f/Grants-Program/master/src/badge_black.svg"/>
+
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Checks](https://github.com/hack-ink/subalfred/actions/workflows/checks.yml/badge.svg?branch=main)](https://github.com/hack-ink/subalfred/actions/workflows/checks.yml)
 [![Release](https://github.com/hack-ink/subalfred/actions/workflows/release.yml/badge.svg)](https://github.com/hack-ink/subalfred/actions/workflows/release.yml)
