@@ -19,14 +19,14 @@
 
 </div>
 
-## Philosophies
-- ***Lighting fast***
-- ***Less dependencies***
-- ***No `unsafe {}`, `.unwrap()`***
-- ***Easy to use***
-- ***Strive for excellence***
+## Philosophy
+- **Blazing fast**
+- **Light weight**
+- **Zero panic**
+- **Ergonomics**
+- **Strive for excellence**
 
-## Documentations
+## Documentation
 ```sh
 # Use `--help` flag to get more information.
 subalfred --help
@@ -41,4 +41,4 @@ subalfred check runtime --help
 ## Contribution
 - If you have a question or request a new feature, [start a discussion](https://github.com/hack-ink/subalfred/discussions/new).
 - If you encounter any bugs, [report an issue](https://github.com/hack-ink/subalfred/issues/new).
-- Otherwise, PRs are always welcome!
+- Finally, PRs are always welcome!
