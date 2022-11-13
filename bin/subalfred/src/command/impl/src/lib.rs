@@ -1,3 +1,7 @@
+//! Quickly define and implement a command containing serval subcommands.
+
+#![deny(missing_docs)]
+
 // proc-macro
 use proc_macro::TokenStream;
 // crates.io
