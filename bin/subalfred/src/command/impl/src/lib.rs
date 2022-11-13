@@ -5,31 +5,25 @@
 // proc-macro
 use proc_macro::TokenStream;
 // crates.io
-use proc_macro2::TokenStream as TokenStream2;
 use syn::*;
 
 /// Quickly define and implement a command containing serval subcommands.
 #[proc_macro_attribute]
 pub fn cmd(_: TokenStream, input: TokenStream) -> TokenStream {
-	let item_enum = syn::parse_macro_input!(input as ItemEnum);
+	let cmd_enum = syn::parse_macro_input!(input as ItemEnum);
 
 	// #[cfg(feature = "debug")]
-	// dbg!(&item_enum);
+	// dbg!(&cmd_enum);
 
-	let ItemEnum { attrs, vis, ident, variants, .. } = item_enum;
-	let variant_runs = variants
-		.iter()
-		.map(|v| v.ident.to_string().parse::<TokenStream2>().unwrap())
-		.map(|n| {
-			quote::quote! {
-				Self::#n(cmd) => { cmd.run() }
-			}
-		})
-		.collect::<Vec<_>>();
-	let variants = variants
+	let ItemEnum {
+		attrs: cmd_attrs, vis: cmd_vis, ident: cmd_name, variants: cmd_variants, ..
+	} = cmd_enum;
+	let cmd_variants_names =
+		cmd_variants.iter().map(|variant| variant.ident.clone()).collect::<Vec<_>>();
+	let cmd_variants = cmd_variants
 		.into_iter()
 		.map(|Variant { attrs, ident, .. }| {
-			let cmd = format!("{}Cmd", ident).parse::<TokenStream2>().unwrap();
+			let cmd = quote::format_ident!("{ident}Cmd");
 
 			quote::quote! {
 				#(#attrs)*
@@ -40,14 +34,16 @@ pub fn cmd(_: TokenStream, input: TokenStream) -> TokenStream {
 
 	quote::quote! {
 		#[derive(Debug, clap::Subcommand)]
-		#(#attrs)*
-		#vis enum #ident {
-			#(#variants,)*
+		#(#cmd_attrs)*
+		#cmd_vis enum #cmd_name {
+			#(#cmd_variants,)*
 		}
-		impl #ident {
-			#vis fn run(&self) -> crate::prelude::Result<()> {
+		impl #cmd_name {
+			#cmd_vis fn run(&self) -> crate::prelude::Result<()> {
 				match self {
-					#(#variant_runs,)*
+					#(
+						Self::#cmd_variants_names(cmd) => cmd.run(),
+					)*
 				}
 			}
 		}
