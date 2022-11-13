@@ -289,7 +289,6 @@ dependencies = [
 name = "cmd-impl"
 version = "0.9.0-rc16"
 dependencies = [
- "proc-macro2",
  "quote",
  "syn",
 ]
