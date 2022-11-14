@@ -161,7 +161,7 @@ impl Apis for Client {
 			if keys_count != values_count {
 				return Err(error::Node::KeyValuesCountMismatched {
 					expect: keys_count,
-					got: values_count,
+					found: values_count,
 				})?;
 			}
 
