@@ -112,7 +112,7 @@ pub enum Node {
 	KeyValuesCountMismatched { expect: usize, found: usize },
 	#[error("[core::node] failed to parse metadata")]
 	ParseMetadataFailed(#[source] submetadatan::Error),
-	#[error("[core::node] failed to start the node")]g
+	#[error("[core::node] failed to start the node")]
 	StartNodeFailed(#[source] std::io::Error),
 }
 
