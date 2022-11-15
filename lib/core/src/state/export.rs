@@ -5,7 +5,7 @@ use std::{path::Path, time::Duration};
 // crates.io
 use fxhash::FxHashSet;
 // hack-ink
-use super::{fork_off, ChainSpec, ForkOffConfig};
+use super::{fork_off, ForkOffConfig};
 use crate::{
 	jsonrpc::ws::Initializer,
 	node,
@@ -13,6 +13,7 @@ use crate::{
 	substrate_client::{Apis, Client},
 	system,
 };
+use subspector::ChainSpec;
 use substorager::StorageKey;
 
 /// Export the chain state from a node's WS RPC endpoint at a specific block height.
