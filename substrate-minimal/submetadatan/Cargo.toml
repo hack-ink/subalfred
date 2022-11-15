@@ -13,4 +13,4 @@ version     = "0.9.0-rc16"
 # crates.io
 frame-metadata = { version = "15.0" }
 scale-info     = { version = "2.3" }
-thiserror      = { version = "1.0" }
+thiserror      = { workspace = true }

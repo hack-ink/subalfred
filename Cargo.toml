@@ -5,3 +5,29 @@ members = [
 	"lib/*",
 	"substrate-minimal/*",
 ]
+
+	[workspace.dependencies]
+	# crates.io
+	array-bytes        = { version = "4.1" }
+	clap               = { version = "4.0" }
+	fxhash             = { version = "0.2" }
+	once_cell          = { version = "1.15" }
+	parity-scale-codec = { version = "3.2" }
+	reqwest            = { version = "0.11" }
+	serde              = { version = "1.0" }
+	serde_json         = { version = "1.0" }
+	thiserror          = { version = "1.0" }
+	tokio              = { version = "1.21" }
+	tracing            = { version = "0.1" }
+	# hack-ink
+	cmd-impl       = { version = "0.9.0-rc16", path = "bin/subalfred/src/command/impl" }
+	subalfred-core = { version = "0.9.0-rc16", path = "lib/core" }
+	subalfred-util = { version = "0.9.0-rc16", path = "lib/util" }
+	subcryptor     = { version = "0.9.0-rc16", path = "substrate-minimal/subcryptor" }
+	subhasher      = { version = "0.9.0-rc16", path = "substrate-minimal/subhasher" }
+	submetadatan   = { version = "0.9.0-rc16", path = "substrate-minimal/submetadatan" }
+	subrpcer       = { version = "0.9.0-rc16", path = "substrate-minimal/subrpcer" }
+	subruntimer    = { version = "0.9.0-rc16", path = "substrate-minimal/subruntimer" }
+	subspector     = { version = "0.9.0-rc16", path = "substrate-minimal/subspector" }
+	substorager    = { version = "0.9.0-rc16", path = "substrate-minimal/substorager" }
+	subversioner   = { version = "0.9.0-rc16", path = "substrate-minimal/subversioner" }
