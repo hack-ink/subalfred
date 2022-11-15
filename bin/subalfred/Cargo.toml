@@ -19,16 +19,16 @@ vergen = { version = "7.4" }
 [dependencies]
 # crates.io
 anyhow             = { version = "1.0" }
-array-bytes        = { version = "4.1" }
-clap               = { version = "4.0", features = ["cargo", "derive", "wrap_help"] }
+array-bytes        = { workspace = true }
+clap               = { workspace = true, features = ["cargo", "derive", "wrap_help"] }
 color-eyre         = { version = "0.6" }
-serde_json         = { version = "1.0" }
-tokio              = { version = "1.21", features = ["macros", "rt-multi-thread"] }
+serde_json         = { workspace = true }
+tokio              = { workspace = true, features = ["macros", "rt-multi-thread"] }
 tracing-subscriber = { version = "0.3" }
 unescaper          = { version = "0.1" }
 # hack-ink
-cmd-impl       = { version = "0.9.0-rc16", path = "src/command/impl" }
-subalfred-core = { version = "0.9.0-rc16", path = "../../lib/core", features = ["clap"] }
-subhasher      = { version = "0.9.0-rc16", path = "../../substrate-minimal/subhasher" }
-subrpcer       = { version = "0.9.0-rc16", path = "../../substrate-minimal/subrpcer" }
-substorager    = { version = "0.9.0-rc16", path = "../../substrate-minimal/substorager" }
+cmd-impl       = { workspace = true }
+subalfred-core = { workspace = true, features = ["clap"] }
+subhasher      = { workspace = true }
+subrpcer       = { workspace = true }
+substorager    = { workspace = true }

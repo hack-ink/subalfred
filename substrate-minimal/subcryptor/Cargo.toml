@@ -13,9 +13,9 @@ version     = "0.9.0-rc16"
 # crates.io
 base58             = { version = "0.2" }
 blake2-rfc         = { version = "0.2" }
-parity-scale-codec = { version = "3.2", optional = true, features = ["derive"] }
+parity-scale-codec = { workspace = true, optional = true, features = ["derive"] }
 ss58-registry      = { version = "1.34" }
-thiserror          = { version = "1.0" }
+thiserror          = { workspace = true }
 
 [features]
 codec = [

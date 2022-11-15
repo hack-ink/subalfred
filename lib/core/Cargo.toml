@@ -11,31 +11,31 @@ version     = "0.9.0-rc16"
 
 [dependencies]
 # crates.io
-array-bytes        = { version = "4.1" }
+array-bytes        = { workspace = true }
 async-trait        = { version = "0.1" }
 cargo_metadata     = { version = "0.15" }
 cargo_toml         = { version = "0.13" }
-clap               = { version = "4.0", optional = true, features = ["derive", "wrap_help"] }
+clap               = { workspace = true, optional = true, features = ["derive", "wrap_help"] }
 futures            = { version = "0.3" }
-fxhash             = { version = "0.2" }
-once_cell          = { version = "1.15" }
-parity-scale-codec = { version = "3.2" }
+fxhash             = { workspace = true }
+once_cell          = { workspace = true }
+parity-scale-codec = { workspace = true }
 regex              = { version = "1.7" }
-reqwest            = { version = "0.11", features = ["json"] }
-serde              = { version = "1.0" }
-serde_json         = { version = "1.0" }
-thiserror          = { version = "1.0" }
-tokio              = { version = "1.21", features = ["fs", "macros", "rt-multi-thread"] }
+reqwest            = { workspace = true, features = ["json"] }
+serde              = { workspace = true }
+serde_json         = { workspace = true }
+thiserror          = { workspace = true }
+tokio              = { workspace = true, features = ["fs", "macros", "rt-multi-thread"] }
 tokio-stream       = { version = "0.1" }
 tokio-tungstenite  = { version = "0.17", features = ["rustls-tls-native-roots"] }
-tracing            = { version = "0.1" }
+tracing            = { workspace = true }
 # hack-ink
-subalfred-util = { version = "0.9.0-rc16", path = "../util" }
-subcryptor     = { version = "0.9.0-rc16", path = "../../substrate-minimal/subcryptor" }
-subhasher      = { version = "0.9.0-rc16", path = "../../substrate-minimal/subhasher" }
-submetadatan   = { version = "0.9.0-rc16", path = "../../substrate-minimal/submetadatan" }
-subrpcer       = { version = "0.9.0-rc16", path = "../../substrate-minimal/subrpcer" }
-subruntimer    = { version = "0.9.0-rc16", path = "../../substrate-minimal/subruntimer", features = ["serde"] }
-subspector     = { version = "0.9.0-rc16", path = "../../substrate-minimal/subspector" }
-substorager    = { version = "0.9.0-rc16", path = "../../substrate-minimal/substorager" }
-subversioner   = { version = "0.9.0-rc16", path = "../../substrate-minimal/subversioner", features = ["serde"] }
+subalfred-util = { workspace = true }
+subcryptor     = { workspace = true }
+subhasher      = { workspace = true }
+submetadatan   = { workspace = true }
+subrpcer       = { workspace = true }
+subruntimer    = { workspace = true, features = ["serde"] }
+subspector     = { workspace = true }
+substorager    = { workspace = true }
+subversioner   = { workspace = true, features = ["serde"] }

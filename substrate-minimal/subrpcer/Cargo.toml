@@ -13,11 +13,11 @@ version     = "0.9.0-rc16"
 # crates.io
 # TODO: https://github.com/dtolnay/paste/issues/72
 affix      = { version = "0.1" }
-once_cell  = { version = "1.15", optional = true }
-reqwest    = { version = "0.11", optional = true, features = ["json"] }
-serde      = { version = "1.0" }
-serde_json = { version = "1.0" }
-tracing    = { version = "0.1", optional = true }
+once_cell  = { workspace = true, optional = true }
+reqwest    = { workspace = true, optional = true, features = ["json"] }
+serde      = { workspace = true }
+serde_json = { workspace = true }
+tracing    = { workspace = true, optional = true }
 ureq       = { version = "2.5", optional = true, features = ["json"] }
 
 [features]
