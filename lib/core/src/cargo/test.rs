@@ -16,9 +16,8 @@ fn members_manifests_should_work() {
 	let metadata = test_data();
 	let result = members(&metadata)
 		.unwrap()
-		.iter()
-		.map(|pkg| (pkg.name.as_str(), remove_prefix(pkg.manifest_path.as_str())))
-		.collect::<Vec<_>>();
+		.into_iter()
+		.map(|pkg| (pkg.name.as_str(), remove_prefix(pkg.manifest_path.as_str())));
 	let expected = [
 		("subalfred", "/Cargo.toml"),
 		("cmd-impl", "/src/command/impl/Cargo.toml"),
@@ -29,15 +28,15 @@ fn members_manifests_should_work() {
 		("submetadatan", "/substrate-minimal/submetadatan/Cargo.toml"),
 		("subrpcer", "/substrate-minimal/subrpcer/Cargo.toml"),
 		("subruntimer", "/substrate-minimal/subruntimer/Cargo.toml"),
+		("subspector", "/substrate-minimal/subspector/Cargo.toml"),
 		("substorager", "/substrate-minimal/substorager/Cargo.toml"),
 		("subversioner", "/substrate-minimal/subversioner/Cargo.toml"),
 		("subgrandpa", "/substrate-minimal/subgrandpa/Cargo.toml"),
 	]
 	.iter()
-	.map(|&(name, path)| (name, path.to_owned()))
-	.collect::<Vec<_>>();
+	.map(|&(name, path)| (name, path.to_owned()));
 
-	assert_eq!(result, expected);
+	result.zip(expected).for_each(|(result, expected)| assert_eq!(result, expected));
 }
 
 #[test]

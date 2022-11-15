@@ -6,8 +6,8 @@ use std::{mem, path::Path};
 #[cfg(feature = "clap")] use clap::Args;
 use fxhash::FxHashMap;
 // hack-ink
-use super::ChainSpec;
 use crate::{prelude::*, system};
+use subspector::ChainSpec;
 
 /// Fork-off configurations.
 #[cfg_attr(feature = "clap", derive(Args))]

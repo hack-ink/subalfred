@@ -36,5 +36,6 @@ subhasher      = { version = "0.9.0-rc16", path = "../../substrate-minimal/subha
 submetadatan   = { version = "0.9.0-rc16", path = "../../substrate-minimal/submetadatan" }
 subrpcer       = { version = "0.9.0-rc16", path = "../../substrate-minimal/subrpcer" }
 subruntimer    = { version = "0.9.0-rc16", path = "../../substrate-minimal/subruntimer", features = ["serde"] }
+subspector     = { version = "0.9.0-rc16", path = "../../substrate-minimal/subspector" }
 substorager    = { version = "0.9.0-rc16", path = "../../substrate-minimal/substorager" }
 subversioner   = { version = "0.9.0-rc16", path = "../../substrate-minimal/subversioner", features = ["serde"] }

@@ -1,6 +1,5 @@
 [package]
 authors     = ["Xavier Lau <xavier@inv.cafe>"]
-build       = "build.rs"
 description = "Your Substrate Alfred."
 edition     = "2021"
 homepage    = "https://subalfred.hack.ink"

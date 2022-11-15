@@ -1684,6 +1684,7 @@ dependencies = [
  "submetadatan",
  "subrpcer",
  "subruntimer",
+ "subspector",
  "substorager",
  "subversioner",
  "thiserror",
@@ -1758,6 +1759,15 @@ name = "subruntimer"
 version = "0.9.0-rc16"
 dependencies = [
  "serde",
+]
+
+[[package]]
+name = "subspector"
+version = "0.9.0-rc16"
+dependencies = [
+ "fxhash",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
