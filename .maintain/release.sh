@@ -1,20 +1,20 @@
 #!/bin/sh
 
-cargo publish -p subcryptor
-cargo publish -p subhasher
-cargo publish -p submetadatan
-cargo publish -p subrpcer
-cargo publish -p subruntimer
+cargo publish --locked -p subcryptor
+cargo publish --locked -p subhasher
+cargo publish --locked -p submetadatan
+cargo publish --locked -p subrpcer
+cargo publish --locked -p subruntimer
 # substorager depends on subhasher, sleep for 15s
 sleep 15s
-cargo publish -p substorager
-cargo publish -p subversioner
+cargo publish --locked -p substorager
+cargo publish --locked -p subversioner
 
-cargo publish -p subalfred-util
+cargo publish --locked -p subalfred-util
 # subalfred-core depends on subalfred-util, sleep for 15s
 sleep 15s
-cargo publish -p subalfred-core
-cargo publish -p cmd-impl
+cargo publish --locked -p subalfred-core
+cargo publish --locked -p cmd-impl
 # subalfred depends on cmd-impl, sleep for 15s
 sleep 15s
-cargo publish -p subalfred
+cargo publish --locked -p subalfred
