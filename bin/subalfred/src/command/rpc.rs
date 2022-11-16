@@ -9,7 +9,7 @@ use subalfred_core::http::CLIENT;
 ///
 /// # Example:
 /// Get the Polkadot's block zero's hash:
-/// ```
+/// ```sh
 /// # Normal output
 /// subalfred rpc https://rpc.polkadot.io --method chain_getBlockHash --params '[[0,1,2]]'
 /// # Beautiful output

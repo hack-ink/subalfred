@@ -2,7 +2,14 @@
 ```
 Send a RPC request to the node's HTTP RPC endpoint.
 
-Example: Get the Polkadot's block zero's hash: ``` # Normal output subalfred rpc https://rpc.polkadot.io --method chain_getBlockHash --params '[[0,1,2]]' # Beautiful output subalfred rpc https://rpc.polkadot.io --method chain_getBlockHash --params '[[0,1,2]]' | jq ```
+# Example:
+Get the Polkadot's block zero's hash:
+```sh
+# Normal output
+subalfred rpc https://rpc.polkadot.io --method chain_getBlockHash --params '[[0,1,2]]'
+# Beautiful output
+subalfred rpc https://rpc.polkadot.io --method chain_getBlockHash --params '[[0,1,2]]' | jq
+```
 
 Usage: subalfred rpc [OPTIONS] --method <METHOD> <URI>
 

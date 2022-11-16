@@ -131,7 +131,7 @@ Arguments:
   <BYTES>
           Bytes data input.
 
-          Example: `[0, 0, 0, 0]`.
+          e.g. `[0, 0, 0, 0]`
 
 Options:
   -l, --log <TARGET=LEVEL,*>
@@ -163,7 +163,7 @@ Arguments:
   <HEX>
           Hex input.
 
-          Example: `0x00000000`.
+          e.g. `0x00000000`
 
 Options:
   -l, --log <TARGET=LEVEL,*>
