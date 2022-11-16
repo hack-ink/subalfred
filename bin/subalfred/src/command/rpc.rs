@@ -7,7 +7,7 @@ use subalfred_core::http::CLIENT;
 
 /// Send a RPC request to the node's HTTP RPC endpoint.
 ///
-/// Example:
+/// # Example:
 /// Get the Polkadot's block zero's hash:
 /// ```
 /// # Normal output
@@ -16,6 +16,7 @@ use subalfred_core::http::CLIENT;
 /// subalfred rpc https://rpc.polkadot.io --method chain_getBlockHash --params '[[0,1,2]]' | jq
 /// ```
 #[derive(Debug, Args)]
+#[command(verbatim_doc_comment)]
 pub(crate) struct RpcCmd {
 	/// Node's HTTP RPC endpoint.
 	#[arg(required = true, value_name = "URI", default_value = "http://localhost:9933")]
