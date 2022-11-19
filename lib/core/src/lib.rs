@@ -1,5 +1,7 @@
 //! Subalfred core libraries.
 
+#![deny(missing_docs)]
+
 pub mod prelude {
 	//! Subalfred core prelude.
 
@@ -14,6 +16,7 @@ pub mod prelude {
 pub mod cargo;
 pub mod check;
 pub mod error;
+pub mod github;
 pub mod http;
 pub mod jsonrpc;
 pub mod key;
