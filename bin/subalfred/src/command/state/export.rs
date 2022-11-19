@@ -13,6 +13,8 @@ pub(crate) struct ExportCmd {
 	#[arg(required = true, value_name = "URI")]
 	live: String,
 	/// Export the data starting from this block.
+	///
+	/// Accept block hash or block number.
 	#[arg(long, value_name = "HASH/NUM")]
 	at: Option<String>,
 	/// Timeout for the fetching.
