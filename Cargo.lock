@@ -50,6 +50,8 @@ checksum = "216261ddc8289130e551ddcd5ce8a064710c0d064a4d2895c67151c92b5443f6"
 [[package]]
 name = "api-impl"
 version = "0.4.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6666c6e6cf290a2ad45a37a4cdf4d7649cce3dcfc99f551d9dfc982987697ee6"
 dependencies = [
  "convert_case 0.6.0",
  "quote",
@@ -701,6 +703,8 @@ dependencies = [
 [[package]]
 name = "githuber"
 version = "0.4.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7b2e5ef09790481908cbfda99ef764f571e28e0a1466bba1419588dd3fd04fb2"
 dependencies = [
  "api-impl",
 ]
