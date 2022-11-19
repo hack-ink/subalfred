@@ -24,6 +24,9 @@ use state::StateCmd;
 mod storage_key;
 use storage_key::StorageKeyCmd;
 
+mod track_update;
+use track_update::TrackUpdateCmd;
+
 mod workspace;
 use workspace::WorkspaceCmd;
 
@@ -42,6 +45,7 @@ pub(crate) enum Cmd {
 	#[command(subcommand)]
 	State,
 	StorageKey,
+	TrackUpdate,
 	#[command(subcommand)]
 	Workspace,
 }

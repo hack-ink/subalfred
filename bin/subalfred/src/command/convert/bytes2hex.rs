@@ -8,7 +8,7 @@ use crate::prelude::*;
 pub(crate) struct Bytes2HexCmd {
 	/// Bytes data input.
 	///
-	/// Example: `[0, 0, 0, 0]`.
+	/// e.g. `[0, 0, 0, 0]`
 	#[arg(required = true, value_name = "BYTES")]
 	bytes: String,
 }

@@ -17,11 +17,14 @@ use subalfred_core::{state, system};
 /// subalfred state insert chain-spec.json --key 0x3a636f6465 --with-file runtime.compact.compressed.wasm
 /// ```
 #[derive(Debug, Args)]
-#[command(group(
-	ArgGroup::new("vers")
-		.required(true)
-		.args(["value", "with_file"]),
-))]
+#[command(
+	verbatim_doc_comment,
+	group(
+		ArgGroup::new("vers")
+			.required(true)
+			.args(["value", "with_file"]),
+	)
+)]
 pub(crate) struct InsertCmd {
 	/// Target state file's path.
 	#[arg(required = true, value_name = "PATH")]

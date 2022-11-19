@@ -14,6 +14,8 @@ pub enum Error {
 	#[error(transparent)]
 	Generic(#[from] Generic),
 	#[error(transparent)]
+	Github(#[from] Github),
+	#[error(transparent)]
 	Jsonrpc(#[from] Jsonrpc),
 	#[error(transparent)]
 	Key(#[from] Key),
@@ -84,13 +86,21 @@ pub fn almost_impossible(e_msg: &'static str) -> Generic {
 	Generic::AlmostImpossible(e_msg)
 }
 
+/// GitHub error.
+#[allow(missing_docs)]
+#[derive(Debug, ThisError)]
+pub enum Github {
+	#[error("[core::github] failed to get environment variable `GITHUB_TOKEN`, {0:?}")]
+	NoTokenFound(std::env::VarError),
+}
+
 /// JSONRPC error.
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Jsonrpc {
 	// #[error("[core::jsonrpc] empty batch")]
 	// EmptyBatch,
-	#[error("[core::jsonrpc] exceeded the maximum number of request queue size, {0}")]
+	#[error("[core::jsonrpc] exceeded the maximum number of request queue size, {0:?}")]
 	ExceededRequestQueueMaxSize(crate::jsonrpc::Id),
 }
 
@@ -108,7 +118,7 @@ pub enum Key {
 #[allow(missing_docs)]
 #[derive(Debug, ThisError)]
 pub enum Node {
-	#[error("[core::node] key-values' count mismatched, expect {expect} but found {found}")]
+	#[error("[core::node] key-values' count mismatched, expect {expect:?} but found {found:?}")]
 	KeyValuesCountMismatched { expect: usize, found: usize },
 	#[error("[core::node] failed to parse metadata")]
 	ParseMetadataFailed(#[source] submetadatan::Error),

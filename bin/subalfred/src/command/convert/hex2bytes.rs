@@ -8,7 +8,7 @@ use crate::prelude::*;
 pub(crate) struct Hex2BytesCmd {
 	/// Hex input.
 	///
-	/// Example: `0x00000000`.
+	/// e.g. `0x00000000`
 	#[arg(required = true, value_name = "HEX")]
 	hex: String,
 }
