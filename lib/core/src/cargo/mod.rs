@@ -85,17 +85,17 @@ pub async fn update_member_versions(to: &str, manifest_path: &str) -> Result<()>
 	};
 	let mut tasks = stream::iter(&members)
 		.map(|pkg| async {
-			let members_deps = pkg
+			let member_deps = pkg
 				.dependencies
 				.iter()
 				.filter(|dep| members.iter().any(|pkg| dep.name == pkg.name))
 				.collect::<Vec<_>>();
 			let content = system::read_file_to_string(&pkg.manifest_path)?;
 			let content = content.replacen(&pkg.version.to_string(), to, 1);
-			let content = if members_deps.is_empty() {
+			let content = if member_deps.is_empty() {
 				Cow::Owned(content)
 			} else {
-				util::find_member_dep_regex(&members_deps).replace_all(
+				util::find_member_dep_regex(&member_deps).replace_all(
 					&content,
 					|caps: &Captures| {
 						format!("{}\"{}\"", &caps[1], util::align_version(&caps[3], to))

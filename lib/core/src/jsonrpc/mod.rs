@@ -16,6 +16,7 @@ use crate::prelude::*;
 /// JSONRPC Id.
 pub type Id = usize;
 
+// TODO: doc
 /// Generic JSONRPC request.
 #[allow(missing_docs)]
 #[derive(Debug, Serialize)]
@@ -27,6 +28,7 @@ pub struct Request<'a, P> {
 	pub method: &'a str,
 	pub params: P,
 }
+// TODO: doc
 /// Raw JSONRPC request.
 #[allow(missing_docs)]
 #[derive(Debug)]
@@ -40,6 +42,7 @@ impl<'a, P> From<(&'a str, P)> for RawRequest<'a, P> {
 	}
 }
 
+// TODO: doc
 /// Generic JSONRPC response.
 #[allow(missing_docs)]
 #[derive(Debug, Deserialize)]
