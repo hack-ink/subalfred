@@ -13,7 +13,7 @@ pub(crate) struct RuntimeCmd {
 	#[arg(long, required = true, value_name = "PATH")]
 	executable: String,
 	/// Pass this name to `--chain` to launch the local chain.
-	#[arg(long, required = true, value_name = "NAME")]
+	#[arg(long, required = true, value_name = "CHAIN")]
 	chain: String,
 	/// Live chain's HTTP RPC endpoint.
 	#[arg(long, required = true, value_name = "URI")]

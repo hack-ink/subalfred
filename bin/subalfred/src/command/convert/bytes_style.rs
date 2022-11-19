@@ -11,10 +11,10 @@ pub(crate) struct BytesStyleCmd {
 	#[arg(required = true, value_name = "BYTES")]
 	bytes: String,
 	/// Origin style.
-	#[arg(value_enum, long, required = true, value_name = "BYTES STYLE")]
+	#[arg(value_enum, long, required = true, value_name = "STYLE")]
 	from: BytesStringKind,
 	/// Target style.
-	#[arg(value_enum, long, required = true, value_name = "BYTES STYLE")]
+	#[arg(value_enum, long, required = true, value_name = "STYLE")]
 	to: BytesStringKind,
 }
 impl BytesStyleCmd {

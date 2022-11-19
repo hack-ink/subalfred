@@ -18,7 +18,7 @@ pub fn cmd(_: TokenStream, input: TokenStream) -> TokenStream {
 	let ItemEnum {
 		attrs: cmd_attrs, vis: cmd_vis, ident: cmd_name, variants: cmd_variants, ..
 	} = cmd_enum;
-	let cmd_variants_names =
+	let cmd_variant_names =
 		cmd_variants.iter().map(|variant| variant.ident.clone()).collect::<Vec<_>>();
 	let cmd_variants = cmd_variants
 		.into_iter()
@@ -42,7 +42,7 @@ pub fn cmd(_: TokenStream, input: TokenStream) -> TokenStream {
 			#cmd_vis fn run(&self) -> crate::prelude::Result<()> {
 				match self {
 					#(
-						Self::#cmd_variants_names(cmd) => cmd.run(),
+						Self::#cmd_variant_names(cmd) => cmd.run(),
 					)*
 				}
 			}
