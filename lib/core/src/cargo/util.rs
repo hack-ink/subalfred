@@ -25,12 +25,20 @@ pub fn find_package<'a>(metadata: &'a Metadata, id: &PackageId) -> Option<&'a Pa
 	metadata.packages.iter().find(|pkg| &pkg.id == id)
 }
 
-pub fn find_member_regex(members: &[&Dependency]) -> Regex {
+pub fn replace_all_member_versions(members: &[&Dependency]) -> Regex {
 	Regex::new(&format!(
-		"(({}) *?= *?\\{{ *?version *?= *?)\"(.+?)\"",
+		"({} *= *\\{{ *version *= *)\"(.+?)\"",
 		members.iter().map(|m| m.name.replace('-', "\\-")).collect::<Vec<_>>().join("|"),
 	))
-	.expect("[core::cargo] build constant regex never fails; qed")
+	.expect("[core::util] build constant regex never fails; qed")
+}
+
+pub fn replace_all_target_versions(targets: &[&str]) -> Regex {
+	Regex::new(&format!(
+		"(git *= *\".+/({})(\\.git)?\".+?branch *= *)\".+?\"",
+		targets.join("|"),
+	))
+	.expect("[core::util] build constant regex never fails; qed")
 }
 
 pub fn align_version<'a>(from: &str, to: &'a str) -> Cow<'a, str> {

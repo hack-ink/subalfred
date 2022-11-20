@@ -55,7 +55,7 @@ Options:
 The original question was from [stackexchange](https://substrate.stackexchange.com/questions/3861/how-do-you-tell-which-block-number-the-last-runtime-upgrade-happened-on-a-chain).
 
 Yep, I think that is an interesting question.
-So, I implemented this method.
+So, I implemented this function.
 It uses dichotomy algorithm, the whole process takes:
 
 $$\log_{2} BlockHeight\times Requests$$

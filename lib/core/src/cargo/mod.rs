@@ -13,7 +13,7 @@ use regex::Captures;
 // hack-ink
 use crate::{prelude::*, system};
 
-/// Provide a method to get the item by id from specific source.
+/// Provide a function to get the item by id from specific source.
 pub trait GetById<'a> {
 	/// Id type.
 	type Id;
@@ -33,7 +33,7 @@ impl<'a> GetById<'a> for &'a Metadata {
 	where
 		'a: 'b,
 	{
-		Ok(self.packages.iter().find(|pkg| &pkg.id == id).ok_or(error::Cargo::GetPackageFailed)?)
+		Ok(self.packages.iter().find(|p| &p.id == id).ok_or(error::Cargo::GetPackageFailed)?)
 	}
 }
 impl<'a> GetById<'a> for &'a [Node] {
@@ -44,7 +44,7 @@ impl<'a> GetById<'a> for &'a [Node] {
 	where
 		'a: 'b,
 	{
-		Ok(self.iter().find(|node| &node.id == id).ok_or(error::Cargo::GetNodeFailed)?)
+		Ok(self.iter().find(|n| &n.id == id).ok_or(error::Cargo::GetNodeFailed)?)
 	}
 }
 
@@ -73,34 +73,87 @@ pub fn members(metadata: &Metadata) -> Option<Vec<&Package>> {
 }
 
 // TODO: optimize the algorithm
-/// Update all the workspace members' versions with the given one.
+/// Update all workspace member versions with the given one.
 ///
-/// If a workspace member depends on other members, this will also update the dependencies.
-pub async fn update_member_versions(to: &str, manifest_path: &str) -> Result<()> {
+/// If a member depends on other members, this will update them all.
+pub async fn update_member_versions(version: &str, manifest_path: &str) -> Result<()> {
 	let metadata = metadata(manifest_path)?;
-	let members = if let Some(members) = members(&metadata) {
-		members
-	} else {
+	let Some(members) = members(&metadata) else {
 		return Ok(());
 	};
 	let mut tasks = stream::iter(&members)
-		.map(|pkg| async {
-			let members = pkg
+		.map(|p| async {
+			let members = p
 				.dependencies
 				.iter()
-				.filter(|dep| members.iter().any(|pkg| dep.name == pkg.name))
+				.filter(|d| members.iter().any(|p| d.name == p.name))
 				.collect::<Vec<_>>();
-			let content = system::read_file_to_string(&pkg.manifest_path)?;
-			let content = content.replacen(&pkg.version.to_string(), to, 1);
+			let content = system::read_file_to_string(&p.manifest_path)?;
+			let content = content.replacen(&p.version.to_string(), version, 1);
 			let content = if members.is_empty() {
 				Cow::Owned(content)
 			} else {
-				util::find_member_regex(&members).replace_all(&content, |caps: &Captures| {
-					format!("{}\"{}\"", &caps[1], util::align_version(&caps[3], to))
+				util::replace_all_member_versions(&members).replace_all(&content, |c: &Captures| {
+					format!("{}\"{}\"", &c[1], util::align_version(&c[2], version))
 				})
 			};
 
-			system::swap_file_data(&pkg.manifest_path, content.as_bytes())
+			system::swap_file_data(&p.manifest_path, content.as_bytes())
+		})
+		// TODO: configurable
+		.buffer_unordered(64);
+
+	while let Some(r) = tasks.next().await {
+		r?;
+	}
+
+	Ok(())
+}
+
+// TODO: this function isn't general enough, move it to somewhere in the future
+// TODO: get rid of `cargo metadata`?
+/// Update specific workspace dependencies' version with the given one.
+///
+/// To use this function, you must make sure your dependencies were anchored at a branch.
+/// This is a general rule of the Polkadot ecosystem.
+///
+/// We use the regex pattern matching here.
+/// So, `git` field must be set before the `branch` field.
+///
+/// It might look like this:
+/// ```toml
+/// frame-system = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v.0.0.0" }
+/// ```
+pub async fn update_dependency_versions(
+	version: &str,
+	manifest_path: &str,
+	targets: &[&str],
+) -> Result<()> {
+	let metadata = metadata(manifest_path)?;
+	let Some(members) = members(&metadata) else {
+		return Ok(());
+	};
+	let mut tasks = stream::iter(members)
+		.map(|p| async {
+			let content = system::read_file_to_string(&p.manifest_path)?;
+			let new_content =
+				util::replace_all_target_versions(targets).replace_all(&content, |c: &Captures| {
+					format!(
+						"{}\"{}\"",
+						&c[1],
+						if &c[2] == "polkadot" {
+							format!("release-v{}", version)
+						} else {
+							format!("polkadot-v{}", version)
+						}
+					)
+				});
+
+			if content == new_content {
+				Ok(())
+			} else {
+				system::swap_file_data(&p.manifest_path, new_content.as_bytes())
+			}
 		})
 		// TODO: configurable
 		.buffer_unordered(64);

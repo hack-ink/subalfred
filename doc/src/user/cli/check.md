@@ -28,13 +28,13 @@ Options:
 ```
 Compare the local node's runtime version with the live's one
 
-Usage: subalfred check runtime [OPTIONS] --executable <PATH> --chain <NAME> --live <URI> --property <PROPERTY>
+Usage: subalfred check runtime [OPTIONS] --executable <PATH> --chain <CHAIN> --live <URI> --property <PROPERTY>
 
 Options:
       --executable <PATH>
           Node executable's path
 
-      --chain <NAME>
+      --chain <CHAIN>
           Pass this name to `--chain` to launch the local chain
 
       --live <URI>

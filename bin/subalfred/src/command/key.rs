@@ -21,7 +21,7 @@ pub(crate) struct KeyCmd {
 	#[arg(value_enum, long, value_name = "TYPE")]
 	r#type: Option<KeyType>,
 	/// Network name.
-	#[arg(long, value_name = "NAME", default_value = "Substrate", conflicts_with = "list_all")]
+	#[arg(long, value_name = "NETWORK", default_value = "Substrate", conflicts_with = "list_all")]
 	network: String,
 	/// List all the networks' addresses.
 	#[arg(long, conflicts_with = "network")]

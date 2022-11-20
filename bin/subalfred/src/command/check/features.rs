@@ -1,33 +1,21 @@
 // std
-use std::{borrow::Cow, path::PathBuf, process};
+use std::process;
 // crates.io
 use clap::Args;
 // hack-ink
-use crate::prelude::*;
+use crate::{command::shared::ManifestPath, prelude::*};
 use subalfred_core::check::features;
 
 /// Check if the crates' features are enabled correctly.
 #[derive(Debug, Args)]
 pub(crate) struct FeaturesCmd {
-	/// Target `Cargo.toml`'s path.
-	/// The target could be a pallet or runtime.
-	///
-	/// If `Cargo.toml` wasn't given, Subalfred will search it under the given path.
-	#[arg(value_name = "PATH", default_value = "./Cargo.toml")]
-	manifest_path: PathBuf,
+	#[command(flatten)]
+	manifest_path: ManifestPath,
 }
 impl FeaturesCmd {
 	pub(crate) fn run(&self) -> Result<()> {
 		let Self { manifest_path } = self;
-		let manifest_path = if manifest_path.is_file() {
-			Cow::Borrowed(manifest_path)
-		} else {
-			let mut manifest_path = manifest_path.to_owned();
-
-			manifest_path.push("Cargo.toml");
-
-			Cow::Owned(manifest_path)
-		};
+		let manifest_path = manifest_path.manifest_path();
 		let manifest_path = manifest_path.to_string_lossy();
 
 		println!("checking: {manifest_path}");
