@@ -40,6 +40,10 @@ Once you have installed [Rust], the following command can be used to build and i
 - Build from crates.io:
 	```sh
 	cargo install subalfred
+	# If you want to install the RC version.
+	#
+	# e.g. v0.9.0-rc18
+	cargo install subalfred --version 0.9.0-rc18
 	```
 - Build from the latest main branch code:
 	```sh

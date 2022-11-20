@@ -14,7 +14,8 @@ Options:
   -l, --log <TARGET=LEVEL,*>
           Set a custom log filter.
 
-          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG`
+          simultaneously, this will append `RUST_LOG`'s value after the log.
 
           [default: info]
 

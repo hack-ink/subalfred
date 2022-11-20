@@ -4,12 +4,12 @@ Send a RPC request to the node's HTTP RPC endpoint.
 
 # Example:
 Get the Polkadot's block zero's hash:
-```sh
+\```sh
 # Normal output
 subalfred rpc https://rpc.polkadot.io --method chain_getBlockHash --params '[[0,1,2]]'
 # Beautiful output
 subalfred rpc https://rpc.polkadot.io --method chain_getBlockHash --params '[[0,1,2]]' | jq
-```
+\```
 
 Usage: subalfred rpc [OPTIONS] --method <METHOD> <URI>
 
@@ -29,7 +29,8 @@ Options:
   -l, --log <TARGET=LEVEL,*>
           Set a custom log filter.
 
-          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG`
+          simultaneously, this will append `RUST_LOG`'s value after the log.
 
           [default: info]
 
