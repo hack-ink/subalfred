@@ -85,27 +85,24 @@ pub async fn update_member_versions(to: &str, manifest_path: &str) -> Result<()>
 	};
 	let mut tasks = stream::iter(&members)
 		.map(|pkg| async {
-			let member_deps = pkg
+			let members = pkg
 				.dependencies
 				.iter()
 				.filter(|dep| members.iter().any(|pkg| dep.name == pkg.name))
 				.collect::<Vec<_>>();
 			let content = system::read_file_to_string(&pkg.manifest_path)?;
 			let content = content.replacen(&pkg.version.to_string(), to, 1);
-			let content = if member_deps.is_empty() {
+			let content = if members.is_empty() {
 				Cow::Owned(content)
 			} else {
-				util::find_member_dep_regex(&member_deps).replace_all(
-					&content,
-					|caps: &Captures| {
-						format!("{}\"{}\"", &caps[1], util::align_version(&caps[3], to))
-					},
-				)
+				util::find_member_regex(&members).replace_all(&content, |caps: &Captures| {
+					format!("{}\"{}\"", &caps[1], util::align_version(&caps[3], to))
+				})
 			};
 
 			system::swap_file_data(&pkg.manifest_path, content.as_bytes())
 		})
-		// Process 64 files concurrently.
+		// TODO: configurable
 		.buffer_unordered(64);
 
 	while let Some(r) = tasks.next().await {

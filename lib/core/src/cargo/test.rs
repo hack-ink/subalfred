@@ -41,10 +41,9 @@ fn members_manifests_should_work() {
 
 #[test]
 fn align_version_should_work() {
-	["0", "0.0", "0.0.0"].iter().for_each(|from| {
-		["1", "1.0", "1.0.0"].iter().for_each(|to| {
-			dbg!(from, to);
-			match *from {
+	["0", "0.0", "0.0.0"].iter().for_each(|&from| {
+		["1", "1.0", "1.0.0"].iter().for_each(|&to| {
+			match from {
 				"0" => assert_eq!(util::align_version(from, to), "1"),
 				"0.0" => assert_eq!(util::align_version(from, to), "1.0"),
 				"0.0.0" => assert_eq!(util::align_version(from, to), "1.0.0"),

@@ -25,10 +25,10 @@ pub fn find_package<'a>(metadata: &'a Metadata, id: &PackageId) -> Option<&'a Pa
 	metadata.packages.iter().find(|pkg| &pkg.id == id)
 }
 
-pub fn find_member_dep_regex(member_deps: &[&Dependency]) -> Regex {
+pub fn find_member_regex(members: &[&Dependency]) -> Regex {
 	Regex::new(&format!(
 		"(({}) *?= *?\\{{ *?version *?= *?)\"(.+?)\"",
-		member_deps.iter().map(|dep| dep.name.replace('-', "\\-")).collect::<Vec<_>>().join("|"),
+		members.iter().map(|m| m.name.replace('-', "\\-")).collect::<Vec<_>>().join("|"),
 	))
 	.expect("[core::cargo] build constant regex never fails; qed")
 }
