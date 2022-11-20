@@ -16,11 +16,13 @@ Commands:
   key
           Calculate the public key/SS58 address of the SS58 address/public key
   rpc
-          Send a RPC request to the node's HTTP RPC endpoint
+          Send a RPC request to the node's HTTP RPC endpoint.
   state
           A set of tools to process Substrate-like chain state
   storage-key
           Calculate the storage key of the storage item
+  track-update
+          Track the updates
   workspace
           Workspace manager
   help
@@ -30,7 +32,8 @@ Options:
   -l, --log <TARGET=LEVEL,*>
           Set a custom log filter.
 
-          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG`
+          simultaneously, this will append `RUST_LOG`'s value after the log.
 
           [default: info]
 

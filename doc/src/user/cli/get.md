@@ -14,7 +14,8 @@ Options:
   -l, --log <TARGET=LEVEL,*>
           Set a custom log filter.
 
-          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG`
+          simultaneously, this will append `RUST_LOG`'s value after the log.
 
           [default: info]
 
@@ -26,7 +27,8 @@ Options:
 ```
 Get the runtime upgrade block.
 
-Using the dichotomy algorithm to find it out. This operation will fail if the runtime version does not existed.
+Using the dichotomy algorithm to find it out. This operation will fail if the runtime version does not
+existed.
 
 Usage: subalfred get runtime-upgrade-block [OPTIONS] --uri <URI> <VERSION>
 
@@ -43,7 +45,8 @@ Options:
   -l, --log <TARGET=LEVEL,*>
           Set a custom log filter.
 
-          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG`
+          simultaneously, this will append `RUST_LOG`'s value after the log.
 
           [default: info]
 

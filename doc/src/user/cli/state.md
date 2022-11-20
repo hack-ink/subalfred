@@ -15,7 +15,7 @@ Commands:
   fork-off
           Fork-off the Substrate-like chain state
   insert
-          Insert the key/value pair into the specific file
+          Insert the key/value pair into the specific file.
   override
           Override the chain spec a with b.
   help
@@ -25,7 +25,8 @@ Options:
   -l, --log <TARGET=LEVEL,*>
           Set a custom log filter.
 
-          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG`
+          simultaneously, this will append `RUST_LOG`'s value after the log.
 
           [default: info]
 
@@ -53,7 +54,8 @@ Options:
   -l, --log <TARGET=LEVEL,*>
           Set a custom log filter.
 
-          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG`
+          simultaneously, this will append `RUST_LOG`'s value after the log.
 
           [default: info]
 
@@ -93,7 +95,9 @@ Arguments:
 
 Options:
       --at <HASH/NUM>
-          Export the data starting from this block
+          Export the data starting from this block.
+
+          Accept block hash or block number.
 
       --timeout <SECS>
           Timeout for the fetching
@@ -135,7 +139,8 @@ Options:
           ```sh
           xxx-node --export-state > xxx-export.json
           xxx-node --build-spec xxx-dev > xxx-dev.json
-          subalfred state fork-off xxx-export.json --renew-consensus-with xxx.dev.json --simple-governance --disable-default-bootnodes
+          subalfred state fork-off xxx-export.json --renew-consensus-with xxx.dev.json --simple-governance
+          --disable-default-bootnodes
           xxx-node --chain xxx.json.fork-off --alice --tmp
           ```
 
@@ -164,7 +169,8 @@ Options:
   -l, --log <TARGET=LEVEL,*>
           Set a custom log filter.
 
-          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG`
+          simultaneously, this will append `RUST_LOG`'s value after the log.
 
           [default: info]
 
@@ -225,7 +231,8 @@ Options:
           ```sh
           xxx-node --export-state > xxx-export.json
           xxx-node --build-spec xxx-dev > xxx-dev.json
-          subalfred state fork-off xxx-export.json --renew-consensus-with xxx.dev.json --simple-governance --disable-default-bootnodes
+          subalfred state fork-off xxx-export.json --renew-consensus-with xxx.dev.json --simple-governance
+          --disable-default-bootnodes
           xxx-node --chain xxx.json.fork-off --alice --tmp
           ```
 
@@ -254,7 +261,8 @@ Options:
   -l, --log <TARGET=LEVEL,*>
           Set a custom log filter.
 
-          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG`
+          simultaneously, this will append `RUST_LOG`'s value after the log.
 
           [default: info]
 
@@ -298,7 +306,8 @@ Options:
   -l, --log <TARGET=LEVEL,*>
           Set a custom log filter.
 
-          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG`
+          simultaneously, this will append `RUST_LOG`'s value after the log.
 
           [default: info]
 
@@ -320,13 +329,13 @@ Insert the key/value pair into the specific file.
 If the key already exists, it will be overwritten.
 
 # Example
-```sh
+\```sh
 # Calculate the WASM code key.
 subalfred convert ascii2hex ':code'
 # "0x3a636f6465"
 # Override the WASM code.
 subalfred state insert chain-spec.json --key 0x3a636f6465 --with-file runtime.compact.compressed.wasm
-```
+\```
 
 Usage: subalfred state insert [OPTIONS] --key <HEX> <--value <HEX>|--with-file <PATH>> <PATH>
 
@@ -347,7 +356,8 @@ Options:
   -l, --log <TARGET=LEVEL,*>
           Set a custom log filter.
 
-          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s value after the log.
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG`
+          simultaneously, this will append `RUST_LOG`'s value after the log.
 
           [default: info]
 
