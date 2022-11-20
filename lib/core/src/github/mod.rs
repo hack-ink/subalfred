@@ -140,8 +140,9 @@ pub async fn track_update(owner: &str, repo: &str, basehead: &str) -> Result<Vec
 		request = request.page(page + 1);
 	}
 
-	let mut pull_requests =
-		stream::iter(commit_shas.into_iter().enumerate().map(|(i, commit_sha)| {
+	let mut pull_requests = stream::iter(commit_shas)
+		.enumerate()
+		.map(|(i, commit_sha)| {
 			let api_client = api_client.clone();
 
 			async move {
@@ -158,9 +159,9 @@ pub async fn track_update(owner: &str, repo: &str, basehead: &str) -> Result<Vec
 						.await,
 				)
 			}
-		}))
+		})
 		// TODO: configurable
-		.buffer_unordered(32)
+		.buffer_unordered(64)
 		.collect::<Vec<_>>()
 		.await;
 

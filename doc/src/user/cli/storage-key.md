@@ -2,10 +2,10 @@
 ```
 Calculate the storage key of the storage item
 
-Usage: subalfred storage-key [OPTIONS] --pallet <PREFIX> --item <ITEM>
+Usage: subalfred storage-key [OPTIONS] --pallet <PALLET> --item <ITEM>
 
 Options:
-      --pallet <PREFIX>
+      --pallet <PALLET>
           Prefix of the storage
 
       --item <ITEM>
@@ -30,7 +30,7 @@ subalfred storage-key --pallet System --item Account
 0x26aa394eea5630e07c48ae0c9558cef7b99d880ec681799c0cf30e8886371da9
 ```
 
-Actually, it equals to `twox128(prefix) + twox128(item)`.
+Actually, it equals to `twox128(pallet) + twox128(item)`.
 ```sh
 subalfred convert ascii2hex System
 ```

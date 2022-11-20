@@ -14,7 +14,7 @@ Options:
 
           [possible values: pallet, parachain, sibling]
 
-      --network <NAME>
+      --network <NETWORK>
           Network name
 
           [default: Substrate]
