@@ -1,7 +1,7 @@
 // std
 use std::borrow::Cow;
 // crates.io
-use cargo_metadata::{Dependency, Metadata, Package, PackageId};
+use cargo_metadata::{Metadata, Package, PackageId};
 use regex::Regex;
 
 #[derive(Debug)]
@@ -25,17 +25,14 @@ pub fn find_package<'a>(metadata: &'a Metadata, id: &PackageId) -> Option<&'a Pa
 	metadata.packages.iter().find(|pkg| &pkg.id == id)
 }
 
-pub fn replace_all_member_versions(members: &[&Dependency]) -> Regex {
-	Regex::new(&format!(
-		"({} *= *\\{{ *version *= *)\"(.+?)\"",
-		members.iter().map(|m| m.name.replace('-', "\\-")).collect::<Vec<_>>().join("|"),
-	))
-	.expect("[core::util] build constant regex never fails; qed")
+pub fn replace_member_versions(members: &[&str]) -> Regex {
+	Regex::new(&format!("(({}) *= *\\{{ *version *= *)\"(.+?)\"", members.join("|"),))
+		.expect("[core::util] build constant regex never fails; qed")
 }
 
-pub fn replace_all_target_versions(targets: &[&str]) -> Regex {
+pub fn replace_target_versions(targets: &[&str]) -> Regex {
 	Regex::new(&format!(
-		"(git *= *\".+/({})(\\.git)?\".+?branch *= *)\".+?\"",
+		"(git *= *\"https://github.com/.+?/({})(\\.git)?\".+?branch *= *)\".+?\"",
 		targets.join("|"),
 	))
 	.expect("[core::util] build constant regex never fails; qed")
