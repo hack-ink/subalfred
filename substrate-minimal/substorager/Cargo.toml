@@ -7,7 +7,7 @@ license     = "GPL-3.0"
 name        = "substorager"
 readme      = "README.md"
 repository  = "https://github.com/hack-ink/subalfred"
-version     = "0.9.0-rc18"
+version     = "0.9.0-rc19"
 
 [dependencies]
 # crates.io
