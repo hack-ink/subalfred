@@ -1,5 +1,7 @@
 //! Subalfred core GitHub library.
 
+#[cfg(test)] mod test;
+
 // std
 use std::{env, sync::Arc};
 // crates.io
@@ -98,6 +100,7 @@ struct Commit {
 }
 
 /// Elementary pull request type.
+#[cfg_attr(test, derive(PartialEq, Eq))]
 #[derive(Debug, Deserialize)]
 pub struct PullRequest {
 	/// Pull request's title.
@@ -108,6 +111,7 @@ pub struct PullRequest {
 	pub labels: Vec<Label>,
 }
 /// Elementary label type.
+#[cfg_attr(test, derive(PartialEq, Eq))]
 #[derive(Debug, Deserialize)]
 pub struct Label {
 	/// Label's name

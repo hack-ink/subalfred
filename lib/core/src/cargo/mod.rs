@@ -1,6 +1,7 @@
 //! Subalfred core Cargo library.
 
 #[cfg(test)] mod test;
+#[cfg(test)] mod test_data;
 
 mod util;
 
@@ -90,15 +91,18 @@ pub async fn update_member_versions(version: &str, manifest_path: &str) -> Resul
 				.collect::<Vec<_>>();
 			let content = system::read_file_to_string(&p.manifest_path)?;
 			let content = content.replacen(&p.version.to_string(), version, 1);
-			let content = if members.is_empty() {
-				Cow::Owned(content)
-			} else {
-				util::replace_all_member_versions(&members).replace_all(&content, |c: &Captures| {
-					format!("{}\"{}\"", &c[1], util::align_version(&c[2], version))
-				})
-			};
 
-			system::swap_file_data(&p.manifest_path, content.as_bytes())
+			if members.is_empty() {
+				system::swap_file_data(&p.manifest_path, content.as_bytes())
+			} else {
+				replace_member_versions(
+					&content,
+					&members.iter().map(|m| m.name.as_str()).collect::<Vec<_>>(),
+					version,
+				);
+
+				system::swap_file_data(&p.manifest_path, content.as_bytes())
+			}
 		})
 		// TODO: configurable
 		.buffer_unordered(64);
@@ -108,6 +112,15 @@ pub async fn update_member_versions(version: &str, manifest_path: &str) -> Resul
 	}
 
 	Ok(())
+}
+fn replace_member_versions<'a>(
+	content: &'a str,
+	members: &'a [&'a str],
+	version: &'a str,
+) -> Cow<'a, str> {
+	util::replace_member_versions(members).replace_all(content, |c: &Captures| {
+		format!("{}\"{}\"", &c[1], util::align_version(&c[3], version))
+	})
 }
 
 // TODO: this function isn't general enough, move it to somewhere in the future
@@ -136,18 +149,7 @@ pub async fn update_dependency_versions(
 	let mut tasks = stream::iter(members)
 		.map(|p| async {
 			let content = system::read_file_to_string(&p.manifest_path)?;
-			let new_content =
-				util::replace_all_target_versions(targets).replace_all(&content, |c: &Captures| {
-					format!(
-						"{}\"{}\"",
-						&c[1],
-						if &c[2] == "polkadot" {
-							format!("release-v{}", version)
-						} else {
-							format!("polkadot-v{}", version)
-						}
-					)
-				});
+			let new_content = replace_target_versions(&content, targets, version);
 
 			if content == new_content {
 				Ok(())
@@ -163,4 +165,21 @@ pub async fn update_dependency_versions(
 	}
 
 	Ok(())
+}
+fn replace_target_versions<'a>(
+	content: &'a str,
+	targets: &'a [&'a str],
+	version: &'a str,
+) -> Cow<'a, str> {
+	util::replace_target_versions(targets).replace_all(content, |c: &Captures| {
+		format!(
+			"{}\"{}\"",
+			&c[1],
+			if &c[2] == "polkadot" {
+				format!("release-v{}", version)
+			} else {
+				format!("polkadot-v{}", version)
+			}
+		)
+	})
 }

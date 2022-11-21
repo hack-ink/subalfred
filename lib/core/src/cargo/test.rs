@@ -1,7 +1,7 @@
 // crates.io
 use cargo_metadata::{Metadata, MetadataCommand};
 // hack-ink
-use super::*;
+use super::{test_data::*, *};
 
 fn test_data() -> Metadata {
 	MetadataCommand::new().manifest_path("./Cargo.toml").exec().unwrap()
@@ -42,13 +42,21 @@ fn members_manifests_should_work() {
 #[test]
 fn align_version_should_work() {
 	["0", "0.0", "0.0.0"].iter().for_each(|&from| {
-		["1", "1.0", "1.0.0"].iter().for_each(|&to| {
-			match from {
-				"0" => assert_eq!(util::align_version(from, to), "1"),
-				"0.0" => assert_eq!(util::align_version(from, to), "1.0"),
-				"0.0.0" => assert_eq!(util::align_version(from, to), "1.0.0"),
-				_ => unreachable!(),
-			}
+		["1", "1.0", "1.0.0"].iter().for_each(|&to| match from {
+			"0" => assert_eq!(util::align_version(from, to), "1"),
+			"0.0" => assert_eq!(util::align_version(from, to), "1.0"),
+			"0.0.0" => assert_eq!(util::align_version(from, to), "1.0.0"),
+			_ => unreachable!(),
 		});
 	});
+}
+
+#[test]
+fn replace_member_versions_should_work() {
+	assert_eq!(replace_member_versions(TOML, &["a", "b", "c"], "1.0.0"), EXPECTED_1);
+}
+
+#[test]
+fn replace_target_versions_should_work() {
+	assert_eq!(replace_target_versions(TOML, &["cumulus", "polkadot", "substrate"], "1.0.0"), EXPECTED_2);
 }
