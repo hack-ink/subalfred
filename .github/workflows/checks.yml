@@ -11,6 +11,7 @@ env:
   CARGO_TERM_COLOR: always
 
   GITHUB_CACHE_VERSION: 1
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   RUST_BACKTRACE: full
   RUSTC_WRAPPER: sccache
