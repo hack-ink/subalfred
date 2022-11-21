@@ -165,21 +165,22 @@ RuntimeVersion {
 ```
 Check if the crates' features are enabled correctly
 
-Usage: subalfred check features [OPTIONS]
+Usage: subalfred check features [OPTIONS] [PATH]
 
-Options:
-      --manifest-path <PATH>
+Arguments:
+  [PATH]
           Root `Cargo.toml`'s path.
 
           If `Cargo.toml` wasn't given, Subalfred will search it under the given path.
 
           [default: ./Cargo.toml]
 
+Options:
   -l, --log <TARGET=LEVEL,*>
           Set a custom log filter.
 
-          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG`
-          simultaneously, this will append `RUST_LOG`'s value after the log.
+          This flag is also working with the `RUST_LOG` environment variable. If you use `RUST_LOG` simultaneously, this will append `RUST_LOG`'s
+          value after the log.
 
           [default: info]
 
