@@ -19,16 +19,20 @@ pub(crate) struct ManifestPath {
 	pub(crate) manifest_path: PathBuf,
 }
 impl ManifestPath {
-	pub(crate) fn manifest_path(&self) -> Cow<PathBuf> {
-		if self.manifest_path.is_file() {
-			Cow::Borrowed(&self.manifest_path)
+	pub(crate) fn build_path(path: &PathBuf) -> Cow<PathBuf> {
+		if path.is_file() {
+			Cow::Borrowed(path)
 		} else {
-			let mut manifest_path = self.manifest_path.clone();
+			let mut path = path.to_owned();
 
-			manifest_path.push("Cargo.toml");
+			path.push("Cargo.toml");
 
-			Cow::Owned(manifest_path)
+			Cow::Owned(path)
 		}
+	}
+
+	pub(crate) fn path(&self) -> Cow<PathBuf> {
+		Self::build_path(&self.manifest_path)
 	}
 }
 

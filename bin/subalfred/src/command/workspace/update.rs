@@ -18,7 +18,7 @@ impl UpdateCmd {
 	pub(crate) async fn run(&self) -> Result<()> {
 		let Self { version, manifest_path } = self;
 
-		cargo::update_member_versions(version, &manifest_path.manifest_path().to_string_lossy())
+		cargo::update_member_versions(version, &manifest_path.path().to_string_lossy())
 			.await?;
 
 		Ok(())

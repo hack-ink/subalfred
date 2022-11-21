@@ -39,7 +39,7 @@ impl UpdateDepsCmd {
 
 		cargo::update_dependency_versions(
 			version,
-			&manifest_path.manifest_path().to_string_lossy(),
+			&manifest_path.path().to_string_lossy(),
 			&targets.iter().map(AsRef::as_ref).collect::<Vec<_>>(),
 		)
 		.await?;
