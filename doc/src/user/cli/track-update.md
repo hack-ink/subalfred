@@ -2,7 +2,7 @@
 ```
 Track the updates.
 
-Basically, it compares two commits and return the associated pull requests.
+This command require a `GITHUB_TOKEN` environment variable to be set. It will list all the commits between the `from` and `to` GitHub ref.
 
 The output is in markdown format.
 
@@ -34,14 +34,25 @@ Options:
 ```
 
 ## Example
+We take `paritytech/substrate` as an example. If you want to track the updates of `cumulus` just replace the `paritytech/substrate` with `paritytech/cumulus`.
+
+The `GITHUB_TOKEN` API key must have the privilege of the target repository.
+
+This command will list all the commits and their labels between `polkadot-v0.9.32` and `polkadot-v0.9.33`.
+And in the future, there will be a GitHub action, which will check the Polkadot updates and create an issue for that.
+
+Currently, its output is a markdown. You can copy and paste it to create a new issue manually.
+
+Moreover, there is an open [StackExchange question](https://substrate.stackexchange.com/questions/5884/how-to-play-with-the-substrate-labels/5903#5903).
+When paritytech finishes the refactoring of the labels.
+This command will provide a categorized update list. You can easily focus on specific parts.
 ```sh
-# This key must have privilege of the target repository.
-#
-# e.g. paritytech/substrate
 export GITHUB_TOKEN=OMITTED
 subalfred track-update paritytech/substrate --from polkadot-v0.9.32 --to polkadot-v0.9.33
+# or
+GITHUB_TOKEN=OMITTED subalfred track-update paritytech/substrate --from polkadot-v0.9.32 --to polkadot-v0.9.33
 ```
-### Source blob
+### Output in source blob style
 ```
 - [BlockId removal: refactor: ProofProvider](https://github.com/paritytech/substrate/pull/12519) - `A0-pleasereview`, `B0-silent`, `C1-low 📌`, `D3-trivial 🧸`
 - [registrar: Avoid freebies in provide_judgement](https://github.com/paritytech/substrate/pull/12465) - `A0-pleasereview`, `B7-runtimenoteworthy`, `C1-low 📌`, `D1-audited 👍`
@@ -128,7 +139,7 @@ subalfred track-update paritytech/substrate --from polkadot-v0.9.32 --to polkado
 - [Remove `sp_tasks::spawn` API and related code + host functions](https://github.com/paritytech/substrate/pull/12639) - `A0-pleasereview`, `B3-apinoteworthy`, `B5-clientnoteworthy`, `C1-low 📌`, `E4-newhostfunctions`, `D3-trivial 🧸`
 - [Backport "Contracts pallet: Bump Runtime API (#12677)" to 0.9.33 branch](https://github.com/paritytech/substrate/pull/12686)
 ```
-### Rendered blob
+### Output in rendered blob style
 - [BlockId removal: refactor: ProofProvider](https://github.com/paritytech/substrate/pull/12519) - `A0-pleasereview`, `B0-silent`, `C1-low 📌`, `D3-trivial 🧸`
 - [registrar: Avoid freebies in provide_judgement](https://github.com/paritytech/substrate/pull/12465) - `A0-pleasereview`, `B7-runtimenoteworthy`, `C1-low 📌`, `D1-audited 👍`
 - [EPM: allow duplicate submissions](https://github.com/paritytech/substrate/pull/12237) - `A0-pleasereview`, `B0-silent`, `E1-runtimemigration`, `C1-low 📌`, `D9-needsaudit 👮`

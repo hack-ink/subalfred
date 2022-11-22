@@ -4,7 +4,7 @@ use clap::Args;
 use crate::{command::shared::ManifestPath, prelude::*};
 use subalfred_core::cargo;
 
-/// Update the workspace dependency versions.
+/// Update the Substrate-related repositories' dependency versions.
 ///
 /// To use this command, you must make sure your dependencies were anchored at a branch.
 /// This is a general rule of the Polkadot ecosystem.
