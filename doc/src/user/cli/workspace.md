@@ -110,7 +110,7 @@ Options:
 ```
 ### Episode 1
 In parachain development. We have some dependency groups. `cumulus`,`polkadot` and `substrate`.
-And you could add your specific dependency group. For example `frontier`.
+And you can add your specific dependency group. For example `frontier`.
 
 For example, when we want to update the version from `polkadot-v0.9.30` to `polkadot-v0.9.31`. We need to handle those dependency versions.
 And here is a general rule. All those repositories have and must have a branch named `polkadot-v0.9.31`. For `polkadot` it's `release-v0.9.31`.
