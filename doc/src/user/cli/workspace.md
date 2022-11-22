@@ -121,7 +121,7 @@ Any ideas/improvements are welcome. We can draft an `Episode 2` together!
 ### Example
 We take `substrate-parachain-template` as an example.
 
-This command will update all the dependencies that I described above.
+This command will update all the dependencies correctly that I described above.
 
 And there is nothing I can show. Try the example commands below and check the file differences.
 You'll find all the dependencies were updated correctly.
