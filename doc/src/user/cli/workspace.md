@@ -61,7 +61,7 @@ cd /tmp/subalfred-example/substrate-parachain-template
 subalfred workspace update 1.0.0
 ```
 
-## Command `workspace update`
+## Command `workspace update-deps`
 ```
 Update the Substrate-related repositories' dependency versions.
 
