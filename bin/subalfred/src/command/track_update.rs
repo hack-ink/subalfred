@@ -6,7 +6,8 @@ use subalfred_core::github::{self, PullRequest};
 
 /// Track the updates.
 ///
-/// Basically, it compares two commits and return the associated pull requests.
+/// This command require a `GITHUB_TOKEN` environment variable to be set.
+/// It will list all the commits between the `from` and `to` GitHub ref.
 ///
 /// The output is in markdown format.
 #[derive(Debug, Args)]
