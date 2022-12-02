@@ -30,10 +30,10 @@ pub struct ForkOffConfig {
 	/// want on it. Test new features, runtime upgrade, etc.
 	///
 	/// ```sh
-	/// xxx-node --export-state > xxx-export.json
-	/// xxx-node --build-spec xxx-dev > xxx-dev.json
-	/// subalfred state fork-off xxx-export.json --renew-consensus-with xxx.dev.json --simple-governance --disable-default-bootnodes
-	/// xxx-node --chain xxx.json.fork-off --alice --tmp
+	/// xxx-node export-state > xxx-export.json
+	/// xxx-node build-spec --raw xxx-dev > xxx-dev.json
+	/// subalfred state fork-off xxx-export.json --renew-consensus-with xxx-dev.json --simple-governance --disable-default-bootnodes
+	/// xxx-node --chain xxx-export.json.fork-off --alice --tmp
 	/// ```
 	///
 	/// Note:
