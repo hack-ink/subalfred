@@ -3,6 +3,7 @@
 
 # Integrated Development Environment
 .idea
+.fleet
 .vscode
 
 # Package Manager

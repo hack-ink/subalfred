@@ -31,7 +31,7 @@ impl HashCmd {
 			Hasher::sha2_256 => subhasher::sha2_256(&data).to_vec(),
 		};
 
-		println!("{}", array_bytes::bytes2hex("0x", &bytes));
+		println!("{}", array_bytes::bytes2hex("0x", bytes));
 
 		Ok(())
 	}

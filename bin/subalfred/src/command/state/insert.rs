@@ -47,7 +47,7 @@ impl InsertCmd {
 		} else if let Some(with_file) = with_file {
 			let bytes = system::read_file_to_vec(with_file)?;
 
-			array_bytes::bytes2hex("0x", &bytes)
+			array_bytes::bytes2hex("0x", bytes)
 		} else {
 			Default::default()
 		};

@@ -24,6 +24,11 @@ impl StorageKey {
 		Default::default()
 	}
 }
+impl AsRef<[u8]> for StorageKey {
+    fn as_ref(&self) -> &[u8] {
+        &self.0
+    }
+}
 impl Deref for StorageKey {
 	type Target = [u8];
 
