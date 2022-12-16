@@ -97,13 +97,13 @@ where
 
 fn clear_consensus(chain_spec: &mut ChainSpec) {
 	let top = &mut chain_spec.genesis.raw.top;
-	let system_prefix = array_bytes::bytes2hex("0x", &subhasher::twox128(b"System"));
+	let system_prefix = array_bytes::bytes2hex("0x", subhasher::twox128(b"System"));
 	let system_account_prefix =
-		array_bytes::bytes2hex("0x", &substorager::storage_key(b"System", b"Account"));
+		array_bytes::bytes2hex("0x", substorager::storage_key(b"System", b"Account"));
 	// TODO: if the `top` is sorted, we can pop the prefix while it is passed
 	let ignore_prefixes = [b"Babe".as_ref(), b"Authorship", b"Session", b"Grandpa", b"Beefy"]
 		.iter()
-		.map(|prefix| array_bytes::bytes2hex("0x", &subhasher::twox128(prefix)))
+		.map(|prefix| array_bytes::bytes2hex("0x", subhasher::twox128(prefix)))
 		.collect::<Vec<_>>();
 	// TODO: use `BTreeMap` for `top`, sortable
 	let mut new_top = FxHashMap::default();

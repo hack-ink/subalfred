@@ -19,7 +19,7 @@ impl Bytes2HexCmd {
 		// May use `clap::value_parser!` here.
 		let bytes = util::vec_literal_string_try_as_vec(bytes)?;
 
-		println!("{}", array_bytes::bytes2hex("0x", bytes.as_slice()));
+		println!("{}", array_bytes::bytes2hex("0x", bytes));
 
 		Ok(())
 	}

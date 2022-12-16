@@ -43,7 +43,7 @@ impl KeyCmd {
 			json_output: JsonOutput { json_output },
 		} = self;
 		let key = if let Some(r#type) = r#type {
-			Cow::Owned(array_bytes::bytes2hex("0x", &r#type.to_key::<32>(key)?))
+			Cow::Owned(array_bytes::bytes2hex("0x", r#type.to_key::<32>(key)?))
 		} else {
 			Cow::Borrowed(key)
 		};
