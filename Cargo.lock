@@ -287,7 +287,7 @@ dependencies = [
 
 [[package]]
 name = "cmd-impl"
-version = "0.9.0-rc19"
+version = "0.9.0-rc20"
 dependencies = [
  "quote",
  "syn",
@@ -875,16 +875,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "io-lifetimes"
-version = "1.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a7d367024b3f3414d8e01f437f704f41a9f64ab36f9067fa73e526ad4c763c87"
-dependencies = [
- "libc",
- "windows-sys 0.42.0",
-]
-
-[[package]]
 name = "ipnet"
 version = "2.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -899,18 +889,6 @@ dependencies = [
  "hermit-abi 0.2.6",
  "io-lifetimes",
  "rustix",
- "windows-sys 0.42.0",
-]
-
-[[package]]
-name = "is-terminal"
-version = "0.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "927609f78c2913a6f6ac3c27a4fe87f43e2a35367c0c4b0f8265e8f49a104330"
-dependencies = [
- "hermit-abi 0.2.6",
- "io-lifetimes 1.0.1",
- "rustix 0.36.4",
  "windows-sys 0.42.0",
 ]
 
@@ -979,12 +957,6 @@ name = "linux-raw-sys"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f051f77a7c8e6957c0696eac88f26b0117e54f52d3fc682ab19397a8812846a4"
-
-[[package]]
-name = "linux-raw-sys"
-version = "0.1.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f9f08d8963a6c613f4b1a78f4f4a4dbfadf8e6545b2d72861731e4858b8b47f"
 
 [[package]]
 name = "log"
@@ -1442,23 +1414,9 @@ checksum = "a3807b5d10909833d3e9acd1eb5fb988f79376ff10fce42937de71a449c4c588"
 dependencies = [
  "bitflags",
  "errno",
- "io-lifetimes 0.7.5",
+ "io-lifetimes",
  "libc",
- "linux-raw-sys 0.0.46",
- "windows-sys 0.42.0",
-]
-
-[[package]]
-name = "rustix"
-version = "0.36.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cb93e85278e08bb5788653183213d3a60fc242b10cb9be96586f5a73dcb67c23"
-dependencies = [
- "bitflags",
- "errno",
- "io-lifetimes 1.0.1",
- "libc",
- "linux-raw-sys 0.1.3",
+ "linux-raw-sys",
  "windows-sys 0.42.0",
 ]
 
@@ -1629,17 +1587,10 @@ dependencies = [
 ]
 
 [[package]]
-<<<<<<< HEAD
 name = "sha1"
 version = "0.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f04293dc80c3993519f2d7f6f511707ee7094fe0c6d3406feb330cdb3540eba3"
-=======
-name = "sha-1"
-version = "0.10.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5058ada175748e33390e40e872bd0fe59a19f265d0158daa551c5a88a76009c"
->>>>>>> 712e8a9 (Bump deps)
 dependencies = [
  "cfg-if",
  "cpufeatures",
@@ -1726,7 +1677,7 @@ checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
 
 [[package]]
 name = "subalfred"
-version = "0.9.0-rc19"
+version = "0.9.0-rc20"
 dependencies = [
  "anyhow",
  "array-bytes",
@@ -1746,7 +1697,7 @@ dependencies = [
 
 [[package]]
 name = "subalfred-core"
-version = "0.9.0-rc19"
+version = "0.9.0-rc20"
 dependencies = [
  "array-bytes",
  "async-trait",
@@ -1780,7 +1731,7 @@ dependencies = [
 
 [[package]]
 name = "subalfred-util"
-version = "0.9.0-rc19"
+version = "0.9.0-rc20"
 dependencies = [
  "tracing",
  "tracing-test",
@@ -1788,7 +1739,7 @@ dependencies = [
 
 [[package]]
 name = "subcryptor"
-version = "0.9.0-rc19"
+version = "0.9.0-rc20"
 dependencies = [
  "base58",
  "blake2-rfc",
@@ -1799,7 +1750,7 @@ dependencies = [
 
 [[package]]
 name = "subgrandpa"
-version = "0.9.0-rc19"
+version = "0.9.0-rc20"
 dependencies = [
  "parity-scale-codec",
  "serde",
@@ -1807,7 +1758,7 @@ dependencies = [
 
 [[package]]
 name = "subhasher"
-version = "0.9.0-rc19"
+version = "0.9.0-rc20"
 dependencies = [
  "blake2-rfc",
  "byteorder",
@@ -1818,7 +1769,7 @@ dependencies = [
 
 [[package]]
 name = "submetadatan"
-version = "0.9.0-rc19"
+version = "0.9.0-rc20"
 dependencies = [
  "frame-metadata",
  "scale-info",
@@ -1827,7 +1778,7 @@ dependencies = [
 
 [[package]]
 name = "subrpcer"
-version = "0.9.0-rc19"
+version = "0.9.0-rc20"
 dependencies = [
  "affix",
  "once_cell",
@@ -1840,14 +1791,14 @@ dependencies = [
 
 [[package]]
 name = "subruntimer"
-version = "0.9.0-rc19"
+version = "0.9.0-rc20"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "subspector"
-version = "0.9.0-rc19"
+version = "0.9.0-rc20"
 dependencies = [
  "fxhash",
  "serde",
@@ -1856,7 +1807,7 @@ dependencies = [
 
 [[package]]
 name = "substorager"
-version = "0.9.0-rc19"
+version = "0.9.0-rc20"
 dependencies = [
  "array-bytes",
  "parity-scale-codec",
@@ -1865,7 +1816,7 @@ dependencies = [
 
 [[package]]
 name = "subversioner"
-version = "0.9.0-rc19"
+version = "0.9.0-rc20"
 dependencies = [
  "serde",
 ]
@@ -1930,7 +1881,7 @@ version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cb20089a8ba2b69debd491f8d2d023761cbf196e999218c591fa1e7e15a21907"
 dependencies = [
- "rustix 0.35.13",
+ "rustix",
  "windows-sys 0.42.0",
 ]
 
