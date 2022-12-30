@@ -11,7 +11,7 @@ members = [
 	array-bytes        = { version = "6.0" }
 	clap               = { version = "4.0" }
 	fxhash             = { version = "0.2" }
-	once_cell          = { version = "1.16" }
+	once_cell          = { version = "1.17" }
 	parity-scale-codec = { version = "3.2" }
 	reqwest            = { version = "0.11" }
 	serde              = { version = "1.0" }
