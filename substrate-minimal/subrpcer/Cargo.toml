@@ -18,7 +18,7 @@ reqwest    = { workspace = true, optional = true, features = ["json"] }
 serde      = { workspace = true }
 serde_json = { workspace = true }
 tracing    = { workspace = true, optional = true }
-ureq       = { version = "2.5", optional = true, features = ["json"] }
+ureq       = { version = "2.6", optional = true, features = ["json"] }
 
 [features]
 reqwest-client = [
