@@ -51,5 +51,5 @@ pub struct Raw {
 	#[serde(default)]
 	pub top: FxHashMap<String, String>,
 	#[serde(default)]
-	pub children_default: Value,
+	pub children_default: FxHashMap<String, FxHashMap<String, String>>,
 }
