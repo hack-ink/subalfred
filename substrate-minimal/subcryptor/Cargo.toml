@@ -14,7 +14,7 @@ version     = "0.9.0-rc20"
 base58             = { version = "0.2" }
 blake2-rfc         = { version = "0.2" }
 parity-scale-codec = { workspace = true, optional = true, features = ["derive"] }
-ss58-registry      = { version = "1.36" }
+ss58-registry      = { version = "1.37" }
 thiserror          = { workspace = true }
 
 [features]
