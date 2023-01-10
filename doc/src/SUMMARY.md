@@ -12,7 +12,7 @@
     - [rpc](user/cli/rpc.md)
     - [state](user/cli/state.md)
     - [storage-key](user/cli/storage-key.md)
-    - [track-update](user/cli/track-update.md)
+    - [track-updates](user/cli/track-updates.md)
     - [workspace](user/cli/workspace.md)
 
 # Reference Guide(TODO)

@@ -36,7 +36,7 @@ impl RpcCmd {
 		} else {
 			Value::Null
 		};
-		let result = CLIENT
+		let r = CLIENT
 			.post(uri)
 			.json(&subrpcer::rpc(0, method, params))
 			.send()
@@ -44,14 +44,14 @@ impl RpcCmd {
 			.json::<Value>()
 			.await?;
 
-		Ok(serde_json::to_string(&result)?)
+		Ok(serde_json::to_string(&r)?)
 	}
 
 	#[tokio::main]
 	pub(crate) async fn run(&self) -> Result<()> {
-		let result = self.run_().await?;
+		let r = self.run_().await?;
 
-		println!("{result}");
+		println!("{r}");
 
 		Ok(())
 	}

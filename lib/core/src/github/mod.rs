@@ -2,14 +2,12 @@
 
 #[cfg(test)] mod test;
 
+pub mod substrate;
+
 // std
 use std::{env, sync::Arc};
 // crates.io
-use futures::{stream, StreamExt};
-use githuber::{
-	api::{commits, Method::*},
-	prelude::*,
-};
+use githuber::api::{ApiExt, Method::*};
 use reqwest::{
 	header::{ACCEPT, USER_AGENT},
 	Client,
@@ -26,7 +24,7 @@ pub struct ApiClient {
 }
 impl ApiClient {
 	const PER_PAGE: u8 = 100;
-	const USER_AGENT: &'static str = "subalfred-v0.9.0-rc16";
+	const USER_AGENT: &'static str = "subalfred-api-client";
 
 	/// Create a new API client.
 	pub fn new() -> Result<Self> {
@@ -101,7 +99,7 @@ struct Commit {
 
 /// Elementary pull request type.
 #[cfg_attr(test, derive(PartialEq, Eq))]
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct PullRequest {
 	/// Pull request's title.
 	pub title: String,
@@ -112,66 +110,10 @@ pub struct PullRequest {
 }
 /// Elementary label type.
 #[cfg_attr(test, derive(PartialEq, Eq))]
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Label {
 	/// Label's name
 	pub name: String,
-}
-
-/// Track the updates.
-///
-/// Basically, it compares two commits and return the associated pull requests.
-pub async fn track_update(owner: &str, repo: &str, basehead: &str) -> Result<Vec<PullRequest>> {
-	let api_client = ApiClient::new()?;
-	let mut request =
-		commits::compare_two_commits(owner, repo, basehead).per_page(ApiClient::PER_PAGE).page(1);
-	let mut commit_shas = Vec::new();
-
-	loop {
-		let response = api_client.request_auto_retry::<_, Commits>(&request).await;
-		let page = request
-			.page
-			.take()
-			.expect("[core::github] `page` has already been set in previous step; qed");
-		let commits_count = response.commits.len() as u8;
-
-		response.commits.into_iter().for_each(|commit| commit_shas.push(commit.sha));
-
-		if commits_count < ApiClient::PER_PAGE {
-			break;
-		}
-
-		request = request.page(page + 1);
-	}
-
-	let mut pull_requests = stream::iter(commit_shas)
-		.enumerate()
-		.map(|(i, commit_sha)| {
-			let api_client = api_client.clone();
-
-			async move {
-				(
-					i,
-					api_client
-						.request_auto_retry::<_, Vec<PullRequest>>(
-							&commits::list_pull_requests_associated_with_a_commit(
-								owner,
-								repo,
-								&commit_sha,
-							),
-						)
-						.await,
-				)
-			}
-		})
-		// TODO: configurable
-		.buffer_unordered(64)
-		.collect::<Vec<_>>()
-		.await;
-
-	pull_requests.sort_by_key(|(i, _)| *i);
-
-	Ok(pull_requests.into_iter().flat_map(|(_, pull_request)| pull_request).collect())
 }
 
 fn get_github_token() -> Result<String> {

@@ -2,9 +2,9 @@
 use super::*;
 
 #[tokio::test]
-async fn track_update_should_work() {
+async fn track_updates_should_work() {
 	assert_eq!(
-		track_update("hack-ink", "subalfred", "v0.9.0-rc17...v0.9.0-rc18").await.unwrap(),
+		substrate::track_updates("hack-ink", "subalfred", "v0.9.0-rc17...v0.9.0-rc18").await.unwrap(),
 		vec![
 			PullRequest {
 				title: "Release `subspector`".into(),

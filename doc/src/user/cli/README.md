@@ -21,7 +21,7 @@ Commands:
           A set of tools to process Substrate-like chain state
   storage-key
           Calculate the storage key of the storage item
-  track-update
+  track-updates
           Track the updates
   workspace
           Workspace manager
