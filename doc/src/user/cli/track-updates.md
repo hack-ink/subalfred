@@ -43,8 +43,10 @@ And in the future, there will be a GitHub action, which will check the Polkadot 
 
 Currently, its output is a markdown. You can copy and paste it to create a new issue manually.
 
-Moreover, there is an open [StackExchange question](https://substrate.stackexchange.com/questions/5884/how-to-play-with-the-substrate-labels/5903#5903).
-When paritytech finishes the refactoring of the labels.
+Moreover, there is an open [StackExchange question](https://substrate.stackexchange.com/questions/5884/how-to-play-with-the-substrate-labels/5903#5903). When paritytech finishes the refactoring of the labels.
+
+Also, there are some discussion about this command [here](https://github.com/w3f/Grant-Milestone-Delivery/pull/629).
+
 This command will provide a categorized update list. You can easily focus on specific parts.
 ```sh
 export GITHUB_TOKEN=OMITTED
