@@ -38,16 +38,51 @@ We take `paritytech/substrate` as an example. If you want to track the updates o
 
 The `GITHUB_TOKEN` API key must have the privilege of the target repository.
 
-This command will list all the commits and their labels between `polkadot-v0.9.33` and `polkadot-v0.9.36`.
-And in the future, there will be a GitHub action, which will check the Polkadot updates and create an issue for that.
+This command will list all the commits/pull requests and their labels between `polkadot-v0.9.33` and `polkadot-v0.9.36`.
+And some commits/pull requests which was under the important/specific labels.
+```rs
+pub enum WatchedLabels {
+	/// [https://github.com/paritytech/substrate/labels/B3-apinoteworthy]
+	B3Api,
+	/// [https://github.com/paritytech/substrate/labels/B5-clientnoteworthy]
+	B5Client,
+	/// [https://github.com/paritytech/substrate/labels/B7-runtimenoteworthy]
+	B7Runtime,
+	/// [https://github.com/paritytech/substrate/labels/C7-high%20❗%EF%B8%8F]
+	C7High,
+	/// [https://github.com/paritytech/substrate/labels/C9-critical%20‼%EF%B8%8F]
+	C9Critical,
+	/// [https://github.com/paritytech/substrate/labels/E1-runtimemigration]
+	E1Runtime,
+	/// [https://github.com/paritytech/substrate/labels/E2-databasemigration]
+	E2Database,
+	/// [https://github.com/paritytech/substrate/labels/E4-newhostfunctions]
+	E4NewHostFunctions,
+	/// [https://github.com/paritytech/substrate/labels/E5-breaksapi]
+	E5BreaksApi,
+	/// [https://github.com/paritytech/substrate/labels/E6-transactionversion]
+	E6TransactionVersion,
+	/// [https://github.com/paritytech/substrate/labels/E7-breaksauthoring]
+	E7BreaksAuthoring,
+	/// [https://github.com/paritytech/substrate/labels/E8-breakseverything]
+	E8BreaksEverything,
+	/// [https://github.com/paritytech/substrate/labels/E10-client-update-first%20👀]
+	E10ClientUpdateFirst,
+	/// [https://github.com/paritytech/substrate/labels/I8-enhancement%20🎁]
+	I8Enhancement,
+}
+```
 
 Currently, its output is a markdown. You can copy and paste it to create a new issue manually.
 
-Moreover, there is an open [StackExchange question](https://substrate.stackexchange.com/questions/5884/how-to-play-with-the-substrate-labels/5903#5903). When paritytech finishes the refactoring of the labels.
+There is an open [StackExchange question](https://substrate.stackexchange.com/questions/5884/how-to-play-with-the-substrate-labels/5903#5903).
+After paritytech finishes the refactoring of the labels.
+This command will provide a more professional update list in the future. You can easily focus on specific parts.
 
 Also, there are some discussion about this command [here](https://github.com/w3f/Grant-Milestone-Delivery/pull/629).
 
-This command will provide a categorized update list. You can easily focus on specific parts.
+Moreover, there will be a GitHub action later, which will check the Polkadot updates and create an issue for that.
+
 ```sh
 export GITHUB_TOKEN=OMITTED
 subalfred track-updates paritytech/substrate --from polkadot-v0.9.33 --to polkadot-v0.9.36
