@@ -70,9 +70,9 @@ impl KeyCmd {
 	}
 
 	pub(crate) fn run(&self) -> Result<()> {
-		let result = self.run_()?;
+		let r = self.run_()?;
 
-		println!("{result}");
+		println!("{r}");
 
 		Ok(())
 	}
