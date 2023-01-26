@@ -56,13 +56,14 @@ pub fn all(address: &str) -> Result<(Vec<u8>, String, Vec<Address>)> {
 fn recover_public_key(address: &str) -> Result<Vec<u8>> {
 	match address.len() {
 		// TODO: support more key types
-		48 | 49 => Ok(subcryptor::public_key_of::<Sr25519>(address).map_err(|e| {
+		47 | 48 | 49 => Ok(subcryptor::public_key_of::<Sr25519>(address).map_err(|e| {
 			error::Ss58::InvalidAddress {
 				address: address.into(),
 				source: Some(error::Ss58InvalidAddressSource::Subcryptor(e)),
 			}
 		})?),
 		len => {
+			dbg!(2);
 			if (len == 64 && !address.starts_with("0x")) || (len == 66 && address.starts_with("0x"))
 			{
 				Ok(array_bytes::hex2bytes(address).map_err(|e| error::Ss58::InvalidAddress {

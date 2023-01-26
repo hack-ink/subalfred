@@ -23,7 +23,7 @@ impl BytesStyleCmd {
 
 		match (from, to) {
 			(ByteStringLiteral, ByteStringLiteral) | (VecString, VecString) => {
-				println!("{}", bytes);
+				println!("{bytes}");
 			},
 			(ByteStringLiteral, VecString) => {
 				let byte_string_literal = unescaper::unescape(bytes)?;

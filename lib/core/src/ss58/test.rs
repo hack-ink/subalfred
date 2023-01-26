@@ -50,7 +50,7 @@ fn recover_public_key_should_work() {
 #[test]
 fn recover_public_key_should_fail() {
 	let address = "";
-	let expected = Err(format!("[core::ss58] invalid address, {:?}", address));
+	let expected = Err(format!("[core::ss58] invalid address, {address:?}"));
 
 	assert_eq!(recover_public_key(address).map_err(|e| e.to_string()), expected);
 }

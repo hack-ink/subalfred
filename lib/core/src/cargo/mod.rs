@@ -176,9 +176,9 @@ fn replace_target_versions<'a>(
 			"{}\"{}\"",
 			&c[1],
 			if &c[2] == "polkadot" {
-				format!("release-v{}", version)
+				format!("release-v{version}")
 			} else {
-				format!("polkadot-v{}", version)
+				format!("polkadot-v{version}")
 			}
 		)
 	})
