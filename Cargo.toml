@@ -12,7 +12,7 @@ members = [
 	clap               = { version = "4.1" }
 	fxhash             = { version = "0.2" }
 	once_cell          = { version = "1.17" }
-	parity-scale-codec = { version = "3.2" }
+	parity-scale-codec = { version = "3.3" }
 	reqwest            = { version = "0.11" }
 	serde              = { version = "1.0" }
 	serde_json         = { version = "1.0" }
