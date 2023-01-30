@@ -18,7 +18,7 @@ pub(crate) struct TrackUpdatesCmd {
 	/// Target repository.
 	///
 	/// e.g. paritytech/substrate
-	#[arg(required = true, value_name = "OWNER/REPOSITORY")]
+	#[arg(value_name = "OWNER/REPOSITORY")]
 	repository: String,
 	/// Release starting from.
 	#[arg(long, required = true, value_name = "VERSION")]

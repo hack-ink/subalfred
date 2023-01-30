@@ -10,7 +10,7 @@ use subalfred_core::state::{self, ForkOffConfig};
 #[derive(Debug, Args)]
 pub(crate) struct ExportCmd {
 	/// Live chain's HTTP RPC endpoint.
-	#[arg(required = true, value_name = "URI")]
+	#[arg(value_name = "URI")]
 	live: String,
 	/// Export the data starting from this block.
 	///

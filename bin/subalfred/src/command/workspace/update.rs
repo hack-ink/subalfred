@@ -8,7 +8,7 @@ use subalfred_core::cargo;
 #[derive(Debug, Args)]
 pub(crate) struct UpdateCmd {
 	/// Target version.
-	#[arg(required = true, value_name = "VERSION")]
+	#[arg(value_name = "VERSION")]
 	version: String,
 	#[command(flatten)]
 	manifest_path: ManifestPath,
