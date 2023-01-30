@@ -27,7 +27,7 @@ use subalfred_core::{state, system};
 )]
 pub(crate) struct InsertCmd {
 	/// Target state file's path.
-	#[arg(required = true, value_name = "PATH")]
+	#[arg(value_name = "PATH")]
 	path: String,
 	/// Storage key.
 	#[arg(long, required = true, value_name = "HEX")]

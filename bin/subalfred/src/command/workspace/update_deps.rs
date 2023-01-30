@@ -22,7 +22,7 @@ pub(crate) struct UpdateDepsCmd {
 	/// Target version.
 	///
 	/// e.g. `0.0.0` will generate `release-v0.0.0` and `polkadot-v0.0.0`
-	#[arg(required = true, value_name = "VERSION")]
+	#[arg(value_name = "VERSION")]
 	version: String,
 	#[command(flatten)]
 	manifest_path: ManifestPath,

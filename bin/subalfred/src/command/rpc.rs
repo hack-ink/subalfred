@@ -19,7 +19,7 @@ use subalfred_core::http::CLIENT;
 #[command(verbatim_doc_comment)]
 pub(crate) struct RpcCmd {
 	/// Node's HTTP RPC endpoint.
-	#[arg(required = true, value_name = "URI", default_value = "http://localhost:9933")]
+	#[arg(value_name = "URI", default_value = "http://localhost:9933")]
 	uri: String,
 	/// JSONRPC method name.
 	#[arg(long, required = true, value_name = "METHOD")]

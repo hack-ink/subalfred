@@ -39,9 +39,9 @@ impl ManifestPath {
 #[derive(Debug, Args)]
 pub(crate) struct TwoChainSpec {
 	/// Chain spec a's path.
-	#[arg(required = true, value_name = "PATH")]
+	#[arg(value_name = "PATH")]
 	pub(crate) a: PathBuf,
 	/// Chain spec b's path.
-	#[arg(required = true, value_name = "PATH")]
+	#[arg(value_name = "PATH")]
 	pub(crate) b: PathBuf,
 }

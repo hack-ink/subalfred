@@ -7,7 +7,7 @@ use crate::prelude::*;
 #[derive(Debug, Args)]
 pub(crate) struct HashCmd {
 	/// Hex data input.
-	#[arg(required = true, value_name = "HEX")]
+	#[arg(value_name = "HEX")]
 	hex: String,
 	/// Hash algorithm.
 	#[arg(value_enum, long, value_name = "HASHER", default_value = "blake2-128-concat")]

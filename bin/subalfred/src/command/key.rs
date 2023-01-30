@@ -15,7 +15,7 @@ type ChainId = u32;
 #[derive(Debug, Args)]
 pub(crate) struct KeyCmd {
 	/// Public key/SS58 address.
-	#[arg(required = true, value_name = "PUBLIC KEY/SS58 ADDRESS")]
+	#[arg(value_name = "PUBLIC KEY/SS58 ADDRESS")]
 	key: String,
 	/// Key type.
 	#[arg(value_enum, long, value_name = "TYPE")]
