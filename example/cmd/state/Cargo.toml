@@ -14,4 +14,4 @@ parity-scale-codec = { version = "3.2" }
 se-util            = { version = "0.0.0", path = "../../util" }
 sp-keyring         = { version = "6.0" }
 subxt              = { version = "0.24" }
-tokio              = { version = "1.23", features = ["rt-multi-thread"] }
+tokio              = { version = "1.24", features = ["rt-multi-thread"] }
