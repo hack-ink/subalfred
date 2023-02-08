@@ -1,12 +1,12 @@
 # System
 .DS_Store
 
-# Integrated Development Environment
+# Integrated development environment
 .idea
 .fleet
 .vscode
 
-# Package Manager
+# Package manager
 ## Cargo
 target
 ## mdBook
