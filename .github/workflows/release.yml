@@ -30,10 +30,7 @@ jobs:
       - name: Setup Rust toolchain
         run: rustup target add ${{ matrix.target.name }}
       - name: Build
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release --locked --target ${{ matrix.target.name }}
+        run: cargo build --release --locked --target ${{ matrix.target.name }}
       - name: Compress
         run: |
           mv target/${{ matrix.target.name }}/release/subalfred${{ matrix.target.extension }} .
