@@ -7,7 +7,7 @@ use std::{
 };
 // crates.io
 use parity_scale_codec::{Decode, Encode};
-// hack-ink
+// subalfred
 use crate::prelude::*;
 
 /// Substrate-like key trait.

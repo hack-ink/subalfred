@@ -1,6 +1,6 @@
 //! Insert core library.
 
-// hack-ink
+// subalfred
 use super::ChainSpec;
 use crate::{prelude::*, system};
 

@@ -4,7 +4,7 @@
 
 // crates.io
 use cargo_metadata::{DependencyKind, Metadata, Node};
-// hack-ink
+// subalfred
 use crate::{
 	cargo::{self, GetById},
 	prelude::*,

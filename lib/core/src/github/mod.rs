@@ -13,7 +13,7 @@ use reqwest::{
 	Client,
 };
 use serde::{de::DeserializeOwned, Deserialize};
-// hack-ink
+// subalfred
 use crate::{http::CLIENT, prelude::*};
 
 /// GitHub REST API client.

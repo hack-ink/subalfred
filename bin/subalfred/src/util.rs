@@ -1,6 +1,6 @@
 // std
 use std::fmt::Write;
-// hack-ink
+// subalfred
 use crate::prelude::*;
 
 pub(crate) fn vec_literal_string_try_as_vec(s: &str) -> Result<Vec<u8>> {
