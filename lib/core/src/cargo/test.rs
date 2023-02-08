@@ -1,6 +1,6 @@
 // crates.io
 use cargo_metadata::{Metadata, MetadataCommand};
-// hack-ink
+// subalfred
 use super::{test_data::*, *};
 
 fn test_data() -> Metadata {

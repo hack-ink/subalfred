@@ -2,7 +2,7 @@
 use std::env;
 // crates.io
 use clap::{Args, Parser};
-// hack-ink
+// subalfred
 use crate::{command::Cmd, prelude::*};
 
 #[derive(Debug, Parser)]
@@ -14,7 +14,6 @@ use crate::{command::Cmd, prelude::*};
 		"-",
 		env!("VERGEN_CARGO_TARGET_TRIPLE"),
 	),
-	author,
 	about,
 	rename_all = "kebab",
 )]

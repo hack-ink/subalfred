@@ -1,6 +1,6 @@
 // crates.io
 use clap::{ArgGroup, Args};
-// hack-ink
+// subalfred
 use crate::prelude::*;
 use subalfred_core::{state, system};
 

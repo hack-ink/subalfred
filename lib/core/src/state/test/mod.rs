@@ -1,6 +1,6 @@
 // std
 use std::fs;
-// hack-ink
+// subalfred
 use super::*;
 
 const CHAIN_SPEC: &str = "src/state/test/.test.json";

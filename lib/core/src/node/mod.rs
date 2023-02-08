@@ -11,7 +11,7 @@ use std::{
 use array_bytes::TryFromHex;
 use parity_scale_codec::Decode;
 use serde::Serialize;
-// hack-ink
+// subalfred
 use crate::{jsonrpc::http, prelude::*};
 use submetadatan::{LatestRuntimeMetadata, RuntimeMetadataPrefixed};
 use subrpcer::state;
