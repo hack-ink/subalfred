@@ -1,13 +1,13 @@
 [package]
-authors     = ["Xavier Lau <xavier@inv.cafe>"]
-description = "Subalfred core libraries."
-edition     = "2021"
-homepage    = "https://subalfred.hack.ink"
-license     = "GPL-3.0"
-name        = "subalfred-core"
-readme      = "README.md"
-repository  = "https://github.com/hack-ink/subalfred"
-version     = "0.9.1"
+authors.workspace    = true
+description          = "Subalfred core libraries."
+edition.workspace    = true
+homepage.workspace   = true
+license.workspace    = true
+name                 = "subalfred-core"
+readme               = "README.md"
+repository.workspace = true
+version.workspace    = true
 
 [dependencies]
 # crates.io

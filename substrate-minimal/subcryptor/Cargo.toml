@@ -1,13 +1,13 @@
 [package]
-authors     = ["Xavier Lau <c.estlavie@icloud.com>"]
-description = "Minimal implementation of Substrate crypto."
-edition     = "2021"
-homepage    = "https://subcryptor.hack.ink"
-license     = "GPL-3.0"
-name        = "subcryptor"
-readme      = "README.md"
-repository  = "https://github.com/hack-ink/subalfred"
-version     = "0.9.1"
+authors.workspace    = true
+description          = "Minimal implementation of Substrate crypto."
+edition.workspace    = true
+homepage.workspace   = true
+license.workspace    = true
+name                 = "subcryptor"
+readme               = "README.md"
+repository.workspace = true
+version.workspace    = true
 
 [dependencies]
 # crates.io

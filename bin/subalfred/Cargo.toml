@@ -1,13 +1,13 @@
 [package]
-authors     = ["Xavier Lau <xavier@inv.cafe>"]
-description = "Your Substrate Alfred."
-edition     = "2021"
-homepage    = "https://subalfred.hack.ink"
-license     = "GPL-3.0"
-name        = "subalfred"
-readme      = "../../README.md"
-repository  = "https://github.com/hack-ink/subalfred"
-version     = "0.9.1"
+authors.workspace    = true
+description          = "Your Substrate Alfred."
+edition.workspace    = true
+homepage.workspace   = true
+license.workspace    = true
+name                 = "subalfred"
+readme               = "../../README.md"
+repository.workspace = true
+version.workspace    = true
 
 [[bin]]
 name = "subalfred"
