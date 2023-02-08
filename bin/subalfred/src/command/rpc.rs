@@ -1,7 +1,7 @@
 // crates.io
 use clap::Args;
 use serde_json::Value;
-// hack-ink
+// subalfred
 use crate::prelude::*;
 use subalfred_core::http::CLIENT;
 

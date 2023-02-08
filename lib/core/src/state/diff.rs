@@ -2,7 +2,7 @@
 
 // std
 use std::path::Path;
-// hack-ink
+// subalfred
 use crate::prelude::*;
 
 /// Check the differences between the two states.

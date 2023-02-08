@@ -2,7 +2,7 @@
 use std::borrow::Cow;
 // crates.io
 use clap::{Args, ValueEnum};
-// hack-ink
+// subalfred
 use crate::{command::shared::JsonOutput, prelude::*};
 use subalfred_core::{
 	key::{Key, PalletId, ParaId, SiblId},
@@ -97,13 +97,16 @@ impl KeyType {
 
 // TODO: change result to `Result<Option<String>>`
 // TODO: if the key is not a specific key then return `Ok(None)`
-fn sub_seed_from_public_key(public_key: impl AsRef<[u8]>) -> Result<String> {
-	let public_key = public_key.as_ref();
+fn sub_seed_from_public_key<K>(public_key: K) -> Result<String>
+where
+	K: AsRef<[u8]>,
+{
+	let k = public_key.as_ref();
 
-	Ok(PalletId::try_from(public_key)
-		.map(|k| ToString::to_string(&k))
-		.or_else(|_| ParaId::try_from(public_key).map(|k| ToString::to_string(&k)))
-		.or_else(|_| SiblId::try_from(public_key).map(|k| ToString::to_string(&k)))?)
+	Ok(PalletId::try_from(k)
+		.map(|k| k.to_string())
+		.or_else(|_| ParaId::try_from(k).map(|k| ToString::to_string(&k)))
+		.or_else(|_| SiblId::try_from(k).map(|k| ToString::to_string(&k)))?)
 }
 
 fn build_plain_output(

@@ -2,7 +2,7 @@
 
 #[cfg(test)] mod test;
 
-// hack-ink
+// subalfred
 use crate::prelude::*;
 use subcryptor::{ss58_registry::Ss58AddressFormat, Sr25519};
 

@@ -4,7 +4,7 @@
 use std::{path::Path, time::Duration};
 // crates.io
 use fxhash::FxHashSet;
-// hack-ink
+// subalfred
 use super::{fork_off, ForkOffConfig};
 use crate::{
 	jsonrpc::ws::Initializer,
