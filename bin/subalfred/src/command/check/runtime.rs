@@ -2,7 +2,7 @@
 use std::{error::Error, process::Child};
 // crates.io
 use clap::{Args, ValueEnum};
-// hack-ink
+// subalfred
 use crate::prelude::*;
 use subalfred_core::{check::runtime, node, system};
 

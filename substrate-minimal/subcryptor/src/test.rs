@@ -1,4 +1,4 @@
-// hack-ink
+// subalfred
 use super::*;
 
 const PUBLIC_KEY: &[u8] = &[

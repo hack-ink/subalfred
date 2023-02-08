@@ -11,7 +11,7 @@ use std::borrow::Cow;
 use cargo_metadata::{CargoOpt, Metadata, MetadataCommand, Node, Package, PackageId, Resolve};
 use futures::stream::{self, StreamExt};
 use regex::Captures;
-// hack-ink
+// subalfred
 use crate::{prelude::*, system};
 
 /// Provide a function to get the item by id from specific source.

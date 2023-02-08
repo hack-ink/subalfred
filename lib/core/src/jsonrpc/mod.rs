@@ -10,7 +10,7 @@ use std::sync::{
 };
 // crates.io
 use serde::{Deserialize, Serialize};
-// hack-ink
+// subalfred
 use crate::prelude::*;
 
 /// JSONRPC Id.

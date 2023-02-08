@@ -1,6 +1,6 @@
 // crates.io
 use clap::Args;
-// hack-ink
+// subalfred
 use crate::{command::shared::TwoChainSpec, prelude::*};
 use subalfred_core::state;
 

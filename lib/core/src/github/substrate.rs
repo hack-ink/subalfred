@@ -3,7 +3,7 @@
 // crates.io
 use futures::{stream, StreamExt};
 use githuber::api::commits;
-// hack-ink
+// subalfred
 use super::*;
 use crate::prelude::*;
 
@@ -40,7 +40,7 @@ pub enum WatchedLabels {
 }
 impl WatchedLabels {
 	const fn as_str(&self) -> &'static str {
-		// hack-ink
+		// subalfred
 		use WatchedLabels::*;
 
 		match self {
@@ -63,7 +63,7 @@ impl WatchedLabels {
 
 	/// Return all labels' name.
 	pub fn all() -> Vec<&'static str> {
-		// hack-ink
+		// subalfred
 		use WatchedLabels::*;
 
 		vec![

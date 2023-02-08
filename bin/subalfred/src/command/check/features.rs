@@ -2,7 +2,7 @@
 use std::{path::PathBuf, process};
 // crates.io
 use clap::Args;
-// hack-ink
+// subalfred
 use crate::{command::shared::ManifestPath, prelude::*};
 use subalfred_core::check::features;
 

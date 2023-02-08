@@ -4,7 +4,7 @@
 
 // crates.io
 use serde::{de::DeserializeOwned, Serialize};
-// hack-ink
+// subalfred
 use super::*;
 use crate::{http::CLIENT, prelude::*};
 
