@@ -63,7 +63,6 @@ fn recover_public_key(address: &str) -> Result<Vec<u8>> {
 			}
 		})?),
 		len => {
-			dbg!(2);
 			if (len == 64 && !address.starts_with("0x")) || (len == 66 && address.starts_with("0x"))
 			{
 				Ok(array_bytes::hex2bytes(address).map_err(|e| error::Ss58::InvalidAddress {
