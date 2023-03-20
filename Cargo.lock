@@ -296,7 +296,7 @@ name = "cmd-impl"
 version = "0.9.1"
 dependencies = [
  "quote",
- "syn 1.0.109",
+ "syn 2.0.2",
 ]
 
 [[package]]
