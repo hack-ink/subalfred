@@ -9,34 +9,28 @@ use crate::prelude::*;
 
 /// The specific labels that worth to watch.
 pub enum WatchedLabels {
-	/// [https://github.com/paritytech/substrate/labels/B3-apinoteworthy]
-	B3Api,
-	/// [https://github.com/paritytech/substrate/labels/B5-clientnoteworthy]
-	B5Client,
-	/// [https://github.com/paritytech/substrate/labels/B7-runtimenoteworthy]
-	B7Runtime,
-	/// [https://github.com/paritytech/substrate/labels/C7-high%20❗%EF%B8%8F]
-	C7High,
-	/// [https://github.com/paritytech/substrate/labels/C9-critical%20‼%EF%B8%8F]
-	C9Critical,
-	/// [https://github.com/paritytech/substrate/labels/E1-runtimemigration]
-	E1Runtime,
-	/// [https://github.com/paritytech/substrate/labels/E2-databasemigration]
-	E2Database,
-	/// [https://github.com/paritytech/substrate/labels/E4-newhostfunctions]
-	E4NewHostFunctions,
-	/// [https://github.com/paritytech/substrate/labels/E5-breaksapi]
-	E5BreaksApi,
-	/// [https://github.com/paritytech/substrate/labels/E6-transactionversion]
-	E6TransactionVersion,
-	/// [https://github.com/paritytech/substrate/labels/E7-breaksauthoring]
-	E7BreaksAuthoring,
-	/// [https://github.com/paritytech/substrate/labels/E8-breakseverything]
-	E8BreaksEverything,
-	/// [https://github.com/paritytech/substrate/labels/E10-client-update-first%20👀]
-	E10ClientUpdateFirst,
-	/// [https://github.com/paritytech/substrate/labels/I8-enhancement%20🎁]
-	I8Enhancement,
+	/// [https://github.com/paritytech/substrate/labels/C5-high]
+	C5High,
+	/// [https://github.com/paritytech/substrate/labels/C7-critical]
+	C7Critical,
+	/// [https://github.com/paritytech/substrate/labels/D2-breaksapi]
+	D2BreaksApi,
+	/// [https://github.com/paritytech/substrate/labels/E0-runtime_migration]
+	E0RuntimeMigration,
+	/// [https://github.com/paritytech/substrate/labels/E1-database_migration]
+	E1DatabaseMigration,
+	/// [https://github.com/paritytech/substrate/labels/E3-host_functions]
+	E3HostFunctions,
+	/// [https://github.com/paritytech/substrate/labels/E4-node_first_update]
+	E4NodeFirstUpdate,
+	/// [https://github.com/paritytech/substrate/labels/F0-breaks_everything]
+	F0BreaksEverything,
+	/// [https://github.com/paritytech/substrate/labels/F1-breaks_authoring]
+	F1BreaksAuthoring,
+	/// [https://github.com/paritytech/substrate/labels/F2-breaks_consensus]
+	F2BreaksConsensus,
+	/// [https://github.com/paritytech/substrate/labels/F3-breaks_API]
+	F3BreaksApi,
 }
 impl WatchedLabels {
 	const fn as_str(&self) -> &'static str {
@@ -44,20 +38,17 @@ impl WatchedLabels {
 		use WatchedLabels::*;
 
 		match self {
-			B3Api => "B3-apinoteworthy",
-			B5Client => "B5-clientnoteworthy",
-			B7Runtime => "B7-runtimenoteworthy",
-			C7High => "C7-high ❗️",
-			C9Critical => "C9-critical ‼️",
-			E1Runtime => "E1-runtimemigration",
-			E2Database => "E2-databasemigration",
-			E4NewHostFunctions => "E4-newhostfunctions",
-			E5BreaksApi => "E5-breaksapi",
-			E6TransactionVersion => "E6-transactionversion",
-			E7BreaksAuthoring => "E7-breaksauthoring",
-			E8BreaksEverything => "E8-breakseverything",
-			E10ClientUpdateFirst => "E10-client-update-first 👀",
-			I8Enhancement => "I8-enhancement 🎁",
+			C5High => "C5-high",
+			C7Critical => "C7-critical",
+			D2BreaksApi => "D2-breaksapi",
+			E0RuntimeMigration => "E0-runtime_migration",
+			E1DatabaseMigration => "E1-database_migration",
+			E3HostFunctions => "E3-host_functions",
+			E4NodeFirstUpdate => "E4-node_first_update",
+			F0BreaksEverything => "F0-breaks_everything",
+			F1BreaksAuthoring => "F1-breaks_authoring",
+			F2BreaksConsensus => "F2-breaks_consensus",
+			F3BreaksApi => "F3-breaks_API",
 		}
 	}
 
@@ -67,20 +58,17 @@ impl WatchedLabels {
 		use WatchedLabels::*;
 
 		vec![
-			B3Api.as_str(),
-			B5Client.as_str(),
-			B7Runtime.as_str(),
-			C7High.as_str(),
-			C9Critical.as_str(),
-			E1Runtime.as_str(),
-			E2Database.as_str(),
-			E4NewHostFunctions.as_str(),
-			E5BreaksApi.as_str(),
-			E6TransactionVersion.as_str(),
-			E7BreaksAuthoring.as_str(),
-			E8BreaksEverything.as_str(),
-			E10ClientUpdateFirst.as_str(),
-			I8Enhancement.as_str(),
+			C5High.as_str(),
+			C7Critical.as_str(),
+			D2BreaksApi.as_str(),
+			E0RuntimeMigration.as_str(),
+			E1DatabaseMigration.as_str(),
+			E3HostFunctions.as_str(),
+			E4NodeFirstUpdate.as_str(),
+			F0BreaksEverything.as_str(),
+			F1BreaksAuthoring.as_str(),
+			F2BreaksConsensus.as_str(),
+			F3BreaksApi.as_str(),
 		]
 	}
 }
@@ -88,20 +76,17 @@ impl WatchedLabels {
 /// The pull requests with specific labels that worth to watch.
 #[derive(Debug, Default)]
 pub struct WatchedPullRequests {
-	b3_api: Vec<PullRequest>,
-	b5_client: Vec<PullRequest>,
-	b7_runtime: Vec<PullRequest>,
-	c7_high: Vec<PullRequest>,
-	c9_critical: Vec<PullRequest>,
-	e1_runtime: Vec<PullRequest>,
-	e2_database: Vec<PullRequest>,
-	e4_new_host_functions: Vec<PullRequest>,
-	e5_breaks_api: Vec<PullRequest>,
-	e6_transaction_version: Vec<PullRequest>,
-	e7_breaks_authoring: Vec<PullRequest>,
-	e8_breaks_everything: Vec<PullRequest>,
-	e10_client_update_first: Vec<PullRequest>,
-	i8_enhancement: Vec<PullRequest>,
+	c5_high: Vec<PullRequest>,
+	c7_critical: Vec<PullRequest>,
+	d2_breaks_api: Vec<PullRequest>,
+	e0_runtime_migration: Vec<PullRequest>,
+	e1_database_migration: Vec<PullRequest>,
+	e3_host_functions: Vec<PullRequest>,
+	e4_node_first_update: Vec<PullRequest>,
+	f0_breaks_everything: Vec<PullRequest>,
+	f1_breaks_authoring: Vec<PullRequest>,
+	f2_breaks_consensus: Vec<PullRequest>,
+	f3_breaks_api: Vec<PullRequest>,
 }
 impl WatchedPullRequests {
 	fn try_push(&mut self, pull_request: PullRequest) {
@@ -118,40 +103,34 @@ impl WatchedPullRequests {
 
 	fn all_mut(&mut self) -> Vec<&mut Vec<PullRequest>> {
 		vec![
-			&mut self.b3_api,
-			&mut self.b5_client,
-			&mut self.b7_runtime,
-			&mut self.c7_high,
-			&mut self.c9_critical,
-			&mut self.e1_runtime,
-			&mut self.e2_database,
-			&mut self.e4_new_host_functions,
-			&mut self.e5_breaks_api,
-			&mut self.e6_transaction_version,
-			&mut self.e7_breaks_authoring,
-			&mut self.e8_breaks_everything,
-			&mut self.e10_client_update_first,
-			&mut self.i8_enhancement,
+			&mut self.c5_high,
+			&mut self.c7_critical,
+			&mut self.d2_breaks_api,
+			&mut self.e0_runtime_migration,
+			&mut self.e1_database_migration,
+			&mut self.e3_host_functions,
+			&mut self.e4_node_first_update,
+			&mut self.f0_breaks_everything,
+			&mut self.f1_breaks_authoring,
+			&mut self.f2_breaks_consensus,
+			&mut self.f3_breaks_api,
 		]
 	}
 
 	/// Make all fields into a [`Vec`].
 	pub fn all(self) -> Vec<Vec<PullRequest>> {
 		vec![
-			self.b3_api,
-			self.b5_client,
-			self.b7_runtime,
-			self.c7_high,
-			self.c9_critical,
-			self.e1_runtime,
-			self.e2_database,
-			self.e4_new_host_functions,
-			self.e5_breaks_api,
-			self.e6_transaction_version,
-			self.e7_breaks_authoring,
-			self.e8_breaks_everything,
-			self.e10_client_update_first,
-			self.i8_enhancement,
+			self.c5_high,
+			self.c7_critical,
+			self.d2_breaks_api,
+			self.e0_runtime_migration,
+			self.e1_database_migration,
+			self.e3_host_functions,
+			self.e4_node_first_update,
+			self.f0_breaks_everything,
+			self.f1_breaks_authoring,
+			self.f2_breaks_consensus,
+			self.f3_breaks_api,
 		]
 	}
 }
