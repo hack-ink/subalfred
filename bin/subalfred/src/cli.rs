@@ -8,9 +8,9 @@ use crate::{command::Cmd, prelude::*};
 #[derive(Debug, Parser)]
 #[command(
 	version = concat!(
-		env!("VERGEN_BUILD_SEMVER"),
+		env!("CARGO_PKG_VERSION"),
 		"-",
-		env!("VERGEN_GIT_SHA_SHORT"),
+		env!("VERGEN_GIT_SHA"),
 		"-",
 		env!("VERGEN_CARGO_TARGET_TRIPLE"),
 	),

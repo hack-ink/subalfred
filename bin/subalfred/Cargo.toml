@@ -14,7 +14,7 @@ name = "subalfred"
 
 [build-dependencies]
 # crates.io
-vergen = { version = "8.0" }
+vergen = { version = "8.0", features = ["build", "cargo", "git", "gitcl"] }
 
 [dependencies]
 # crates.io
