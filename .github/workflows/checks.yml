@@ -17,12 +17,12 @@ env:
   RUST_BACKTRACE: full
 
 jobs:
-  cargo_checks:
+  cargo-checks:
     name: Task cargo ${{ matrix.action }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        action: [clippy, nextest]
+        action: [clippy, fmt, nextest]
     steps:
       - name: Fetch latest code
         uses: actions/checkout@v3
@@ -35,15 +35,25 @@ jobs:
             target
           key: cargo-${{ env.GITHUB_CACHE_VERSION }}-${{ matrix.action }}-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: cargo-${{ env.GITHUB_CACHE_VERSION }}-${{ matrix.action }}-
-      - name: Cargo clippy
+      - name: Cargo ${{ matrix.action }}
         if: matrix.action == 'clippy'
         uses: actions-rs/clippy-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --workspace --all-features --all-targets --locked
+      - name: Cargo ${{ matrix.action }}
+        if: matrix.action == 'fmt'
+        run: cargo ${{ matrix.action }} --all -- --check
       - name: Install cargo-nextest
         if: matrix.action == 'nextest'
         uses: taiki-e/install-action@nextest
-      - name: Cargo nextest
+      - name: Cargo ${{ matrix.action }}
         if: matrix.action == 'nextest'
-        run: cargo nextest run --release --workspace --all-features --all-targets --locked
+        run: cargo ${{ matrix.action }} run --release --workspace --all-features --all-targets --locked
+      - name: Fast fail
+        uses: vishnudxb/cancel-workflow@v1.2
+        if: failure()
+        with:
+          repo: hack-ink/<NAME>
+          workflow_id: ${{ github.run_id }}
+          access_token: ${{ github.token }}

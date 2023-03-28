@@ -58,5 +58,8 @@ fn replace_member_versions_should_work() {
 
 #[test]
 fn replace_target_versions_should_work() {
-	assert_eq!(replace_target_versions(TOML, &["cumulus", "polkadot", "substrate"], "1.0.0"), EXPECTED_2);
+	assert_eq!(
+		replace_target_versions(TOML, &["cumulus", "polkadot", "substrate"], "1.0.0"),
+		EXPECTED_2
+	);
 }
