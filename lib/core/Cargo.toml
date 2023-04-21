@@ -21,7 +21,7 @@ fxhash             = { workspace = true }
 githuber           = { version = "0.4.3" }
 once_cell          = { workspace = true }
 parity-scale-codec = { workspace = true }
-regex              = { version = "1.7" }
+regex              = { version = "1.8" }
 reqwest            = { workspace = true, features = ["json"] }
 serde              = { workspace = true }
 serde_json         = { workspace = true }
