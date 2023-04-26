@@ -97,7 +97,7 @@ pub async fn export(
 
 					client
 						.get_pairs_paged(
-							substorager::storage_key(pallet.as_bytes(), item.as_bytes()),
+							substorager::storage_value_key(pallet, item),
 							at.clone(),
 						)
 						.await?
@@ -156,7 +156,7 @@ pub async fn export(
 	});
 
 	if renew_consensus_with.is_some() {
-		let staking_force_era = substorager::storage_key(b"Staking", b"ForceEra").to_string();
+		let staking_force_era = substorager::storage_value_key(&b"Staking"[..], b"ForceEra").to_string();
 
 		top.insert(staking_force_era, "0x02".into());
 	}

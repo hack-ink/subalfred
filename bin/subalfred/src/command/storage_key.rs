@@ -18,7 +18,7 @@ impl StorageKeyCmd {
 	pub(crate) fn run(&self) -> Result<()> {
 		let Self { pallet, item } = self;
 
-		println!("{}", substorager::storage_key(pallet.as_bytes(), item.as_bytes()));
+		println!("{}", substorager::storage_value_key(pallet, item));
 
 		Ok(())
 	}

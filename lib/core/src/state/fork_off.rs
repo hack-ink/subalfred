@@ -99,7 +99,7 @@ fn clear_consensus(chain_spec: &mut ChainSpec) {
 	let top = &mut chain_spec.genesis.raw.top;
 	let system_prefix = array_bytes::bytes2hex("0x", subhasher::twox128(b"System"));
 	let system_account_prefix =
-		array_bytes::bytes2hex("0x", substorager::storage_key(b"System", b"Account"));
+		array_bytes::bytes2hex("0x", substorager::storage_value_key(&b"System"[..], b"Account"));
 	// TODO: if the `top` is sorted, we can pop the prefix while it is passed
 	let ignore_prefixes = [b"Babe".as_ref(), b"Authorship", b"Session", b"Grandpa", b"Beefy"]
 		.iter()
@@ -127,8 +127,8 @@ fn clear_consensus(chain_spec: &mut ChainSpec) {
 		})
 		.collect();
 
-	top.insert(substorager::storage_key(b"Staking", b"ForceEra").to_string(), "0x02".into());
-	top.remove(&substorager::storage_key(b"System", b"LastRuntimeUpgrade").to_string());
+	top.insert(substorager::storage_value_key(&b"Staking"[..], b"ForceEra").to_string(), "0x02".into());
+	top.remove(&substorager::storage_value_key(&b"System"[..], b"LastRuntimeUpgrade").to_string());
 }
 
 pub(super) fn set_simple_governance(chain_spec: &mut ChainSpec) {
@@ -137,11 +137,11 @@ pub(super) fn set_simple_governance(chain_spec: &mut ChainSpec) {
 	let alice_members = "0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d";
 	// TODO: this might be different on different chain
 	let alice_phragmen_election = "0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d0010a5d4e800000000000000000000000010a5d4e80000000000000000000000";
-	let council = substorager::storage_key(b"Council", b"Members");
-	let technical_committee = substorager::storage_key(b"TechnicalCommittee", b"Members");
-	let phragmen_election = substorager::storage_key(b"PhragmenElection", b"Members");
-	let technical_membership = substorager::storage_key(b"TechnicalMembership", b"Members");
-	let sudo = substorager::storage_key(b"Sudo", b"Key");
+	let council = substorager::storage_value_key(&b"Council"[..], b"Members");
+	let technical_committee = substorager::storage_value_key(&b"TechnicalCommittee"[..], b"Members");
+	let phragmen_election = substorager::storage_value_key(&b"PhragmenElection"[..], b"Members");
+	let technical_membership = substorager::storage_value_key(&b"TechnicalMembership"[..], b"Members");
+	let sudo = substorager::storage_value_key(&b"Sudo"[..], b"Key");
 
 	// TODO: skip if not exist
 	top.insert(council.to_string(), alice_members.into());

@@ -14,7 +14,7 @@ impl Ascii2HexCmd {
 	pub(crate) fn run(&self) -> Result<()> {
 		let Self { data } = self;
 
-		println!("{}", array_bytes::bytes2hex("0x", data.as_bytes()));
+		println!("{}", array_bytes::bytes2hex("0x", data));
 
 		Ok(())
 	}
