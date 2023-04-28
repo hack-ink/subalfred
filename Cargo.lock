@@ -1584,9 +1584,9 @@ checksum = "6e63cff320ae2c57904679ba7cb63280a3dc4613885beafb148ee7bf9aa9042d"
 
 [[package]]
 name = "ss58-registry"
-version = "1.39.0"
+version = "1.40.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ecf0bd63593ef78eca595a7fc25e9a443ca46fe69fd472f8f09f5245cdcd769d"
+checksum = "eb47a8ad42e5fc72d5b1eb104a5546937eaf39843499948bb666d6e93c62423b"
 dependencies = [
  "Inflector",
  "num-format",
