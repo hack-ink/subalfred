@@ -12,5 +12,5 @@ version.workspace    = true
 [dependencies]
 # crates.io
 frame-metadata = { version = "15.1" }
-scale-info     = { version = "2.5" }
+scale-info     = { version = "2.6" }
 thiserror      = { workspace = true }
