@@ -17,7 +17,7 @@ members = [
 	[workspace.dependencies]
 	# crates.io
 	array-bytes        = { version = "6.1" }
-	clap               = { version = "4.2" }
+	clap               = { version = "4.3" }
 	fxhash             = { version = "0.2" }
 	once_cell          = { version = "1.17" }
 	parity-scale-codec = { version = "3.5" }
