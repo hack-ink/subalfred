@@ -4,6 +4,7 @@ members = [
 	"bin/subalfred/src/command/impl",
 	"lib/*",
 ]
+resolver = "2"
 
 [workspace.package]
 authors    = ["Xavier Lau <xavier@inv.cafe>"]
@@ -11,7 +12,7 @@ edition    = "2021"
 homepage   = "https://subalfred.hack.ink"
 license    = "GPL-3.0"
 repository = "https://github.com/hack-ink/subalfred"
-version    = "0.9.1"
+version    = "0.9.2"
 
 [workspace.dependencies]
 # crates.io
@@ -39,12 +40,12 @@ subspector     = { version = "0.10" }
 substorager    = { version = "0.10" }
 subversioner   = { version = "0.10" }
 
-[patch.crates-io]
-subcryptor     = { path = "../substrate-minimal/subcryptor" }
-subhasher      = { path = "../substrate-minimal/subhasher" }
-submetadatan   = { path = "../substrate-minimal/submetadatan" }
-subrpcer       = { path = "../substrate-minimal/subrpcer" }
-subruntimer    = { path = "../substrate-minimal/subruntimer" }
-subspector     = { path = "../substrate-minimal/subspector" }
-substorager    = { path = "../substrate-minimal/substorager" }
-subversioner   = { path = "../substrate-minimal/subversioner" }
+# [patch.crates-io]
+# subcryptor     = { path = "../substrate-minimal/subcryptor" }
+# subhasher      = { path = "../substrate-minimal/subhasher" }
+# submetadatan   = { path = "../substrate-minimal/submetadatan" }
+# subrpcer       = { path = "../substrate-minimal/subrpcer" }
+# subruntimer    = { path = "../substrate-minimal/subruntimer" }
+# subspector     = { path = "../substrate-minimal/subspector" }
+# substorager    = { path = "../substrate-minimal/substorager" }
+# subversioner   = { path = "../substrate-minimal/subversioner" }
