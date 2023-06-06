@@ -13,7 +13,7 @@ use parity_scale_codec::Decode;
 use serde::Serialize;
 // subalfred
 use crate::{jsonrpc::http, prelude::*};
-use submetadatan::{LatestRuntimeMetadata, RuntimeMetadataPrefixed};
+use submetadatan::{frame_metadata::RuntimeMetadataPrefixed, LatestRuntimeMetadata};
 use subrpcer::state;
 use subversioner::RuntimeVersion;
 
@@ -73,8 +73,8 @@ pub fn parse_raw_runtime_metadata(raw_runtime_metadata: &str) -> Result<LatestRu
 		.map_err(|_| error::almost_impossible(E_CODEC_METADATA_IS_NON_HEX))?;
 	let metadata_prefixed =
 		RuntimeMetadataPrefixed::decode(&mut &*codec_metadata).map_err(error::Generic::Codec)?;
-	let metadata =
-		submetadatan::metadata(metadata_prefixed).map_err(error::Node::ParseMetadataFailed)?;
+	let metadata = submetadatan::unprefix_metadata(metadata_prefixed)
+		.map_err(error::Node::ParseMetadataFailed)?;
 
 	Ok(metadata)
 }

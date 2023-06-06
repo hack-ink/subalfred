@@ -34,7 +34,7 @@ tracing            = { workspace = true }
 subalfred-util = { workspace = true }
 subcryptor     = { workspace = true }
 subhasher      = { workspace = true }
-submetadatan   = { workspace = true }
+submetadatan   = { workspace = true, features = ["cmp"] }
 subrpcer       = { workspace = true }
 subruntimer    = { workspace = true, features = ["serde"] }
 subspector     = { workspace = true }

@@ -96,10 +96,7 @@ pub async fn export(
 					tracing::trace!("fetching from {pallet}::{item}");
 
 					client
-						.get_pairs_paged(
-							substorager::storage_key(pallet.as_bytes(), item.as_bytes()),
-							at.clone(),
-						)
+						.get_pairs_paged(substorager::storage_value_key(pallet, item), at.clone())
 						.await?
 						.into_iter()
 						.for_each(|pair| {
@@ -156,7 +153,8 @@ pub async fn export(
 	});
 
 	if renew_consensus_with.is_some() {
-		let staking_force_era = substorager::storage_key(b"Staking", b"ForceEra").to_string();
+		let staking_force_era =
+			substorager::storage_value_key(&b"Staking"[..], b"ForceEra").to_string();
 
 		top.insert(staking_force_era, "0x02".into());
 	}

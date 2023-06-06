@@ -3,39 +3,49 @@ members = [
 	"bin/*",
 	"bin/subalfred/src/command/impl",
 	"lib/*",
-	"substrate-minimal/*",
 ]
+resolver = "2"
 
-	[workspace.package]
-	authors    = ["Xavier Lau <xavier@inv.cafe>"]
-	edition    = "2021"
-	homepage   = "https://subalfred.hack.ink"
-	license    = "GPL-3.0"
-	repository = "https://github.com/hack-ink/subalfred"
-	version    = "0.9.1"
+[workspace.package]
+authors    = ["Xavier Lau <xavier@inv.cafe>"]
+edition    = "2021"
+homepage   = "https://subalfred.hack.ink"
+license    = "GPL-3.0"
+repository = "https://github.com/hack-ink/subalfred"
+version    = "0.9.2"
 
-	[workspace.dependencies]
-	# crates.io
-	array-bytes        = { version = "6.1" }
-	clap               = { version = "4.3" }
-	fxhash             = { version = "0.2" }
-	once_cell          = { version = "1.18" }
-	parity-scale-codec = { version = "3.5" }
-	reqwest            = { version = "0.11" }
-	serde              = { version = "1.0" }
-	serde_json         = { version = "1.0" }
-	thiserror          = { version = "1.0" }
-	tokio              = { version = "1.28" }
-	tracing            = { version = "0.1" }
-	# hack-ink
-	cmd-impl       = { version = "0.9.1", path = "bin/subalfred/src/command/impl" }
-	subalfred-core = { version = "0.9.1", path = "lib/core" }
-	subalfred-util = { version = "0.9.1", path = "lib/util" }
-	subcryptor     = { version = "0.9.1", path = "substrate-minimal/subcryptor" }
-	subhasher      = { version = "0.9.1", path = "substrate-minimal/subhasher" }
-	submetadatan   = { version = "0.9.1", path = "substrate-minimal/submetadatan" }
-	subrpcer       = { version = "0.9.1", path = "substrate-minimal/subrpcer" }
-	subruntimer    = { version = "0.9.1", path = "substrate-minimal/subruntimer" }
-	subspector     = { version = "0.9.1", path = "substrate-minimal/subspector" }
-	substorager    = { version = "0.9.1", path = "substrate-minimal/substorager" }
-	subversioner   = { version = "0.9.1", path = "substrate-minimal/subversioner" }
+[workspace.dependencies]
+# crates.io
+array-bytes        = { version = "6.1" }
+clap               = { version = "4.3" }
+fxhash             = { version = "0.2" }
+once_cell          = { version = "1.18" }
+parity-scale-codec = { version = "3.5" }
+reqwest            = { version = "0.11" }
+serde              = { version = "1.0" }
+serde_json         = { version = "1.0" }
+thiserror          = { version = "1.0" }
+tokio              = { version = "1.28" }
+tracing            = { version = "0.1" }
+# hack-ink
+cmd-impl       = { version = "0.9", path = "bin/subalfred/src/command/impl" }
+subalfred-core = { version = "0.9", path = "lib/core" }
+subalfred-util = { version = "0.9", path = "lib/util" }
+subcryptor     = { version = "0.10" }
+subhasher      = { version = "0.10" }
+submetadatan   = { version = "0.10" }
+subrpcer       = { version = "0.10" }
+subruntimer    = { version = "0.10" }
+subspector     = { version = "0.10" }
+substorager    = { version = "0.10" }
+subversioner   = { version = "0.10" }
+
+# [patch.crates-io]
+# subcryptor     = { path = "../substrate-minimal/subcryptor" }
+# subhasher      = { path = "../substrate-minimal/subhasher" }
+# submetadatan   = { path = "../substrate-minimal/submetadatan" }
+# subrpcer       = { path = "../substrate-minimal/subrpcer" }
+# subruntimer    = { path = "../substrate-minimal/subruntimer" }
+# subspector     = { path = "../substrate-minimal/subspector" }
+# substorager    = { path = "../substrate-minimal/substorager" }
+# subversioner   = { path = "../substrate-minimal/subversioner" }

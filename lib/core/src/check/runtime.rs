@@ -8,8 +8,10 @@ use std::{
 // subalfred
 use crate::{node, prelude::*};
 use submetadatan::{
-	form::PortableForm, LatestRuntimeMetadata, PalletStorageMetadata, PortableRegistry,
-	StorageEntryMetadata,
+	cmp,
+	frame_metadata::{PalletStorageMetadata, StorageEntryMetadata},
+	scale_info::{form::PortableForm, PortableRegistry},
+	LatestRuntimeMetadata,
 };
 
 /// Fetch two nodes' runtime versions through their HTTP RPC endpoints.
@@ -192,7 +194,7 @@ pub async fn check_storage(
 					break;
 				};
 
-				if a.opposite(b) && submetadatan::cmp_storage_entry(&a_types, &b_types, a, b) {
+				if a.opposite(b) && cmp::storage_entry(&a_types, &b_types, a, b) {
 					j += 2;
 				} else {
 					// TODO: get type diffs
