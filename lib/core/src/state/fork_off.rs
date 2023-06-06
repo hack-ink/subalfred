@@ -127,7 +127,10 @@ fn clear_consensus(chain_spec: &mut ChainSpec) {
 		})
 		.collect();
 
-	top.insert(substorager::storage_value_key(&b"Staking"[..], b"ForceEra").to_string(), "0x02".into());
+	top.insert(
+		substorager::storage_value_key(&b"Staking"[..], b"ForceEra").to_string(),
+		"0x02".into(),
+	);
 	top.remove(&substorager::storage_value_key(&b"System"[..], b"LastRuntimeUpgrade").to_string());
 }
 
@@ -138,9 +141,11 @@ pub(super) fn set_simple_governance(chain_spec: &mut ChainSpec) {
 	// TODO: this might be different on different chain
 	let alice_phragmen_election = "0x04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d0010a5d4e800000000000000000000000010a5d4e80000000000000000000000";
 	let council = substorager::storage_value_key(&b"Council"[..], b"Members");
-	let technical_committee = substorager::storage_value_key(&b"TechnicalCommittee"[..], b"Members");
+	let technical_committee =
+		substorager::storage_value_key(&b"TechnicalCommittee"[..], b"Members");
 	let phragmen_election = substorager::storage_value_key(&b"PhragmenElection"[..], b"Members");
-	let technical_membership = substorager::storage_value_key(&b"TechnicalMembership"[..], b"Members");
+	let technical_membership =
+		substorager::storage_value_key(&b"TechnicalMembership"[..], b"Members");
 	let sudo = substorager::storage_value_key(&b"Sudo"[..], b"Key");
 
 	// TODO: skip if not exist
