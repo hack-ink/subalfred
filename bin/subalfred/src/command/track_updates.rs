@@ -81,15 +81,13 @@ impl TrackUpdatesCmd {
 
 		println!("### Watched labels");
 
-		WatchedLabels::all()
-			.into_iter()
-			.zip(w.all().into_iter())
-			.filter(|(_, ps)| !ps.is_empty())
-			.for_each(|(l, ps)| {
+		WatchedLabels::all().into_iter().zip(w.all()).filter(|(_, ps)| !ps.is_empty()).for_each(
+			|(l, ps)| {
 				println!("- #### {l}");
 
 				ps.into_iter().for_each(|p| println!("\t- [{}]({})", p.title, p.html_url));
-			});
+			},
+		);
 
 		Ok(())
 	}
