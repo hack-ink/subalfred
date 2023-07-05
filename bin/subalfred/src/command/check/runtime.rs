@@ -57,7 +57,7 @@ impl RuntimeCmd {
 				}
 
 				entry_diffs.into_iter().for_each(|(prefix, entry_diffs)| {
-					println!("Pallet {prefix}",);
+					println!("Pallet {prefix}");
 
 					entry_diffs.into_iter().for_each(|entry_diff| println!("{entry_diff}"));
 
