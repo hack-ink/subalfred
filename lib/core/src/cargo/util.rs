@@ -26,7 +26,7 @@ pub fn find_package<'a>(metadata: &'a Metadata, id: &PackageId) -> Option<&'a Pa
 }
 
 pub fn replace_member_versions(members: &[&str]) -> Regex {
-	Regex::new(&format!("(({}) *= *\\{{ *version *= *)\"(.+?)\"", members.join("|"),))
+	Regex::new(&format!("(({}) *= *\\{{ *version *= *)\"(.+?)\"", members.join("|")))
 		.expect("[core::util] build constant regex never fails; qed")
 }
 

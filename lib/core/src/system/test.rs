@@ -6,7 +6,7 @@ use super::*;
 #[test]
 fn swap_file_path_should_work() {
 	assert_eq!(
-		["/subalfred/Cargo.toml", "/subalfred/substrate-minimal/subrpcer/impl/Cargo.toml",]
+		["/subalfred/Cargo.toml", "/subalfred/substrate-minimal/subrpcer/impl/Cargo.toml"]
 			.iter()
 			.map(|path| swapped_file_path(path).unwrap())
 			.collect::<Vec<_>>(),
