@@ -292,7 +292,7 @@ impl Ws {
 		let id = ids.first().expect("[core::jsonrpc] `raw_requests` never empty; qed").to_owned();
 		let requests = ids
 			.into_iter()
-			.zip(raw_requests.into_iter())
+			.zip(raw_requests)
 			.map(|(id, raw_request)| {
 				let RawRequest { method, params } = raw_request.into();
 

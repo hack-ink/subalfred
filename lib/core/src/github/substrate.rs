@@ -91,7 +91,7 @@ pub struct WatchedPullRequests {
 impl WatchedPullRequests {
 	fn try_push(&mut self, pull_request: PullRequest) {
 		pull_request.labels.iter().for_each(|l| {
-			for (wl, ps) in WatchedLabels::all().into_iter().zip(self.all_mut().into_iter()) {
+			for (wl, ps) in WatchedLabels::all().into_iter().zip(self.all_mut()) {
 				if l.name.as_str() == wl {
 					ps.push(pull_request.clone());
 
