@@ -49,3 +49,11 @@ subversioner   = { version = "0.10" }
 # subspector     = { path = "../substrate-minimal/subspector" }
 # substorager    = { path = "../substrate-minimal/substorager" }
 # subversioner   = { path = "../substrate-minimal/subversioner" }
+
+[profile.ci-dev]
+incremental = false
+inherits    = "dev"
+
+[profile.ci-release]
+inherits = "release"
+lto      = true
