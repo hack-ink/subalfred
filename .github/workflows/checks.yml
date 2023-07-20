@@ -26,7 +26,7 @@ jobs:
         action: [clippy, fmt, nextest]
     steps:
       - name: Setup build environment
-        run: rustup toolchain install nightly --profile minimal
+        run: rustup show
       - name: Fetch latest code
         uses: actions/checkout@v3
       - uses: Swatinem/rust-cache@v2
