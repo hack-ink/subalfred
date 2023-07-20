@@ -25,10 +25,11 @@ jobs:
       matrix:
         action: [clippy, fmt, nextest]
     steps:
-      - name: Setup build environment
-        run: rustup show
       - name: Fetch latest code
         uses: actions/checkout@v3
+      - name: Setup build environment
+        if: matrix.action != 'fmt'
+        run: rustup show
       - uses: Swatinem/rust-cache@v2
         if: matrix.action != 'fmt'
         with:
