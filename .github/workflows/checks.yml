@@ -26,7 +26,7 @@ jobs:
         action: [clippy, fmt, nextest]
     steps:
       - name: Fetch latest code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup build environment
         if: matrix.action != 'fmt'
         run: rustup show
