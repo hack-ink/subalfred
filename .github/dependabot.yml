@@ -7,7 +7,7 @@ updates:
       time: "00:00"
     labels:
       - "Bot"
-      - "Deps"
+      - "Dep"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
