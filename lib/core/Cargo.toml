@@ -13,7 +13,7 @@ version.workspace    = true
 # crates.io
 array-bytes        = { workspace = true }
 async-trait        = { version = "0.1" }
-cargo_metadata     = { version = "0.17" }
+cargo_metadata     = { version = "0.18" }
 cargo_toml         = { version = "0.15" }
 clap               = { workspace = true, optional = true, features = ["derive", "wrap_help"] }
 futures            = { version = "0.3" }
