@@ -20,7 +20,7 @@ Use `subalfred-aarch64-apple-darwin.zst` as an example.
 - Multi-lines command:
 	```sh
 	curl -LO https://github.com/hack-ink/subalfred/releases/latest/download/subalfred-aarch64-apple-darwin.zst
-	zstd -o subalfred -d
+	zstd -o subalfred -d subalfred-aarch64-apple-darwin.zst
 	chmod u+x subalfred
 	```
 

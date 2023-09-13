@@ -6,7 +6,6 @@ src          = "src"
 title        = "Subalfred Book"
 
 [output.html]
-cname                = "subalfred.hack.ink"
 default-theme        = "ayu"
 edit-url-template    = "https://github.com/hack-ink/subalfred/edit/main/doc/{path}"
 git-repository-url   = "https://github.com/hack-ink/subalfred/tree/main/doc"
