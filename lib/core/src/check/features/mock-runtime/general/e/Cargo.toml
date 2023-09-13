@@ -1,0 +1,10 @@
+[package]
+authors     = ["Xavier Lau <xavier@inv.cafe>"]
+description = "general-e"
+edition     = "2021"
+homepage    = "https://subalfred.hack.ink"
+license     = "GPL-3.0"
+name        = "general-e"
+readme      = "README.md"
+repository  = "https://github.com/hack-ink/subalfred"
+version     = "0.0.0"

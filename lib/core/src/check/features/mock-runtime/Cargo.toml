@@ -10,9 +10,10 @@ repository  = "https://github.com/hack-ink/subalfred"
 version     = "0.0.0"
 
 [dependencies]
-# hack-ink
 a           = { package = "general-a", default-features = false, path = "general/a" }
 general-b   = { default-features = false, path = "general/b" }
+general-d   = { default-features = true, path = "general/d" }
+general-e   = { path = "general/e" }
 pallet-a    = { default-features = false, path = "pallet/a" }
 pallet-b    = { default-features = false, path = "pallet/b" }
 pallet-c    = { default-features = false, path = "pallet/c" }
@@ -26,9 +27,9 @@ general-c = { path = "general/c" }
 [features]
 default = ["std"]
 std = [
-	# hack-ink
 	"a/std",
 	"general-b/std",
+	"general-d/std",
 	# "pallet-a/std",
 	"pallet-b/std",
 	"pallet-c/std",
@@ -37,22 +38,22 @@ std = [
 	"primitive-c/std",
 ]
 
-
 runtime-benchmarks = [
-	# hack-ink
 	"pallet-a/runtime-benchmarks",
 	# "pallet-b/runtime-benchmarks",
 	"pallet-c/runtime-benchmarks",
 ]
+
 try-runtime = [
-	# hack-ink
+	# subalfred
 	"pallet-a/try-runtime",
 	"pallet-b/try-runtime",
 	# "pallet-c/try-runtime",
 ]
 
-
 [workspace]
+resolver = "2"
+
 exclude = []
 members = [
 	"general/*",

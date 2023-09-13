@@ -15,12 +15,22 @@ name = "general-c"
 version = "0.0.0"
 
 [[package]]
+name = "general-d"
+version = "0.0.0"
+
+[[package]]
+name = "general-e"
+version = "0.0.0"
+
+[[package]]
 name = "mock-runtime"
 version = "0.0.0"
 dependencies = [
  "general-a",
  "general-b",
  "general-c",
+ "general-d",
+ "general-e",
  "pallet-a",
  "pallet-b",
  "pallet-c",
