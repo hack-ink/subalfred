@@ -2,7 +2,7 @@
 authors     = ["Xavier Lau <xavier@inv.cafe>"]
 description = "general-c"
 edition     = "2021"
-homepage    = "https://subalfred.hack.ink"
+homepage    = "https://hack.ink/subalfred"
 license     = "GPL-3.0"
 name        = "general-c"
 readme      = "README.md"

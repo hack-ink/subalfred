@@ -9,7 +9,7 @@ resolver = "2"
 [workspace.package]
 authors    = ["Xavier Lau <xavier@inv.cafe>"]
 edition    = "2021"
-homepage   = "https://subalfred.hack.ink"
+homepage   = "https://hack.ink/subalfred"
 license    = "GPL-3.0"
 repository = "https://github.com/hack-ink/subalfred"
 version    = "0.9.2"
