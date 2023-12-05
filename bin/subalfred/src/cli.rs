@@ -48,7 +48,15 @@ struct GlobalArgs {
 	/// Set a custom log filter.
 	///
 	/// This flag also works with the `RUST_LOG` environment variable.
-	/// If you are using `RUST_LOG` at the same time, it will append the value of `RUST_LOG` after the log.
-	#[arg(verbatim_doc_comment, global = true, long, short, value_name = "TARGET=LEVEL,*", default_value = "info")]
+	/// If you are using `RUST_LOG` at the same time, it will append the value of `RUST_LOG` after
+	/// the log.
+	#[arg(
+		verbatim_doc_comment,
+		global = true,
+		long,
+		short,
+		value_name = "TARGET=LEVEL,*",
+		default_value = "info"
+	)]
 	log: String,
 }
