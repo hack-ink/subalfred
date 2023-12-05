@@ -27,8 +27,9 @@ tokio              = { workspace = true, features = ["macros", "rt-multi-thread"
 tracing-subscriber = { version = "0.3" }
 unescaper          = { version = "0.1" }
 # hack-ink
-cmd-impl       = { workspace = true }
-subalfred-core = { workspace = true, features = ["clap"] }
 subhasher      = { workspace = true }
 subrpcer       = { workspace = true }
 substorager    = { workspace = true }
+# subalfred
+cmd-impl       = { workspace = true }
+subalfred-core = { workspace = true, features = ["clap"] }

@@ -22,16 +22,16 @@
 
 ## Philosophy
 - **Blazing fast**
-- **Light weight**
+- **Lightweight**
 - **Zero panic**
 - **Ergonomics**
-- **Strive for excellence**
+- **Pursue excellence**
 
 ## Documentation
 ```sh
-# Use `--help` flag to get more information.
+# Get more information by using the `--help` flag.
 subalfred --help
-# Each subcommand also provides its own `--help`.
+# Each subcommand also has its own `--help`.
 subalfred check --help
 subalfred check runtime --help
 ```
@@ -40,6 +40,6 @@ subalfred check runtime --help
 - [`hack-ink.github.io/subalfred`](https://hack-ink.github.io/subalfred)
 
 ## Contribution
-- If you have a question or request a new feature, [start a discussion](https://github.com/hack-ink/subalfred/discussions/new).
-- If you encounter any bugs, [report an issue](https://github.com/hack-ink/subalfred/issues/new).
-- Finally, PRs are always welcome!
+- If you have any questions or would like to request a new feature, [start a discussion](https://github.com/hack-ink/subalfred/discussions/new).
+- If you come across any bugs, [report an issue](https://github.com/hack-ink/subalfred/issues/new).
+- Lastly, pull requests are always welcome!

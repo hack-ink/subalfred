@@ -28,9 +28,6 @@ thiserror          = { version = "1.0" }
 tokio              = { version = "1.34" }
 tracing            = { version = "0.1" }
 # hack-ink
-cmd-impl       = { version = "0.9", path = "bin/subalfred/src/command/impl" }
-subalfred-core = { version = "0.9", path = "lib/core" }
-subalfred-util = { version = "0.9", path = "lib/util" }
 subcryptor     = { version = "0.10" }
 subhasher      = { version = "0.10" }
 submetadatan   = { version = "0.10" }
@@ -39,8 +36,13 @@ subruntimer    = { version = "0.10" }
 subspector     = { version = "0.10" }
 substorager    = { version = "0.10" }
 subversioner   = { version = "0.10" }
+# subalfred
+cmd-impl       = { version = "0.9", path = "bin/subalfred/src/command/impl" }
+subalfred-core = { version = "0.9", path = "lib/core" }
+subalfred-util = { version = "0.9", path = "lib/util" }
 
 # [patch.crates-io]
+# hack-ink
 # subcryptor     = { path = "../substrate-minimal/subcryptor" }
 # subhasher      = { path = "../substrate-minimal/subhasher" }
 # submetadatan   = { path = "../substrate-minimal/submetadatan" }

@@ -1,15 +1,15 @@
-//! Subalfred core libraries.
+//! Subalfred's core libraries.
 
-#![deny(missing_docs)]
+#![deny(missing_docs, unused_crate_dependencies)]
 
 pub mod prelude {
-	//! Subalfred core prelude.
+	//! Subalfred's core prelude.
 
 	pub use std::result::Result as StdResult;
 
 	pub use super::error::{self, Error};
 
-	/// Subalfred core libraries' `Result` type.
+	/// Subalfred's core libraries' [`Result`] type.
 	pub type Result<T> = StdResult<T, Error>;
 }
 
