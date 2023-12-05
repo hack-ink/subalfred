@@ -1,6 +1,6 @@
 //! Quickly define and implement a command containing serval subcommands.
 
-#![deny(missing_docs)]
+#![deny(missing_docs, unused_crate_dependencies)]
 
 // proc-macro
 use proc_macro::TokenStream;

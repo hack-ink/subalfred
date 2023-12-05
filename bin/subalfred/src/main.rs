@@ -1,6 +1,6 @@
-#![deny(missing_docs)]
+#![deny(missing_docs, unused_crate_dependencies)]
 
-//! Subalfred CLI start entry point.
+//! Subalfred CLI starting point.
 
 mod prelude {
 	pub use std::result::Result as StdResult;
@@ -26,7 +26,6 @@ mod cli;
 mod command;
 mod util;
 
-// #[tokio::main]
 fn main() -> prelude::Result<()> {
 	color_eyre::install().map_err(|e| anyhow::anyhow!(e))?;
 	cli::Cli::new().run()?;

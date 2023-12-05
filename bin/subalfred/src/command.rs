@@ -30,7 +30,7 @@ use track_updates::TrackUpdatesCmd;
 mod workspace;
 use workspace::WorkspaceCmd;
 
-/// The main CMD of Subalfred.
+/// The primary directive of Subalfred.
 #[cmd_impl::cmd]
 pub(crate) enum Cmd {
 	#[command(subcommand)]

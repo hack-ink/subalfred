@@ -1,6 +1,6 @@
 [package]
 authors.workspace    = true
-description          = "Subalfred core libraries."
+description          = "Subalfred's core libraries."
 edition.workspace    = true
 homepage.workspace   = true
 license.workspace    = true
@@ -14,7 +14,6 @@ version.workspace    = true
 array-bytes        = { workspace = true }
 async-trait        = { version = "0.1" }
 cargo_metadata     = { version = "0.18" }
-cargo_toml         = { version = "0.17" }
 clap               = { workspace = true, optional = true, features = ["derive", "wrap_help"] }
 futures            = { version = "0.3" }
 fxhash             = { workspace = true }
@@ -31,12 +30,13 @@ tokio-stream       = { version = "0.1" }
 tokio-tungstenite  = { version = "0.20", features = ["rustls-tls-native-roots"] }
 tracing            = { workspace = true }
 # hack-ink
+subcryptor   = { workspace = true }
+subhasher    = { workspace = true }
+submetadatan = { workspace = true, features = ["cmp"] }
+subrpcer     = { workspace = true }
+subruntimer  = { workspace = true, features = ["serde"] }
+subspector   = { workspace = true }
+substorager  = { workspace = true }
+subversioner = { workspace = true, features = ["serde"] }
+# subalfred
 subalfred-util = { workspace = true }
-subcryptor     = { workspace = true }
-subhasher      = { workspace = true }
-submetadatan   = { workspace = true, features = ["cmp"] }
-subrpcer       = { workspace = true }
-subruntimer    = { workspace = true, features = ["serde"] }
-subspector     = { workspace = true }
-substorager    = { workspace = true }
-subversioner   = { workspace = true, features = ["serde"] }
