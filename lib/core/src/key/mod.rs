@@ -1,4 +1,7 @@
-//! Subalfred core key library.
+//! Subalfred's core key library.
+
+mod keystore;
+pub use keystore::*;
 
 // std
 use std::{

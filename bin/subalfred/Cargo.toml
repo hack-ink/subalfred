@@ -22,14 +22,15 @@ anyhow             = { version = "1.0" }
 array-bytes        = { workspace = true }
 clap               = { workspace = true, features = ["cargo", "derive", "wrap_help"] }
 color-eyre         = { version = "0.6" }
+rpassword          = { version = "7.3" }
 serde_json         = { workspace = true }
 tokio              = { workspace = true, features = ["macros", "rt-multi-thread"] }
 tracing-subscriber = { version = "0.3" }
 unescaper          = { version = "0.1" }
 # hack-ink
-subhasher      = { workspace = true }
-subrpcer       = { workspace = true }
-substorager    = { workspace = true }
+subhasher   = { workspace = true }
+subrpcer    = { workspace = true }
+substorager = { workspace = true }
 # subalfred
 cmd-impl       = { workspace = true }
 subalfred-core = { workspace = true, features = ["clap"] }

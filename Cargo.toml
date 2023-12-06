@@ -28,29 +28,29 @@ thiserror          = { version = "1.0" }
 tokio              = { version = "1.34" }
 tracing            = { version = "0.1" }
 # hack-ink
-subcryptor     = { version = "0.10" }
-subhasher      = { version = "0.10" }
-submetadatan   = { version = "0.10" }
-subrpcer       = { version = "0.10" }
-subruntimer    = { version = "0.10" }
-subspector     = { version = "0.10" }
-substorager    = { version = "0.10" }
-subversioner   = { version = "0.10" }
+subcryptor   = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
+subhasher    = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
+submetadatan = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
+subrpcer     = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
+subruntimer  = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
+subspector   = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
+substorager  = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
+subversioner = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
 # subalfred
 cmd-impl       = { version = "0.9", path = "bin/subalfred/src/command/impl" }
 subalfred-core = { version = "0.9", path = "lib/core" }
 subalfred-util = { version = "0.9", path = "lib/util" }
 
-# [patch.crates-io]
-# hack-ink
-# subcryptor     = { path = "../substrate-minimal/subcryptor" }
-# subhasher      = { path = "../substrate-minimal/subhasher" }
-# submetadatan   = { path = "../substrate-minimal/submetadatan" }
-# subrpcer       = { path = "../substrate-minimal/subrpcer" }
-# subruntimer    = { path = "../substrate-minimal/subruntimer" }
-# subspector     = { path = "../substrate-minimal/subspector" }
-# substorager    = { path = "../substrate-minimal/substorager" }
-# subversioner   = { path = "../substrate-minimal/subversioner" }
+# [patch.'https://github.com/hack-ink/substrate-minimal']
+# # hack-ink
+# subcryptor   = { path = "../substrate-minimal/subcryptor" }
+# subhasher    = { path = "../substrate-minimal/subhasher" }
+# submetadatan = { path = "../substrate-minimal/submetadatan" }
+# subrpcer     = { path = "../substrate-minimal/subrpcer" }
+# subruntimer  = { path = "../substrate-minimal/subruntimer" }
+# subspector   = { path = "../substrate-minimal/subspector" }
+# substorager  = { path = "../substrate-minimal/substorager" }
+# subversioner = { path = "../substrate-minimal/subversioner" }
 
 [profile.ci-dev]
 incremental = false
