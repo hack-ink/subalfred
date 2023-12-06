@@ -355,7 +355,7 @@ checksum = "702fc72eb24e5a1e48ce58027a675bc24edd52096d5397d4aea7c6dd9eca0bd1"
 
 [[package]]
 name = "cmd-impl"
-version = "0.9.2"
+version = "0.9.3"
 dependencies = [
  "quote",
  "syn 2.0.39",
@@ -1731,7 +1731,7 @@ checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
 
 [[package]]
 name = "subalfred"
-version = "0.9.2"
+version = "0.9.3"
 dependencies = [
  "anyhow",
  "array-bytes",
@@ -1752,7 +1752,7 @@ dependencies = [
 
 [[package]]
 name = "subalfred-core"
-version = "0.9.2"
+version = "0.9.3"
 dependencies = [
  "array-bytes",
  "async-trait",
@@ -1785,7 +1785,7 @@ dependencies = [
 
 [[package]]
 name = "subalfred-util"
-version = "0.9.2"
+version = "0.9.3"
 dependencies = [
  "tracing",
  "tracing-test",
