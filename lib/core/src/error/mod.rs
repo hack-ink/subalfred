@@ -10,6 +10,9 @@ pub enum Error {
 	Quick(#[from] Quick),
 
 	#[error(transparent)]
+	Subcryptor(#[from] subcryptor::Error),
+
+	#[error(transparent)]
 	Cargo(#[from] Cargo),
 	#[error(transparent)]
 	Generic(#[from] Generic),

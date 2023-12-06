@@ -6,6 +6,9 @@ use check::CheckCmd;
 mod convert;
 use convert::ConvertCmd;
 
+mod decrypt;
+use decrypt::DecryptCmd;
+
 mod get;
 use get::GetCmd;
 
@@ -37,6 +40,7 @@ pub(crate) enum Cmd {
 	Check,
 	#[command(subcommand)]
 	Convert,
+	Decrypt,
 	#[command(subcommand)]
 	Get,
 	Hash,
