@@ -95,7 +95,7 @@ pub async fn find_runtime_upgrade_block(
 	let best_finalized_hash = client.get_finalized_head().await?;
 	let mut left = 0;
 	let mut right =
-		u32::try_from_hex(&client.get_header::<String, _>(Some(best_finalized_hash)).await?.number)
+		u32::try_from_hex(client.get_header::<String, _>(Some(best_finalized_hash)).await?.number)
 			.map_err(|_| error::almost_impossible(E_BLOCK_NUMBER_IS_NON_HEX))?;
 	let mut mid = right / 2;
 
