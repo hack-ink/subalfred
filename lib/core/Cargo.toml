@@ -27,7 +27,7 @@ serde_json         = { workspace = true }
 thiserror          = { workspace = true }
 tokio              = { workspace = true, features = ["fs", "macros", "rt-multi-thread"] }
 tokio-stream       = { version = "0.1" }
-tokio-tungstenite  = { version = "0.20", features = ["rustls-tls-native-roots"] }
+tokio-tungstenite  = { version = "0.21", features = ["rustls-tls-native-roots"] }
 tracing            = { workspace = true }
 # hack-ink
 subcryptor   = { workspace = true }
