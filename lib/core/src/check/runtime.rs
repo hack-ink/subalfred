@@ -14,8 +14,8 @@ use submetadatan::{
 	LatestRuntimeMetadata,
 };
 
-/// Fetch two nodes' runtime versions through their HTTP RPC endpoints.
-/// Compare the versions, then return the differences in markdown diff style.
+/// Retrieve the runtime versions of two nodes by using their RPC endpoints, compare the versions,
+/// and present the differences in markdown diff format.
 pub async fn check_version(a_uri: &str, b_uri: &str) -> Result<Option<String>> {
 	const E_WRITE_TO_STRING_NEVER_FAILS: &str = "[core::check] write to string never fails; qed";
 
@@ -46,8 +46,8 @@ pub async fn check_version(a_uri: &str, b_uri: &str) -> Result<Option<String>> {
 	Ok(Some(result))
 }
 
-/// Fetch two nodes' runtime storage through their HTTP RPC endpoints.
-/// Compare the storage, then return the differences in markdown diff style.
+/// Fetch the runtime storage of two nodes using their RPC endpoints. compare the storage and return
+/// the differences in markdown diff format.
 pub async fn check_storage(
 	a_uri: &str,
 	b_uri: &str,

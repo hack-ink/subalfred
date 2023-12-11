@@ -18,34 +18,39 @@ pub trait Key
 where
 	Self: Sized,
 {
-	///  Key Id.
+	/// Key Id.
 	const ID: [u8; 4];
 
-	/// Sub-seed type.
-	type SubSeed: Encode;
+	/// Seed type.
+	type Seed: Encode;
 
-	/// Sub-seed, used to derive the key.
-	fn sub_seed(self) -> Self::SubSeed;
+	/// Seed, used to derive the key.
+	fn seed(self) -> Self::Seed;
 
-	/// Convert the [`Self::ID`] into `[u8; N]`.
+	/// Derive the key from the given seed.
 	fn to_key<const N: usize>(self) -> Result<[u8; N]> {
-		let mut result = [0; N];
-		let sub_seed = self.sub_seed();
-		let encoded_sub_seed = sub_seed.encode();
+		self.to_key_with_sub_seed(())
+	}
 
-		if (Self::ID.len() + encoded_sub_seed.len()) > N {
+	/// Derive the key from the given seed and sub-seed.
+	fn to_key_with_sub_seed<S, const N: usize>(self, sub_seed: S) -> Result<[u8; N]>
+	where
+		S: Encode,
+	{
+		let mut result = [0; N];
+		let seed = (self.seed(), sub_seed).encode();
+
+		if (Self::ID.len() + seed.len()) > N {
 			Err(error::Key::InvalidSubSeed)?;
 		}
 
-		Self::ID
-			.iter()
-			.cloned()
-			.chain(encoded_sub_seed)
-			.enumerate()
-			.for_each(|(i, v)| result[i] = v);
+		Self::ID.iter().cloned().chain(seed).enumerate().for_each(|(i, v)| result[i] = v);
 
 		Ok(result)
 	}
+
+	// TODO: add `from_key` method.
+	// TODO: add `from_key_with_sub_seed` method.
 }
 
 macro_rules! impl_keys {
@@ -59,11 +64,11 @@ macro_rules! impl_keys {
 			#[derive(Debug)]
 			pub struct $name(pub $ty);
 			impl Key for $name {
-				type SubSeed = $ty;
+				type Seed = $ty;
 
 				const ID: [u8; 4] = $id;
 
-				fn sub_seed(self) -> Self::SubSeed {
+				fn seed(self) -> Self::Seed {
 					self.0
 				}
 			}
@@ -72,23 +77,24 @@ macro_rules! impl_keys {
 
 				fn try_from(key: &[u8]) -> Result<Self> {
 					let id_size = Self::ID.len();
-					// Note:
-					// These sub-seed types' mem size have the exact same size as `<$ty as Encode>::size_hint(&Default::default())`.
-					// If introduce some complex types in the future, might need to use the formula above to calculate the size.
-					let sub_seed_size = mem::size_of::<$ty>();
+					// Please note that the memory size of these sub-seed types is exactly the same as
+					// `<$ty as Encode>::size_hint(&Default::default())`.
+					// If complex types are introduced in the future,
+					// it may be necessary to use the aforementioned formula to calculate their size.
+					let seed_size = mem::size_of::<$ty>();
 
-					if key.len() < id_size + sub_seed_size {
+					if key.len() < id_size + seed_size {
 						Err(error::Key::InvalidKey)?;
 					}
 
 					let id = &key[..id_size];
-					let sub_seed = &key[id_size..id_size + sub_seed_size];
+					let seed = &key[id_size..id_size + seed_size];
 
 					if id != Self::ID {
 						Err(error::Key::InvalidKey)?;
 					}
 
-					Ok(Self(<$ty>::decode(&mut &*sub_seed).map_err(error::Generic::Codec)?))
+					Ok(Self(<$ty>::decode(&mut &*seed).map_err(error::Generic::Codec)?))
 				}
 			}
 		)+
@@ -119,4 +125,16 @@ impl Display for SiblId {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult {
 		write!(f, "SiblId({})", &self.0)
 	}
+}
+#[test]
+fn to_key_with_sub_seed_should_work() {
+	// This is the crowdloan address and fund index for parachain 2025.
+	// Data retrieved from Polkadot#18549460.
+	assert_eq!(
+		array_bytes::bytes2hex(
+			"0x",
+			PalletId(*b"py/cfund").to_key_with_sub_seed::<_, 32>(75_u32).unwrap()
+		),
+		"0x6d6f646c70792f6366756e644b00000000000000000000000000000000000000"
+	);
 }
