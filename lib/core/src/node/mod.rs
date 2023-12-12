@@ -6,6 +6,7 @@
 use std::{
 	io::{BufRead, BufReader},
 	process::{Child, Command, Stdio},
+	time::Duration,
 };
 // crates.io
 use array_bytes::TryFromHex;
@@ -51,19 +52,29 @@ pub fn spawn(executable: &str, rpc_port: u16, chain: &str) -> Result<Child> {
 }
 
 /// Get runtime version from a nodes's HTTP RPC endpoint.
-pub async fn runtime_version<Hash>(uri: &str, at: Option<Hash>) -> Result<RuntimeVersion>
+pub async fn runtime_version<Hash>(
+	uri: &str,
+	at: Option<Hash>,
+	timeout: Duration,
+) -> Result<RuntimeVersion>
 where
 	Hash: Serialize,
 {
-	Ok(http::send::<_, RuntimeVersion>(uri, &state::get_runtime_version(0, at)).await?.result)
+	Ok(http::send::<_, RuntimeVersion>(uri, &state::get_runtime_version(0, at), timeout)
+		.await?
+		.result)
 }
 
 /// Fetch runtime metadata from a nodes's HTTP RPC endpoint.
-pub async fn runtime_metadata<Hash>(uri: &str, at: Option<Hash>) -> Result<LatestRuntimeMetadata>
+pub async fn runtime_metadata<Hash>(
+	uri: &str,
+	at: Option<Hash>,
+	timeout: Duration,
+) -> Result<LatestRuntimeMetadata>
 where
 	Hash: Serialize,
 {
-	let response = http::send::<_, String>(uri, &state::get_metadata(0, at)).await?;
+	let response = http::send::<_, String>(uri, &state::get_metadata(0, at), timeout).await?;
 
 	parse_raw_runtime_metadata(&response.result)
 }
@@ -84,6 +95,7 @@ pub fn parse_raw_runtime_metadata(raw_runtime_metadata: &str) -> Result<LatestRu
 pub async fn find_runtime_upgrade_block(
 	runtime_version: u32,
 	uri: &str,
+	timeout: Duration,
 ) -> Result<Option<(u32, String)>> {
 	// subalfred
 	use crate::{
@@ -91,7 +103,7 @@ pub async fn find_runtime_upgrade_block(
 		substrate_client::{Apis, Client},
 	};
 
-	let client = Client::initialize(Initializer::new(), uri).await?;
+	let client = Client::initialize(Initializer::new().request_timeout(timeout), uri).await?;
 	let best_finalized_hash = client.get_finalized_head().await?;
 	let mut left = 0;
 	let mut right =

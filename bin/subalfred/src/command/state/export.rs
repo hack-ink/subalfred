@@ -1,7 +1,9 @@
+// std
+use std::time::Duration;
 // crates.io
 use clap::Args;
 // subalfred
-use crate::prelude::*;
+use crate::{command::shared::Network, prelude::*};
 use subalfred_core::state::{self, ForkOffConfig};
 
 /// Export the chain state from the Substrate-like node through the WS RPC endpoint.
@@ -17,9 +19,6 @@ pub(crate) struct ExportCmd {
 	/// Accept block hash or block number.
 	#[arg(long, value_name = "HASH/NUM")]
 	at: Option<String>,
-	/// Timeout for the fetching.
-	#[arg(long, value_name = "SECS", default_value = "10")]
-	timeout: u32,
 	/// Export all the data.
 	///
 	/// So, it conflicts with any other filter option.
@@ -37,13 +36,24 @@ pub(crate) struct ExportCmd {
 	skip_pallets: Vec<String>,
 	#[command(flatten)]
 	fork_off_config: ForkOffConfig,
+	#[command(flatten)]
+	network: Network,
 }
 impl ExportCmd {
 	#[tokio::main]
 	pub(crate) async fn run(&self) -> Result<()> {
-		let Self { live, at, timeout, all, skip_pallets, fork_off_config } = self;
+		let Self { live, at, all, skip_pallets, fork_off_config, network: Network { timeout } } =
+			self;
 
-		state::export(live, at.to_owned(), *timeout, *all, skip_pallets, fork_off_config).await?;
+		state::export(
+			live,
+			at.to_owned(),
+			*all,
+			skip_pallets,
+			fork_off_config,
+			Duration::from_secs(*timeout),
+		)
+		.await?;
 
 		Ok(())
 	}

@@ -24,18 +24,14 @@ use substorager::StorageKey;
 pub async fn export(
 	uri: &str,
 	at: Option<String>,
-	timeout: u32,
 	all: bool,
 	skip_pallets: &[String],
 	fork_off_config: &ForkOffConfig,
+	timeout: Duration,
 ) -> Result<()> {
 	subalfred_util::execution_timer!("state::export");
 
-	let client = Client::initialize(
-		Initializer::new().request_timeout(Duration::from_secs(timeout as _)),
-		uri,
-	)
-	.await?;
+	let client = Client::initialize(Initializer::new().request_timeout(timeout), uri).await?;
 	let at = if at.is_some() {
 		if let Ok(at) = at.as_ref().unwrap().parse::<u32>() {
 			Some(client.get_block_hash(Some(at)).await?)

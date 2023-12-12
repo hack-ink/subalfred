@@ -1,9 +1,9 @@
 // std
-use std::{error::Error, process::Child};
+use std::{error::Error, process::Child, time::Duration};
 // crates.io
 use clap::{Args, ValueEnum};
 // subalfred
-use crate::prelude::*;
+use crate::{command::shared::Network, prelude::*};
 use subalfred_core::{check::runtime, node, system};
 
 /// Compare the runtime version of the local node with that of the live one.
@@ -21,6 +21,8 @@ pub(crate) struct RuntimeCmd {
 	/// Property being targeted.
 	#[arg(value_enum, long, required = true, value_name = "PROPERTY")]
 	property: Property,
+	#[command(flatten)]
+	network: Network,
 }
 impl RuntimeCmd {
 	#[tokio::main]
@@ -39,14 +41,15 @@ impl RuntimeCmd {
 			Ok(result?)
 		}
 
-		let Self { executable, chain, live, property } = self;
+		let Self { executable, chain, live, property, network: Network { timeout } } = self;
+		let timeout = Duration::from_secs(*timeout);
 		let rpc_port = system::random_available_port()?;
 		let mut node_process = node::spawn(executable, rpc_port, chain)?;
 		let local = format!("http://127.0.0.1:{rpc_port}");
 
 		match property {
 			Property::Storage => {
-				let result = runtime::check_storage(&local, live).await;
+				let result = runtime::check_storage(&local, live, timeout).await;
 				let (pallet_diffs, entry_diffs) =
 					map_err_and_kill_node_process(result, &mut node_process)?;
 
@@ -65,7 +68,7 @@ impl RuntimeCmd {
 				});
 			},
 			Property::Version => {
-				let result = runtime::check_version(&local, live).await;
+				let result = runtime::check_version(&local, live, timeout).await;
 
 				if let Some(diffs) = map_err_and_kill_node_process(result, &mut node_process)? {
 					println!("{diffs}")
