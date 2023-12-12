@@ -4,6 +4,13 @@ use std::{borrow::Cow, path::PathBuf};
 use clap::Args;
 
 #[derive(Debug, Args)]
+pub(crate) struct Network {
+	/// Set a timeout.
+	#[arg(long, value_name = "SECS", default_value = "10")]
+	pub(crate) timeout: u64,
+}
+
+#[derive(Debug, Args)]
 pub(crate) struct JsonOutput {
 	/// Enable JSON output.
 	#[arg(long)]

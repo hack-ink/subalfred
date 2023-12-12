@@ -1,7 +1,9 @@
+// std
+use std::time::Duration;
 // crates.io
 use clap::Args;
 // subalfred
-use crate::prelude::*;
+use crate::{command::shared::Network, prelude::*};
 use subalfred_core::node;
 
 /// Get the runtime upgrade block.
@@ -16,14 +18,17 @@ pub(crate) struct RuntimeUpgradeBlockCmd {
 	/// Node's WS RPC endpoint.
 	#[arg(long, required = true, value_name = "URI", default_value = "ws://localhost:9944")]
 	uri: String,
+	#[command(flatten)]
+	network: Network,
 }
 impl RuntimeUpgradeBlockCmd {
 	#[tokio::main]
 	pub(crate) async fn run(&self) -> Result<()> {
-		let Self { runtime_version, uri } = self;
+		let Self { runtime_version, uri, network: Network { timeout } } = self;
 
 		if let Some((number, hash)) =
-			node::find_runtime_upgrade_block(*runtime_version, uri).await?
+			node::find_runtime_upgrade_block(*runtime_version, uri, Duration::from_secs(*timeout))
+				.await?
 		{
 			println!("{number} {hash}");
 		} else {
