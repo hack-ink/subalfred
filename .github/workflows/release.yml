@@ -62,7 +62,7 @@ jobs:
           mv ../SHA256 .
           mv ../MD5 .
       - name: Publish
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           discussion_category_name: Announcements
           generate_release_notes: true
@@ -85,7 +85,7 @@ jobs:
     needs: [release]
     steps:
       - name: Clean artifacts
-        uses: geekyeggo/delete-artifact@v4
+        uses: geekyeggo/delete-artifact@v5
         with:
           name: artifacts
     runs-on: ubuntu-latest
