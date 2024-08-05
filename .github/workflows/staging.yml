@@ -37,7 +37,7 @@ jobs:
           mkdir -p artifacts
           mv subalfred-${{ matrix.target.name }}.zst artifacts
       - name: Upload artifact
-        uses: actions/upload-artifact@v4.3.3
+        uses: actions/upload-artifact@v4.3.5
         with:
           name: artifacts
           path: artifacts
