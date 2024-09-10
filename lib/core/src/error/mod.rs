@@ -35,7 +35,7 @@ pub enum Error {
 
 /// An error helper/wrapper to debug/print the error quickly.
 #[derive(Debug)]
-pub struct Quick(String);
+pub struct Quick(#[allow(unused)] String);
 impl std::fmt::Display for Quick {
 	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
 		std::fmt::Debug::fmt(self, f)
