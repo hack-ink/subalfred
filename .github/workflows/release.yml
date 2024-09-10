@@ -1,11 +1,15 @@
 name: Release
+
+env:
+  CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+  CARGO_TERM_COLOR: always
+
+  RUST_BACKTRACE: full
+
 on:
   push:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
-
-env:
-  CARGO_TERM_COLOR: always
 
 jobs:
   build:
@@ -15,13 +19,9 @@ jobs:
       matrix:
         target:
           [
-            { name: x86_64-unknown-linux-gnu, os: ubuntu-latest },
             { name: aarch64-apple-darwin, os: macos-latest },
-            {
-              name: x86_64-pc-windows-msvc,
-              os: windows-latest,
-              extension: .exe,
-            },
+            { name: x86_64-unknown-linux-gnu, os: ubuntu-latest },
+            { name: x86_64-pc-windows-msvc, os: windows-latest },
           ]
     steps:
       - name: Fetch latest code
@@ -30,19 +30,37 @@ jobs:
         run: rustup target add ${{ matrix.target.name }}
       - name: Build
         run: cargo build --profile ci-release --locked --target ${{ matrix.target.name }}
-      - name: Compress
+      - name: Pack (macOS)
+        if: matrix.target.os == 'macos-latest'
         run: |
-          mv target/${{ matrix.target.name }}/ci-release/subalfred${{ matrix.target.extension }} .
-          zstd --ultra -22 -o subalfred-${{ matrix.target.name }}.zst subalfred${{ matrix.target.extension }}
-      - name: Collect artifact
+          mv target/${{ matrix.target.name }}/ci-release/subalfred .
+          zip subalfred-${{ matrix.target.name }}.zip subalfred
+      - name: Pack (Windows)
+        if: matrix.target.os == 'windows-latest'
         run: |
-          mkdir -p artifacts
-          mv subalfred-${{ matrix.target.name }}.zst artifacts
+          mv target/${{ matrix.target.name }}/ci-release/subalfred.exe .
+          Compress-Archive -Path subalfred.exe -DestinationPath subalfred-${{ matrix.target.name }}.zip
+      - name: Pack (Linux)
+        if: matrix.target.os == 'ubuntu-latest'
+        run: |
+          mv target/${{ matrix.target.name }}/ci-release/subalfred .
+          tar -czvf subalfred-${{ matrix.target.name }}.tar.gz subalfred
       - name: Upload artifact
-        uses: actions/upload-artifact@v4.3.3
+        uses: actions/upload-artifact@v4
         with:
-          name: artifacts
-          path: artifacts
+          name: subalfred-${{ matrix.target.name }}
+          path: subalfred-${{ matrix.target.name }}.*
+          retention-days: 1
+
+  # release:
+  #   name: Release
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Publish
+  #       uses: softprops/action-gh-release@v2
+  #       with:
+  #         discussion_category_name: Announcements
+  #         generate_release_notes: true
 
   release:
     name: Release
@@ -51,11 +69,10 @@ jobs:
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
-        with:
-          name: artifacts
-          path: artifacts
       - name: Hash
         run: |
+          mkdir -p artifacts
+          mv subalfred-*/* artifacts/
           cd artifacts
           sha256sum * | tee ../SHA256
           md5sum * | tee ../MD5
@@ -78,14 +95,3 @@ jobs:
         run: cargo login ${{ secrets.CARGO_REGISTRY_TOKEN }}
       - name: Publish
         run: .maintain/release.sh
-
-  clean-artifacts:
-    name: Clean artifacts
-    if: always()
-    needs: [release]
-    steps:
-      - name: Clean artifacts
-        uses: geekyeggo/delete-artifact@v5
-        with:
-          name: artifacts
-    runs-on: ubuntu-latest
