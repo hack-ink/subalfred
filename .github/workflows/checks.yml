@@ -50,6 +50,8 @@ jobs:
         uses: taiki-e/install-action@nextest
       - name: Cargo nextest
         if: matrix.action == 'nextest'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: cargo nextest run --cargo-profile ci-dev --workspace --all-features --all-targets --locked
       - name: Fast fail
         uses: vishnudxb/cancel-workflow@v1.2
