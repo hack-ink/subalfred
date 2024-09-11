@@ -17,25 +17,25 @@ version    = "0.9.3"
 [workspace.dependencies]
 # crates.io
 array-bytes        = { version = "6.2" }
-clap               = { version = "4.4" }
+clap               = { version = "4.5" }
 fxhash             = { version = "0.2" }
 once_cell          = { version = "1.19" }
 parity-scale-codec = { version = "3.6" }
-reqwest            = { version = "0.11" }
+reqwest            = { version = "0.12" }
 serde              = { version = "1.0" }
 serde_json         = { version = "1.0" }
 thiserror          = { version = "1.0" }
-tokio              = { version = "1.35" }
+tokio              = { version = "1.40" }
 tracing            = { version = "0.1" }
 # hack-ink
-subcryptor   = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
-subhasher    = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
-submetadatan = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
-subrpcer     = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
-subruntimer  = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
-subspector   = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
-substorager  = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
-subversioner = { version = "0.10", git = "https://github.com/hack-ink/substrate-minimal" }
+subcryptor   = { version = "0.11", git = "https://github.com/hack-ink/substrate-minimal" }
+subhasher    = { version = "0.11", git = "https://github.com/hack-ink/substrate-minimal" }
+submetadatan = { version = "0.11", git = "https://github.com/hack-ink/substrate-minimal" }
+subrpcer     = { version = "0.11", git = "https://github.com/hack-ink/substrate-minimal" }
+subruntimer  = { version = "0.11", git = "https://github.com/hack-ink/substrate-minimal" }
+subspector   = { version = "0.11", git = "https://github.com/hack-ink/substrate-minimal" }
+substorager  = { version = "0.11", git = "https://github.com/hack-ink/substrate-minimal" }
+subversioner = { version = "0.11", git = "https://github.com/hack-ink/substrate-minimal" }
 # subalfred
 cmd-impl       = { version = "0.9", path = "bin/subalfred/src/command/impl" }
 subalfred-core = { version = "0.9", path = "lib/core" }
