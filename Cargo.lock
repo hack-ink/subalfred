@@ -1846,7 +1846,7 @@ dependencies = [
 [[package]]
 name = "subcryptor"
 version = "0.11.1"
-source = "git+https://github.com/hack-ink/substrate-minimal#2f533525f12ea56639dc7a5a133ba38bf440f8e2"
+source = "git+https://github.com/hack-ink/substrate-minimal#12accaa63c05c6dc08b2e9abadc1b35d6aeec00c"
 dependencies = [
  "array-bytes",
  "base58",
@@ -1861,7 +1861,7 @@ dependencies = [
 [[package]]
 name = "subhasher"
 version = "0.11.1"
-source = "git+https://github.com/hack-ink/substrate-minimal#2f533525f12ea56639dc7a5a133ba38bf440f8e2"
+source = "git+https://github.com/hack-ink/substrate-minimal#12accaa63c05c6dc08b2e9abadc1b35d6aeec00c"
 dependencies = [
  "blake2-rfc",
  "byteorder",
@@ -1873,7 +1873,7 @@ dependencies = [
 [[package]]
 name = "submetadatan"
 version = "0.11.1"
-source = "git+https://github.com/hack-ink/substrate-minimal#2f533525f12ea56639dc7a5a133ba38bf440f8e2"
+source = "git+https://github.com/hack-ink/substrate-minimal#12accaa63c05c6dc08b2e9abadc1b35d6aeec00c"
 dependencies = [
  "array-bytes",
  "frame-metadata",
@@ -1887,7 +1887,7 @@ dependencies = [
 [[package]]
 name = "subrpcer"
 version = "0.11.1"
-source = "git+https://github.com/hack-ink/substrate-minimal#2f533525f12ea56639dc7a5a133ba38bf440f8e2"
+source = "git+https://github.com/hack-ink/substrate-minimal#12accaa63c05c6dc08b2e9abadc1b35d6aeec00c"
 dependencies = [
  "affix",
  "serde",
@@ -1897,7 +1897,7 @@ dependencies = [
 [[package]]
 name = "subruntimer"
 version = "0.11.1"
-source = "git+https://github.com/hack-ink/substrate-minimal#2f533525f12ea56639dc7a5a133ba38bf440f8e2"
+source = "git+https://github.com/hack-ink/substrate-minimal#12accaa63c05c6dc08b2e9abadc1b35d6aeec00c"
 dependencies = [
  "serde",
 ]
@@ -1905,7 +1905,7 @@ dependencies = [
 [[package]]
 name = "subspector"
 version = "0.11.1"
-source = "git+https://github.com/hack-ink/substrate-minimal#2f533525f12ea56639dc7a5a133ba38bf440f8e2"
+source = "git+https://github.com/hack-ink/substrate-minimal#12accaa63c05c6dc08b2e9abadc1b35d6aeec00c"
 dependencies = [
  "fxhash",
  "serde",
@@ -1915,7 +1915,7 @@ dependencies = [
 [[package]]
 name = "substorager"
 version = "0.11.1"
-source = "git+https://github.com/hack-ink/substrate-minimal#2f533525f12ea56639dc7a5a133ba38bf440f8e2"
+source = "git+https://github.com/hack-ink/substrate-minimal#12accaa63c05c6dc08b2e9abadc1b35d6aeec00c"
 dependencies = [
  "array-bytes",
  "subhasher",
@@ -1930,7 +1930,7 @@ checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
 [[package]]
 name = "subversioner"
 version = "0.11.1"
-source = "git+https://github.com/hack-ink/substrate-minimal#2f533525f12ea56639dc7a5a133ba38bf440f8e2"
+source = "git+https://github.com/hack-ink/substrate-minimal#12accaa63c05c6dc08b2e9abadc1b35d6aeec00c"
 dependencies = [
  "serde",
 ]
