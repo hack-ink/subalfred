@@ -20,7 +20,7 @@ array-bytes        = { version = "6.2" }
 clap               = { version = "4.5" }
 fxhash             = { version = "0.2" }
 once_cell          = { version = "1.20" }
-parity-scale-codec = { version = "3.6" }
+parity-scale-codec = { version = "3.7" }
 reqwest            = { version = "0.12" }
 serde              = { version = "1.0" }
 serde_json         = { version = "1.0" }
