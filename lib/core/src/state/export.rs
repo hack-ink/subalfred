@@ -5,7 +5,7 @@ use std::{path::Path, time::Duration};
 // crates.io
 use fxhash::FxHashSet;
 // subalfred
-use super::{fork_off, ForkOffConfig};
+use super::{ForkOffConfig, fork_off};
 use crate::{
 	jsonrpc::ws::Initializer,
 	node,

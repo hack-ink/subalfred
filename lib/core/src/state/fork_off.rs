@@ -114,11 +114,7 @@ fn clear_consensus(chain_spec: &mut ChainSpec) {
 		.into_iter()
 		.filter_map(|(k, v)| {
 			if k.starts_with(&system_prefix) {
-				if k.starts_with(&system_account_prefix) {
-					Some((k, v))
-				} else {
-					None
-				}
+				if k.starts_with(&system_account_prefix) { Some((k, v)) } else { None }
 			} else if ignore_prefixes.iter().any(|prefix| k.starts_with(prefix)) {
 				None
 			} else {

@@ -8,11 +8,11 @@ resolver = "2"
 
 [workspace.package]
 authors    = ["Xavier Lau <xavier@inv.cafe>"]
-edition    = "2021"
+edition    = "2024"
 homepage   = "https://hack.ink/subalfred"
 license    = "GPL-3.0"
 repository = "https://github.com/hack-ink/subalfred"
-version    = "0.9.3"
+version    = "0.9.4"
 
 [workspace.dependencies]
 # crates.io

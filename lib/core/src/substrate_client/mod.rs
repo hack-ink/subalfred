@@ -8,7 +8,7 @@ pub use api::Apis;
 // std
 use std::sync::Arc;
 // crates.io
-use serde::{de::DeserializeOwned, Serialize};
+use serde::{Serialize, de::DeserializeOwned};
 use tokio::sync::mpsc::{self, Sender};
 // subalfred
 use crate::{

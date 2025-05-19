@@ -14,7 +14,7 @@ use parity_scale_codec::Decode;
 use serde::Serialize;
 // subalfred
 use crate::{jsonrpc::http, prelude::*};
-use submetadatan::{frame_metadata::RuntimeMetadataPrefixed, LatestRuntimeMetadata};
+use submetadatan::{LatestRuntimeMetadata, frame_metadata::RuntimeMetadataPrefixed};
 use subrpcer::state;
 use subversioner::RuntimeVersion;
 

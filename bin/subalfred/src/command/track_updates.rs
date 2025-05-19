@@ -3,8 +3,8 @@ use clap::Args;
 // subalfred
 use crate::prelude::*;
 use subalfred_core::github::{
-	substrate::{self, WatchedLabels, WatchedPullRequests},
 	PullRequest,
+	substrate::{self, WatchedLabels, WatchedPullRequests},
 };
 
 /// Track the updates.

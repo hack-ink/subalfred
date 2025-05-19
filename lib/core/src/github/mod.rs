@@ -9,10 +9,10 @@ use std::{env, sync::Arc};
 // crates.io
 use githuber::api::{ApiExt, Method::*};
 use reqwest::{
-	header::{ACCEPT, USER_AGENT},
 	Client,
+	header::{ACCEPT, USER_AGENT},
 };
-use serde::{de::DeserializeOwned, Deserialize};
+use serde::{Deserialize, de::DeserializeOwned};
 // subalfred
 use crate::{http::CLIENT, prelude::*};
 
@@ -84,7 +84,9 @@ impl ApiClient {
 			}
 		}
 
-		unreachable!("[core::github] there is an infinity loop before; hence this block can never be reached; qed")
+		unreachable!(
+			"[core::github] there is an infinity loop before; hence this block can never be reached; qed"
+		)
 	}
 }
 

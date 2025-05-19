@@ -4,7 +4,7 @@
 
 // subalfred
 use crate::prelude::*;
-use subcryptor::{ss58_registry::Ss58AddressFormat, Sr25519};
+use subcryptor::{Sr25519, ss58_registry::Ss58AddressFormat};
 
 /// Network address.
 #[cfg_attr(test, derive(Clone, PartialEq, Eq))]

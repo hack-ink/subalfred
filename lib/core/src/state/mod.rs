@@ -57,7 +57,12 @@ fn write_to_custom_extension_file(
 	system::write_data_to_file(
 		base_path.with_file_name(format!(
 			"{}.{}",
-			base_path.file_name().expect("[core::state] able to read the file in previous steps, thus never fails at this step; qed").to_string_lossy(),
+			base_path
+				.file_name()
+				.expect(
+					"[core::state] able to read the file in previous steps, thus never fails at this step; qed"
+				)
+				.to_string_lossy(),
 			file_extension
 		)),
 		&serde_json::to_vec(&serde_json::to_value(chain_spec).map_err(error::Generic::Serde)?)

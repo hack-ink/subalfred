@@ -9,10 +9,9 @@ use std::{
 // subalfred
 use crate::{node, prelude::*};
 use submetadatan::{
-	cmp,
+	LatestRuntimeMetadata, cmp,
 	frame_metadata::{PalletStorageMetadata, StorageEntryMetadata},
-	scale_info::{form::PortableForm, PortableRegistry},
-	LatestRuntimeMetadata,
+	scale_info::{PortableRegistry, form::PortableForm},
 };
 
 /// Retrieve the runtime versions of two nodes by using their RPC endpoints, compare the versions,

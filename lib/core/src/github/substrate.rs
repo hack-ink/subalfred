@@ -1,7 +1,7 @@
 //! Collection of Substrate GitHub related functions.
 
 // crates.io
-use futures::{stream, StreamExt};
+use futures::{StreamExt, stream};
 use githuber::api::commits;
 // subalfred
 use super::*;

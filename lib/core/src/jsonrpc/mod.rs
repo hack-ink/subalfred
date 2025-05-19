@@ -5,8 +5,8 @@ pub mod ws;
 
 // std
 use std::sync::{
-	atomic::{AtomicUsize, Ordering},
 	Arc,
+	atomic::{AtomicUsize, Ordering},
 };
 // crates.io
 use serde::{Deserialize, Serialize};

@@ -4,7 +4,7 @@
 // std
 use std::{str, sync::Arc, time::Duration};
 // crates.io
-use futures::{future::Fuse, FutureExt, SinkExt, StreamExt};
+use futures::{FutureExt, SinkExt, StreamExt, future::Fuse};
 // #[cfg(feature = "futures-selector")] use futures::{
 // 	future::{self, Either::*},
 // 	stream,
@@ -17,7 +17,7 @@ use tokio::{
 	time,
 };
 use tokio_stream::wrappers::IntervalStream;
-use tokio_tungstenite::tungstenite::{error::Result as WsResult, Message};
+use tokio_tungstenite::tungstenite::{Message, error::Result as WsResult};
 // subalfred
 use super::*;
 use crate::prelude::*;

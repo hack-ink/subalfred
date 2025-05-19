@@ -5,7 +5,7 @@
 // std
 use std::time::Duration;
 // crates.io
-use serde::{de::DeserializeOwned, Serialize};
+use serde::{Serialize, de::DeserializeOwned};
 // subalfred
 use super::*;
 use crate::{http::CLIENT, prelude::*};
